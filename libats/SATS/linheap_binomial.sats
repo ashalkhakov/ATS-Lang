@@ -47,10 +47,10 @@ sortdef vt0p = viewt@ype
 
 (* ****** ****** *)
 //
-typedef cmp (a:vt0p) = (&a, &a) -<cloref> Sgn
+typedef cmp (a:vt0p) = (&a, &a) -<cloref> int
 //
 fun{a:vt0p}
-compare_elt_elt (x1: &a, x2: &a, cmp: cmp a):<> Sgn
+compare_elt_elt (x1: &a, x2: &a, cmp: cmp a):<> int
 //
 (* ****** ****** *)
 
