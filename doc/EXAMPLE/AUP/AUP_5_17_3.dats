@@ -52,7 +52,7 @@ fun thread_func
   in
     if x < arg then let
       val () = printf ("Thread 2 says %ld\n", @(theX_inc_and_get(1L)))
-      val _leftover = sleep (1)
+      val _leftover = sleep (1u)
     in
       // nothing
     end else break
@@ -75,7 +75,7 @@ implement main () = () where {
   prval () = fpf (pf)
   val () = while (theX_inc_and_get(0L) < 10L) let
     val () = printf ("Thread 1 says %ld\n", @(theX_inc_and_get(1L)))
-    val _leftover = sleep (1)
+    val _leftover = sleep (1u)
   in
     // nothing
   end // end of [val]

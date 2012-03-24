@@ -228,8 +228,9 @@ fn eval_A_times_u_knd {N:nat}
       prval pf_u = darray_v_copy (p_u)
       prval pf_Au = darray_v_copy (p_Au)
       prval pf_thread = nthread_v_take (pf_nthread)
+      var tid: pthread_t // uninitialized
       val () = pthread_create_detached_cloptr (
-        lam () =<lin,cloptr1> worker (pf_thread, pf_u, pf_Au | knd, N, p_u, p_Au)
+        lam () =<lin,cloptr1> worker (pf_thread, pf_u, pf_Au | knd, N, p_u, p_Au), tid
       ) // end of [pthread_create_detached_cloptr]
     in
       worker_gen (pf_nthread | n-1)

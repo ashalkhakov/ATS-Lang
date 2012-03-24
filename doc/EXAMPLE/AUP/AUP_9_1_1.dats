@@ -53,7 +53,7 @@ main () = () where {
   var i: int
   val () = for
     (i := 1; ; i := i+1) let
-    val _leftover = sleep (1); val () = printf ("%d\n", @(i))
+    val _leftover = sleep (1u); val () = printf ("%d\n", @(i))
   in
     // nothing
   end // end of [val]

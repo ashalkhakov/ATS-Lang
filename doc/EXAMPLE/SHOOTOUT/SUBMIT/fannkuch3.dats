@@ -197,9 +197,10 @@ fun fannkuch_locklst_gen (sz: int): locklst = let
       viewdef V = fannkuch_v (l_a, l_C, l_P, l_S)
       val lock =  pthread_uplock_create ()
       val tick = pthread_upticket_create {V} (lock)
+      var tid: pthread_t // uninitialized
       val () = pthread_create_detached_cloptr (
-         lam () =<lin,cloptr1> fannkuch_worker
-           (pf_a, pf_C, pf_P, pf_S | tick, p_a, p_C, p_P, p_S, sz, i)
+        lam () =<lin,cloptr1> fannkuch_worker
+          (pf_a, pf_C, pf_P, pf_S | tick, p_a, p_C, p_P, p_S, sz, i), tid
       ) // end of [pthread_create_detached_cloptr]
       val () = res := locklst_cons (p_a, p_C, p_P, p_S, lock, ?)
       val+ locklst_cons (_, _, _, _, _, !res1) = res

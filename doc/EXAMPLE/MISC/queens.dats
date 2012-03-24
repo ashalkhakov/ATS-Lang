@@ -34,7 +34,9 @@ fun repeat {n:nat} .<n>. (n: int n, f: !() -<cloptr1> void): void =
   if n > 0 then (f (); repeat (n-1, f)) else ()
 
 fun pause (npause: Nat): void = let
-  fun loop (n: int): void = if n > 0 then (usleep (PAUSE); loop (n-1))
+  fun loop (n: int): void =
+    if n > 0 then let val err = usleep (PAUSE) in loop (n-1) end
+  // end of [loop]
 in
   loop (1 << npause)
 end // end of [pause]

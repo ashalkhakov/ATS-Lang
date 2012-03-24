@@ -456,8 +456,9 @@ end // end of [worker]
 
 fun workerlst_gen {i: nat | i <= NTHREAD} (dt: double, i: int i) : void =
   if i < NTHREAD then let
+    var tid: pthread_t // uninitialized
     val () = begin
-      pthread_create_detached_cloptr (lam () =<lin,cloptr1> worker (dt, i))
+      pthread_create_detached_cloptr (lam () =<lin,cloptr1> worker (dt, i), tid)
     end // end of [val]
   in
     workerlst_gen (dt, i + 1)

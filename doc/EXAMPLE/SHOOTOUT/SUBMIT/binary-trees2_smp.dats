@@ -142,10 +142,13 @@ fun loop_depths
     val lock = pthread_uplock_create ()
     val tick = pthread_upticket_create {V} (lock)
     val () =
-      pthread_create_detached_cloptr (f) where {
-      val f = lam (): void =<lin,cloptr1> worker (
+      pthread_create_detached_cloptr
+        (f, tid) where {
+      val f = lam ()
+        : void =<lin,cloptr1> worker (
         pf_n, pf_d, pf_c | tick, p_n, p_d, p_c, d, max_depth
-      )
+      ) // end of [val]
+      var tid: pthread_t // unintialized
     } // end of [pthread_create_detached_cloptr]
     val () = res := locklst_cons (p_n, p_d, p_c, lock, ?)
     val+ locklst_cons (_, _, _, _, !res1) = res

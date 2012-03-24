@@ -49,7 +49,7 @@ main (argc, argv) = () where {
       var x: elt? // uninitialized
     in
       if sz > 0 then let
-        val removed = $H.linheap_delmin (heap, x, cmp)
+        val removed = $H.linheap_delmin (heap, cmp, x)
         val () = assert_errmsg (removed, #LOCATION)
         prval () = opt_unsome {elt} (x)
         // val () = (print x; print_newline ())

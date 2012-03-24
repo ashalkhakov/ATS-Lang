@@ -281,8 +281,9 @@ fun count_all {n:nat} {l:addr}
     if t > 0 then let
       prval pf2 = bytes_v_make ()
       prval pf1 = nthread_v_take (pf_nthread)
+      var tid: pthread_t // uninitialized
       val () = pthread_create_detached_cloptr (
-        lam () =<lin,cloptr1> count_worker (pf1, pf2 | n, p)
+        lam () =<lin,cloptr1> count_worker (pf1, pf2 | n, p), tid
       ) // end of [pthread_create_detached_cloptr]
     in
       workerlst_gen (pf_nthread | t-1)

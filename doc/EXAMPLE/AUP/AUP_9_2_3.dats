@@ -201,7 +201,7 @@ main () = () where {
   val () = try4 ()
   val () = try5 ()
   val () = try6 ()
-  val _leftover = sleep (1)
+  val _leftover = sleep (1u)
 } // end of [main]
 
 (* ****** ****** *)

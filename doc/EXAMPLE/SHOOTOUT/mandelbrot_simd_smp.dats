@@ -334,8 +334,9 @@ val () = output_all (pf_nthread, pf0_A | NTHREAD) where {
       prval pf_A = bytearr_v_copy (pf0_A) where {
         extern prfun bytearr_v_copy (pf0_A: !bytearr @ l0): bytearr @ l0
       }
+      var tid: pthread_t // unintialized
       val () = pthread_create_detached_cloptr (
-         lam () =<lin,cloptr1> output_worker (pf_thread, pf_A | h, w, h_r, w_r, w8, p_A)
+         lam () =<lin,cloptr1> output_worker (pf_thread, pf_A | h, w, h_r, w_r, w8, p_A), tid
       ) // end of [pthread_create_detached_cloptr]
     in
       output_all (pf_nthread, pf0_A | n - 1)

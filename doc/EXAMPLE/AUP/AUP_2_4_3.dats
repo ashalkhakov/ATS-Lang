@@ -106,6 +106,11 @@ end // end of [unlock]
 
 (* ****** ****** *)
 
+fn sleep
+  (i: int) = let
+  val _remaining = sleep ((uint1_of_int)i) in ()
+end // end of [sleep]
+
 fn testlock (): void = loop (1) where {
   #define N 4
   #define NAME "accounts"

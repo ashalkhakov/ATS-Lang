@@ -53,7 +53,7 @@ main () = () where {
   val () = maininit ()
   val () = showpginfo ("initial call")
   val () = while (true) let
-    val _leftover = sleep (1000000) in (*nothing*)
+    val _leftover = sleep (1000000u) in (*nothing*)
   end // end of [val]
 } // end of [main]
 
