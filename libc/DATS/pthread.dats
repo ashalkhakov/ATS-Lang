@@ -55,8 +55,9 @@ fun pthread_create_detached_cloptr
 
 implement
 pthread_create_detached_exn
-  {vt} (f, env) = let
-  val ret = pthread_create_detached (f, env)
+  {vt} (f, env, tid) = let
+  var env = env
+  val ret = pthread_create_detached (f, env, tid)
 in
   if :(env: vt?) =>
     (ret = 0) then let
@@ -65,8 +66,8 @@ in
     // nothing
   end else let
     prval () = opt_unsome {vt} (env)
-    prval () = __assert (env) where {
-      extern prfun __assert (x: !vt >> vt?):<> void
+    prval () = __leak (env) where {
+      extern praxi __leak (x: !vt >> vt?):<> void
     } // end of [prval]
     val () = $STDIO.perror ("pthread_create")
   in
@@ -75,10 +76,11 @@ in
 end // end of [pthread_create_detached_exn]
 
 implement
-pthread_create_detached_cloptr (f) = let
+pthread_create_detached_cloptr
+  (f, tid) = let
   fun app (f: () -<lincloptr1> void): void = (f (); cloptr_free (f))
 in
-  pthread_create_detached_exn(app, f)
+  pthread_create_detached_exn(app, f, tid)
 end // end of [pthread_create_detached_cloptr]
 
 (* ****** ****** *)

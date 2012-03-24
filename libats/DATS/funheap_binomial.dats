@@ -353,7 +353,7 @@ funheap_isnot_empty {a} (hp) = (
 
 implement{a}
 funheap_getmin
-  (hp, res) = let
+  (hp0, cmp, res) = let
 (*
 val () = (
   print ("funheap_getmin: enter"); print_newline ()
@@ -361,12 +361,14 @@ val () = (
 *)
 in
 //
-case+ hp of
+case+ hp0 of
 | bheap_cons
-    (_ | bt, _) => let
-    val btnode (_, x, _) = bt
-    val () = res := x
-    prval () = opt_some {a} (res) in true
+    (pf0 | _, _) => let
+    prval () = exp2_ispos (pf0)
+    val () = res := bheap_find_min (hp0, cmp)
+    prval () = opt_some {a} (res)
+  in
+    true
   end // end of [bheap_cons]
 | bheap_nil () => let
     prval () = opt_none {a} (res) in false
@@ -378,7 +380,7 @@ end // end of [funheap_getmin]
 
 implement{a}
 funheap_delmin
-  (hp, res, cmp) = let
+  (hp0, cmp, res) = let
 (*
 val () = (
   print ("funheap_delmin: enter"); print_newline ()
@@ -386,10 +388,10 @@ val () = (
 *)
 in
 //
-case+ hp of
+case+ hp0 of
 | bheap_cons (pf0 | _, _) => let
     prval () = exp2_ispos (pf0)
-    val (_(*pf*) | hp_new, btmin) = bheap_remove_min (hp, cmp)
+    val (_(*pf*) | hp_new, btmin) = bheap_remove_min (hp0, cmp)
     val btnode (_, x, bts) = btmin
     val () = res := x
     prval () = opt_some {a} (res)
@@ -404,7 +406,7 @@ case+ hp of
         | btlst_nil () => hp
       // end of [loop]
     } // end of [val]
-    val () = hp := bheap_bheap_merge (hp_new, hp1, cmp)
+    val () = hp0 := bheap_bheap_merge (hp_new, hp1, cmp)
   in
     true
   end // end of [bheap_cons]

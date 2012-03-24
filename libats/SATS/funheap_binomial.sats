@@ -72,14 +72,14 @@ funheap_insert
 
 fun{a:t@ype}
 funheap_getmin (
-  hp: heap (a), res: &a? >> opt (a, b)
+  hp: heap (a), cmp: cmp a, res: &a? >> opt (a, b)
 ) :<> #[b:bool] bool b // end of [funheap_getmin]
 
 (* ****** ****** *)
 
 fun{a:t@ype}
 funheap_delmin (
-  hp: &heap (a), res: &a? >> opt (a, b), cmp: cmp a
+  hp: &heap (a), cmp: cmp a, res: &a? >> opt (a, b)
 ) :<> #[b:bool] bool b // end of [funheap_delmin]
 
 (* ****** ****** *)

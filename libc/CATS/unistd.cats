@@ -97,10 +97,7 @@ atslib_strarr_get (
 /* ****** ****** */
 
 #define atslib_sleep sleep
-
-ATSinline()
-ats_void_type // n >= 0
-atslib_usleep (ats_int_type n) { usleep (n) ; return ; }
+#define atslib_usleep usleep
 
 /* ****** ****** */
 

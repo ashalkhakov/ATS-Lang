@@ -339,13 +339,12 @@ void* gc_pthread_stubfun (void *data0) {
 /* ****** ****** */
 
 int gc_pthread_create (
-  ats_ptr_type f
-, ats_ptr_type env
-, pthread_t *pid_r
-, int detached
+  int detached
+, ats_ptr_type f, ats_ptr_type env
+, pthread_t *tid_r
 ) {
   void **data ;
-  pthread_t pid ; pthread_attr_t attr;
+  pthread_t tid ; pthread_attr_t attr;
   int ret ;
 //
   data = gc_man_malloc_bsz (2*sizeof(void*)) ;
@@ -354,12 +353,12 @@ int gc_pthread_create (
   if (detached) {
     pthread_attr_init (&attr);
     pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED) ;
-    ret = pthread_create (&pid, &attr, &gc_pthread_stubfun, data) ;
+    ret = pthread_create (&tid, &attr, &gc_pthread_stubfun, data) ;
   } else {
-    ret = pthread_create (&pid, NULL/*default*/, &gc_pthread_stubfun, data) ;
+    ret = pthread_create (&tid, NULL/*default*/, &gc_pthread_stubfun, data) ;
   } // end of [if]
   if (ret != 0) gc_man_free (data) ; // no thread is created due to error
-  if (pid_r) *pid_r = pid ;
+  if (tid_r) *tid_r = tid ;
   return ret ;
 } /* end of [gc_pthread_create] */
 

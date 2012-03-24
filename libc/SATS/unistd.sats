@@ -194,18 +194,21 @@ fun alarm_cancel {i:int}
 // end of [alarm_cancel]
 
 (* ****** ****** *)
-
-// [sleep] may be implemented using SIGARM
+//
+// HX: [sleep] may be implemented using SIGARM
+//
 fun sleep {i:nat}
-  (t: int i): [j:nat | j <= i] int j = "mac#atslib_sleep"
+  (t: uint i): [j:nat | j <= i] uint j = "mac#atslib_sleep"
 // end of [sleep]
 
 (* ****** ****** *)
 
 #define MILLION 1000000
+//
 // some systems require that the argument of usleep <= 1 million
-fun usleep
-  (n: natLte MILLION (*microseconds*)): void = "atslib_usleep" // !fun
+//
+fun usleep // succ/fail: 0/~1
+  (n: natLte MILLION(*microsec*)): int(*err*)= "mac#atslib_usleep"
 // end of [usleep]
 
 (* ****** ****** *)

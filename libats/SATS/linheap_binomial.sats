@@ -76,17 +76,17 @@ linheap_insert (
 
 fun{a:t@ype}
 linheap_getmin (
-  hp: !heap (a), res: &a? >> opt (a, b)
+  hp: !heap (a), cmp: cmp a, res: &a? >> opt (a, b)
 ) :<> #[b:bool] bool b // end of [linheap_getmin]
 
 fun{a:vt0p}
-linheap_getminptr (hp: !heap (a)):<> ptr
+linheap_getminptr (hp: !heap (a), cmp: cmp a):<> ptr
 
 (* ****** ****** *)
 
 fun{a:vt0p}
 linheap_delmin (
-  hp: &heap (a), res: &a? >> opt (a, b), cmp: cmp a
+  hp: &heap (a), cmp: cmp a, res: &a? >> opt (a, b)
 ) :<> #[b:bool] bool b // end of [linheap_delmin]
 
 (* ****** ****** *)

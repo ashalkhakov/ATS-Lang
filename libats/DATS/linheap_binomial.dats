@@ -229,43 +229,6 @@ bheap_bheap_merge
 
 (* ****** ****** *)
 
-fun{a:t@ype}
-bheap_find_min
-  {n:nat}{sz:pos} .<>. (
-  hp0: !bheap (a, n, sz), cmp: cmp a
-) :<> a = let
-//
-  fun find
-    {n:nat}{sz:nat} .<sz>. (
-    hp0: !bheap (a, n, sz), x0: &a, cmp: cmp a
-  ) :<> void =
-    case+ hp0 of
-    | bheap_cons (pf | !p_bt, !p_hp) => let
-        prval () = exp2_ispos (pf)
-        val btnode (_, !p_x, _) = !p_bt
-        val () = if compare_elt_elt<a> (x0, !p_x, cmp) > 0 then (x0 := !p_x)
-        prval () = fold@ (!p_bt)
-        val () = find (!p_hp, x0, cmp)
-        prval () = fold@ (hp0)
-      in
-        // nothing
-      end // end of [bheap_cons]
-    | bheap_nil () => fold@ (hp0)
-  (* end of [find] *)
-//
-  val+ bheap_cons
-    (pf0 | !p_bt0, !p_hp1) = hp0
-  val+ btnode (_, !p_x, _) = !p_bt0
-  var x0: a = !p_x
-  prval () = fold@ (!p_bt0)
-  val () = find (!p_hp1, x0, cmp)
-  prval () = fold@ (hp0)
-in
-  x0
-end // end of [bheap_find_min]
-
-(* ****** ****** *)
-
 local
 
 staload UN = "prelude/SATS/unsafe.sats"
@@ -274,12 +237,56 @@ staload _(*anon*) = "prelude/DATS/unsafe.dats"
 in // in of [local]
 
 fun{a:vt0p}
+bheap_find_minptr
+  {n:nat}{sz:pos} .<>. (
+  hp0: !bheap (a, n, sz), cmp: cmp a
+) :<> ptr = let
+//
+  fun find
+    {n:nat}{sz:nat}{l:addr} .<sz>. (
+    hp0: !bheap (a, n, sz), p_x0: ptr l, cmp: cmp a
+  ) :<> ptr =
+    case+ hp0 of
+    | bheap_cons (pf | !p_bt, !p_hp) => let
+        prval () = exp2_ispos (pf)
+        val btnode (_, !p_x, _) = !p_bt
+        prval (pfat, fpf) = __assert () where {
+          extern praxi __assert (): (a@l, a@l -<lin,prf> void)
+        } // end of [prval]
+        val sgn = compare_elt_elt<a> (!p_x0, !p_x, cmp)
+        prval () = fpf (pfat)
+        prval () = fold@ (!p_bt)
+        val res = (
+          if sgn > 0 then find (!p_hp, p_x, cmp) else find (!p_hp, p_x0, cmp)
+        ) : ptr // end of [val]
+        prval () = fold@ (hp0)
+      in
+        res
+      end // end of [bheap_cons]
+    | bheap_nil () => let
+        prval () = fold@ (hp0) in p_x0
+      end // end of [bheap_nil]
+  (* end of [find] *)
+//
+  val+ bheap_cons
+    (pf0 | !p_bt0, !p_hp1) = hp0
+  val+ btnode (_, !p_x0, _) = !p_bt0
+  prval () = fold@ (!p_bt0)
+  val res = find (!p_hp1, p_x0, cmp)
+  prval () = fold@ (hp0)
+in
+  res
+end // end of [bheap_find_minptr]
+
+(* ****** ****** *)
+
+fun{a:vt0p}
 bheap_remove_min
   {n:nat}{sz:pos} .<>. (
-  hp0: &bheap (a, n, sz)>> bheap (a, n1, sz-p)
+  hp0: &bheap (a, n, sz) >> bheap (a, n1, sz-p)
 , cmp: cmp a
 ) :<> #[
-  n1,n2,p:int | n1 >= n; n2 >= n;sz >= p
+  n1,n2,p:int | n1 >= n; n2 >= n; sz >= p
 ] (
   EXP2 (n2, p) | btree (a, n2)
 ) = let
@@ -325,7 +332,7 @@ bheap_remove_min
   , pos: int (pos)
   , btmin: &btree(a, 0)? >> btree (a, n2)
   ) :<> #[
-    n1,n2,p:int |n1 >= n; n2 >= n; sz >= p
+    n1,n2,p:int | n1 >= n; n2 >= n; sz >= p
   ] (
     EXP2 (n2, p) | void
   ) = let
@@ -443,8 +450,9 @@ end // end of [linheap_insert]
 (* ****** ****** *)
 
 implement{a}
-linheap_getmin (hp, res) = let
-  val p_min = linheap_getminptr (hp)
+linheap_getmin
+  (hp0, cmp, res) = let
+  val p_min = linheap_getminptr (hp0, cmp)
   val [l:addr] p_min = ptr1_of_ptr (p_min)
 in
 //
@@ -461,7 +469,7 @@ end // end of [if]
 end // end of [linheap_getmin]
 
 implement{a}
-linheap_getminptr (hp) = let
+linheap_getminptr (hp0, cmp) = let
 (*
 val () = (
   print ("linheap_getminptr: enter"); print_newline ()
@@ -469,18 +477,14 @@ val () = (
 *)
 in
 //
-case+ hp of
-| bheap_cons (
-    pf0 | !p_bt, _
-  ) => let
-    val btnode (_, !p_elt, _) = !p_bt
-    prval () = fold@ (!p_bt); prval () = fold@ (hp)
+case+ hp0 of
+| bheap_cons
+    (pf | _, _) => let
+    prval () = exp2_ispos (pf); prval () = fold@ (hp0)
   in
-    p_elt
+    bheap_find_minptr (hp0, cmp)
   end // end of [bheap_cons]
-| bheap_nil {a}{n} () => let
-    prval () = fold@ {a}{n} (hp) in null
-  end // end of [bheap_nil]
+| bheap_nil {a}{n} () => (fold@ {a}{n} (hp0); null)
 //
 end // end of [linheap_getminptr]
 
@@ -494,7 +498,7 @@ in // in of [local]
 
 implement{a}
 linheap_delmin
-  (hp, res, cmp) = let
+  (hp, cmp, res) = let
 (*
 val () = (
   print ("linheap_delmin: enter"); print_newline ()

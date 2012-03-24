@@ -50,9 +50,10 @@ staload _(*anon*) =
 
 (* ****** ****** *)
 
-staload PT = "libc/SATS/pthread.sats"
-stadef mutex = $PT.mutex_vt
-stadef cond = $PT.cond_vt
+staload
+PT = "libc/SATS/pthread.sats"
+stadef pthread_t = $PT.pthread_t
+stadef mutex = $PT.mutex_vt and cond = $PT.cond_vt
 
 (* ****** ****** *)
 
@@ -433,7 +434,8 @@ workshop_add_worker
       end // end of [status < 0]
   end // end of [val]
   val ws_new = workshop_ref (ws)
-  val err = $PT.pthread_create_detached {env} (worker, ws_new)
+  var tid: pthread_t // uninitialized
+  val err = $PT.pthread_create_detached {env} (worker, ws_new, tid)
   val () = if err > 0 then let
     // no new worker is added
     prval () = opt_unsome {env} (ws_new); val () = workshop_unref (ws_new)

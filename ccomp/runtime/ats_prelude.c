@@ -169,18 +169,16 @@ ats_funarg_match_failure_handle (
 
 ats_int_type
 ats_pthread_create_detached (
-  ats_ptr_type f // f(ats_ptr_type): void
-, ats_ptr_type env
+  ats_ptr_type f, ats_ptr_type env, ats_ref_type tid_r
 ) {
   int ret ;
 #ifdef _ATS_NGC
-  pthread_t pid ;
   pthread_attr_t attr;
   pthread_attr_init (&attr);
   pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED) ;
-  ret = pthread_create (&pid, &attr, f, env) ;
+  ret = pthread_create ((pthread_t*)tid_r, &attr, f, env) ;
 #elif _ATS_GCATS
-  ret = gc_pthread_create (f, env, NULL/*pid_r*/, 1/*detached*/) ;
+  ret = gc_pthread_create (1/*detached*/, f, env, tid_r) ;
 /*
   fprintf (stderr, "exit(ATS): there is no support for pthreads under GCATS.\n") ;
   exit (1) ;
@@ -189,11 +187,10 @@ ats_pthread_create_detached (
   fprintf (stderr, "exit(ATS): there is no support for pthreads under GCBDW.\n") ;
   exit (1) ;
 #else // _ATS_NGC is the default
-  pthread_t pid ;
   pthread_attr_t attr;
   pthread_attr_init (&attr);
   pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED) ;
-  ret = pthread_create (&pid, &attr, f, env) ;
+  ret = pthread_create ((pthread_t*)tid_r, &attr, f, env) ;
 #endif // end of [#ifdef]
   return ret ;
 } // end of [ats_pthread_create_detached]

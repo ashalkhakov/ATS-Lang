@@ -96,41 +96,50 @@ fun pthread_attr_destroy_exn
 fun pthread_create (
   tid: &pthread_t? >> pthread_t
 , attr: &pthread_attr_t
-, fthread: ptr -> ptr
-, arg: ptr
+, f: ptr -> ptr, arg: ptr
 ) : int = "mac#atslib_pthread_create"
 // end of [pthread_create]
 
 (* ****** ****** *)
 
-fun pthread_join
-  (tid: pthread_t, status: &ptr? >> ptr): int = "mac#atslib_pthread_join"
+fun pthread_join (
+  tid: pthread_t
+, status: &ptr? >> ptr
+) : int = "mac#atslib_pthread_join"
 // end of [pthread_join]
 
 (* ****** ****** *)
 //
-// HX: this one is implemented in [$ATSHOME/ccomp/runtime/ats_prelude.c]
+// HX: it implemented in [$ATSHOME/ccomp/runtime/ats_prelude.c]
 //
-fun pthread_create_detached {vt:viewtype}
-  (f: (vt) -<fun1> void, env: !vt >> opt (vt, i > 0)): #[i:nat] int i
-  = "ats_pthread_create_detached"
+fun pthread_create_detached
+  {vt:viewtype} (
+  f: (vt) -<fun1> void
+, env: !vt >> opt (vt, i > 0)
+, tid: &pthread_t? >> pthread_t
+) : #[i:nat] int i = "ats_pthread_create_detached"
 // end of [pthread_create_detached]
 
 //
 // HX: [pthread_create_detached_exn] is implemented in
 // [$ATSHOME/libc/DATS/pthread.dats]
 //
-fun pthread_create_detached_exn {vt:viewtype}
-  (f: (vt) -<fun1> void, env: vt): void // env is to be processed by f
+fun pthread_create_detached_exn
+  {vt:viewtype} (
+  f: (vt) -<fun1> void, env: vt, tid: &pthread_t? >> pthread_t
+) : void // env is to be processed by f
 // end of [pthread_create_detached_exn]
 
 //
 // HX: [pthread_create_detached_cloptr] is implemented in
 // [$ATSHOME/libc/DATS/pthread.dats]
 //
-fun pthread_create_detached_cloptr
-  (f: () -<lincloptr1> void): void // HX: closure is freed to avoid leak!
-// end of [pthread_create_detached_cloptr]
+fun pthread_create_detached_cloptr (
+//
+// HX: closure is freed to avoid leak!
+//
+  f: () -<lincloptr1> void, tid: &pthread_t? >> pthread_t
+) : void // end of [pthread_create_detached_cloptr]
 
 (* ****** ****** *)
 //
