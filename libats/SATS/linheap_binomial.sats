@@ -62,15 +62,32 @@ fun{a:vt0p} linheap_size (hp: !heap a): size_t
 
 (* ****** ****** *)
 
+fun linheap_is_empty {a:vt0p} (hp: !heap (a)):<> bool
+fun linheap_isnot_empty {a:vt0p} (hp: !heap (a)):<> bool
+
+(* ****** ****** *)
+
 fun{a:vt0p}
-linheap_insert (hp: &heap (a), x: a, cmp: cmp a):<> void
+linheap_insert (
+  hp: &heap (a), x: a, cmp: cmp a
+) :<> void // end of [linheap_insert]
+
+(* ****** ****** *)
+
+fun{a:t@ype}
+linheap_getmin (
+  hp: !heap (a), res: &a? >> opt (a, b)
+) :<> #[b:bool] bool b // end of [linheap_getmin]
+
+fun{a:vt0p}
+linheap_getminptr (hp: !heap (a)):<> ptr
 
 (* ****** ****** *)
 
 fun{a:vt0p}
 linheap_delmin (
   hp: &heap (a), res: &a? >> opt (a, b), cmp: cmp a
-) :<> #[b:bool] bool b // end of [linheap_delim]
+) :<> #[b:bool] bool b // end of [linheap_delmin]
 
 (* ****** ****** *)
 

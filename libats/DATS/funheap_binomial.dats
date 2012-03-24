@@ -337,13 +337,52 @@ end // end of [funheap_insert]
 
 (* ****** ****** *)
 
+implement
+funheap_is_empty {a} (hp) = (
+  case+ hp of
+  | bheap_cons (_ | _, _) => false | bheap_nil () => true
+) // end of [funheap_is_empty]
+
+implement
+funheap_isnot_empty {a} (hp) = (
+  case+ hp of
+  | bheap_cons (_ | _, _) => true | bheap_nil () => false
+) // end of [funheap_isnot_empty]
+
+(* ****** ****** *)
+
+implement{a}
+funheap_getmin
+  (hp, res) = let
+(*
+val () = (
+  print ("funheap_getmin: enter"); print_newline ()
+) // end of [val]
+*)
+in
+//
+case+ hp of
+| bheap_cons
+    (_ | bt, _) => let
+    val btnode (_, x, _) = bt
+    val () = res := x
+    prval () = opt_some {a} (res) in true
+  end // end of [bheap_cons]
+| bheap_nil () => let
+    prval () = opt_none {a} (res) in false
+  end // end of [bheap_nil]
+//
+end // end of [funheap_getmin]
+
+(* ****** ****** *)
+
 implement{a}
 funheap_delmin
   (hp, res, cmp) = let
 (*
-  val () = (
-    print ("funheap_delmin: enter"); print_newline ()
-  ) // end of [val]
+val () = (
+  print ("funheap_delmin: enter"); print_newline ()
+) // end of [val]
 *)
 in
 //

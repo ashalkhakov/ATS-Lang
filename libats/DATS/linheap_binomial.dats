@@ -416,6 +416,22 @@ end // end of [local]
 
 (* ****** ****** *)
 
+implement
+linheap_is_empty {a} (hp) = (
+  case+ hp of
+  | bheap_cons (_ | _, _) => (fold@ (hp); false)
+  | bheap_nil {a}{n} () => (fold@ {a}{n} (hp); true)
+) // end of [linheap_is_empty]
+
+implement
+linheap_isnot_empty {a} (hp) = (
+  case+ hp of
+  | bheap_cons (_ | _, _) => (fold@ (hp); true)
+  | bheap_nil {a}{n} () => (fold@ {a}{n} (hp); false)
+) // end of [linheap_isnot_empty]
+
+(* ****** ****** *)
+
 implement{a}
 linheap_insert
   (hp, x0, cmp) = let
@@ -423,6 +439,50 @@ linheap_insert
 in
   hp := btree_bheap_merge (EXP2bas () | bt, 0, hp, cmp)
 end // end of [linheap_insert]
+
+(* ****** ****** *)
+
+implement{a}
+linheap_getmin (hp, res) = let
+  val p_min = linheap_getminptr (hp)
+  val [l:addr] p_min = ptr1_of_ptr (p_min)
+in
+//
+if p_min > null then let
+  prval (pf, fpf) = __assert () where {
+    extern praxi __assert (): (a @ l, a @ l -<lin,prf> void)
+  } // end of [prval]
+  val () = res := !p_min
+  prval () = fpf (pf)
+  prval () = opt_some {a} (res) in true
+end else let
+  prval () = opt_none {a} (res) in false
+end // end of [if]
+end // end of [linheap_getmin]
+
+implement{a}
+linheap_getminptr (hp) = let
+(*
+val () = (
+  print ("linheap_getminptr: enter"); print_newline ()
+) // end of [val]
+*)
+in
+//
+case+ hp of
+| bheap_cons (
+    pf0 | !p_bt, _
+  ) => let
+    val btnode (_, !p_elt, _) = !p_bt
+    prval () = fold@ (!p_bt); prval () = fold@ (hp)
+  in
+    p_elt
+  end // end of [bheap_cons]
+| bheap_nil {a}{n} () => let
+    prval () = fold@ {a}{n} (hp) in null
+  end // end of [bheap_nil]
+//
+end // end of [linheap_getminptr]
 
 (* ****** ****** *)
 
@@ -436,9 +496,9 @@ implement{a}
 linheap_delmin
   (hp, res, cmp) = let
 (*
-  val () = (
-    print ("linheap_delmin: enter"); print_newline ()
-  ) // end of [val]
+val () = (
+  print ("linheap_delmin: enter"); print_newline ()
+) // end of [val]
 *)
 in
 //

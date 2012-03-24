@@ -58,6 +58,11 @@ fun{a:t@ype} funheap_size (hp: heap a): size_t
 
 (* ****** ****** *)
 
+fun funheap_is_empty {a:t@ype} (hp: heap (a)):<> bool
+fun funheap_isnot_empty {a:t@ype} (hp: heap (a)):<> bool
+
+(* ****** ****** *)
+
 fun{a:t@ype}
 funheap_insert
   (hp: &heap (a), x: a, cmp: cmp a):<> void
@@ -66,9 +71,16 @@ funheap_insert
 (* ****** ****** *)
 
 fun{a:t@ype}
+funheap_getmin (
+  hp: heap (a), res: &a? >> opt (a, b)
+) :<> #[b:bool] bool b // end of [funheap_getmin]
+
+(* ****** ****** *)
+
+fun{a:t@ype}
 funheap_delmin (
   hp: &heap (a), res: &a? >> opt (a, b), cmp: cmp a
-) :<> #[b:bool] bool b // end of [funheap_delim]
+) :<> #[b:bool] bool b // end of [funheap_delmin]
 
 (* ****** ****** *)
 
