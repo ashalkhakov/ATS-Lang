@@ -142,7 +142,7 @@ fun loop_depths
     val () = pthread_create_detached_cloptr (
       lam () =<lin,cloptr1> worker
         (pf_n, pf_d, pf_c | tick, p_n, p_d, p_c, d, max_depth)
-    , tid // pthread id
+    , tid // HX: for storing the id of the created pthread
     ) // end of [pthread_create_detached_cloptr]
     val () = res := locklst_cons (p_n, p_d, p_c, lock, ?)
     val+ locklst_cons (_, _, _, _, !res1) = res

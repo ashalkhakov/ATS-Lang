@@ -200,7 +200,8 @@ fun fannkuch_locklst_gen (sz: int): locklst = let
       var tid: pthread_t // uninitialized
       val () = pthread_create_detached_cloptr (
         lam () =<lin,cloptr1> fannkuch_worker
-          (pf_a, pf_C, pf_P, pf_S | tick, p_a, p_C, p_P, p_S, sz, i), tid
+          (pf_a, pf_C, pf_P, pf_S | tick, p_a, p_C, p_P, p_S, sz, i)
+      , tid // HX: for storing the id of the created pthread
       ) // end of [pthread_create_detached_cloptr]
       val () = res := locklst_cons (p_a, p_C, p_P, p_S, lock, ?)
       val+ locklst_cons (_, _, _, _, _, !res1) = res
