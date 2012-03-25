@@ -266,14 +266,10 @@ libats_lex.o: \
 
 ######
 
-%_sats.o: %.sats
-	$(ATSCC) $(ATSCCFLAGS) -c $<
+%_lats.dats: %.lats ; $(ATSLEX) < $< > $@
 
-%_dats.o: %.dats
-	$(ATSCC) $(ATSCCFLAGS) -c $<
-
-%_lats.dats: %.lats
-	$(ATSLEX) < $< > $@
+%_sats.o: %.sats ; $(ATSCC) $(ATSCCFLAGS) -c $<
+%_dats.o: %.dats ; $(ATSCC) $(ATSCCFLAGS) -c $<
 
 ######
 
