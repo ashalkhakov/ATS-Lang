@@ -377,8 +377,8 @@ workshop_unref {a} {l} (ws) = () where {
 //
 // HX:
 // return status >  0 : continue
-// return status =  0 : quit
-// return status = ~1 : pause
+// return status =  0 : quit // nworker decreases by 1
+// return status = ~1 : pause // it can be resumed later
 //
 implement{a}
 workshop_add_worker
@@ -490,7 +490,6 @@ workshop_insert_work {l} (ws, wk) = let
         workshop_get_WSmut {a} {l} (pf_ws | p_ws)
       val [l_ful:addr] (pf_ful, fpf_ful | p_ful) = 
         workshop_get_WQful {a} {l} (pf_ws | p_ws)
-      viewdef V_mut = mutex (WORKSHOP a @ l) @ l_mut
       val _err = $PT.pthread_cond_wait {V_ws} (pf_ws | !p_ful, !p_mut)
       prval () = minus_addback (fpf_mut, pf_mut | p1_ws)
       prval () = minus_addback (fpf_ful, pf_ful | p1_ws)
@@ -548,7 +547,6 @@ workshop_remove_work {l} (ws) = let
         pf_emp, fpf_emp | p_emp
       ) = 
         workshop_get_WQemp {a} {l} (pf_ws | p_ws)
-      viewdef V_mut = mutex (WORKSHOP a @ l) @ l_mut
       val _err = $PT.pthread_cond_wait {V_ws} (pf_ws | !p_emp, !p_mut)
       prval () = minus_addback (fpf_mut, pf_mut | p1_ws)
       prval () = minus_addback (fpf_emp, pf_emp | p1_ws)

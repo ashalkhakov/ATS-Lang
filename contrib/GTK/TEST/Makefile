@@ -39,7 +39,7 @@ test02: gtk-test02.dats ; $(ATSCC) -o $@ $< $(GTKFLAGS)
 cleanall:: ; $(RMF) test02
 
 checkall:: test03
-test03: gtk-test03.dats ; $(ATSCC) -o $@ $< $(GTKFLAGS)
+test03: gtk-test03.dats ; $(ATSCC) -o $@ $< $(GTKFLAGS) $(ATSGTKLIB)
 cleanall:: ; $(RMF) test03
 
 checkall:: test04

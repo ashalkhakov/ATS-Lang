@@ -34,17 +34,54 @@
 //
 (* ****** ****** *)
 
-fun gtk_main (): void = "mac#atsctrb_gtk_main"
-fun gtk_main_level (): guint = "mac#atsctrb_gtk_main_level"
+fun gtk_main
+  (): void = "mac#atsctrb_gtk_main"
+// end of [gtk_main]
+
+fun gtk_main_level
+  (): guint = "mac#atsctrb_gtk_main_level"
+// end of [gtk_main_level]
+
+(*
+// gtk_main_iteration(): gtk_main_iteration_do(TRUE)
+*)
+fun gtk_main_iteration
+  (): gboolean = "mac#gtk_main_iteration"
+fun gtk_main_iteration_do
+  (blocking: gboolean): gboolean = "mac#gtk_main_iteration_do"
+// end of [gtk_main_iteration_do]
+
 fun gtk_main_quit (): void = "mac#atsctrb_gtk_main_quit"
 
 (* ****** ****** *)
 
-fun gtk_timeout_add (
-  interval: guint32, f: GtkFunction, data: gpointer
+fun gtk_init_add (
+  f: GtkFunction, data: gpointer
+) : void = "mac#gtk_init_add" // end of [gtk_init_add]
+
+fun gtk_quit_add (
+  level: guint, f: GtkFunction, data: gpointer
+) : guint = "mac#gtk_quit_add" // end of [gtk_quit_add]
+
+(* ****** ****** *)
+
+#ifndef
+GTK_DISABLE_DEPRECATED
+#then
+
+fun
+gtk_timeout_add (
+  interval: guint32
+, f: GtkFunction, data: gpointer
 ) : guint
   = "mac#atsctrb_gtk_timeout_add"
 // end of [gtk_timeout_add]
+
+fun gtk_timeout_remove
+  (id: guint): void = "mac#gtk_timeout_remove"
+// end of [gtk_timeout_remove]
+
+#endif // end of [...]
 
 (* ****** ****** *)
 

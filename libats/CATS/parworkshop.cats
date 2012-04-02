@@ -51,6 +51,7 @@
 /* ****** ****** */
 
 typedef struct {
+//
   pthread_mutex_t WSmut ;
 //
   atslib_linqueue_arr_QUEUE WQ ;
