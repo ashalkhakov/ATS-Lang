@@ -65,6 +65,12 @@ fun gtk_quit_add (
 
 (* ****** ****** *)
 
+fun gtk_events_pending
+  ((*none*)): gboolean = "mac#gtk_events_pending"
+// end of [gtk_events_pending]
+
+(* ****** ****** *)
+
 #ifndef
 GTK_DISABLE_DEPRECATED
 #then
