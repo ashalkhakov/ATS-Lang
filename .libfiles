@@ -352,7 +352,7 @@ libats/DATS/linset_listord.dats
 /*
 ** linear ordset implementation based on randomized bstrees
 ** note that the flag __USE_MISC needs to be set in order to
-** gain access to struct drand48_data
+** gain access to the type 'struct drand48_data'
 */
 libats/SATS/linordset_randbst.sats -D_XOPEN_SOURCE -D_BSD_SOURCE
 libats/DATS/linordset_randbst.dats -D_XOPEN_SOURCE -D_BSD_SOURCE
