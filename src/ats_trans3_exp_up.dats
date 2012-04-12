@@ -918,7 +918,9 @@ in
     ) => begin
     case+ d2ess_ind of
     | cons (d2es_ind, nil ()) => let
-        val loc_arg = $Loc.location_combine (d2e_arr.d2exp_loc, d2e_r.d2exp_loc)
+        val loc_arg =
+          $Loc.location_combine (d2e_arr.d2exp_loc, d2e_r.d2exp_loc)
+        // end of [val]
         val d2es_arg = cons (d2e_arr, $Lst.list_extend (d2es_ind, d2e_r))
         val d2a = D2EXPARGdyn (loc_arg, 0, d2es_arg)
       in
@@ -1127,12 +1129,12 @@ in
           val () = the_effect_env_check_ref
             (loc0) // HX: read from a reference is effectful
           val () = if s2exp_is_linear s2e_elt then let // linearity checking
-              val () = prerr_loc_error3 (d2e0.d2exp_loc)
-              val () = prerr ": a reference to a linear value cannot be accessed directly."
-              val () = prerr_newline ()
-            in
-              $Err.abort {void} ()
-            end // end of [if]
+            val () = prerr_loc_error3 (d2e0.d2exp_loc)
+            val () = prerr ": a reference to a linear value cannot be accessed directly."
+            val () = prerr_newline ()
+          in
+            $Err.abort {void} ()
+          end // end of [if]
         in
           d3exp_sel_ptr (loc0, s2e_elt, d3e0, nil ())
         end // end of [Some_vt]
@@ -2048,7 +2050,8 @@ val d3e0 = (case+ d2e0.d2exp_node of
         d2exp_apps_tr_up (d3e_fun, d2as_arg)
       end // end of [_]
     end // end of [D2Eapps]
-  | D2Earrsize (os2e_elt, d2es_elt) => let
+  | D2Earrsize
+      (os2e_elt, d2es_elt) => let
       val sz = $Lst.list_length d2es_elt
       val s2e_elt = (case+ os2e_elt of
         | Some s2e => s2e | None () => let
@@ -2062,7 +2065,9 @@ val d3e0 = (case+ d2e0.d2exp_node of
     in
       d3exp_arrsize (loc0, s2e_arrsz, s2e_elt, d3es_elt)
     end // end of [D2Earrsize]
-  | D2Earrsub (d2s_brackets, d2e_arr, loc_ind, d2ess_ind) => begin
+  | D2Earrsub (
+      d2s_brackets, d2e_arr, loc_ind, d2ess_ind
+    ) => begin
       if d2exp_var_cst_is_ptr d2e_arr then let
         val d2l = d2lab_ind (loc_ind, d2ess_ind)
       in

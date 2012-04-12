@@ -263,6 +263,7 @@ fun sec_changed
   prval () = opt_unsome {tm_struct} (tm)
   val sd = tm.tm_sec
   val sd_old = !theLastSec
+  val () = !theLastSec := sd
 in
   sd <> sd_old
 end // end of [sec_changed]

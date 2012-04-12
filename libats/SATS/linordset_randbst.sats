@@ -116,9 +116,11 @@ viewtypedef rngobj = rngobj_viewtype
 
 fun linordset_rngobj_make_drand48
   ():<> rngobj = "atslib_linordset_rngobj_make_drand48"
+// end of [linordset_rngobj_make_drand48]
 
 fun linordset_rngobj_free
   (obj: rngobj):<> void = "atslib_linordset_rngobj_free"
+// end of [linordset_rngobj_free]
 
 (* ****** ****** *)
 

@@ -217,7 +217,11 @@ padding-top: 6px ;
 <table>
 <tr>
 <td style="width: 100%;">
-This page is maintained by
+This page is created with
+#ulink("http://www.ats-lang.org", "ATS")
+by
+#ulink("http://www.cs.bu.edu/~hwxi/", "Hongwei Xi")
+and also maintained by
 #ulink("http://www.cs.bu.edu/~hwxi/", "Hongwei Xi").
 </td>
 <td style="width: 0%;"><!--pushed to the right-->

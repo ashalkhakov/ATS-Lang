@@ -53,11 +53,13 @@ staload "ats_trans3.sats"
 
 (* ****** ****** *)
 
-overload prerr with $Loc.prerr_location
+macdef prerr_location = $Loc.prerr_location
 
 (* ****** ****** *)
 
-implement s2exp_addr_deref_slablst (loc0, s2e0, s2ls) = let
+implement
+s2exp_addr_deref_slablst
+  (loc0, s2e0, s2ls) = let
   val @(s2r0, s2ls0_ft) = s2exp_addr_normalize s2e0
   val s2ls = $Lst.list_append (s2ls0_ft, s2ls)
 in
@@ -97,14 +99,16 @@ in
       (s2e_elt, s2ls0_bk)
     end // end of [Some_vt]
   | ~None_vt () => let
-      fun aux (s2ls: s2lablst): void = begin
+      fun aux (
+        s2ls: s2lablst
+      ) : void = begin
         case+ s2ls of
-        | list_cons (s2l, s2ls) => (prerr "."; prerr_s2lab s2l; aux s2ls)
+        | list_cons (s2l, s2ls) =>
+            (prerr "."; prerr_s2lab s2l; aux s2ls)
         | list_nil () => ()
       end // end of [aux]
     in
-      prerr loc0;
-      prerr ": error(3)";
+      prerr_location loc0; prerr ": error(3)";
       prerr ": there is no view at ["; prerr s2r0; aux s2ls; prerr "]";
       prerr_newline ();
       $Err.abort ()
