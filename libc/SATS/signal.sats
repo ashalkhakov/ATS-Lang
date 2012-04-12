@@ -118,8 +118,8 @@ fun sigismember // 0/1/-1 : false/true/error // errno set: EINVAL
 abst@ype sigmaskhow_t = int
 
 macdef SIG_BLOCK = $extval (sigmaskhow_t, "SIG_BLOCK")
+macdef SIG_UNBLOCK = $extval (sigmaskhow_t, "SIG_UNBLOCK")
 macdef SIG_SETMASK = $extval (sigmaskhow_t, "SIG_SETMASK")
-macdef SIG_NONBLOCK = $extval (sigmaskhow_t, "SIG_NONBLOCK")
 
 /* ****** ****** */
 
