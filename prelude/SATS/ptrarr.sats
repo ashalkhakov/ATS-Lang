@@ -41,14 +41,37 @@
 //
 // HX-2010-10-14: this accurately describes [ptrarr]:
 //
+typedef Ptr1 = [l:agz] ptr (l)
 dataview ptrarr_v (n:int, l:addr) =
   | {l:addr} ptrarr_v_nil (0, l) of ptr(null) @ l
   | {l:addr} ptrarr_v_cons (n+1, l) of (Ptr1 @ l, ptrarr_v (n, l+sizeof(ptr)))
 // end of [ptrarr_v]
 *)
-abst@ype ptrarr (n:int) = array (ptr, n)
+abst@ype ptrarr (n:int) = array (ptr, n+1)
 
-praxi ptrarr_takeout {vt:viewtype}
+(* ****** ****** *)
+
+praxi
+ptrarr_nil {l:addr} (pf: ptr null @ l): ptrarr (0) @ l
+praxi
+ptrarr_unnil {l:addr} (pf: ptrarr (0) @ l): ptr null @ l
+
+(* ****** ****** *)
+
+praxi
+ptrarr_cons
+  {n:pos}{l:addr} (
+  pf1: Ptr1 @ l, pf2: ptrarr (n-1) @ l+sizeof(ptr)
+) : ptrarr (n) @ l // end of [ptrarr_cons]
+praxi
+ptrarr_uncons {n:pos}{l:addr}
+  (pf: ptrarr (n) @ l): (Ptr1 @ l, ptrarr (n-1) @ l+sizeof(ptr))
+// end of [ptrarr_uncons]
+
+(* ****** ****** *)
+
+praxi
+ptrarr_takeout {vt:viewtype}
   {n:nat} {l:addr} (pf: ptrarr(n) @ l): (
   array_v (vt, n, l), array_v (vt, n, l) -<lin,prf> ptrarr(n) @ l
 ) // end of [ptrarr_takeout]
