@@ -95,4 +95,4 @@ fun fprint_webox_html (out: FILEref, x: webox): void // recursive
 
 (* ****** ****** *)
 
-(* end of [weboxlayout.dats] *)
+(* end of [weboxlayout.sats] *)

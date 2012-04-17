@@ -8,8 +8,8 @@
 
 /*
 ** ATS - Unleashing the Potential of Types!
-**
-** Copyright (C) 2002-2008 Hongwei Xi.
+** Copyright (C) 2002-2008 Hongwei Xi, Boston University
+** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
 ** the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by the
@@ -291,9 +291,9 @@ atspre_fscan_int_exn (
 ) {
   int n ;
   n = fscanf ((FILE*)inp, "%d", (int*)r) ;
-  if (n < 1) {
+  if (n <= 0) {
     ats_exit_errmsg (n, (ats_ptr_type)"exit(ATS): [fscan_int_exn] failed.\n") ;
-  }
+  } // end of [if]
   return ;
 } /* end of [atspre_fscan_int_exn] */
 

@@ -54,6 +54,11 @@ prelude_float: prelude_float.dats
 	$(ATSCC) -O2 -o $@ $< && ./prelude_float
 cleanall:: ; $(RMF) prelude_float
 
+checkall:: prelude_integer
+prelude_integer: prelude_integer.dats
+	$(ATSCC) -O2 -o $@ $< && ./prelude_integer
+cleanall:: ; $(RMF) prelude_integer
+
 checkall:: prelude_lazy_vt
 prelude_lazy_vt: prelude_lazy_vt.dats
 	$(ATSCC) -O2 -o $@ $< && ./prelude_lazy_vt
