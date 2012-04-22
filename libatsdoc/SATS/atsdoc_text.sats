@@ -53,8 +53,8 @@ datatype text =
   | TEXTapptxt3 of (text, text, text) // text concatenation
   | TEXTappstr3 of (string, string, string) // string concatenation
 //
-  | TEXTcontxt of textlst // text concatenation
-  | TEXTcontxtsep of (textlst, text(*sep*)) // text concatenation with separator
+  | TEXTconcatxt of textlst // text concatenation
+  | TEXTconcatxtsep of (textlst, text(*sep*)) // text concatenation with separator
 // end of [text]
 
 where

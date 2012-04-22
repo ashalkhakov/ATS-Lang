@@ -440,8 +440,8 @@ fprint_text (out, x) =
       val () = fprint_string (out, x3)
     }
 //
-  | TEXTcontxt (xs) => fprint_textlst (out, xs)
-  | TEXTcontxtsep (xs, sep) => fprint_textlst_sep (out, xs, sep)
+  | TEXTconcatxt (xs) => fprint_textlst (out, xs)
+  | TEXTconcatxtsep (xs, sep) => fprint_textlst_sep (out, xs, sep)
 //
 (* end of [fprint_text] *)
 
@@ -666,7 +666,7 @@ in
   // nothing
 end // end of [if]
 //
-end // end of [
+end // end of [fprint_filsub]
 
 (* ****** ****** *)
 

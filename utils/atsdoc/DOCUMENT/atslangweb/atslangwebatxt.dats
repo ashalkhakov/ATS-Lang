@@ -241,7 +241,7 @@ fn mysitelinks (current: string) = let
   val sep = strcst ("<span class=\"separator\"> | </span>")
 //
 in
-  TEXTcontxtsep (xs, sep)
+  TEXTconcatxtsep (xs, sep)
 end // end of [mysitelinks]
 
 (* ****** ****** *)

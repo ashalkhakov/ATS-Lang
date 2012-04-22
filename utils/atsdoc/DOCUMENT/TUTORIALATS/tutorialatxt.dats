@@ -31,7 +31,7 @@ fun itemizedlist
   val opn = TEXTstrcst "<itemizedlist>\n"
   val cls = TEXTstrcst "\n</itemizedlist>"
 in
-  TEXTapptxt3 (opn, TEXTcontxtsep (xs, TEXTnewline), cls)
+  TEXTapptxt3 (opn, TEXTconcatxtsep (xs, TEXTnewline), cls)
 end
 //
 (* ****** ****** *)
