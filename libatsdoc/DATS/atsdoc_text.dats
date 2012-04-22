@@ -80,6 +80,43 @@ macdef neof (i) = (,(i) != EOF)
 
 (* ****** ****** *)
 
+datatype atext =
+//
+  | ATEXTnil of () // empty text
+//
+  | ATEXTstrcst of string // string constants
+  | ATEXTstrsub of string // strings containing marked tokens
+//
+  | ATEXTapptxt2 of (atext, atext) // text concatenation
+  | ATEXTappstr2 of (string, string) // string concatenation
+//
+  | ATEXTapptxt3 of (atext, atext, atext) // text concatenation
+  | ATEXTappstr3 of (string, string, string) // string concatenation
+//
+  | ATEXTconcatxt of atextlst // text concatenation
+  | ATEXTconcatxtsep of (atextlst, atext(*sep*)) // text concatenation with separator
+// end of [atext]
+
+where stringlst = List (string)
+
+(* ****** ****** *)
+
+assume atext_type = atext
+
+(* ****** ****** *)
+
+implement atext_nil () = ATEXTnil ()
+implement atext_strcst (x) = ATEXTstrcst (x)
+implement atext_strsub (x) = ATEXTstrsub (x)
+implement atext_apptxt2 (x1, x2) = ATEXTapptxt2 (x1, x2)
+implement atext_appstr2 (x1, x2) = ATEXTappstr2 (x1, x2)
+implement atext_apptxt3 (x1, x2, x3) = ATEXTapptxt3 (x1, x2, x3)
+implement atext_appstr3 (x1, x2, x3) = ATEXTappstr3 (x1, x2, x3)
+implement atext_concatxt (xs) = ATEXTconcatxt (xs)
+implement atext_concatxtsep (xs, sep) = ATEXTconcatxtsep (xs, sep)
+
+(* ****** ****** *)
+
 local
 
 staload
@@ -233,12 +270,12 @@ in
     val _err = fclose_err (filr)
   in
     if strptr_isnot_null (res) then
-      TEXTstrcst ((string_of_strptr)res)
+      ATEXTstrcst ((string_of_strptr)res)
     else let
-      val () = strptr_free (res) in TEXTnil ()
+      val () = strptr_free (res) in ATEXTnil ()
     end (* end of [if] *)
   end else let
-    prval None_v () = pfopt in TEXTnil ()
+    prval None_v () = pfopt in ATEXTnil ()
   end (* end of [if] *)
 end // end of [filename2text]
 
@@ -259,7 +296,7 @@ if strptr_isnot_null (path) then let
 in
   text
 end else let
-  val _null = strptr_free_null (path) in TEXTnil ()
+  val _null = strptr_free_null (path) in ATEXTnil ()
 end // end of [if]
 //
 end // end of [atscode2xml_strcode]
@@ -341,12 +378,12 @@ if fd >= 0 then let
   val () = strptr_free (tmp)
 in
   if strptr_isnot_null (res) then let
-    val res = string_of_strptr (res) in TEXTstrcst (res)
+    val res = string_of_strptr (res) in ATEXTstrcst (res)
   end else let
-    val () = strptr_free (res) in TEXTnil ()
+    val () = strptr_free (res) in ATEXTnil ()
   end // end of [if]
 end else let
-  prval $F.open_v_fail () = pfopt; val () = strptr_free (tmp) in TEXTnil ()
+  prval $F.open_v_fail () = pfopt; val () = strptr_free (tmp) in ATEXTnil ()
 end // end of [if]
 //
 end // end of [atscode2xml_filcode]
@@ -381,10 +418,10 @@ atscc_posmark_html_body_exec (
 local
 
 viewtypedef
-textmap = symmap (text)
+atextmap = symmap (atext)
 
 val map0 = symmap_make_nil ()
-val theTextMap = ref<textmap> (map0)
+val theTextMap = ref<atextmap> (map0)
 
 in // in of [local]
 
@@ -412,51 +449,54 @@ end // end of [local]
 (* ****** ****** *)
 
 implement
-fprint_text (out, x) =
+fprint_atext (out, x) =
   case+ x of
 //
-  | TEXTnil () => ()
+  | ATEXTnil () => ()
 //
-  | TEXTstrcst (str) => fprint_string (out, str)
-  | TEXTstrsub (sub) => fprint_strsub (out, sub)
+  | ATEXTstrcst (str) => fprint_string (out, str)
+  | ATEXTstrsub (sub) => fprint_strsub (out, sub)
 //
-  | TEXTapptxt2 (x1, x2) => {
-      val () = fprint_text (out, x1)
-      val () = fprint_text (out, x2)
+  | ATEXTapptxt2 (x1, x2) => {
+      val () = fprint_atext (out, x1)
+      val () = fprint_atext (out, x2)
     }
-  | TEXTappstr2 (x1, x2) => {
+  | ATEXTappstr2 (x1, x2) => {
       val () = fprint_string (out, x1)
       val () = fprint_string (out, x2)
     }
 //
-  | TEXTapptxt3 (x1, x2, x3) => {
-      val () = fprint_text (out, x1)
-      val () = fprint_text (out, x2)
-      val () = fprint_text (out, x3)
+  | ATEXTapptxt3 (x1, x2, x3) => {
+      val () = fprint_atext (out, x1)
+      val () = fprint_atext (out, x2)
+      val () = fprint_atext (out, x3)
     }
-  | TEXTappstr3 (x1, x2, x3) => {
+  | ATEXTappstr3 (x1, x2, x3) => {
       val () = fprint_string (out, x1)
       val () = fprint_string (out, x2)
       val () = fprint_string (out, x3)
     }
 //
-  | TEXTconcatxt (xs) => fprint_textlst (out, xs)
-  | TEXTconcatxtsep (xs, sep) => fprint_textlst_sep (out, xs, sep)
+  | ATEXTconcatxt (xs) => fprint_atextlst (out, xs)
+  | ATEXTconcatxtsep (xs, sep) => fprint_atextlst_sep (out, xs, sep)
 //
-(* end of [fprint_text] *)
+(* end of [fprint_atext] *)
 
 implement
-fprint_textlst (out, xs) =
-  list_app_cloptr<text> (xs, lam (x) =<1> fprint_text (out, x))
-// end of [fprint_textlst]
+fprint_atextlst (out, xs) =
+  list_app_cloptr<atext> (xs, lam (x) =<1> fprint_atext (out, x))
+// end of [fprint_atextlst]
 
 implement
-fprint_textlst_sep (out, xs, sep) = let
-  fun loop (xs: textlst, i: int):<cloref1> void =
+fprint_atextlst_sep
+  (out, xs, sep) = let
+  fun loop (
+    xs: atextlst, i: int
+  ) :<cloref1> void =
     case+ xs of
     | list_cons (x, xs) => let
-        val () = if i > 0 then fprint_text (out, sep)
-        val () = fprint_text (out, x)
+        val () = if i > 0 then fprint_atext (out, sep)
+        val () = fprint_atext (out, x)
       in
         loop (xs, i+1)
       end // end of [list_cons]
@@ -464,7 +504,7 @@ fprint_textlst_sep (out, xs, sep) = let
   // end of [loop]
 in
   loop (xs, 0)
-end // end of [fprint_textlst]
+end // end of [fprint_atextlst]
 
 (* ****** ****** *)
 
@@ -536,7 +576,7 @@ in
     val sym = symbol_make_string (id)
     val ans = theTextMap_search (sym)
     val () = (case+ ans of
-      | ~Some_vt xt => fprint_text (out, xt)
+      | ~Some_vt xt => fprint_atext (out, xt)
       | ~None_vt () => fprintf (out, "#%s$", @(id))
     ) // end of [val]
 //

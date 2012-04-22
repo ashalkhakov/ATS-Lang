@@ -21,12 +21,12 @@ val theCSSfilr = $STDIO.fopen_ref_exn
 val () = fprint_webox_css_all (theCSSfilr, theBodyProp)
 //
 fun addcssrule
-  (rule: string): text = let
-  val () = fprint_string (theCSSfilr, rule) in TEXTnil ()
+  (rule: string): atext = let
+  val () = fprint_string (theCSSfilr, rule) in atext_nil ()
 end // end of [addcssrule]
 fun addcssrule_strsub
-  (rule: string): text = let
-  val () = fprint_strsub (theCSSfilr, rule) in TEXTnil ()
+  (rule: string): atext = let
+  val () = fprint_strsub (theCSSfilr, rule) in atext_nil ()
 end // end of [addcssrule_strsub]
 //
 (* ****** ****** *)
@@ -245,13 +245,13 @@ local
 *)
 in
 //
-fun theBodyText (): text = let
+fun theBodyText (): atext = let
   val res = tostring_fprint<webox>
     ("atslangweb_theBodyText", fprint_webox_html, theBodyProp)
   val () = assert (strptr_isnot_null res)
   val res = string_of_strptr (res)
 in
-  TEXTstrsub (res)
+  atext_strsub (res)
 end (* theBodyText *)
 //
 end // end of [local]

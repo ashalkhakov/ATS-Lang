@@ -19,16 +19,16 @@ val LT = "<"
 val LTSLASH = "</"
 val GT = ">"
 
-val COMMENTopn = TEXTstrcst"<!--"
-and COMMENTcls = TEXTstrcst("-->")
+val COMMENTopn = atext_strcst"<!--"
+and COMMENTcls = atext_strcst("-->")
 
 fun xmltagging (
   tag: string, x: string
-) : text = let
-  val _opn = TEXTappstr3 (LT, tag, GT)
-  val _cls = TEXTappstr3 (LTSLASH, tag, GT)
+) : atext = let
+  val _opn = atext_appstr3 (LT, tag, GT)
+  val _cls = atext_appstr3 (LTSLASH, tag, GT)
 in
-  TEXTapptxt3 (_opn, TEXTstrsub(x), _cls)
+  atext_apptxt3 (_opn, atext_strsub(x), _cls)
 end // end of [xmltagging]
 
 macdef para (x) = xmltagging ("P", ,(x)) // paragraph
@@ -40,14 +40,14 @@ macdef emph (x) = xmltagging ("I", ,(x)) // italic
 local
 
 val _opn =
-  TEXTstrcst"<PRE class=\"textpre\">"
-val _cls = TEXTstrcst"</PRE>"
+  atext_strcst"<PRE class=\"textpre\">"
+val _cls = atext_strcst"</PRE>"
 
 in // in of [local]
 
 fn textpre
-  (x: string): text =
-  TEXTapptxt3 (_opn, TEXTstrsub(x), _cls)
+  (x: string): atext =
+  atext_apptxt3 (_opn, atext_strsub(x), _cls)
 // end of [textpre]
 
 end // end of [local]
@@ -57,23 +57,23 @@ end // end of [local]
 local
 
 val _opn =
-  TEXTstrcst"<span class=\"code\">"
-val _cls = TEXTstrcst"</span>"
+  atext_strcst"<span class=\"code\">"
+val _cls = atext_strcst"</span>"
 
 in // in of [local]
 
-fn code (x: string): text = 
-  TEXTapptxt3 (_opn, TEXTstrsub(x), _cls)
+fn code (x: string): atext = 
+  atext_apptxt3 (_opn, atext_strsub(x), _cls)
 // end of [code]
 
 end // end of [local]
 
 (* ****** ****** *)
 
-fun ignore (x: string): text = TEXTnil ()
+fun ignore (x: string): atext = atext_nil ()
 
-fun comment (x: string): text =
-  TEXTapptxt3 (COMMENTopn, TEXTstrsub(x), COMMENTcls)
+fun comment (x: string): atext =
+  atext_apptxt3 (COMMENTopn, atext_strsub(x), COMMENTcls)
 // end of [comment]
 
 fun sub2str
@@ -86,42 +86,42 @@ in
   end (* end of [if] *)
 end // end of [sub2str]
 
-fun atscode2xmls (x: string): text = atscode2xml_strcode (0, x)
-fun atscode2xmld (x: string): text = atscode2xml_strcode (1, x)
+fun atscode2xmls (x: string): atext = atscode2xml_strcode (0, x)
+fun atscode2xmld (x: string): atext = atscode2xml_strcode (1, x)
 
-fun atscode2xmlss (x: string): text = atscode2xml_strcode (0, sub2str x)
-fun atscode2xmldd (x: string): text = atscode2xml_strcode (1, sub2str x)
+fun atscode2xmlss (x: string): atext = atscode2xml_strcode (0, sub2str x)
+fun atscode2xmldd (x: string): atext = atscode2xml_strcode (1, sub2str x)
 
-fun DQ () = TEXTstrcst ("\"")
+fun DQ () = atext_strcst ("\"")
 
-fun copy (x: string): text = TEXTstrcst (x)
+fun copy (x: string): atext = atext_strcst (x)
 
-fun atslink (): text =
-  TEXTstrcst "<a href=\"http://www.ats-lang.org/\">ATS</a>"
+fun atslink (): atext =
+  atext_strcst "<a href=\"http://www.ats-lang.org/\">ATS</a>"
 // end of [atslink]
 
 #define MYDOCROOT "http://www.ats-lang.org/DOCUMENT"
 
 fun mydoclink (
   codepath: string, linkname: string
-) : text = let
+) : atext = let
   val res = sprintf (
     "<a href=\"%s/atsdocman/%s\">%s</a>", @(MYDOCROOT, codepath, linkname)
   ) // end of [val]
   val res = string_of_strptr (res)
 in
-  TEXTstrcst (res)
+  atext_strcst (res)
 end // end of [mydoclink]
 
 fun myatsdoclink (
   codepath: string, linkname: string
-) : text = let
+) : atext = let
   val res = sprintf (
     "<a href=\"%s/ANAIRIATS/%s\">%s</a>", @(MYDOCROOT, codepath, linkname)
   ) // end of [val]
   val res = string_of_strptr (res)
 in
-  TEXTstrcst (res)
+  atext_strcst (res)
 end // end of [myatsdoclink]
 
 macdef filename(x) = xmltagging ("I", ,(x)) // italic
@@ -157,10 +157,10 @@ macdef filename(x) = xmltagging ("I", ,(x)) // italic
 <body>
 
 %{
-fun HR (sz: int): text = let
+fun HR (sz: int): atext = let
   val res = sprintf ("<HR SIZE=%i ALIGN=LEFT></HR>", @(sz))
 in
-  TEXTstrcst (string_of_strptr (res))
+  atext_strcst (string_of_strptr (res))
 end // end of [HR]
 %}
 
@@ -299,7 +299,7 @@ staload "libatsdoc/SATS/atsdoc_text.sats"
 %}
 
 %{
-fn author () = TEXTstrcst"John Doe"
+fn author () = atext_strcst"John Doe"
 %}
 
 %{
@@ -308,14 +308,14 @@ UN = "prelude/SATS/unsafe.sats"
 staload TIME = "libc/SATS/time.sats"
 
 fn timestamp
-  (): text = let
+  (): atext = let
   var time = $TIME.time_get ()
   val (fpf | x) = $TIME.ctime (time)
   val x1 = sprintf ("%s", @($UN.castvwtp1(x)))
   prval () = fpf (x)
   val x1 = string_of_strptr (x1)
 in
-  TEXTstrcst (x1)
+  atext_strcst (x1)
 end // end of [val]
 %}
 
@@ -368,19 +368,19 @@ follows:
 #atscode2xmls("\
 datatype text =
 //
-  | TEXTnil of () // empty text
+  | ATEXTnil of () // empty text
 //
-  | TEXTstrcst of string // string constants
-  | TEXTstrsub of string // strings containing marked tokens
+  | ATEXTstrcst of string // string constants
+  | ATEXTstrsub of string // strings containing marked tokens
 //
-  | TEXTapptxt2 of (text, text) // text concatenation
-  | TEXTappstr2 of (string, string) // string concatenation
+  | ATEXTapptxt2 of (text, text) // text concatenation
+  | ATEXTappstr2 of (string, string) // string concatenation
 //
-  | TEXTapptxt3 of (text, text, text) // text concatenation
-  | TEXTappstr3 of (string, string, string) // string concatenation
+  | ATEXTapptxt3 of (text, text, text) // text concatenation
+  | ATEXTappstr3 of (string, string, string) // string concatenation
 //
-  | TEXTconcatxt of textlst // text concatenation
-  | TEXTconcatxtsep of (textlst, text(*sep*)) // text concatenation with separator
+  | ATEXTconcatxt of textlst // text concatenation
+  | ATEXTconcatxtsep of (textlst, text(*sep*)) // text concatenation with separator
 // end of [text]
 
 where
@@ -390,10 +390,10 @@ stringlst = List (string)
 ")#comment("atscode2xmls")
 
 The meaning of all the data constructors associated with the datatype
-#code("text") should be easily understood except #code("TEXTstrsub"), which
+#code("text") should be easily understood except #code("ATEXTstrsub"), which
 indicates that its (string) argument may contain marked tokens, that is,
 symbols formed by placing identifiers between the two characters '\\\#' and
-'$'. When stringizing a value of the form #code("TEXTstrsub")(str) for some
+'$'. When stringizing a value of the form #code("ATEXTstrsub")(str) for some
 string str, we must replace each marked token in str with the string it
 represents. For further details, please see the implementation of
 #code("fprint_strsub") in

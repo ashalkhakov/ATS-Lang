@@ -27,11 +27,11 @@ macdef filename(x) =
 macdef LI (x) = xmltagging ("listitem", ,(x))
 //
 fun itemizedlist
-  (xs: textlst): text = let
-  val opn = TEXTstrcst "<itemizedlist>\n"
-  val cls = TEXTstrcst "\n</itemizedlist>"
+  (xs: atextlst): atext = let
+  val opn = atext_strcst "<itemizedlist>\n"
+  val cls = atext_strcst "\n</itemizedlist>"
 in
-  TEXTapptxt3 (opn, TEXTconcatxtsep (xs, TEXTnewline), cls)
+  atext_apptxt3 (opn, atext_concatxtsep (xs, atext_newline), cls)
 end
 //
 (* ****** ****** *)
@@ -45,59 +45,59 @@ end
 
 fun mydoclink (
   path: string, linkname: string
-) : text = let
+) : atext = let
   val res = sprintf (
     "<ulink url=\"%s/TUTORIALATS/%s\">%s</ulink>", @(MYDOCROOT, path, linkname)
   ) // end of [val]
   val res = string_of_strptr (res)
 in
-  TEXTstrcst (res)
+  atext_strcst (res)
 end // end of [mydoclink]
 
 fun mycodelink (
   path: string, linkname: string
-) : text = let
+) : atext = let
   val res = sprintf (
     "<ulink url=\"%s/TUTORIALATS/CODE/%s\">%s</ulink>", @(MYDOCROOT, path, linkname)
   ) // end of [val]
   val res = string_of_strptr (res)
 in
-  TEXTstrcst (res)
+  atext_strcst (res)
 end // end of [mydoclink]
 
 fun myatsdoclink (
   path: string, linkname: string
-) : text = let
+) : atext = let
   val res = sprintf (
     "<ulink url=\"%s/ANAIRIATS/%s\">%s</ulink>", @(MYDOCROOT, path, linkname)
   ) // end of [val]
   val res = string_of_strptr (res)
 in
-  TEXTstrcst (res)
+  atext_strcst (res)
 end // end of [myatsdoclink]
 
 (* ****** ****** *)
 
 local
 
-val theCodeLst = ref<textlst> (list_nil)
+val theCodeLst = ref<atextlst> (list_nil)
 
 in // in of [local]
 
-fun theCodeLst_add (x: text) =
+fun theCodeLst_add (x: atext) =
   !theCodeLst := list_cons (x, !theCodeLst)
 
-fun theCodeLst_get (): textlst = let
+fun theCodeLst_get (): atextlst = let
   val xs = list_reverse (!theCodeLst) in list_of_list_vt (xs)
 end // end of [theCodeLst_get]
 
 fun fprint_theCodeLst
   (out: FILEref): void = let
-  fun loop (xs: textlst, i: int):<cloref1> void =
+  fun loop (xs: atextlst, i: int):<cloref1> void =
     case+ xs of
     | list_cons (x, xs) => let
         val () = if i > 0 then fprint_newline (out)
-        val () = fprint_text (out, x)
+        val () = fprint_atext (out, x)
       in
         loop (xs, i+1)
       end // end of [list_cons]
@@ -111,8 +111,8 @@ end // end of [local]
 (* ****** ****** *)
 
 fn atscode_extract
-  (x: string): text = let
-  val () = theCodeLst_add (TEXTstrcst (x)) in atscode (x)
+  (x: string): atext = let
+  val () = theCodeLst_add (atext_strcst (x)) in atscode (x)
 end // end of [atscode_extract]
 
 (* ****** ****** *)

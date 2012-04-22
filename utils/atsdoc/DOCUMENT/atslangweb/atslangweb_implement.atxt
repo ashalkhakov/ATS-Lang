@@ -8,7 +8,7 @@ staload STDIO = "libc/SATS/stdio.sats"
 //
 #include "atslangwebatxt.dats"
 //
-val _ATSLANGWEBIMPLEMENT: text =
+val _ATSLANGWEBIMPLEMENT: atext =
   strcst"<strong>Implementations</strong>"
 val () = theTextMap_insert_str ("ATSLANGWEBIMPLEMENT", _ATSLANGWEBIMPLEMENT)
 //
@@ -25,13 +25,13 @@ val () = fprintf (theCSSfilr,
 ) // end of [val]
 
 fun addcssrule
-  (rule: string): text = let
-  val () = fprint_string (theCSSfilr, rule) in TEXTnil ()
+  (rule: string): atext = let
+  val () = fprint_string (theCSSfilr, rule) in atext_nil ()
 end // end of [addcssrule]
 
 (* ****** ****** *)
 
-fn OCaml (): text = ulink("http://caml.inria.fr/ocaml", "OCaml")
+fn OCaml (): atext = ulink("http://caml.inria.fr/ocaml", "OCaml")
 
 (* ****** ****** *)
 //

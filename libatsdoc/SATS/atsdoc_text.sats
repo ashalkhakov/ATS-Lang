@@ -40,48 +40,42 @@ typedef symbol = $SYM.symbol
 
 (* ****** ****** *)
 
-datatype text =
-//
-  | TEXTnil of () // empty text
-//
-  | TEXTstrcst of string // string constants
-  | TEXTstrsub of string // strings containing marked tokens
-//
-  | TEXTapptxt2 of (text, text) // text concatenation
-  | TEXTappstr2 of (string, string) // string concatenation
-//
-  | TEXTapptxt3 of (text, text, text) // text concatenation
-  | TEXTappstr3 of (string, string, string) // string concatenation
-//
-  | TEXTconcatxt of textlst // text concatenation
-  | TEXTconcatxtsep of (textlst, text(*sep*)) // text concatenation with separator
-// end of [text]
-
-where
-textlst = List (text)
-and
-stringlst = List (string)
+abstype atext_type
+typedef atext = atext_type
+typedef atextlst = List (atext)
 
 (* ****** ****** *)
 
-fun filename2text (path: string): text
+fun atext_nil (): atext
+fun atext_strcst (x: string): atext
+fun atext_strsub (x: string): atext
+fun atext_apptxt2 (x1: atext, x2: atext): atext
+fun atext_appstr2 (x1: string, x2: string): atext
+fun atext_apptxt3 (x1: atext, x2: atext, x3: atext): atext
+fun atext_appstr3 (x1: string, x2: string, x3: string): atext
+fun atext_concatxt (xs: atextlst): atext
+fun atext_concatxtsep (xs: atextlst, sep: atext): atext
 
 (* ****** ****** *)
 
-fun atscode2xml_strcode (stadyn: int, code: string): text
-fun atscode2xml_filcode (stadyn: int, path: string): text
+fun filename2text (path: string): atext
 
 (* ****** ****** *)
 
-fun theTextMap_search (s: symbol): Option_vt (text)
-fun theTextMap_insert (s: symbol, txt: text): void
-fun theTextMap_insert_str (s: string, txt: text): void
+fun atscode2xml_strcode (stadyn: int, code: string): atext
+fun atscode2xml_filcode (stadyn: int, path: string): atext
 
 (* ****** ****** *)
 
-fun fprint_text (out: FILEref, x: text): void
-fun fprint_textlst (out: FILEref, xs: textlst): void
-fun fprint_textlst_sep (out: FILEref, xs: textlst, sep: text): void
+fun theTextMap_search (s: symbol): Option_vt (atext)
+fun theTextMap_insert (s: symbol, txt: atext): void
+fun theTextMap_insert_str (s: string, txt: atext): void
+
+(* ****** ****** *)
+
+fun fprint_atext (out: FILEref, x: atext): void
+fun fprint_atextlst (out: FILEref, xs: atextlst): void
+fun fprint_atextlst_sep (out: FILEref, xs: atextlst, sep: atext): void
 
 (* ****** ****** *)
 
@@ -101,4 +95,4 @@ fun tostring_strsub (sub: string): strptr0 // HX: nullptr means error
 
 (* ****** ****** *)
 
-(* end of [atsdoc_text.sats] *)
+(* end of [atsdoc_atext.sats] *)

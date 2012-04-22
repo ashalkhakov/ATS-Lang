@@ -57,7 +57,7 @@ staload "libatsdoc/SATS/atsdoc_text.sats"
 //
 (* ****** ****** *)
 
-val TEXTnewline = TEXTstrcst"\n"
+val atext_newline = atext_strcst"\n"
 
 (* ****** ****** *)
 
@@ -71,11 +71,11 @@ in
 
 fun xmltagging (
   tag: string, x: string
-) : text = let
-  val _opn = TEXTappstr3 (LT, tag, GT)
-  val _clo = TEXTappstr3 (LTSLASH, tag, GT)
+) : atext = let
+  val _opn = atext_appstr3 (LT, tag, GT)
+  val _clo = atext_appstr3 (LTSLASH, tag, GT)
 in
-  TEXTapptxt3 (_opn, TEXTstrsub(x), _clo)
+  atext_apptxt3 (_opn, atext_strsub(x), _clo)
 end // end of [xmltagging]
 
 end // end of [local]
@@ -90,21 +90,21 @@ macdef body (x) = xmltagging ("body", ,(x))
 
 local
 //
-val COMMENTopn = TEXTstrcst"<!--"
-and COMMENTcls = TEXTstrcst("-->")
+val COMMENTopn = atext_strcst"<!--"
+and COMMENTcls = atext_strcst("-->")
 //
 in
 
-fun comment (x: string): text =
-  TEXTapptxt3 (COMMENTopn, TEXTstrsub(x), COMMENTcls)
+fun comment (x: string): atext =
+  atext_apptxt3 (COMMENTopn, atext_strsub(x), COMMENTcls)
 // end of [comment]
 
 end // end of [local]
 
 (* ****** ****** *)
 
-fun ignore (x: string): text = TEXTnil ()
-fun ignoretxt (x: text): text = TEXTnil ()
+fun ignore (x: string): atext = atext_nil ()
+fun ignoretxt (x: atext): atext = atext_nil ()
 
 (* ****** ****** *)
 
@@ -119,24 +119,24 @@ macdef textpre(x) = xmltagging ("pre", ,(x)) // <pre> ... </pre>
 (* ****** ****** *)
 
 fn pcenter
-  (x: string): text = let
-  val opn = TEXTstrcst"<p style=\"text-align: center;\">"
-  val cls = TEXTstrcst"</p>"
+  (x: string): atext = let
+  val opn = atext_strcst"<p style=\"text-align: center;\">"
+  val cls = atext_strcst"</p>"
 in
-  TEXTapptxt3 (opn, TEXTstrsub(x), cls)
+  atext_apptxt3 (opn, atext_strsub(x), cls)
 end // end of [pcenter]
 
 (* ****** ****** *)
 
 fun timestamp
-  (): text = let
+  (): atext = let
   var time = $TIME.time_get ()
   val (fpf | x) = $TIME.ctime (time)
   val x1 = sprintf ("%s", @($UN.castvwtp1(x)))
   prval () = fpf (x)
   val x1 = string_of_strptr (x1)
 in
-  TEXTstrcst (x1)
+  atext_strcst (x1)
 end // end of [val]
 
 (* ****** ****** *)

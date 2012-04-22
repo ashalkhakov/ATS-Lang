@@ -28,35 +28,36 @@ staload _(*anon*) = "libatsdoc/DATS/atsdoc_text.dats"
 
 (* ****** ****** *)
 //
-macdef strcst (x) = TEXTstrcst ,(x)
-macdef strsub (x) = TEXTstrsub ,(x)
+macdef strcst (x) = atext_strcst ,(x)
+macdef strsub (x) = atext_strsub ,(x)
 //
-fun strcst_of_strptr (x: strptr1): text = TEXTstrcst ((s2s)x)
-fun strsub_of_strptr (x: strptr1): text = TEXTstrsub ((s2s)x)
+fun strcst_of_strptr (x: strptr1): atext = atext_strcst ((s2s)x)
+fun strsub_of_strptr (x: strptr1): atext = atext_strsub ((s2s)x)
 //
 (* ****** ****** *)
 
 macdef command(x) = xmltagging ("pre", ,(x)) // <pre> ... </pre>
 
-fn filename (x: string): text = let
+fn filename
+  (x: string): atext = let
   val opn = strcst"<span style=\"text-decoration: underline;\">"
   val cls = strcst"</span>"
 in
-  TEXTapptxt3 (opn, strsub(x), cls)
-end
+  atext_apptxt3 (opn, strsub(x), cls)
+end // end of [filename]
 
 (* ****** ****** *)
 
 fn menu
-  (itmlst: string): text = xmltagging ("ul", itmlst)
+  (itmlst: string): atext = xmltagging ("ul", itmlst)
 // end of [menu]
 
 fn lisub
-  (x: string): text = xmltagging ("li", x)
+  (x: string): atext = xmltagging ("li", x)
 // end of [lisub]
 
-fn litxt (x: text): text =
-  TEXTapptxt3 (strcst"<li>", x, strcst"</li>")
+fn litxt (x: atext): atext =
+  atext_apptxt3 (strcst"<li>", x, strcst"</li>")
 // end of [litxt]
 
 (* ****** ****** *)
@@ -67,15 +68,15 @@ fn HR (sz: int) =
 
 (* ****** ****** *)
 
-fun uid (id: string, name: string): text =
+fun uid (id: string, name: string): atext =
   strcst_of_strptr (sprintf ("<a id=\"%s\">%s</a>", @(id, name)))
 // end of [uid]
 
-fun ulink (link: string, name: string): text =
+fun ulink (link: string, name: string): atext =
   strcst_of_strptr (sprintf ("<a href=\"%s\">%s</a>", @(link, name)))
 // end of [ulink]
 
-fun ulink1 (link: string, name: string): text =
+fun ulink1 (link: string, name: string): atext =
   strsub_of_strptr (sprintf ("<a href=\"%s\">%s</a>", @(link, name)))
 // end of [ulink1]
 
@@ -85,37 +86,37 @@ fun ulink1 (link: string, name: string): text =
 "http://ats-lang.svn.sourceforge.net/svnroot/ats-lang/trunk"
 // end of [#define]
 
-fun ATSLANGSVNROOTget (): text = TEXTstrcst (ATSLANGSVNROOT)
+fun ATSLANGSVNROOTget (): atext = atext_strcst (ATSLANGSVNROOT)
 
 (* ****** ****** *)
 
-fun ATSLANGWEBROOTget (): text = TEXTstrcst (ATSLANGWEBROOT)
+fun ATSLANGWEBROOTget (): atext = atext_strcst (ATSLANGWEBROOT)
 
-val ATSLANGWEBHOME: text = strcst ((s2s)res) where {
+val ATSLANGWEBHOME: atext = strcst ((s2s)res) where {
   val res = sprintf ("<a href=\"%s/\">Home</a>", @(ATSLANGWEBROOT))
 }
-val ATSLANGWEBDOWNLOAD: text = strcst ((s2s)res) where {
+val ATSLANGWEBDOWNLOAD: atext = strcst ((s2s)res) where {
   val res = sprintf ("<a href=\"%s/DOWNLOAD/\">Download</a>", @(ATSLANGWEBROOT))
 }
-val ATSLANGWEBDOCUMENT: text = strcst ((s2s)res) where {
+val ATSLANGWEBDOCUMENT: atext = strcst ((s2s)res) where {
   val res = sprintf ("<a href=\"%s/DOCUMENT/\">Documentation</a>", @(ATSLANGWEBROOT))
 }
-val ATSLANGWEBLIBRARY: text = strcst ((s2s)res) where {
+val ATSLANGWEBLIBRARY: atext = strcst ((s2s)res) where {
   val res = sprintf ("<a href=\"%s/LIBRARY/\">Libraries</a>", @(ATSLANGWEBROOT))
 }
-val ATSLANGWEBRESOURCE: text = strcst ((s2s)res) where {
+val ATSLANGWEBRESOURCE: atext = strcst ((s2s)res) where {
   val res = sprintf ("<a href=\"%s/RESOURCE/\">Resources</a>", @(ATSLANGWEBROOT))
 }
-val ATSLANGWEBCOMMUNITY: text = strcst ((s2s)res) where {
+val ATSLANGWEBCOMMUNITY: atext = strcst ((s2s)res) where {
   val res = sprintf ("<a href=\"%s/COMMUNITY/\">Community</a>", @(ATSLANGWEBROOT))
 }
-val ATSLANGWEBEXAMPLE: text = strcst ((s2s)res) where {
+val ATSLANGWEBEXAMPLE: atext = strcst ((s2s)res) where {
   val res = sprintf ("<a href=\"%s/EXAMPLE/\">Examples</a>", @(ATSLANGWEBROOT))
 }
-val ATSLANGWEBIMPLEMENT: text = strcst ((s2s)res) where {
+val ATSLANGWEBIMPLEMENT: atext = strcst ((s2s)res) where {
   val res = sprintf ("<a href=\"%s/IMPLEMENT/\">Implementations</a>", @(ATSLANGWEBROOT))
 }
-val ATSLANGWEBPAPER: text = strcst ((s2s)res) where {
+val ATSLANGWEBPAPER: atext = strcst ((s2s)res) where {
   val res = sprintf ("<a href=\"%s/PAPER/\">Papers</a>", @(ATSLANGWEBROOT))
 }
 
@@ -234,14 +235,14 @@ fn mysitelinks (current: string) = let
   val flag = (if (current = "COMMUNITY") then 1 else 0): int
   val COMMUNITY = strcst (COMMUNITY_ahref (flag))
 //
-  val xs = $lst {text} (
+  val xs = $lst {atext} (
     HOME, DOWNLOAD, DOCUMENT, LIBRARY, RESOURCE, COMMUNITY
   ) // end of [val]
 //
   val sep = strcst ("<span class=\"separator\"> | </span>")
 //
 in
-  TEXTconcatxtsep (xs, sep)
+  atext_concatxtsep (xs, sep)
 end // end of [mysitelinks]
 
 (* ****** ****** *)
@@ -250,14 +251,14 @@ fun staexp (x: string) = let
   val opn = "<span class=atsyntax_staexp>"
   val cls = "</span>"
 in
-  TEXTappstr3 (opn, x, cls)
+  atext_appstr3 (opn, x, cls)
 end // end of [staexp]
 
 fun dynexp (x: string) = let
   val opn = "<span class=atsyntax_dynexp>"
   val cls = "</span>"
 in
-  TEXTappstr3 (opn, x, cls)
+  atext_appstr3 (opn, x, cls)
 end // end of [dynexp]
 
 (* ****** ****** *)
@@ -268,8 +269,8 @@ local
 *)
 in
 //
-fun atscode2xmls (x: string): text = atscode2xml_strcode (0, x)
-fun atscode2xmld (x: string): text = atscode2xml_strcode (1, x)
+fun atscode2xmls (x: string): atext = atscode2xml_strcode (0, x)
+fun atscode2xmld (x: string): atext = atscode2xml_strcode (1, x)
 //
 end // end of [local]
 //
