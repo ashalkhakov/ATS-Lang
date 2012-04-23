@@ -238,7 +238,7 @@ end // end of [local]
 fn atsdoc_usage (): void = {
   val cmd = argv0_get () // [argv0] is already set
   val () = printf ("usage: %s <command> ... <command>\n\n", @(cmd))
-  val () = printf ("where a <command> is of one of the following forms:\n\n", @())
+  val () = printf ("where each <command> is of one of the following forms:\n\n", @())
   val () = printf ("  -to filename (outputing texting data to <filename>)\n", @())
   val () = printf ("  --toutput filename (outputing texting to <filename>)\n", @())
   val () = printf ("  -do filename (outputing ATS code to <filename>)\n", @())

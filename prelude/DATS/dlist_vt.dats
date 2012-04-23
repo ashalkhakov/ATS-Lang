@@ -78,6 +78,9 @@ dlist_vt_cons (x, xs) =
       (_, !p_prev, _) => let
       prval () = fold@ (xs)
       val res = DLISTcons (x, null, xs)
+      prval () = __assert (p_prev) where {
+        extern praxi __assert {l:addr} (p: ptr l): [l > null] void
+      } // end of [prval]
       val () = $UN.ptrset<ptr> (p_prev, dlist2ptr(res))
     in
       res

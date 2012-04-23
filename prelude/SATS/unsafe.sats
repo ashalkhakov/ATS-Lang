@@ -54,6 +54,8 @@ castfn castvwtp1 {to:t@ype} {from:viewt@ype} (x: !from):<> to
 (* ****** ****** *)
 //
 castfn cast2ptr {a:type} (x: a):<> ptr
+castfn cast2Ptr {a:type} (x: a):<> Ptr
+castfn cast2Ptr1 {a:type} (x: a):<> Ptr1
 //
 castfn cast2int {a:t@ype} (x: a):<> int
 castfn cast2uint {a:t@ype} (x: a):<> uint
@@ -66,8 +68,8 @@ castfn cast2ssize {a:t@ype} (x: a):<> ssize_t
 //
 // HX: only if you know what you are doing ...
 //
-fun{a:viewt@ype} ptrget (p: ptr):<> a
-fun{a:viewt@ype} ptrset (p: ptr, x: a):<> void
+fun{a:viewt@ype} ptrget (p: Ptr1):<> a
+fun{a:viewt@ype} ptrset (p: Ptr1, x: a):<> void
 
 (* ****** ****** *)
 //

@@ -137,10 +137,10 @@ fun timestamp
   val x1 = string_of_strptr (x1)
 in
   atext_strcst (x1)
-end // end of [val]
+end // end of [timestamp]
 
 (* ****** ****** *)
 
-#endif // end of [#ifndef(ATSDOC_XHTMLATXT)
+#endif // end of [#ifndef(ATSDOC_XHTMLATXT)]
 
 (* end of [xhtmlatxt.dats] *)

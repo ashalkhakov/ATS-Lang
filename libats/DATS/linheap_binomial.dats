@@ -303,6 +303,9 @@ bheap_remove_min
     | bheap_cons (pf | !p_bt, !p_hp) => let
         prval () = exp2_ispos (pf)
         val+ btnode (_, !p_x, _) = !p_bt
+        prval () = __assert (p_x) where {
+          extern praxi __assert {l:addr} (p: ptr l): [l > null] void
+        } // end of [prval]
         val sgn = compare_elt_elt<a> (x0, !p_x, cmp)
         val () = if sgn > 0 then ($UN.ptrset<a> (&x0, $UN.ptrget<a>(p_x)); pos := pos+1)
         prval () = fold@ (!p_bt)
@@ -317,6 +320,9 @@ bheap_remove_min
   val+ bheap_cons
     (pf0 | !p_bt0, !p_hp1) = hp0
   val+ btnode (_, !p_x, _) = !p_bt0
+  prval () = __assert (p_x) where {
+    extern praxi __assert {l:addr} (p: ptr l): [l > null] void
+  } // end of [prval]
   prval () = fold@ {a} (!p_bt0)
   var x0: a = $UN.ptrget<a> (p_x) and pos: Nat = 0
   val () = find (!p_hp1, x0, pos, cmp)

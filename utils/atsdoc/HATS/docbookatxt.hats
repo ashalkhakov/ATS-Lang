@@ -136,6 +136,6 @@ end // end of [local]
 //
 (* ****** ****** *)
 
-#endif // end of [#ifndef(ATSDOC_DOCBOOKATXT)
+#endif // end of [#ifndef(ATSDOC_DOCBOOKATXT)]
 
 (* end of [docbookatxt.dats] *)
