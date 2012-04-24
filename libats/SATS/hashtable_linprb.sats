@@ -140,7 +140,7 @@ hashtbl_clear {l:agz} (ptbl: !HASHTBLptr (key, itm, l)):<> void
 //
 fun{key:t0p;itm:vt0p} // unsafe but ...
 hashtbl_search_ref {l:agz} (ptbl: !HASHTBLptr (key, itm, l), k0: key): Ptr
-// end of [hashtbl_search_ptr]
+// end of [hashtbl_search_ref]
 
 //
 // HX-2010-03-20:

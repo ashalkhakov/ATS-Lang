@@ -408,7 +408,7 @@ implement{key,itm}
 hashtbl_search (ptbl, k0, res) = let
   val [l:addr] p_itm = hashtbl_search_ref (ptbl, k0)
 in
-  if p_itm <> null then let
+  if p_itm > null then let
     prval (fpf, pf) = __assert () where {
       extern praxi __assert (): (itm @ l -<prf> void, itm @ l)
     } // end of [prval]

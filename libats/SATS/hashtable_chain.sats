@@ -133,15 +133,6 @@ hashtbl_clear_fun {l:agz}
 
 //
 // HX-2010-03-20:
-// if the returned pointer is used, it must be done before the hashtable
-// is changed!
-//
-fun{key:t0p;itm:vt0p} // unsafe but ...
-hashtbl_search_ref {l:agz} (ptbl: !HASHTBLptr (key, itm, l), k0: key):<> Ptr
-// end of [hashtbl_search_ptr]
-
-//
-// HX-2010-03-20:
 // this one is a safe version, but it can only handle non-linear items
 //
 fun{key:t0p;itm:t0p}
@@ -149,6 +140,15 @@ hashtbl_search {l:agz} (
   ptbl: !HASHTBLptr (key, itm, l), k0: key, res: &itm? >> opt (itm, b)
 ) :<> #[b:bool] bool b
 // end of [hashtbl_search]
+
+//
+// HX-2010-03-20:
+// if the returned pointer is used, it must be done before the hashtable
+// is changed!
+//
+fun{key:t0p;itm:vt0p} // unsafe but ...
+hashtbl_search_ref {l:agz} (ptbl: !HASHTBLptr (key, itm, l), k0: key):<> Ptr
+// end of [hashtbl_search_ref]
 
 (* ****** ****** *)
 

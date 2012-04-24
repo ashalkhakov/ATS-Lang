@@ -92,11 +92,18 @@ fun{key,itm:t@ype} linmap_black_height (m: !map (key, itm)):<> Nat
 
 (* ****** ****** *)
 
-fun{key:t0p;itm:t0p}
-linmap_search (
+fun{
+key:t0p;itm:t0p
+} linmap_search (
   m: !map (key, itm)
 , k0: key, cmp: cmp key, res: &itm? >> opt (itm, b)
 ) :<> #[b:bool] bool b // end of [linmap_search]
+
+fun{
+key:t0p;itm:vt0p
+} linmap_search_ref (
+  m: !map (key, itm), k0: key, cmp: cmp key // unsafe but ...
+) :<> Ptr // end of [linmap_search_ref]
 
 (* ****** ****** *)
 //

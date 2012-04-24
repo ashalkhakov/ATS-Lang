@@ -139,33 +139,54 @@ implement{key,itm} linmap_height (t) = avltree_height (t)
 
 (* ****** ****** *)
 
-implement{key,itm}
+implement
+{key,itm}
 linmap_search
-  (t, k0, cmp, res) = search (t, res) where {
-  fun search {h:nat} .<h>. (
-      t: !avltree (key, itm, h), res: &itm? >> opt (itm, b)
-    ):<cloref> #[b:bool] bool b = begin
+  (t, k0, cmp, res) = let
+  val [l:addr] p = linmap_search_ref (t, k0, cmp)
+in
+  if p > null then let
+    prval (fpf, pf) = __assert () where {
+      extern praxi __assert (): (itm @ l -<prf> void, itm @ l)
+    } // end of [prval]
+    val () = res := !p
+    prval () = fpf (pf)
+    prval () = opt_some {itm} (res)
+  in
+    true
+  end else let
+    prval () = opt_none {itm} (res)
+  in
+    false
+  end // end of [if]
+end // end of [linmap_search]
+
+implement
+{key,itm}
+linmap_search_ref
+  (t, k0, cmp) = search (t) where {
+  fun search
+    {h:nat} .<h>. (
+      t: !avltree (key, itm, h)
+    ) :<cloref> Ptr = begin
     case+ t of
-    | B (_(*h*), k, x, !ptl, !ptr) => let
+    | B (
+        _(*h*), k, !p_x, !ptl, !ptr
+      ) => let
         val sgn = compare_key_key (k0, k, cmp)
       in
         case+ 0 of
         | _ when sgn < 0 => let
-            val ans = search (!ptl, res) in fold@ t; ans
+            val res = search (!ptl) in fold@ t; res
           end // end of [sgn < 0]
         | _ when sgn > 0 => let
-            val ans = search (!ptr, res) in fold@ t; ans
+            val res = search (!ptr) in fold@ t; res
           end // end of [sgn > 0]
-        | _ => let
-            val () = res := x; prval () = opt_some {itm} (res) in
-            fold@ t; true
-          end // end of [_]
+        | _ => (fold@ t; p_x)
       end // end of [B]
-    | E () => let
-        prval () = opt_none {itm} (res) in fold@ t; false
-      end // end of [E]
+    | E () => (fold@ (t); null)
   end // end of [search]
-} // end of [linmap_search]
+} // end of [linmap_search_ref]
 
 (* ****** ****** *)
 
