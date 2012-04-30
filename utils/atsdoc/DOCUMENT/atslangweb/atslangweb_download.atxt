@@ -336,7 +336,6 @@ Please find more details #ulink1("#ATSLANGWEBROOTget()/IMPLEMENT/\#ATS_Anairiats
 '))
 
 %{
-
 implement
 main () = {
 //
@@ -345,5 +344,4 @@ val () =  $STDIO.fclose_exn (theCSSfilr)
 val () = fprint_filsub (stdout_ref, "atslangweb_temp.html")
 //
 } // end of [main]
-
-%}
+%}\

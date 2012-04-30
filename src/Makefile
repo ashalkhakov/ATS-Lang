@@ -338,10 +338,10 @@ clean:: ; $(RMF) $(DIR)/*_lats.dats
 clean:: ; $(RMF) $(DIR)/libats_lex.o
 clean:: ; $(RMF) $(DIR)/ats_grammar_yats.output
 
-cleanall: clean
-	$(RMF) ats_grammar_yats.c
-	$(RMF) ats_grammar_yats.h
-	$(RMF) atsopt
+cleanall:: clean
+cleanall:: ; $(RMF) ats_grammar_yats.c
+cleanall:: ; $(RMF) ats_grammar_yats.h
+cleanall:: ; $(RMF) atsopt
 
 ######
 

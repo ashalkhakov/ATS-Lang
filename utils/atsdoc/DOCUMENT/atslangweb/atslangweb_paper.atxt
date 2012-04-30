@@ -276,7 +276,6 @@ Links: #ulink("SPPSV-padl05.pdf", "pdf") #ulink("SPPSV-padl05.ps", "ps")
 '))
 
 %{
-
 implement
 main () = {
 //
@@ -285,5 +284,4 @@ val () =  $STDIO.fclose_exn (theCSSfilr)
 val () = fprint_filsub (stdout_ref, "atslangweb_temp.html")
 //
 } // end of [main]
-
-%}
+%}\

@@ -16,7 +16,7 @@ staload "contrib/X11/SATS/Xlib.sats"
 
 implement main () = () where {
   val dpy = XOpenDisplay (stropt_none)
-  val () = assert_errmsg (Display_ptr_isnot_null dpy, #LOCATION)
+  val () = assertloc (Display_ptr_isnot_null dpy)
   val bpxl = XBlackPixel (dpy, 0)
   val () = (print "bpxl = "; print bpxl; print_newline ())
   val wpxl = XWhitePixel (dpy, 0)
@@ -37,7 +37,7 @@ implement main () = () where {
   var asz: int
   val xarr = XListDepths (dpy, 0, asz)
   val p_arr = ptr_of (xarr)
-  val () = assert_errmsg (p_arr > null, #LOCATION)
+  val () = assertloc (p_arr > null)
   prval () = opt_unsome (asz)
   val () = (print "asz = "; print_int asz; print_newline ())
   val () = (print "p_arr = "; print p_arr; print_newline ())
@@ -112,7 +112,7 @@ implement main () = () where {
   val () = XRaiseWindow (dpy, win)
   val () = XFlush (dpy)
   // val () = XDestroyWindow (dpy, win)
-  val _ = sleep (5) where {
+  val _ = sleep (5u) where {
     staload "libc/SATS/unistd.sats"
   }
 //

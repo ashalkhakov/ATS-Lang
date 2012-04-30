@@ -41,10 +41,20 @@ staload "prelude/SATS/option_vt.sats"
 
 (* ****** ****** *)
 
+implement{a} option_vt_some (x) = Some_vt (x)
+implement{a} option_vt_none ( ) = None_vt ( )
+
+(* ****** ****** *)
+
 implement{a}
-option_vt_free (x) = 
-  case+ x of ~Some_vt _ => () | ~None_vt _ => ()
-// end of [option_vt_free]
+option_vt_make_opt
+  (b, x) = (
+  if b then let
+    prval () = opt_unsome {a} (x) in Some_vt (x)
+  end else let
+    prval () = opt_unnone {a} (x) in None_vt ( )
+  end // end of [if]
+) (* end of [option_vt_make_opt] *)
 
 (* ****** ****** *)
 
@@ -57,6 +67,25 @@ implement
 option_vt_is_some (x) = case+ x of
   | Some_vt _ => (fold@ (x); true) | None_vt _ => (fold@ (x); false)
 // end of [option_vt_is_some]
+
+(* ****** ****** *)
+
+implement{a}
+option_vt_unsome
+  (opt) = x where { val+ ~Some_vt (x) = opt }
+// end of [option_unsome]
+
+implement{a}
+option_vt_unnone
+  (opt) = () where { val+ ~None_vt () = opt }
+// end of [option_unnone]
+
+(* ****** ****** *)
+
+implement{a}
+option_vt_free (x) = 
+  case+ x of ~Some_vt _ => () | ~None_vt _ => ()
+// end of [option_vt_free]
 
 (* ****** ****** *)
 

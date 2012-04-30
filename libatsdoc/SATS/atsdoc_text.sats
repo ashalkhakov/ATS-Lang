@@ -56,6 +56,9 @@ fun atext_appstr3 (x1: string, x2: string, x3: string): atext
 fun atext_concatxt (xs: atextlst): atext
 fun atext_concatxtsep (xs: atextlst, sep: atext): atext
 
+val atext_newline : atext
+fun atext_strptr (x: strptr1): atext
+
 (* ****** ****** *)
 
 fun filename2text (path: string): atext

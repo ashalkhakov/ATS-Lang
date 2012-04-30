@@ -70,9 +70,10 @@ fun option_is_some
 
 (* ****** ****** *)
 
-val{a:type} option_none : option (a, false)
 fun{a:type} option_some (x: a):<> option (a, true)
 fun{a:type} option_unsome (opt: option (a, true)):<> a
+
+fun{a:type} option_none ((*void*)):<> option (a, false)
 
 (* ****** ****** *)
 

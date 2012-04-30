@@ -61,8 +61,14 @@ option_is_some (ov) =
 
 (* ****** ****** *)
 
-implement{a} option_some v = Some v
-implement{a} option_unsome ov = let val Some v = ov in v end
+implement{a}
+option_some (x) = Some (x)
+implement{a}
+option_unsome (opt) = let val Some x = opt in x end
+
+implement{a} option_none ( ) = None ( )
+
+(* ****** ****** *)
 
 implement{a}
 option_app (ov, f) =

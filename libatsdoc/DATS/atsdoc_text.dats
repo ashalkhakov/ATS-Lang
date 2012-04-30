@@ -115,6 +115,9 @@ implement atext_appstr3 (x1, x2, x3) = ATEXTappstr3 (x1, x2, x3)
 implement atext_concatxt (xs) = ATEXTconcatxt (xs)
 implement atext_concatxtsep (xs, sep) = ATEXTconcatxtsep (xs, sep)
 
+implement atext_newline = ATEXTstrcst ("\n")
+implement atext_strptr (x) = ATEXTstrcst ((string_of_strptr)x)
+
 (* ****** ****** *)
 
 local

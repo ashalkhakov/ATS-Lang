@@ -43,15 +43,41 @@
 
 (* ****** ****** *)
 
-fun{a:t@ype}
-option_vt_free (x: Option_vt (a)): void
+sortdef t0p = t@ype and vt0p = viewt@ype
+
+(* ****** ****** *)
+
+fun{a:vt0p}
+option_vt_some (x: a): option_vt (a, true)
+fun{a:vt0p}
+option_vt_none ((*void*)): option_vt (a, false)
+
+(* ****** ****** *)
+
+fun{a:vt0p}
+option_vt_make_opt
+  {b:bool} (
+  b: bool b, x: &opt (a, b) >> a?
+) : option_vt (a, b) // end of [option_vt_make_opt]
 
 (* ****** ****** *)
 
 fun option_vt_is_none
-  {a:viewt@ype} {b:bool} (x: !option_vt (a, b)): bool (~b)
+  {a:vt0p} {b:bool} (x: !option_vt (a, b)): bool (~b)
 fun option_vt_is_some
-  {a:viewt@ype} {b:bool} (x: !option_vt (a, b)): bool ( b)
+  {a:vt0p} {b:bool} (x: !option_vt (a, b)): bool ( b)
+
+(* ****** ****** *)
+
+fun{a:vt0p}
+option_vt_unsome (opt: option_vt (a, true)):<> a
+fun{a:vt0p}
+option_vt_unnone (opt: option_vt (a, false)):<> void
+
+(* ****** ****** *)
+
+fun{a:t0p}
+option_vt_free (opt: Option_vt (a)): void
 
 (* ****** ****** *)
 

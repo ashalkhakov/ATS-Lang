@@ -50,7 +50,7 @@ staload "contrib/X11/SATS/X.sats"
 
 (* ****** ****** *)
 
-// these are resource allocated by
+// these are for resources allocated by
 absviewtype XPtr (a:viewt@ype, l:addr)
 viewtypedef XPtr0 (a:viewt@ype) = [l:addr] XPtr (a, l)
 viewtypedef XPtr1 (a:viewt@ype) = [l:addr | l > null] XPtr (a, l)
