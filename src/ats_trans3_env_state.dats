@@ -91,7 +91,9 @@ end // end of [stbefitemlst_restore_typ]
 
 implement
 stbefitemlst_restore_lin_typ (sbis) = let
-  fun loop (sbis: stbefitemlst): void = case+ sbis of
+  fun loop (
+    sbis: stbefitemlst
+  ) : void = case+ sbis of
     | list_cons (sbi, sbis) => let
         val d2v = sbi.stbefitem_var
         val () = d2var_set_lin (d2v, sbi.stbefitem_lin)
@@ -196,7 +198,8 @@ extern fun staftitem_set_typ
 
 (* ****** ****** *)
 
-typedef sascstr = '{
+typedef
+sascstr = '{
   sascstr_loc= loc_t
 , sascstr_met= s2explstopt
 , sascstr_sub= stasub_t
@@ -205,13 +208,14 @@ typedef sascstr = '{
 
 typedef sascstrlst = List sascstr
 
-fn sascstr_make
-  (loc: loc_t, met: s2explstopt, sub: stasub_t, ref: ref c3stropt)
-  : sascstr = '{
+fn sascstr_make (
+  loc: loc_t, met: s2explstopt, sub: stasub_t, ref: ref c3stropt
+) : sascstr = '{
   sascstr_loc= loc, sascstr_met= met, sascstr_sub= sub, sascstr_ref= ref
 } // end of [sascstr_make]
 
-typedef staftscstr (n:int) = '{
+typedef
+staftscstr (n:int) = '{
   staftscstr_met= s2explstopt
 , staftscstr_res= i2nvresstate
 , staftscstr_sais= staftitemlst n
@@ -260,9 +264,11 @@ in '{
 //
 // HX: [loc0] is the location of the branch
 //
-fun staftscstr_stbefitemlst_merge_ifmetck {n:nat} (
-    loc0: loc_t, sac: staftscstr_t n, sbis: stbefitemlst n, metck: bool
-  ) : void = let
+fun
+staftscstr_stbefitemlst_merge_ifmetck
+  {n:nat} (
+  loc0: loc_t, sac: staftscstr_t n, sbis: stbefitemlst n, metck: bool
+) : void = let
   fn aux (loc0: loc_t, sai: staftitem, sbi: stbefitem): void = let
     val linbef = sbi.stbefitem_lin
     val d2v = sbi.stbefitem_var
@@ -420,9 +426,9 @@ fn aux_item_errmsg2 (loc: loc_t, d2v: d2var_t): void = begin
 end // end of [aux_item_errmsg2]
 
 fn aux_saityp (
-    used: int // [d2v] is used
-  , sub: stasub_t, args: i2nvarglst, d2v: d2var_t, x: saityp
-  ) : void = begin case+ x of
+  used: int // [d2v] is used
+, sub: stasub_t, args: i2nvarglst, d2v: d2var_t, x: saityp
+) : void = begin case+ x of
   | SAITYPsome (loc, s2e) => let
       var used1: int = used
 (*
@@ -493,12 +499,14 @@ in
   | list_nil () => ()
 end // end of [aux_item_one]
 
-fun aux_item_all {n:nat} (
-    sub: stasub_t
-  , res: i2nvresstate
-  , sais: staftitemlst n
-  , sbis: stbefitemlst n
-  ) : void = begin case+ sais of
+fun
+aux_item_all
+  {n:nat} (
+  sub: stasub_t
+, res: i2nvresstate
+, sais: staftitemlst n
+, sbis: stbefitemlst n
+) : void = begin case+ sais of
   | list_cons (sai, sais) => let
       val+ list_cons (sbi, sbis) = sbis
       val d2v = sbi.stbefitem_var
@@ -521,8 +529,9 @@ fun aux_item_all {n:nat} (
   | list_nil () => ()
 end // end of [aux_item_all]
 
-fn aux_term_check
-  (met_bound: s2explstopt, x: sascstr): void = begin
+fn aux_term_check (
+  met_bound: s2explstopt, x: sascstr
+) : void = begin
   case+ met_bound of
   | Some s2es_bound => begin case+ x.sascstr_met of
     | Some s2es => let
@@ -545,13 +554,15 @@ fn aux_term_check
   | None () => ()
 end // end of [aux_term_check]
 
-fun aux_itemlst_all {n:nat} (
-    met_bound: s2explstopt
-  , res: i2nvresstate
-  , sais: staftitemlst n
-  , sbis: stbefitemlst n
-  , xs: sascstrlst
-  ) : void = begin case+ xs of
+fun
+aux_itemlst_all
+  {n:nat} (
+  met_bound: s2explstopt
+, res: i2nvresstate
+, sais: staftitemlst n
+, sbis: stbefitemlst n
+, xs: sascstrlst
+) : void = begin case+ xs of
   | list_cons (x, xs) => let
       val () = trans3_env_push_sta ()
       val () = aux_term_check (met_bound, x)
@@ -569,7 +580,8 @@ end // end of [aux_itemlst_all]
 in // in of [local]
 
 implement
-staftscstr_stbefitemlst_check (loc0, sac, sbis) = let
+staftscstr_stbefitemlst_check
+  (loc0, sac, sbis) = let
 (*
   val () = begin
     $Loc.print_location loc0;
@@ -592,9 +604,8 @@ end // end of [local]
 local
 
 fun aux_find (
-    args: i2nvarglst
-  , d2v: d2var_t
-  ) : Option_vt (s2expopt) = let
+   args: i2nvarglst, d2v: d2var_t
+ ) : Option_vt (s2expopt) = let
   val ans = i2nvarglst_find_d2var (args, d2v)
 in
   case+ ans of
@@ -602,12 +613,14 @@ in
   | ~None_vt () => None_vt ()
 end // end of [aux_find]
 
-fun aux_iter {n:nat} (
-    loc0: loc_t
-  , args: i2nvarglst
-  , sais: staftitemlst n
-  , sbis: stbefitemlst n
-  ) : void = begin case+ sais of
+fun
+aux_iter
+  {n:nat} (
+  loc0: loc_t
+, args: i2nvarglst
+, sais: staftitemlst n
+, sbis: stbefitemlst n
+) : void = begin case+ sais of
   | list_cons (sai, sais) => let
       val+ list_cons (sbi, sbis) = sbis
       val d2v = sbi.stbefitem_var
@@ -657,7 +670,8 @@ end // end of [aux_iter]
 in // in of [local]
 
 implement
-staftscstr_stbefitemlst_update (loc0, sac, sbis) = let
+staftscstr_stbefitemlst_update
+  (loc0, sac, sbis) = let
   val res = sac.staftscstr_res and sais = sac.staftscstr_sais
   val () = trans3_env_add_svarlst res.i2nvresstate_svs
   val () = trans3_env_hypo_add_proplst (loc0, res.i2nvresstate_gua)
