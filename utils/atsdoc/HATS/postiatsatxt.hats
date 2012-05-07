@@ -207,6 +207,17 @@ fun atscode_eof_strsub_for_C
 
 (* ****** ****** *)
 
+fun macextval
+  (tname: string, vname: string): atext = let
+  val x = sprintf (
+    "macdef %s = $extval (%s, \"%s\")", @(vname, tname, vname)
+  ) // end of[val]
+in
+  atext_strptr (x)
+end // end of[macextval]
+
+(* ****** ****** *)
+
 #endif // end of [ATSDOC_POSTIATSATXT]
 
 (* ****** ****** *)
