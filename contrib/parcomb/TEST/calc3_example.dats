@@ -126,20 +126,29 @@ where stm = '{ stm_loc= location_t, stm_node= stm_node }
 
 (* ****** ****** *)
 
-extern fun fprint_binop (out: FILEref, opr: binop): void
-
-implement fprint_binop (out, opr) = case+ opr of
+extern
+fun fprint_binop
+  (out: FILEref, opr: binop): void
+implement
+fprint_binop
+  (out, opr) = case+ opr of
   | Plus () => fprint_string (out, "+")
   | Minus () => fprint_string (out, "-")
   | Times () => fprint_string (out, "*")
   | Div () => fprint_string (out, "/")
 // end of [fprint_binop]
 
-extern fun fprint_stm (out: FILEref, stm: stm): void
-extern fun fprint_exp (out: FILEref, exp: exp): void
-extern fun fprint_explst (out: FILEref, exps: explst): void
+extern
+fun fprint_stm (out: FILEref, stm: stm): void
+extern
+fun fprint_exp (out: FILEref, exp: exp): void
+extern
+fun fprint_explst (out: FILEref, exps: explst): void
 
-implement fprint_stm (out, stm) = case+ stm.stm_node of
+implement
+fprint_stm
+  (out, stm) = (
+  case+ stm.stm_node of
   | CompoundStm (stm1, stm2) => begin
       fprint_string (out, "(");
       fprint_stm (out, stm1); fprint_string (out, "; "); fprint_stm (out, stm2);
@@ -151,9 +160,12 @@ implement fprint_stm (out, stm) = case+ stm.stm_node of
   | PrintStm (exps) => begin
       fprint_string (out, "print ("); fprint_explst (out, exps); fprint_string (out, ")")
     end
-// end of [fprint_stm]
+) // end of [fprint_stm]
 
-implement fprint_exp (out, exp) = case+ exp.exp_node of
+implement
+fprint_exp
+  (out, exp) = (
+  case+ exp.exp_node of
   | IdExp (id) => fprint_ident (out, id)
   | NumExp (int) => fprint_int (out, int)
   | OpExp (exp1, opr, exp2) => begin
@@ -168,45 +180,63 @@ implement fprint_exp (out, exp) = case+ exp.exp_node of
       fprint_stm (out, stm1); fprint_string (out, "; "); fprint_exp (out, exp2);
       fprint_string (out, ")")
     end
-// end of [fprint_exp]
+) // end of [fprint_exp]
 
-implement fprint_explst (out, exps) = loop (out, exps, 0) where {
-  fun loop (out: FILEref, exps: explst, i: int): void = case+ exps of
+implement
+fprint_explst
+  (out, exps) = let
+  fun loop (
+    out: FILEref, exps: explst, i: int
+  ) : void = (
+    case+ exps of
     | list_cons (exp, exps) => begin
         if i > 0 then fprint_string (out, ", ");
         fprint_exp (out, exp);
         loop (out, exps, i+1)
       end // end of [list_cons]
     | list_nil () => ()
-  // end of [loop]    
-} // end of [fprint_explst]
+  ) // end of [loop]    
+in
+  loop (out, exps, 0)
+end // end of [fprint_explst]
 
 (* ****** ****** *)
 
-fn fCompoundStm (stm1: stm, stm2: stm):<> stm = let
-  val loc = location_combine (stm1.stm_loc, stm2.stm_loc)
-in
-  '{ stm_loc= loc, stm_node= CompoundStm (stm1, stm2) }
-end // end of [fCompoundStm]
+fn fCompoundStm (
+  stm1: stm, stm2: stm
+) :<> stm = let
+  val loc =
+    location_combine (stm1.stm_loc, stm2.stm_loc)
+  // end of [val]
+in '{
+  stm_loc= loc, stm_node= CompoundStm (stm1, stm2) 
+} end // end of [fCompoundStm]
 
-fn fAssignStm (tok1: token, exp2: exp):<> stm = let
+fn fAssignStm (
+  tok1: token, exp2: exp
+) :<> stm = let
   val- TOKide name = tok1.token_node
   val loc1 = tok1.token_loc; val id1 = ident_make name
   val loc = location_combine (loc1, exp2.exp_loc)
-in
-  '{ stm_loc= loc, stm_node= AssignStm (id1, exp2) }
-end // end of [fAssignStm]
+in '{
+  stm_loc= loc, stm_node= AssignStm (id1, exp2)
+} end // end of [fAssignStm]
 
-fn fPrintStm
-  (tok1: token, exps2: explst, tok3: token):<> stm = let
-  val loc = location_combine (tok1.token_loc, tok3.token_loc)
-in
-  '{ stm_loc= loc, stm_node= PrintStm (exps2) }
-end // end of [fPrintStm]
+fn fPrintStm (
+  tok1: token, exps2: explst, tok3: token
+) :<> stm = let
+  val loc =
+    location_combine (tok1.token_loc, tok3.token_loc)
+  // end of [val]
+in '{
+  stm_loc= loc, stm_node= PrintStm (exps2)
+} end // end of [fPrintStm]
 
 (* ****** ****** *)
 
-fn fIdExp (tok: token):<> exp = let
+fn fIdExp (
+  tok: token
+) :<> exp = let
   val loc = tok.token_loc
   val- TOKide (name) = tok.token_node
   val id = ident_make (name)
@@ -214,23 +244,28 @@ in '{
   exp_loc= loc, exp_node= IdExp (id)
 } end // end of [fIdExp]
 
-fn fNumExp (tok: token):<> exp = let
+fn fNumExp (
+  tok: token
+) :<> exp = let
   val- TOKint int = tok.token_node in '{
   exp_loc= tok.token_loc, exp_node= NumExp (int)
 } end // end of [fNumExp]
 
-fn fOpExp (exp1: exp, opr: binop, exp2: exp):<> exp = let
+fn fOpExp (
+  exp1: exp, opr: binop, exp2: exp
+) :<> exp = let
   val loc = location_combine (exp1.exp_loc, exp2.exp_loc)
-in
-  '{ exp_loc= loc, exp_node= OpExp (exp1, opr, exp2) }
-end // end of [fOpExp]
+in '{
+  exp_loc= loc, exp_node= OpExp (exp1, opr, exp2)
+} end // end of [fOpExp]
 
-fn fEseqExp
-  (tok1: token, stm2: stm, exp3: exp, tok4: token):<> exp = let
+fn fEseqExp (
+  tok1: token, stm2: stm, exp3: exp, tok4: token
+) :<> exp = let
   val loc = location_combine (tok1.token_loc, tok4.token_loc)
-in
-  '{ exp_loc= loc, exp_node= EseqExp (stm2, exp3) }
-end // end of [fEseqExp]
+in '{
+  exp_loc= loc, exp_node= EseqExp (stm2, exp3)
+} end // end of [fEseqExp]
 
 (* ****** ****** *)
 
@@ -436,7 +471,9 @@ extern fun interpStm (tbl: &table_t, _: stm): void
 
 (* ****** ****** *)
 
-implement interpExp (tbl, exp) =
+implement
+interpExp
+  (tbl, exp) = (
   case+ exp.exp_node of
   | IdExp id => let val v = lookup (tbl, id) in v end
   | NumExp v => v
@@ -450,9 +487,12 @@ implement interpExp (tbl, exp) =
   | EseqExp (stm, exp) => let
       val () = interpStm (tbl, stm) in interpExp (tbl, exp)
     end // end of [EseqExp]
-// end of [interpExp]
+) // end of [interpExp]
 
-implement interpStm (tbl, stm) = case+ stm.stm_node of
+implement
+interpStm
+  (tbl, stm) = (
+  case+ stm.stm_node of
   | CompoundStm (stm1, stm2) => let
       val () = interpStm (tbl, stm1) in interpStm (tbl, stm2)
     end // end of [CompoundStm]
@@ -472,13 +512,14 @@ implement interpStm (tbl, stm) = case+ stm.stm_node of
           end // end of [list_cons]
         | list_nil () => print_newline ()
     } // end of [PrintStm]
-// end of [interpStm]
+) // end of [interpStm]
     
 (* ****** ****** *)
 
 extern fun interp (_: stm): void
 
-implement interp (stm) = let
+implement
+interp (stm) = let
   var tbl0 = table_make (); val () = interpStm (tbl0, stm)
 in
   // empty
