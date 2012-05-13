@@ -184,27 +184,30 @@ end // end of [d1cstdeclst_tr]
 
 (* ****** ****** *)
 
-fn s1arg_arg_tr (s1a: s1arg): s2arg = begin
+fn s1arg_arg_tr
+  (s1a: s1arg): s2arg = begin
   s2arg_make (s1a.s1arg_loc, s1a.s1arg_sym, s1rtopt_tr s1a.s1arg_srt)
 end // end of [s1arg_arg_tr]
 
-fun s1arglst_arg_tr (s1as: s1arglst): s2arglst = begin case+ s1as of
+fun s1arglst_arg_tr
+  (s1as: s1arglst): s2arglst = begin case+ s1as of
   | cons (s1a, s1as) => cons (s1arg_arg_tr s1a, s1arglst_arg_tr s1as)
   | nil () => nil ()
 end // end of [s1arglst_arg_tr]
 
 (* ****** ****** *)
 
-fun d2con_select_arity (d2cs: d2conlst, n: int): d2conlst = begin
+fun d2con_select_arity
+  (d2cs: d2conlst, n: int): d2conlst = (
   case+ d2cs of
   | D2CONLSTcons (d2c, d2cs) =>
       if d2con_get_arity_full (d2c) = n then begin
         D2CONLSTcons (d2c, d2con_select_arity (d2cs, n))
       end else begin
         d2con_select_arity (d2cs, n)
-      end
+      end // end of [if]
   | D2CONLSTnil () => D2CONLSTnil ()
-end // end of [d2con_select_arity]
+) // end of [d2con_select_arity]
 
 (*
 //

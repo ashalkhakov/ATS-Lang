@@ -358,9 +358,12 @@ fn p3at_con_free_update
     print "p3at_con_free_update: d2c = "; print d2c; print_newline ();
   end // end of [val]
 *)
-  fun aux_var
-    (d2v_ptr: d2var_t, s2e: s2exp): @(d2var_t, s2exp) = let
-    val s2v_addr = s2var_make_id_srt (d2var_get_sym d2v_ptr, s2rt_addr)
+  fun aux_var (
+    d2v_ptr: d2var_t, s2e: s2exp
+  ) : @(d2var_t, s2exp) = let
+    val sym = d2var_get_sym (d2v_ptr)
+    val s2v_addr =
+      s2var_make_id_srt (sym, s2rt_addr)
     val () = trans3_env_add_svar s2v_addr
     val s2e_addr = s2exp_var s2v_addr
     val s2e_ptr = s2exp_ptr_addr_type (s2e_addr)
@@ -379,13 +382,16 @@ fn p3at_con_free_update
   in
     (d2v_view, s2e_addr)
   end // end of [aux_var]
-  fn aux_pat (p3t: p3at):<cloref1> s2exp = let
+  fn aux_pat (
+    p3t: p3at
+  ) :<cloref1> s2exp = let
     val d2v_ptr = (case+ p3t.p3at_node of
       | P3Tany (d2v) => let
-          val os2e = (case+ p3t.p3at_typ_lft of
+          val os2e = (
+            case+ p3t.p3at_typ_lft of
             | None () => Some (s2exp_topize_1 p3t.p3at_typ)
             | os2e => os2e
-          ) : s2expopt
+          ) : s2expopt // end of [val]
         in
           d2var_set_typ (d2v, os2e); d2v
         end (* end of [P3Tany] *)
@@ -393,10 +399,11 @@ fn p3at_con_free_update
       | P3Tas (refknd, d2v, p3t_as) when refknd > 0 => d2v
       | _ => let
           val d2v = d2var_make_any (p3t.p3at_loc)
-          val os2e = (case+ p3t.p3at_typ_lft of
+          val os2e = (
+            case+ p3t.p3at_typ_lft of
             | None () => Some (s2exp_topize_1 p3t.p3at_typ)
             | os2e => os2e
-          ) : s2expopt
+          ) : s2expopt // end of [val]
         in
           d2var_set_typ (d2v, os2e); d2v
         end (* end of [_] *)
