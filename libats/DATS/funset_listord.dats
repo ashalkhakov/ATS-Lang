@@ -80,8 +80,6 @@ funset_make_list
   (xs, cmp) = let
 //
 var env: ptr = null
-var !p_clo = @lam
-  (x1: &a, x2: &a): int =<clo> cmp (x1, x2)
 val xs = list_copy (xs) // HX: [xs] is ascending!
 //
 fun loop1 {m:pos} .<m,0>. (
