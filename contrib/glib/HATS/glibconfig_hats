@@ -39,6 +39,9 @@
 /* ****** ****** */
 
 (*
+//
+#undef G_DISABLE_SINGLE_INCLUDES // HX: gmacros.h may complain
+//
 #include <glibconfig.h>
 *)
 
