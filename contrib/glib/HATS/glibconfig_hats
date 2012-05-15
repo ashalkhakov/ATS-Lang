@@ -40,9 +40,9 @@
 
 (*
 //
-#undef G_DISABLE_SINGLE_INCLUDES // HX: gmacros.h may complain
+#define GLIB_COMPILATION 1
 //
-#include <glibconfig.h>
+#include <glibconfig.h> // HX: gmacros.h may otherwise complain
 *)
 
 /* ****** ****** */
