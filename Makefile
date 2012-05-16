@@ -210,9 +210,6 @@ ifeq ($(HAVE_LIBGTK20),1)
 	$(MAKE) -C contrib/pango all
 	$(MAKE) -C contrib/GTK all
 endif
-ifeq ($(HAVE_LIBSDL10),1)
-	$(MAKE) -C contrib/SDL all
-endif
 
 ###### some toplevel commands ######
 
