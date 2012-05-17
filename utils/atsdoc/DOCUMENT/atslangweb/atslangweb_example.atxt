@@ -201,8 +201,9 @@ as follows:
 ')
 
 #atscode2xmld('\
-fun fibats {n:nat}
-  (n: int n): [r:int] (FIB (n, r) | int r) = let
+fun fibats
+  {n:nat} (n: int n)
+  : [r:int] (FIB (n, r) | int r) = let
   fun loop {i:nat | i <= n} {r0,r1:int} (
     pf0: FIB (i, r0), pf1: FIB (i+1, r1) | ni: int (n-i), r0: int r0, r1: int r1
   ) : [r:int] (FIB (n, r) | int r) =
