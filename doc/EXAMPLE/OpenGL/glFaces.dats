@@ -238,7 +238,7 @@ implement animate () = let
     val dir = !direction_ref in !direction_ref := ~dir
   end // end of [val]
   val () = !frame_cur_ref := frame_new
-  val () = usleep (100000) // one-tenth of a second
+  val _(*err*) = usleep (100000) // one-tenth of a second
 in
   glutPostRedisplay ()
 end // end of [animate]

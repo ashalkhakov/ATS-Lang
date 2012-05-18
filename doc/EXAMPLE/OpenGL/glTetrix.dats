@@ -303,10 +303,10 @@ in
     val () = n := n - 1
     val () = disappear (!p_arr)
     val () = glTetrix_display_main (0) // theCurrentShape is aborbed!
-    val () = usleep (25000)
+    val _(*err*) = usleep (25000)
     val () = restore (!p_arr)
     val () = glTetrix_display_main (0) // theCurrentShape is aborbed!
-    val () = usleep (25000)
+    val _(*err*) = usleep (25000)
   in
     // empty
   end // end of [while]
@@ -762,7 +762,8 @@ extern fun theCurrentShape_freefall (): void
 implement theCurrentShape_freefall (): void = let
   #define FreeFallTimeInterval 2048
   fun loop (S: shape0): void = let
-    val () = usleep (FreeFallTimeInterval)
+    val _(*err*) =
+      usleep (FreeFallTimeInterval)
     val res = theCurrentShape_ymove_if (~1)
   in
     if res <> 0 then let

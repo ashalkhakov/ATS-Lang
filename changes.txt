@@ -1,5 +1,10 @@
 ########################################################################
 
+ats-lang-anairiats-0.2.8:
+
+
+########################################################################
+
 ats-lang-anairiats-0.2.7:
 
 1. free_gc_viewt0ype_addr_view -> free_gc_t0ype_addr_view
@@ -20,6 +25,7 @@ ats-lang-anairiats-0.2.7:
 13: Adding libats/funmset_listord (functional multiset implementation)
 14: Fixing a bug involving tailcall optimization (argument movement)
 15: Fixing a minor bug involving p2at_arg_tr.
+16: The interface for pthread creating in ATS is slightly modified.
 
 ########################################################################
 

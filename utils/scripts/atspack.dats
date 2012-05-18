@@ -665,6 +665,7 @@ fn Anairiats_doc_dir_copy () = let
     val () = cp "prelude_bool.dats"
     val () = cp "prelude_char.dats"
     val () = cp "prelude_float.dats"
+    val () = cp "prelude_integer.dats"
     val () = cp "prelude_list.dats"  
     val () = cp "prelude_list_vt.dats"
     val () = cp "prelude_matrix.dats"
