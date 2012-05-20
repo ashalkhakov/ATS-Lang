@@ -92,14 +92,15 @@ ATS/Anairats packages are available at the following links:
 #menu('\
 #litxt(
 #para('\
-The current #strong("stable") release is <a href="http://sourceforge.net/projects/ats-lang/download">ats-lang-anairiats-0.2.6</a> (2.9MB)
+The current #strong("stable") release is
+<a href="http://sourceforge.net/projects/ats-lang/download">ats-lang-anairiats-0.2.7</a> (2.4MB)
 '))
 #litxt(
 #para('\
 The current #strong("unstable") version is
 #ulink1(
-  "http://www.cs.bu.edu/~hwxi/ATS/IMPLEMENTATION/Anairiats/ats-lang-anairiats-0.2.7-unstable.tgz"
-, "ats-lang-anairiats-0.2.7-unstable"
+  "http://www.cs.bu.edu/~hwxi/ATS/IMPLEMENTATION/Anairiats/ats-lang-anairiats-0.2.8-unstable.tgz"
+, "ats-lang-anairiats-0.2.8-unstable"
 )
 '))
 ')#comment("menu")
