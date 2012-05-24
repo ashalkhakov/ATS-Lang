@@ -66,7 +66,9 @@ set_t0ype_type (elt: t@ype) = List (elt)
 
 (* ****** ****** *)
 //
-// HX: a set is represented as a sorted list in descending order
+// HX:
+// a set is represented as a sorted list in descending order;
+// note that descending order is chosen to faciliate set comparison
 //
 (* ****** ****** *)
 
@@ -79,8 +81,11 @@ implement{a}
 funset_make_list
   (xs, cmp) = let
 //
-var env: ptr = null
-val xs = list_copy (xs) // HX: [xs] is ascending!
+typedef env = cmp(a)
+//
+fn fcmp
+  (x: a, y: a, cmp: !env):<> int = cmp (x, y)
+val xs = list_mergesort<a> {env} (xs, fcmp, cmp) // [xs] is ascending!
 //
 fun loop1 {m:pos} .<m,0>. (
   xs: list_vt (a, m), ys: List_vt (a), cmp: cmp a

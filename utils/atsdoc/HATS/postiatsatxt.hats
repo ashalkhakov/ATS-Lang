@@ -47,6 +47,13 @@ staload "libatsdoc/SATS/atsdoc_text.sats"
 //
 (* ****** ****** *)
 
+fun comment
+  (x: string): atext = let
+  val _beg = "(*\n" and _end = "\n*)"
+in
+  atext_appstr3 (_beg, x, _end)
+end // end of [comment]
+
 fun ignoretxt (x: atext): atext = atext_nil ()
 
 (* ****** ****** *)

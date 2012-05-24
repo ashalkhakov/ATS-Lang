@@ -261,6 +261,7 @@ fun eq_string_string__main
 fun neq_string_string
   (s1: string, s2: string):<> bool = "atspre_neq_string_string"
 overload <> with neq_string_string
+overload != with neq_string_string
 
 fun neq_string_string__main
   {v:view} {l1,l2:addr} (

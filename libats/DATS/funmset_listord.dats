@@ -66,7 +66,9 @@ mset_t0ype_type (elt: t@ype) = List @(Pos, elt)
 
 (* ****** ****** *)
 //
-// HX: mset is represented as a sorted mlist in descending order
+// HX:
+// mset is represented as a sorted mlist in descending order;
+// note that desending order is chosen to facilitate mset comparion
 //
 (* ****** ****** *)
 
