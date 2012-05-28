@@ -57,7 +57,7 @@ stadef dlist_vt = dlist_viewt0ype_int_int_viewtype
 
 praxi
 lemma1_dlist_vt_params {a:vt0p}
-  {f,r:int} (xs: !dlist_vt (a, f, r)): [f >= 0; r >= 0] void
+  {f,r:int} (xs: !dlist_vt (a, f, r)): [f >= 0;r >= 0] void
 // end of [lemma_dlist_vt_params]
 
 praxi

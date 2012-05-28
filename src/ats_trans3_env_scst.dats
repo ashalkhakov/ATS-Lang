@@ -88,8 +88,10 @@ end // end of [the_s2cstlst_env_adds]
 
 implement
 the_s2cstlst_env_bind_and_add
-  (loc0, s2c, s2e) = begin
-  if not (s2cst_get_isasp s2c) then let
+  (loc0, s2c, s2e) = let
+  val isasp = s2cst_get_isasp (s2c)
+in
+  if not (isasp) then let
 (*
     val () = begin
       print "the_s2cstlst_env_bind_and_add: s2c = "; print s2c; print_newline ();
@@ -97,7 +99,7 @@ the_s2cstlst_env_bind_and_add
     end // end of [val]
 *)
     val () = s2cst_set_def (s2c, Some s2e)
-    val () = s2cst_set_isasp (s2c, false)
+    val () = s2cst_set_isasp (s2c, true)
   in
     the_s2cstlst_env_add s2c
   end else let
