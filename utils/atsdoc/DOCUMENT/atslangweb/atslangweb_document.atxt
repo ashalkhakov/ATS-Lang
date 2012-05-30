@@ -118,7 +118,8 @@ reliable programming with #ulink("http://www.cairographics.org", "cairo"),
 a comprehensive drawing package supporting 2D graphics, through the API for
 cairo in ATS. In particular, it is demonstrated concretely that linear
 types can be used highly effectively to prevent resources (such as contexts
-created for drawing) from being leaked due to programming errors.\
+created for drawing) from being leaked due to inadvertent programming
+errors.\
 
 </td></tr>
 <tr><td>

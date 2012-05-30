@@ -33,7 +33,7 @@
 
 (* ****** ****** *)
 
-#define ATS_STALOADFLAG 0 // there is need for staloading at run0time
+#define ATS_STALOADFLAG 0 // there is no need for staloading at run-time
 
 (* ****** ****** *)
 

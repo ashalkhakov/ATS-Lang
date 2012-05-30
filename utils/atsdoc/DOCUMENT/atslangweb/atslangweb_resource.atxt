@@ -59,6 +59,7 @@ padding-right: 10px ;
 
 #menu('\
 #litxt(#ulink("\#ATS_edit", "Editing ATS source code"))
+#litxt(#ulink("\#ATS_crossref", "Viewing ATS source code"))
 #litxt(#ulink("\#ATS_mler", "ML programmer\'s guide to ATS"))
 #litxt(#ulink("\#ATS_courses", "Courses based on ATS"))
 ')#comment("menu")
@@ -73,6 +74,16 @@ A #ulink1("#ATSLANGSVNROOTget()/utils/vim/ats.vim", "mode") for editing ATS sour
 ')
 #lisub('\
 A #ulink("http://cs-people.bu.edu/md/ats-mode/", "mode") for editing ATS source code in emacs.
+')
+")#comment("menu")
+
+#HR(1)
+
+<h2>#uid("ATS_crossref", "Viewing ATS source code")</h2>
+#menu("\
+#lisub('\
+A #ulink("http://xrats.illtyped.com", "site")
+for viewing ATS source code with cross-reference support.
 ')
 ")#comment("menu")
 
