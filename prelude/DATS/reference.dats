@@ -80,9 +80,11 @@ end // end of [ref_swap]
 
 (* ****** ****** *)
 
-implement ref_map {a} (r, f) = begin
-  let val (vbox pf | p) = ref_get_view_ptr r in f !p end
-end // end of [ref_map]
+implement
+ref_app_fun
+  {a} (r, f) = begin
+  let val (vbox pf | p) = ref_get_view_ptr r in f (!p) end
+end // end of [ref_app_fun]
 
 (* ****** ****** *)
 

@@ -647,6 +647,8 @@ prfun array_v_ungroup :
   (MUL (m, n, mn), array_v (@[a][n], m, l)) -<prf> array_v (a, mn, l)
 // end of [array_v_ungroup]
 
+(* ****** ****** *)
+
 fun{a:vt0p}
 array2_ptr_takeout
   {m,n:int}

@@ -130,6 +130,13 @@ list_vt_make_elt {n:nat} (x: a, n: int n):<> list_vt (a, n)
 (* ****** ****** *)
 
 fun{a:vt0p}
+list_vt_extend {n:int}
+  (xs: list_vt (a, n), x: a):<> list_vt (a, n+1)
+// end of [list_vt_extend]
+
+(* ****** ****** *)
+
+fun{a:vt0p}
 list_vt_append {m,n:int}
   (xs: list_vt (a, m), ys: list_vt (a, n)):<> list_vt (a, m+n)
 // end of [list_vt_append]

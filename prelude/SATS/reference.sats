@@ -124,7 +124,10 @@ fun{a:viewt@ype} ref_swap (r: ref a, x: &a):<!ref> void
 //
 // HX: implemented in [prelude/DATS/reference.dats]
 //
-fun ref_map {a:viewt@ype} (r: ref a, f: (&a) -<0> void):<!ref> void
+fun ref_app_fun
+  {a:viewt@ype}
+  (r: ref a, f: (&a) -<0> void):<!ref> void
+// end of [ref_app_fun]
 
 (*
 

@@ -224,15 +224,36 @@ end // end of [list_make_elt]
 (* ****** ****** *)
 
 implement{a}
+list_vt_extend (xs0, y) = let
+//
+prval () = list_vt_length_is_nonnegative (xs0)
+//
+fun loop {n:nat} .<n>. (
+  xs0: &list_vt (a, n) >> list_vt (a, n+1), y: a
+) :<> void = begin case+ xs0 of
+  | list_vt_cons (_, !p_xs) => (loop (!p_xs, y); fold@ xs0)
+  | ~list_vt_nil () => (xs0 := list_vt_sing (y))
+end // end of [loop]
+//
+var xs0 = xs0
+//
+in
+  loop (xs0, y); xs0
+end // end of [list_vt_append]
+
+(* ****** ****** *)
+
+implement{a}
 list_vt_append (xs0, ys0) = let
 //
 prval () = list_vt_length_is_nonnegative (xs0)
 prval () = list_vt_length_is_nonnegative (ys0)
 //
 var xs0 = xs0
-fun{a:viewt@ype} loop {m,n:nat} .<m>.
-  (xs0: &list_vt (a, m) >> list_vt (a, m+n), ys0: list_vt (a, n))
-  :<> void = begin case+ xs0 of
+fun loop {m,n:nat} .<m>. (
+  xs0: &list_vt (a, m) >> list_vt (a, m+n)
+, ys0: list_vt (a, n)
+) :<> void = begin case+ xs0 of
   | list_vt_cons (_, !p_xs) => (loop (!p_xs, ys0); fold@ xs0)
   | ~list_vt_nil () => (xs0 := ys0)
 end // end of [loop]
