@@ -1184,10 +1184,11 @@ end (* end of [d2exp_caseof_tr_dn] *)
 
 implement d2exp_scaseof_tr_dn
   (loc0, r2es, s2e_val, sc2ls, s2e0) = let
+//
   val r2es = i2nvresstate_update (r2es)
   val sbis = the_d2varset_env_stbefitemlst_save ()
   val sac = staftscstr_initialize (r2es, sbis)
-
+//
   fn aux_one (sc2l: sc2lau):<cloref1> sc3lau = let
     val sp2t = sc2l.sc2lau_pat
     val d2e_body = sc2l.sc2lau_exp

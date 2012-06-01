@@ -136,6 +136,10 @@ fun print_saityplst
 
 (* ****** ****** *)
 
+(*
+//
+// HX-2012-06-01: the function is not used anywhere
+//
 fn saityplst_check
   (d2v: d2var_t, xs: saityplst): int = let
   fn errmsg (d2v: d2var_t, x: saityp): void = case+ x of
@@ -179,6 +183,7 @@ in
       end // end of [if]
     end (* end of [list_cons, list_cons] *)
 end // end of [saityplst_check]
+*)
 
 (* ****** ****** *)
 
