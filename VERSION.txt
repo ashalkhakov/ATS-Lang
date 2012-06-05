@@ -34,7 +34,7 @@ ats-lang-anairiats-0.2.7:
 <pre>
 ats-lang-anairiats-0.2.6:
 
-1. Adding contrib/JNI for interface ATS and Java.
+1. Adding contrib/JNI for interfacing ATS with Java.
 2. Adding the --xrefprelude flag to make cross-referencing work again.
 3. The keyword [sta] can now also be written as [stacst].
 4. If a name refers to several static constants, then the latest declared
