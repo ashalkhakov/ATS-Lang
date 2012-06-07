@@ -156,12 +156,16 @@ typedef ats_a2rray_ptr_type ats_matrix_type ;
 
 /* ****** ****** */
 
-typedef struct { int tag ; } ats_sum_type ;
+typedef
+struct { int tag ; } ats_sum_type ;
 typedef ats_sum_type *ats_sum_ptr_type ;
 
 /* ****** ****** */
 
-typedef struct { int tag ; char *name ; } ats_exn_type ;
+typedef
+struct { 
+  int tag ; char *name ;
+} ats_exn_type ;
 typedef ats_exn_type *ats_exn_ptr_type ;
 
 /* ****** ****** */
