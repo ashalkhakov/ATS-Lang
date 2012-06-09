@@ -35,20 +35,20 @@
 (* ****** ****** *)
 
 %{#
-#include "libatsdoc/CATS/atsdoc_location.cats"
+#include "libatsdoc/CATS/libatsdoc_location.cats"
 %} // end of [%{#]
 
 (* ****** ****** *)
 
 staload
-FIL = "libatsdoc/SATS/atsdoc_filename.sats"
+FIL = "libatsdoc/SATS/libatsdoc_filename.sats"
 typedef filename = $FIL.filename
 
 (* ****** ****** *)
 
 abst@ype
 position_t0ype =
-$extype "atsdoc_position_struct"
+$extype "libatsdoc_position_struct"
 typedef position = position_t0ype
 
 (* ****** ****** *)
@@ -129,4 +129,4 @@ fun location_combine
 
 (* ****** ****** *)
 
-(* end of [atsdoc_location.sats] *)
+(* end of [libatsdoc_location.sats] *)

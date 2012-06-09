@@ -34,8 +34,8 @@
 //
 /* ****** ****** */
 
-#ifndef ATSDOC_LOCATION_CATS
-#define ATSDOC_LOCATION_CATS
+#ifndef LIBATSDOC_LOCATION_CATS
+#define LIBATSDOC_LOCATION_CATS
 
 /* ****** ****** */
 
@@ -43,12 +43,12 @@ typedef struct {
   ats_lint_type ntot ;
   ats_int_type nrow ; // line number
   ats_int_type ncol ; // line offset
-} atsdoc_position_struct ;
+} libatsdoc_position_struct ;
 
 /* ****** ****** */
 
-#endif // end of [ATSDOC_LOCATION_CATS]
+#endif // end of [LIBATSDOC_LOCATION_CATS]
 
 /* ****** ****** */
 
-/* end of [atsdoc_position.cats] */
+/* end of [libatsdoc_position.cats] */

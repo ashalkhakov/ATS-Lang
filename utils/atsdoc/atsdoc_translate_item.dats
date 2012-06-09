@@ -43,7 +43,7 @@ staload _(*anon*) = "prelude/DATS/reference.dats"
 (* ****** ****** *)
 //
 staload
-LOC = "libatsdoc/SATS/atsdoc_location.sats"
+LOC = "libatsdoc/SATS/libatsdoc_location.sats"
 typedef position = $LOC.position
 //
 macdef posincby1
@@ -53,7 +53,7 @@ macdef posincbyc
 //
 (* ****** ****** *)
 
-staload "libatsdoc/SATS/atsdoc_lexbuf.sats"
+staload "libatsdoc/SATS/libatsdoc_lexbuf.sats"
 
 (* ****** ****** *)
 
@@ -65,7 +65,8 @@ staload "atsdoc_translate.sats"
 
 (* ****** ****** *)
 
-macdef neof (i) = (,(i) != EOF)
+macdef
+neof (i) = (,(i) != EOF)
 
 (* ****** ****** *)
 

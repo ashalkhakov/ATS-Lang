@@ -30,25 +30,67 @@
 (* ****** ****** *)
 //
 // Author: Hongwei Xi (hwxi AT cs DOT bu DOT edu)
-// Start Time: July, 2011
+// Start Time: April, 2011
 //
 (* ****** ****** *)
 
-staload "libatsdoc/SATS/atsdoc_error.sats"
+staload UN = "prelude/SATS/unsafe.sats"
+
+(* ****** ****** *)
+
+staload "libats/SATS/linmap_avltree.sats"
+staload _(*anon*) = "libats/DATS/linmap_avltree.dats"
+
+(* ****** ****** *)
+
+staload "libatsdoc/SATS/libatsdoc_symmap.sats"
+
+(* ****** ****** *)
+//
+typedef key = uint
+//
+assume
+symmap_vtype (itm:type) = map (key, itm)
+
+(* ****** ****** *)
+//
+val cmp0 = $UN.cast{cmp(key)} (null)
+//
+implement
+compare_key_key<key> (x1, x2, _) = compare_uint_uint (x1, x2)
+//
+(* ****** ****** *)
+
+implement symmap_make_nil () = linmap_make_nil<> ()
+implement symmap_free {itm} (map) = linmap_free<key,itm> (map)
 
 (* ****** ****** *)
 
 implement
-abort () = let
-(*
-  val _ = segfault () where {
-    extern fun segfault (): int = "atsdoc_error_segfault"
-  } // end of [val]
-*)
+symmap_search
+  {itm} (map, sym) = let
+  val k = $SYM.symbol_get_stamp (sym)
+  var res: itm?
+  val found = linmap_search (map, k, cmp0, res)
 in
-  $raise FatalErrorException ()
-end // end of [abort]
+  if found then let
+    prval () = opt_unsome {itm} (res) in Some_vt (res)
+  end else let
+    prval () = opt_unnone {itm} (res) in None_vt ()
+  end (* end of [if] *)
+end // end of [symmap_search]
 
 (* ****** ****** *)
 
-(* end of [atsdoc_error.dats] *)
+implement
+symmap_insert
+  {itm} (map, sym, i) = {
+  val k = $SYM.symbol_get_stamp (sym)
+  var res: itm
+  val _exist = linmap_insert<uint,itm> (map, k, i, cmp0, res)
+  prval () = opt_clear (res)
+} // end of [symmap_insert]
+
+(* ****** ****** *)
+
+(* end of [libatsdoc_symmap.dats] *)

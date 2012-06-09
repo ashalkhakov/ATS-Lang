@@ -35,13 +35,13 @@
 (* ****** ****** *)
 
 %{#
-#include "libatsdoc/CATS/atsdoc_lexbuf.cats"
+#include "libatsdoc/CATS/libatsdoc_lexbuf.cats"
 %} // end of [%{#]
 
 (* ****** ****** *)
 
 staload
-LOC = "libatsdoc/SATS/atsdoc_location.sats"
+LOC = "libatsdoc/SATS/libatsdoc_location.sats"
 typedef position = $LOC.position
 typedef location = $LOC.location
 
@@ -49,7 +49,7 @@ typedef location = $LOC.location
 
 absviewt@ype
 lexbuf_vt0ype =
-$extype "atsdoc_lexbuf_struct"
+$extype "libatsdoc_lexbuf_struct"
 viewtypedef lexbuf = lexbuf_vt0ype
 
 (* ****** ****** *)
@@ -125,4 +125,4 @@ fun lexbuf_get_substrptr1
 
 (* ****** ****** *)
 
-(* end of [atsdoc_lexbuf.sats] *)
+(* end of [libatsdoc_lexbuf.sats] *)

@@ -35,7 +35,7 @@
 (* ****** ****** *)
 
 staload
-SYM = "libatsdoc/SATS/atsdoc_symbol.sats"
+SYM = "libatsdoc/SATS/libatsdoc_symbol.sats"
 typedef symbol = $SYM.symbol
 
 (* ****** ****** *)
@@ -101,4 +101,4 @@ fun tostring_strsub (sub: string): strptr0 // HX: nullptr means error
 
 (* ****** ****** *)
 
-(* end of [atsdoc_atext.sats] *)
+(* end of [libatsdoc_atext.sats] *)

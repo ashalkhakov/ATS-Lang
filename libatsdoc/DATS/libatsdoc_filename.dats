@@ -41,13 +41,13 @@ staload _(*anon*) = "prelude/DATS/reference.dats"
 (* ****** ****** *)
 
 staload
-SYM = "libatsdoc/SATS/atsdoc_symbol.sats"
+SYM = "libatsdoc/SATS/libatsdoc_symbol.sats"
 typedef symbol= $SYM.symbol
 overload = with $SYM.eq_symbol_symbol
 
 (* ****** ****** *)
 
-staload "libatsdoc/SATS/atsdoc_filename.sats"
+staload "libatsdoc/SATS/libatsdoc_filename.sats"
 
 (* ****** ****** *)
 
@@ -550,4 +550,4 @@ atsopt_filename_append (
 
 (* ****** ****** *)
 
-(* end of [atsdoc_filename.dats] *)
+(* end of [libatsdoc_filename.dats] *)

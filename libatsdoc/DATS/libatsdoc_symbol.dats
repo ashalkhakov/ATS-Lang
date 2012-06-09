@@ -38,7 +38,7 @@ staload UN = "prelude/SATS/unsafe.sats"
 
 (* ****** ****** *)
 
-staload "libatsdoc/SATS/atsdoc_symbol.sats"
+staload "libatsdoc/SATS/libatsdoc_symbol.sats"
 
 (* ****** ****** *)
 
@@ -238,4 +238,4 @@ prerr_symbol (x) = fprint_symbol (stderr_ref, x)
 
 (* ****** ****** *)
 
-(* end of [atsdoc_symbol.dats] *)
+(* end of [libatsdoc_symbol.dats] *)

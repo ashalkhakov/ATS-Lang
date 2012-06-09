@@ -34,7 +34,7 @@
 //
 (* ****** ****** *)
 
-staload SYM = "libatsdoc/SATS/atsdoc_symbol.sats"
+staload SYM = "libatsdoc/SATS/libatsdoc_symbol.sats"
 
 (* ****** ****** *)
 
@@ -138,4 +138,4 @@ fun filenameopt_make_relative (name: string): filenameopt_vt
 
 (* ****** ****** *)
 
-(* end of [atsdoc_filename.sats] *)
+(* end of [libatsdoc_filename.sats] *)

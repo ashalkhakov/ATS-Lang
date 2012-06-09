@@ -35,18 +35,18 @@
 (* ****** ****** *)
 
 staload
-FIL = "libatsdoc/SATS/atsdoc_filename.sats"
+FIL = "libatsdoc/SATS/libatsdoc_filename.sats"
 typedef filename = $FIL.filename
 
 staload
-LOC = "libatsdoc/SATS/atsdoc_location.sats"
+LOC = "libatsdoc/SATS/libatsdoc_location.sats"
 stadef location = $LOC.location
 stadef position = $LOC.position
 
 (* ****** ****** *)
 
 staload
-LBF = "libatsdoc/SATS/atsdoc_lexbuf.sats"
+LBF = "libatsdoc/SATS/libatsdoc_lexbuf.sats"
 stadef lexbuf = $LBF.lexbuf
 
 (* ****** ****** *)

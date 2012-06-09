@@ -16,7 +16,7 @@ staload _(*anon*) = "prelude/DATS/reference.dats"
 macdef para (x) = xmltagging ("p", ,(x))
 macdef emph (x) = xmltagging ("em", ,(x))
 //
-staload _(*anon*) = "libatsdoc/DATS/atsdoc_text.dats"
+staload _(*anon*) = "libatsdoc/DATS/libatsdoc_text.dats"
 //
 (* ****** ****** *)
 

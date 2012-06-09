@@ -67,12 +67,12 @@ WAIT = "libc/sys/SATS/wait.sats"
 //
 (* ****** ****** *)
 
-staload "libatsdoc/SATS/atsdoc_symbol.sats"
-staload "libatsdoc/SATS/atsdoc_symmap.sats"
+staload "libatsdoc/SATS/libatsdoc_symbol.sats"
+staload "libatsdoc/SATS/libatsdoc_symmap.sats"
 
 (* ****** ****** *)
 
-staload "libatsdoc/SATS/atsdoc_text.sats"
+staload "libatsdoc/SATS/libatsdoc_text.sats"
 
 (* ****** ****** *)
 
@@ -170,11 +170,11 @@ end // end of [string2filename]
 extern
 fun file2strptr {fd:int} (
   pf: !fildes_v fd  | fd: int fd // [fd] is regular: no support for pipe
-) : strptr0 = "atsdoc_file2strptr"
+) : strptr0 = "libatsdoc_file2strptr"
 // end of [file2strptr]
 %{$
 ats_ptr_type
-atsdoc_file2strptr
+libatsdoc_file2strptr
   (ats_int_type fd) {
   int err = 0 ;
   int nerr = 0 ;
@@ -203,7 +203,7 @@ atsdoc_file2strptr
   }
 //
   if (sbp) free (sbp) ; return NULL ;
-} // end of [atsdoc_file2strptr]
+} // end of [libatsdoc_file2strptr]
 %} // end of [%{$]
 
 (* ****** ****** *)
@@ -248,7 +248,7 @@ end // end of [tostring_fprint]
 
 implement
 tostring_strsub (sub) = 
-  tostring_fprint<string> ("atsdoc_tostring_strsub", fprint_strsub, sub)
+  tostring_fprint<string> ("libatsdoc_tostring_strsub", fprint_strsub, sub)
 // end of [tostring_strsub]
 
 (* ****** ****** *)
@@ -269,7 +269,7 @@ in
       if (c != EOF) then (fprint_char (out, (char_of_int)c); fpr (out, inp)) else ()
     end // end of [fpr]
 //
-    val res = tostring_fprint ("atsdoc_filename2text", fpr, filr)
+    val res = tostring_fprint ("libatsdoc_filename2text", fpr, filr)
     val _err = fclose_err (filr)
   in
     if strptr_isnot_null (res) then
@@ -288,7 +288,7 @@ implement
 atscode2xml_strcode
   (stadyn, code) = let
   val [l:addr] path =
-    string2filename ("atsdoc_atscode2xmlinp", code)
+    string2filename ("libatsdoc_atscode2xmlinp", code)
   prval () = addr_is_gtez {l} ()
 in
 //
@@ -339,7 +339,7 @@ atscode2xml_filcode
   (stadyn, path) = let
 //
   val tmp = sprintf
-    ("%sXXXXXX", @("atsdoc_atscode2xmlout"))
+    ("%sXXXXXX", @("libatsdoc_atscode2xmlout"))
   // end of [val]
   val [m,n:int] tmp = strbuf_of_strptr (tmp)
   prval () = __assert () where {
@@ -511,7 +511,7 @@ end // end of [fprint_atextlst]
 
 (* ****** ****** *)
 
-staload "libatsdoc/SATS/atsdoc_reader.sats"
+staload "libatsdoc/SATS/libatsdoc_reader.sats"
 extern fun fprsub_reader (out: FILEref, inp: &reader): void
 
 (* ****** ****** *)
@@ -713,4 +713,4 @@ end // end of [fprint_filsub]
 
 (* ****** ****** *)
 
-(* end of [atsdoc_text.dats] *)
+(* end of [libatsdoc_text.dats] *)

@@ -39,14 +39,14 @@
 //
 (* ****** ****** *)
 
-dynload "libatsdoc/DATS/atsdoc_error.dats"
-dynload "libatsdoc/DATS/atsdoc_filename.dats"
-dynload "libatsdoc/DATS/atsdoc_location.dats"
-dynload "libatsdoc/DATS/atsdoc_reader.dats"
-dynload "libatsdoc/DATS/atsdoc_lexbuf.dats"
-dynload "libatsdoc/DATS/atsdoc_symbol.dats"
-dynload "libatsdoc/DATS/atsdoc_symmap.dats"
-dynload "libatsdoc/DATS/atsdoc_text.dats"
+dynload "libatsdoc/DATS/libatsdoc_error.dats"
+dynload "libatsdoc/DATS/libatsdoc_filename.dats"
+dynload "libatsdoc/DATS/libatsdoc_location.dats"
+dynload "libatsdoc/DATS/libatsdoc_reader.dats"
+dynload "libatsdoc/DATS/libatsdoc_lexbuf.dats"
+dynload "libatsdoc/DATS/libatsdoc_symbol.dats"
+dynload "libatsdoc/DATS/libatsdoc_symmap.dats"
+dynload "libatsdoc/DATS/libatsdoc_text.dats"
 
 (* ****** ****** *)
 

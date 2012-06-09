@@ -3,6 +3,7 @@
 ats-lang-anairiats-0.2.8:
 
 1. Fixing a bug involving assumed abstract types.
+2. Adding list_mapopt_* functions.
 
 ########################################################################
 

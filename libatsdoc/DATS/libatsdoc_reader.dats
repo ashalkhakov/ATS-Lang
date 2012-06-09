@@ -38,14 +38,14 @@ staload _(*anon*) = "prelude/DATS/pointer.dats"
 
 (* ****** ****** *)
 
-staload "libatsdoc/SATS/atsdoc_reader.sats"
+staload "libatsdoc/SATS/libatsdoc_reader.sats"
 
 (* ****** ****** *)
 
 viewtypedef
 freader (v:view) =
 $extype_struct
-"atsdoc_reader_struct" of {
+"libatsdoc_reader_struct" of {
   pfres= v
 , getchar= (!v | (*none*)) -<cloptr1> int
 , freeres= ( v | (*none*)) -<cloptr1> void  
@@ -219,4 +219,4 @@ end // end of [local]
 
 (* ****** ****** *)
 
-(* end of [atsdoc_reader.dats] *)
+(* end of [libatsdoc_reader.dats] *)

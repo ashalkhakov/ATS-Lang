@@ -59,22 +59,22 @@ all:: libatsdoc clean
 ######
 
 SOURCES := \
-  atsdoc_error.sats \
-  atsdoc_error.dats \
-  atsdoc_symbol.sats \
-  atsdoc_symbol.dats \
-  atsdoc_symmap.sats \
-  atsdoc_symmap.dats \
-  atsdoc_filename.sats \
-  atsdoc_filename.dats \
-  atsdoc_location.sats \
-  atsdoc_location.dats \
-  atsdoc_reader.sats \
-  atsdoc_reader.dats \
-  atsdoc_lexbuf.sats \
-  atsdoc_lexbuf.dats \
-  atsdoc_text.sats \
-  atsdoc_text.dats \
+  libatsdoc_error.sats \
+  libatsdoc_error.dats \
+  libatsdoc_symbol.sats \
+  libatsdoc_symbol.dats \
+  libatsdoc_symmap.sats \
+  libatsdoc_symmap.dats \
+  libatsdoc_filename.sats \
+  libatsdoc_filename.dats \
+  libatsdoc_location.sats \
+  libatsdoc_location.dats \
+  libatsdoc_reader.sats \
+  libatsdoc_reader.dats \
+  libatsdoc_lexbuf.sats \
+  libatsdoc_lexbuf.dats \
+  libatsdoc_text.sats \
+  libatsdoc_text.dats \
 
 SOURCESsta := $(filter %.sats, $(SOURCES))
 SOURCESdyn := $(filter %.dats, $(SOURCES))
@@ -85,22 +85,22 @@ OBJECTS := $(patsubst %.dats, %_dats.o, $(OBJECTS))
 
 ######
 
-atsdoc_error_sats.o : SATS/atsdoc_error.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_error_dats.o : DATS/atsdoc_error.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_symbol_sats.o : SATS/atsdoc_symbol.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_symbol_dats.o : DATS/atsdoc_symbol.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_symmap_sats.o : SATS/atsdoc_symmap.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_symmap_dats.o : DATS/atsdoc_symmap.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_filename_sats.o : SATS/atsdoc_filename.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_filename_dats.o : DATS/atsdoc_filename.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_location_sats.o : SATS/atsdoc_location.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_location_dats.o : DATS/atsdoc_location.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_reader_sats.o : SATS/atsdoc_reader.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_reader_dats.o : DATS/atsdoc_reader.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_lexbuf_sats.o : SATS/atsdoc_lexbuf.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_lexbuf_dats.o : DATS/atsdoc_lexbuf.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_text_sats.o : SATS/atsdoc_text.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-atsdoc_text_dats.o : DATS/atsdoc_text.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_error_sats.o : SATS/libatsdoc_error.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_error_dats.o : DATS/libatsdoc_error.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_symbol_sats.o : SATS/libatsdoc_symbol.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_symbol_dats.o : DATS/libatsdoc_symbol.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_symmap_sats.o : SATS/libatsdoc_symmap.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_symmap_dats.o : DATS/libatsdoc_symmap.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_filename_sats.o : SATS/libatsdoc_filename.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_filename_dats.o : DATS/libatsdoc_filename.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_location_sats.o : SATS/libatsdoc_location.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_location_dats.o : DATS/libatsdoc_location.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_reader_sats.o : SATS/libatsdoc_reader.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_reader_dats.o : DATS/libatsdoc_reader.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_lexbuf_sats.o : SATS/libatsdoc_lexbuf.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_lexbuf_dats.o : DATS/libatsdoc_lexbuf.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_text_sats.o : SATS/libatsdoc_text.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_text_dats.o : DATS/libatsdoc_text.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
 
 ######
 

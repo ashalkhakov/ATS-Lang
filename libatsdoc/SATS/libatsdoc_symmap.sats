@@ -8,7 +8,7 @@
 
 (*
 ** ATS/Postiats - Unleashing the Potential of Types!
-** Copyright (C) 2011-20?? Hongwei Xi, ATS Trustworthy Software, Inc.
+** Copyright (C) 2011-20?? Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -30,67 +30,38 @@
 (* ****** ****** *)
 //
 // Author: Hongwei Xi (hwxi AT cs DOT bu DOT edu)
-// Start Time: April, 2011
+// Start Time: July, 2011
 //
 (* ****** ****** *)
 
-staload UN = "prelude/SATS/unsafe.sats"
+staload
+SYM = "libatsdoc/SATS/libatsdoc_symbol.sats"
+typedef symbol = $SYM.symbol
 
 (* ****** ****** *)
 
-staload "libats/SATS/linmap_avltree.sats"
-staload _(*anon*) = "libats/DATS/linmap_avltree.dats"
+absviewtype
+symmap_vtype (itm:type)
+stadef symmap = symmap_vtype
 
-(* ****** ****** *)
+fun symmap_make_nil
+  {itm:type} ():<> symmap (itm)
 
-staload "libatsdoc/SATS/atsdoc_symmap.sats"
+fun symmap_free
+  {itm:type} (map: symmap (itm)):<> void
 
-(* ****** ****** *)
-//
-typedef key = uint
-//
-assume
-symmap_vtype (itm:type) = map (key, itm)
-
-(* ****** ****** *)
-//
-val cmp0 = $UN.cast{cmp(key)} (null)
-//
-implement
-compare_key_key<key> (x1, x2, _) = compare_uint_uint (x1, x2)
-//
-(* ****** ****** *)
-
-implement symmap_make_nil () = linmap_make_nil<> ()
-implement symmap_free {itm} (map) = linmap_free<key,itm> (map)
-
-(* ****** ****** *)
-
-implement
+fun
 symmap_search
-  {itm} (map, sym) = let
-  val k = $SYM.symbol_get_stamp (sym)
-  var res: itm?
-  val found = linmap_search (map, k, cmp0, res)
-in
-  if found then let
-    prval () = opt_unsome {itm} (res) in Some_vt (res)
-  end else let
-    prval () = opt_unnone {itm} (res) in None_vt ()
-  end (* end of [if] *)
-end // end of [symmap_search]
+  {itm:type}
+  (map: !symmap itm, k: symbol):<> Option_vt itm
+// end of [symmap_search]
 
-(* ****** ****** *)
-
-implement
+fun
 symmap_insert
-  {itm} (map, sym, i) = {
-  val k = $SYM.symbol_get_stamp (sym)
-  var res: itm
-  val _exist = linmap_insert<uint,itm> (map, k, i, cmp0, res)
-  prval () = opt_clear (res)
-} // end of [symmap_insert]
+  {itm:type} (
+  map: &symmap (itm), key: symbol, itm: itm
+) :<> void // end of [symmap_insert]
 
 (* ****** ****** *)
 
-(* end of [atsdoc_symmap.dats] *)
+(* end of [libatsdoc_symmap.sats] *)

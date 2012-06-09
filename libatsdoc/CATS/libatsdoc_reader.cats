@@ -34,37 +34,22 @@
 //
 /* ****** ****** */
 
-#ifndef ATSDOC_LEXBUF_CATS
-#define ATSDOC_LEXBUF_CATS
-
-/* ****** ****** */
-
-#include "libats/CATS/linqueue_arr.cats"
-
-/* ****** ****** */
-
-#include "libatsdoc/CATS/atsdoc_reader.cats"
+#ifndef LIBATSDOC_READER_CATS
+#define LIBATSDOC_READER_CATS
 
 /* ****** ****** */
 
 typedef struct {
 //
-  atslib_linqueue_arr_QUEUE cbuf ;
+  ats_ptr_type getchar ; // () -<cloref1> int
+  ats_ptr_type freeres ; // () -> void
 //
-  ats_lint_type base ;
-  ats_int_type base_nrow ; // line number
-  ats_int_type base_ncol ; // line offset
-//
-  ats_int_type nspace ; // leading space
-//
-  atsdoc_reader_struct reader ; // for getchar
-//
-} atsdoc_lexbuf_struct ;
+} libatsdoc_reader_struct ;
 
 /* ****** ****** */
 
-#endif // end of [ATSDOC_LEXBUF_CATS]
+#endif // end of [LIBATSDOC_READER_CATS]
 
 /* ****** ****** */
 
-/* end of [atsdoc_lexbuf.cats] */
+/* end of [libatsdoc_reader.cats] */

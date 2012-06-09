@@ -35,12 +35,12 @@
 (* ****** ****** *)
 
 staload
-FIL = "libatsdoc/SATS/atsdoc_filename.sats"
+FIL = "libatsdoc/SATS/libatsdoc_filename.sats"
 typedef filename = $FIL.filename
 
 (* ****** ****** *)
 
-staload "libatsdoc/SATS/atsdoc_location.sats"
+staload "libatsdoc/SATS/libatsdoc_location.sats"
 
 (* ****** ****** *)
 
@@ -51,7 +51,7 @@ macdef neof (i) = (,(i) != EOF)
 assume
 position_t0ype =
 $extype_struct
-"atsdoc_position_struct" of {
+"libatsdoc_position_struct" of {
   ntot= lint, nrow= int, ncol= int
 } // end of [position_t0ype]
 
@@ -295,4 +295,4 @@ end // end of [local]
 
 (* ****** ****** *)
 
-(* end of [atsdoc_location.dats] *)
+(* end of [libatsdoc_location.dats] *)

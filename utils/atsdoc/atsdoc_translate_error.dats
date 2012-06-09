@@ -40,13 +40,13 @@ staload _(*anon*) = "prelude/DATS/reference.dats"
 (* ****** ****** *)
 
 staload
-LOC = "libatsdoc/SATS/atsdoc_location.sats"
+LOC = "libatsdoc/SATS/libatsdoc_location.sats"
 typedef location = $LOC.location
 overload fprint with $LOC.fprint_location
 
 (* ****** ****** *)
 
-staload "libatsdoc/SATS/atsdoc_lexbuf.sats"
+staload "libatsdoc/SATS/libatsdoc_lexbuf.sats"
 
 (* ****** ****** *)
 

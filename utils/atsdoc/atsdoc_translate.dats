@@ -47,13 +47,13 @@ macdef fputc_err = $STDIO.fputc_err
 (* ****** ****** *)
 //
 staload
-SYM = "libatsdoc/SATS/atsdoc_symbol.sats"
+SYM = "libatsdoc/SATS/libatsdoc_symbol.sats"
 //
 staload
-FIL = "libatsdoc/SATS/atsdoc_filename.sats"
+FIL = "libatsdoc/SATS/libatsdoc_filename.sats"
 //
 staload
-LOC = "libatsdoc/SATS/atsdoc_location.sats"
+LOC = "libatsdoc/SATS/libatsdoc_location.sats"
 //
 macdef posincby1
   (pos) = $LOC.position_incby_count (,(pos), 1u)
@@ -62,7 +62,7 @@ macdef posincbyc
 //
 (* ****** ****** *)
 
-staload "libatsdoc/SATS/atsdoc_lexbuf.sats"
+staload "libatsdoc/SATS/libatsdoc_lexbuf.sats"
 
 (* ****** ****** *)
 
@@ -78,7 +78,8 @@ staload "atsdoc_translate.sats"
 
 (* ****** ****** *)
 
-macdef neof (i) = (,(i) != EOF)
+macdef
+neof (i) = (,(i) != EOF)
 
 (* ****** ****** *)
 

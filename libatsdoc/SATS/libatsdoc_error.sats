@@ -28,44 +28,18 @@
 *)
 
 (* ****** ****** *)
+//
+// Author: Hongwei Xi (hwxi AT cs DOT bu DOT edu)
+// Start Time: July, 2011
+//
+(* ****** ****** *)
 
-abstype symbol_type // boxed
-typedef symbol = symbol_type
-typedef symbolist = List (symbol)
-typedef symbolopt = Option (symbol)
+exception FatalErrorException
 
 (* ****** ****** *)
 
-val symbol_empty : symbol
+fun abort {a:viewt@ype} ():<!exn> a // raising FatalErrorException
 
 (* ****** ****** *)
 
-fun eq_symbol_symbol (x1: symbol, x2: symbol):<> bool
-overload = with eq_symbol_symbol
-fun neq_symbol_symbol (x1: symbol, x2: symbol):<> bool
-overload != with eq_symbol_symbol
-
-fun compare_symbol_symbol (x1: symbol, x2: symbol):<> Sgn
-overload compare with compare_symbol_symbol
-
-(* ****** ****** *)
-
-fun fprint_symbol
-  (out: FILEref, x: symbol): void
-overload fprint with fprint_symbol
-fun print_symbol (x: symbol): void
-overload print with print_symbol
-fun prerr_symbol (x: symbol): void
-overload prerr with prerr_symbol
-
-(* ****** ****** *)
-
-typedef stamp = uint
-
-fun symbol_get_name (x: symbol):<> string
-fun symbol_get_stamp (x: symbol):<> stamp
-fun symbol_make_string (name: string): symbol
-
-(* ****** ****** *)
-
-(* end of [atsdoc_symbol.sats] *)
+(* end of [libatsdoc_error.sats] *)

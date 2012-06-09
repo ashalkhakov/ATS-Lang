@@ -8,7 +8,7 @@
 
 (*
 ** ATS/Postiats - Unleashing the Potential of Types!
-** Copyright (C) 2011-20?? Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2011-20?? Hongwei Xi, ATS Trustworthy Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -34,48 +34,21 @@
 //
 (* ****** ****** *)
 
-%{#
-#include "libatsdoc/CATS/atsdoc_reader.cats"
-%} // end of [%{#]
+staload "libatsdoc/SATS/libatsdoc_error.sats"
 
 (* ****** ****** *)
 
-absviewt@ype
-reader_vt0ype =
-  $extype "atsdoc_reader_struct"
-viewtypedef reader = reader_vt0ype
+implement
+abort () = let
+(*
+  val _ = segfault () where {
+    extern fun segfault (): int = "libatsdoc_error_segfault"
+  } // end of [val]
+*)
+in
+  $raise FatalErrorException ()
+end // end of [abort]
 
 (* ****** ****** *)
 
-fun reader_initialize_filp
-  {m:file_mode} {l:addr} (
-  pfmod: file_mode_lte (m, r)
-, pffil: FILE m @ l
-| r: &reader? >> reader, p: ptr l
-) : void // end of [reader_initialize_filp]
-
-(* ****** ****** *)
-
-fun reader_initialize_getc (
-  r: &reader? >> reader, getc: () -<cloptr1> int
-) : void // end of [reader_initialize_getc]
-
-(* ****** ****** *)
-
-fun reader_initialize_string (
-  r: &reader? >> reader, inp: string
-) : void // end of [reader_initialize_string]
-
-(* ****** ****** *)
-
-fun reader_uninitialize (
-  r: &reader >> reader?
-) : void // end of [reader_uninitialize]
-
-(* ****** ****** *)
-
-fun reader_get_char (r: &reader): int // HX: EOF(-1) is returned at the end
-
-(* ****** ****** *)
-
-(* end of [atsdoc_reader.sats] *)
+(* end of [libatsdoc_error.dats] *)

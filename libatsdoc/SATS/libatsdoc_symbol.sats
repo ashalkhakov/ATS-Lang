@@ -28,40 +28,44 @@
 *)
 
 (* ****** ****** *)
-//
-// Author: Hongwei Xi (hwxi AT cs DOT bu DOT edu)
-// Start Time: July, 2011
-//
-(* ****** ****** *)
 
-staload
-SYM = "libatsdoc/SATS/atsdoc_symbol.sats"
-typedef symbol = $SYM.symbol
+abstype symbol_type // boxed
+typedef symbol = symbol_type
+typedef symbolist = List (symbol)
+typedef symbolopt = Option (symbol)
 
 (* ****** ****** *)
 
-absviewtype
-symmap_vtype (itm:type)
-stadef symmap = symmap_vtype
-
-fun symmap_make_nil
-  {itm:type} ():<> symmap (itm)
-
-fun symmap_free
-  {itm:type} (map: symmap (itm)):<> void
-
-fun
-symmap_search
-  {itm:type}
-  (map: !symmap itm, k: symbol):<> Option_vt itm
-// end of [symmap_search]
-
-fun
-symmap_insert
-  {itm:type} (
-  map: &symmap (itm), key: symbol, itm: itm
-) :<> void // end of [symmap_insert]
+val symbol_empty : symbol
 
 (* ****** ****** *)
 
-(* end of [atsdoc_symmap.sats] *)
+fun eq_symbol_symbol (x1: symbol, x2: symbol):<> bool
+overload = with eq_symbol_symbol
+fun neq_symbol_symbol (x1: symbol, x2: symbol):<> bool
+overload != with eq_symbol_symbol
+
+fun compare_symbol_symbol (x1: symbol, x2: symbol):<> Sgn
+overload compare with compare_symbol_symbol
+
+(* ****** ****** *)
+
+fun fprint_symbol
+  (out: FILEref, x: symbol): void
+overload fprint with fprint_symbol
+fun print_symbol (x: symbol): void
+overload print with print_symbol
+fun prerr_symbol (x: symbol): void
+overload prerr with prerr_symbol
+
+(* ****** ****** *)
+
+typedef stamp = uint
+
+fun symbol_get_name (x: symbol):<> string
+fun symbol_get_stamp (x: symbol):<> stamp
+fun symbol_make_string (name: string): symbol
+
+(* ****** ****** *)
+
+(* end of [libatsdoc_symbol.sats] *)

@@ -35,7 +35,7 @@
 (* ****** ****** *)
 
 staload
-LOC = "libatsdoc/SATS/atsdoc_location.sats"
+LOC = "libatsdoc/SATS/libatsdoc_location.sats"
 
 (* ****** ****** *)
 //
@@ -49,12 +49,12 @@ staload _(*anon*) = "libats/ngc/DATS/deque_arr.dats"
 (* ****** ****** *)
 
 staload
-R = "libatsdoc/SATS/atsdoc_reader.sats"
+R = "libatsdoc/SATS/libatsdoc_reader.sats"
 viewtypedef reader = $R.reader
 
 (* ****** ****** *)
 
-staload "libatsdoc/SATS/atsdoc_lexbuf.sats"
+staload "libatsdoc/SATS/libatsdoc_lexbuf.sats"
 
 (* ****** ****** *)
 //
@@ -83,7 +83,7 @@ viewtypedef
 lexbuf_int_int
   (m: int, n:int) =
 $extype_struct
-"atsdoc_lexbuf_struct" of {
+"libatsdoc_lexbuf_struct" of {
   cbuf= QUEUE (uchar, m, n) // character buffer
 , base= lint
 , base_nrow=int, base_ncol= int
@@ -415,4 +415,4 @@ lexbufpos_get_strptr1
 
 (* ****** ****** *)
 
-(* end of [atsdoc_lexbuf.dats] *)
+(* end of [libatsdoc_lexbuf.dats] *)

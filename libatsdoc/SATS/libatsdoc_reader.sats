@@ -34,12 +34,48 @@
 //
 (* ****** ****** *)
 
-exception FatalErrorException
+%{#
+#include "libatsdoc/CATS/libatsdoc_reader.cats"
+%} // end of [%{#]
 
 (* ****** ****** *)
 
-fun abort {a:viewt@ype} ():<!exn> a // raising FatalErrorException
+absviewt@ype
+reader_vt0ype =
+  $extype "libatsdoc_reader_struct"
+viewtypedef reader = reader_vt0ype
 
 (* ****** ****** *)
 
-(* end of [atsdoc_error.sats] *)
+fun reader_initialize_filp
+  {m:file_mode} {l:addr} (
+  pfmod: file_mode_lte (m, r)
+, pffil: FILE m @ l
+| r: &reader? >> reader, p: ptr l
+) : void // end of [reader_initialize_filp]
+
+(* ****** ****** *)
+
+fun reader_initialize_getc (
+  r: &reader? >> reader, getc: () -<cloptr1> int
+) : void // end of [reader_initialize_getc]
+
+(* ****** ****** *)
+
+fun reader_initialize_string (
+  r: &reader? >> reader, inp: string
+) : void // end of [reader_initialize_string]
+
+(* ****** ****** *)
+
+fun reader_uninitialize (
+  r: &reader >> reader?
+) : void // end of [reader_uninitialize]
+
+(* ****** ****** *)
+
+fun reader_get_char (r: &reader): int // HX: EOF(-1) is returned at the end
+
+(* ****** ****** *)
+
+(* end of [libatsdoc_reader.sats] *)
