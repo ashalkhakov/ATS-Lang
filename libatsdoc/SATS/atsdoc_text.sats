@@ -43,6 +43,9 @@ typedef symbol = $SYM.symbol
 abstype atext_type
 typedef atext = atext_type
 typedef atextlst = List (atext)
+typedef atextopt = Option (atext)
+viewtypedef atextlst_vt = List_vt (atext)
+viewtypedef atextopt_vt = Option_vt (atext)
 
 (* ****** ****** *)
 

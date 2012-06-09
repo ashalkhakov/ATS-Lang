@@ -76,6 +76,17 @@ typedef List (a:t@ype) = [n:int | n >= 0] list (a, n)
 
 (* ****** ****** *)
 
+sortdef t0p = t@ype
+
+(* ****** ****** *)
+
+typedef
+listLt (a:t0p, n:int) = [n1:nat | n1 < n] list (a, n1)
+typedef
+listLte (a:t0p, n:int) = [n1:nat | n1 <= n] list (a, n1)
+
+(* ****** ****** *)
+
 prfun list_length_is_nonnegative
   {a:t@ype} {n:int} (xs: list (a, n)): [n>=0] void
 // end of [list_length_is_nonnegative]
@@ -357,32 +368,37 @@ list_extend {n:int} (xs: list (a, n), y: a):<> list_vt (a, n+1)
 
 fun{a:t@ype}
 list_filter_funenv
-  {v:view} {vt:viewtype} {n:int} {p:eff} (
-  pf: !v | xs: list (a, n), p: (!v | a, !vt) -<fun,p> bool, env: !vt
-) :<p> [n1:nat | n1 <= n] list_vt (a, n1)
+  {v:view}{vt:viewtype}{n:int}{p:eff} (
+  pf: !v | xs: list (a, n)
+, p: (!v | a, !vt) -<fun,p> bool, env: !vt
+) :<p> listLte_vt (a, n) // endfun
 
 fun{a:t@ype}
-list_filter_fun {n:int} {p:eff}
-  (xs: list (a, n), p: a -<fun,p> bool):<p> [n1:nat | n1 <= n] list_vt (a, n1)
+list_filter_fun{n:int}{p:eff}
+  (xs: list (a, n), p: a -<fun,p> bool):<p> listLte_vt (a, n)
 // end of [list_filter_fun]
 
 fun{a:t@ype}
-list_filter_vclo {v:view} {n:int} {p:eff} (
+list_filter_vclo
+  {v:view}{n:int}{p:eff} (
   pf: !v | xs: list (a, n), p: &(!v | a) -<clo,p> bool
-) :<p> [n1:nat | n1 <= n] list_vt (a, n1)
+) :<p> listLte_vt (a, n) // endfun
 
 fun{a:t@ype}
-list_filter_cloptr {n:int} {p:eff} (
+list_filter_cloptr
+  {n:int}{p:eff} (
   xs: list (a, n), p: !(a) -<cloptr,p> bool
-) :<p> [n1:nat | n1 <= n] list_vt (a, n1)
+) :<p> listLte_vt (a, n) // end of [list_filter_cloptr]
 fun{a:t@ype}
-list_filter_vcloptr {v:view} {n:int} {p:eff} (
+list_filter_vcloptr
+  {v:view}{n:int}{p:eff} (
   pf: !v | xs: list (a, n), p: !(!v | a) -<cloptr,p> bool
-) :<p> [n1:nat | n1 <= n] list_vt (a, n1)
+) :<p> listLte_vt (a, n) // endfun
 
 fun{a:t@ype}
-list_filter_cloref {n:int} {p:eff}
-  (xs: list (a, n), p: a -<cloref,p> bool):<p> [n1:nat | n1 <= n] list_vt (a, n1)
+list_filter_cloref
+  {n:int}{p:eff}
+  (xs: list (a, n), p: a -<cloref,p> bool):<p> listLte_vt (a, n)
 // end of [list_filter_cloref]
 
 (* ****** ****** *)
@@ -820,6 +836,57 @@ overload list_map with list_map_vclo
 overload list_map with list_map_cloptr
 overload list_map with list_map_vcloptr
 overload list_map with list_map_cloref
+*)
+
+(* ****** ****** *)
+
+fun{a:t@ype}{b:viewt@ype}
+list_mapopt_funenv
+  {v:view} {vt:viewtype} {n:int} {fe:eff} (
+  pf: !v | xs: list (a, n)
+, f: (!v | a, !vt) -<fun,fe> Option_vt (b), env: !vt
+) :<fe> listLte_vt (b, n)
+// end of [list_mapopt_funenv]
+
+fun{a:t@ype}{b:viewt@ype}
+list_mapopt_fun
+  {n:int} {fe:eff} (
+  xs: list (a, n), f: a -<fun,fe> Option_vt (b)
+) :<fe> listLte_vt (b, n)
+
+fun{a:t@ype}{b:viewt@ype}
+list_mapopt_vclo
+  {v:view} {n:int} {fe:eff} (
+  pf: !v | xs: list (a, n), f: &(!v | a) -<clo,fe> Option_vt (b)
+) :<fe> listLte_vt (b, n)
+//  end of [list_mapopt_vclo]
+
+fun{a:t@ype}{b:viewt@ype}
+list_mapopt_cloptr
+  {n:int} {fe:eff} (
+  xs: list (a, n), f: !(a) -<cloptr,fe> Option_vt (b)
+) :<fe> listLte_vt (b, n)
+fun{a:t@ype}{b:viewt@ype}
+list_mapopt_vcloptr
+  {v:view} {n:int} {fe:eff} (
+  pf: !v | xs: list (a, n), f: !(!v | a) -<cloptr,fe> Option_vt (b)
+) :<fe> listLte_vt (b, n)
+// end of [list_mapopt_vcloptr]
+
+fun{a:t@ype}{b:viewt@ype}
+list_mapopt_cloref
+  {n:int} {fe:eff} (
+  xs: list (a, n), f: (a -<cloref,fe> Option_vt (b))
+) :<fe> listLte_vt (b, n)
+// end of [list_mapopt_cloref]
+
+(*
+symintr list_mapopt
+overload list_mapopt with list_mapopt_fun
+overload list_mapopt with list_mapopt_vclo
+overload list_mapopt with list_mapopt_cloptr
+overload list_mapopt with list_mapopt_vcloptr
+overload list_mapopt with list_map_cloref
 *)
 
 (* ****** ****** *)

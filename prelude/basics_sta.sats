@@ -62,6 +62,10 @@
 
 (* ****** ****** *)
 
+sortdef t0p = t@ype and vt0p = viewt@ype
+
+(* ****** ****** *)
+
 // some unindexed types
 
 (* ****** ****** *)
@@ -356,11 +360,11 @@ and == : (rat, rat) -> bool
 
 (* ****** ****** *)
 //
-viewtypedef bottom_t0ype_uni = {a:t@ype} a
-viewtypedef bottom_t0ype_exi = [a:t@ype | false] a
+viewtypedef bottom_t0ype_uni = {a:t0p} a
+viewtypedef bottom_t0ype_exi = [a:t0p | false] a
 //
-viewtypedef bottom_viewt0ype_uni = {a:viewt@ype} a
-viewtypedef bottom_viewt0ype_exi = [a:viewt@ype | false] a
+viewtypedef bottom_viewt0ype_uni = {a:vt0p} a
+viewtypedef bottom_viewt0ype_exi = [a:vt0p | false] a
 //
 (* ****** ****** *)
 //
@@ -389,7 +393,7 @@ abstype
 refopt_viewt0ype_bool_type (viewt@ype, bool) // unnamed
 stadef refopt = refopt_viewt0ype_bool_type
 //
-typedef Refopt (a: viewt@ype) = [b:bool] refopt (a, b)
+typedef Refopt (a: vt0p) = [b:bool] refopt (a, b)
 //
 *)
 
@@ -425,7 +429,7 @@ stadef opt = opt_viewt0ype_bool_viewt0ype
 
 //
 // HX-2010-03-23: resulting in incorrect erasure
-// stadef Opt (a:viewt@ype) = [b:bool] opt (a, b)
+// stadef Opt (a:vt0p) = [b:bool] opt (a, b)
 //
 
 (* ****** ****** *)
@@ -659,7 +663,7 @@ typedef uInt = [n:int | n >=0] uint n
 (* ****** ****** *)
 
 typedef sizeof_t
-  (a:viewt@ype) = size_int_t0ype (sizeof_viewt0ype_int a)
+  (a:vt0p) = size_int_t0ype (sizeof_viewt0ype_int a)
 // end of [sizeof_t]
 
 typedef Size = [i:int | i >= 0] size_t i
@@ -726,14 +730,14 @@ stadef junkptr = junkptr_viewtype // shorthand
 //
 viewtypedef
 arraysize_viewt0ype_int_viewt0ype
-  (a:viewt@ype, n:int) =
+  (a:vt0p, n:int) =
   [l:addr] (free_gc_v (a?, n, l), @[a][n] @ l | ptr l, size_t n)
 // end of [viewtypedef]
 
 stadef arraysize = arraysize_viewt0ype_int_viewt0ype
 
 viewtypedef Arraysize
-  (a:viewt@ype) = [n:int | n >= 0] arraysize (a, n)
+  (a:vt0p) = [n:int | n >= 0] arraysize (a, n)
 // end of [Arraysize]
 
 (* ****** ****** *)
@@ -755,7 +759,7 @@ stadef cloref = cloref_t0ype_type
 (* ****** ****** *)
 
 viewtypedef // HX: for commenting only
-SHARED_viewt0ype_viewt0ype (a: viewt@ype) = a
+SHARED_viewt0ype_viewt0ype (a: vt0p) = a
 stadef SHARED = SHARED_viewt0ype_viewt0ype
 
 (* ****** ****** *)
@@ -765,12 +769,12 @@ stadef SHARED = SHARED_viewt0ype_viewt0ype
 (*
 viewtypedef
 READ_viewt0ype_int_viewt0ype
-  (a: viewt@ype+, stamp: int) = a
+  (a: viewt@ype, stamp: int) = a
 stadef READ = READ_viewt0ype_int_viewt0ype
 *)
 
 viewtypedef
-READ_viewt0ype_viewt0ype (a: viewt@ype) = a
+READ_viewt0ype_viewt0ype (a: vt0p) = a
 stadef READ = READ_viewt0ype_viewt0ype
 
 (* ****** ****** *)
@@ -828,13 +832,16 @@ box_t0ype_type (a:t@ype+) = box (a) of a
 stadef box = box_t0ype_type
 //
 dataviewtype
-box_viewt0ype_viewtype (a:viewt@ype+) = box_vt (a) of a
+box_viewt0ype_viewtype
+  (a:viewt@ype+) = box_vt (a) of a
 stadef box_vt = box_viewt0ype_viewtype
 //
 // HX: [list0_t0ype_type] is co-variant
 //
-datatype list0_t0ype_type (a: t@ype+) =
-  | list0_cons (a) of (a, list0_t0ype_type a) | list0_nil (a) of ()
+datatype
+list0_t0ype_type (a: t@ype+) =
+  | list0_cons (a) of (a, list0_t0ype_type a)
+  | list0_nil (a) of ()
 // end of [list0_t0ype_type]
 stadef list0 = list0_t0ype_type
 //
@@ -845,7 +852,11 @@ list_t0ype_int_type (a:t@ype+, int) =
   | list_nil (a, 0)
 // end of [datatype]
 stadef list = list_t0ype_int_type
-typedef List (a:t@ype) = [n:int | n >= 0] list (a, n)
+typedef List (a:t0p) = [n:int | n >= 0] list (a, n)
+typedef listLt
+  (a:t0p, n:int) = [n1:int | 0 <= n1; n1 < n] list (a, n1)
+typedef listLte
+  (a:t0p, n:int) = [n1:int | 0 <= n1; n1 <= n] list (a, n1)
 //
 // HX: [option0_t0ype_type] is co-variant
 //
@@ -860,7 +871,7 @@ option_t0ype_bool_type (a:t@ype+, bool) =
   | None (a, false) | Some (a, true) of a
 // end of [datatype]
 stadef option = option_t0ype_bool_type
-typedef Option (a:t@ype) = [b:bool] option (a, b)
+typedef Option (a:t0p) = [b:bool] option (a, b)
 //
 (* ****** ****** *)
 //
@@ -873,14 +884,19 @@ list_viewt0ype_int_viewtype (a:viewt@ype+, int) =
   | list_vt_nil (a, 0)
 // end of [list_viewt0ype_int_viewtype]
 stadef list_vt = list_viewt0ype_int_viewtype
-viewtypedef List_vt (a:viewt@ype) = [n:int | n >=0] list_vt (a, n)
+viewtypedef
+List_vt (a:vt0p) = [n:int | n >=0] list_vt (a, n)
+viewtypedef listLt_vt
+  (a:vt0p, n:int) = [n1:int | 0 <= n1; n1 < n] list_vt (a, n1)
+viewtypedef listLte_vt
+  (a:vt0p, n:int) = [n1:int | 0 <= n1; n1 <= n] list_vt (a, n1)
 //
 dataviewtype // viewt@ype+: covariant
 option_viewt0ype_bool_viewtype (a:viewt@ype+, bool) =
   | None_vt (a, false) | Some_vt (a, true) of a
 // end of [option_viewt0ype_bool_viewtype]
 stadef option_vt = option_viewt0ype_bool_viewtype
-viewtypedef Option_vt (a:viewt@ype) = [b:bool] option_vt (a, b)
+viewtypedef Option_vt (a:vt0p) = [b:bool] option_vt (a, b)
 //
 (* ****** ****** *)
 //
@@ -899,7 +915,7 @@ option_view_bool_view
   (a:view+, bool) = Some_v (a, true) of a | None_v (a, false)
 // end of [option_view_bool_view]
 stadef option_v = option_view_bool_view
-viewdef optvar_v (a:viewt@ype, l:addr) = option_v (a @ l, l > null)
+viewdef optvar_v (a:vt0p, l:addr) = option_v (a @ l, l > null)
 //
 dataview
 disj_view_view_int_view
@@ -954,7 +970,7 @@ where stream (a:t@ype) = lazy (stream_con a)
 dataviewtype
 stream_vt_con (a:viewt@ype+) =
   | stream_vt_nil (a) | stream_vt_cons (a) of (a, stream_vt a)
-where stream_vt (a:viewt@ype) = lazy_vt (stream_vt_con a)
+where stream_vt (a:vt0p) = lazy_vt (stream_vt_con a)
 //
 (* ****** ****** *)
 
