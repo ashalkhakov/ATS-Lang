@@ -187,22 +187,22 @@ implement deque_size (q) = q.nitm
 
 implement
 deque_is_empty (q) = let
-  prval () = deque_param_lemma (q) in (q.nitm = 0)
+  prval () = lemma_deque_param (q) in (q.nitm = 0)
 end // end of [deque_is_empty]
 
 implement
 deque_isnot_empty (q) = let
-  prval () = deque_param_lemma (q) in (q.nitm > 0)
+  prval () = lemma_deque_param (q) in (q.nitm > 0)
 end // end of [deque_isnot_empty]
 
 implement
 deque_is_full (q) = let
-  prval () = deque_param_lemma (q) in (q.cap = q.nitm)
+  prval () = lemma_deque_param (q) in (q.cap = q.nitm)
 end // end of [deque_is_full]
 
 implement
 deque_isnot_full (q) = let
-  prval () = deque_param_lemma (q) in (q.cap > q.nitm)
+  prval () = lemma_deque_param (q) in (q.cap > q.nitm)
 end // end of [deque_isnot_full]
 
 (* ****** ****** *)
@@ -249,7 +249,7 @@ implement
 deque_uninitialize
   {a} {m,n} (q) = let
 //
-  prval () = deque_param_lemma (q)
+  prval () = lemma_deque_param (q)
 //
   prval pfgc = q.pfqarr_gc
   prval pfqarr = DEQUEarr_v_clear (q.pfqarr)
@@ -266,7 +266,7 @@ implement
 deque_uninitialize_vt
   {a} {m} (q) = let
 //
-  prval () = deque_param_lemma (q)
+  prval () = lemma_deque_param (q)
 //
   prval pfgc = q.pfqarr_gc
   prval pfarr = DEQUEarr_v_decode (q.pfqarr)
@@ -316,7 +316,7 @@ prfun DEQUEarr_insert_beg
 implement{a}
 deque_insert_beg (q, x) = () where {
 //
-  prval () = deque_param_lemma (q)
+  prval () = lemma_deque_param (q)
 //
   val p_beg = q.qarr_beg
   val (pf_prv | p1_beg) = DEQUEptrprv (q, p_beg)
@@ -343,7 +343,7 @@ prfun DEQUEarr_insert_end
 implement{a}
 deque_insert_end (q, x) = let
 //
-  prval () = deque_param_lemma (q)
+  prval () = lemma_deque_param (q)
 //
   val p_end = q.qarr_end
   val (pf_nxt | p1_end) = DEQUEptrnxt (q, p_end)
@@ -377,7 +377,7 @@ prfun DEQUEarr_remove_beg
 implement{a}
 deque_remove_beg (q) = x where {
 //
-  prval () = deque_param_lemma (q)
+  prval () = lemma_deque_param (q)
 //
   val p_beg = q.qarr_beg
   val (pf_nxt | p1_beg) = DEQUEptrnxt (q, p_beg)
@@ -409,7 +409,7 @@ prfun DEQUEarr_remove_end
 implement{a}
 deque_remove_end (q) = x where {
 //
-  prval () = deque_param_lemma (q)
+  prval () = lemma_deque_param (q)
 //
   val p_end = q.qarr_end
   val (pf_prv | p1_end) = DEQUEptrprv (q, p_end)

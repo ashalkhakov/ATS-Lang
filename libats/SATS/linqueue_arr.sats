@@ -68,10 +68,10 @@ QUEUE0 (a:viewt@ype) = [m,n:int] QUEUE (a, m, n)
 
 (* ****** ****** *)
 
-prfun queue_param_lemma
+prfun lemma_queue_param
   {a:viewt@ype} {m,n:int}
   (x: &QUEUE (a, m, n)): [0 <= n; n <= m] void
-// end of [queue_param_lemma]
+// end of [lemma_queue_param]
 
 (* ****** ****** *)
 

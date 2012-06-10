@@ -72,10 +72,10 @@ DEQUE0 (
 
 (* ****** ****** *)
 
-prfun deque_param_lemma
+prfun lemma_deque_param
   {a:viewt@ype} {m,n:int}
   (x: &DEQUE (a, m, n)): [0 <= n; n <= m] void
-// end of [deque_param_lemma]
+// end of [lemma_deque_param]
 
 (* ****** ****** *)
 
@@ -183,7 +183,7 @@ deque_set_elt_at
 (* ****** ****** *)
 
 fun{a:viewt@ype}
-deque_insert_beg (*last*)
+deque_insert_beg (*first*)
   {m,n:int | m > n} (
   q: &DEQUE (a, m, n) >> DEQUE (a, m, n+1), x: a
 ) :<> void // end of [deque_insert_beg]
@@ -251,7 +251,7 @@ deque_remove_beg_many_tsz
 (* ****** ****** *)
 
 fun{a:viewt@ype}
-deque_remove_end (*first*)
+deque_remove_end (*last*)
   {m,n:int | n > 0} (
   q: &DEQUE (a, m, n) >> DEQUE (a, m, n-1)
 ) :<> a // end of [deque_remove_end]
