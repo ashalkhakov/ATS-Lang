@@ -116,7 +116,7 @@ color: \#E0E0E0 ;
 #strsub[theSidebar]('\
 <div id="theSidebar-prop">
 <table border="0" cellspacing="0" cellpadding="2">
-  <tr><td>\#ATSLANGWEBHOME$(<a href="http://www.ats-lang.org/ATS.html">old</a>)</td></tr>
+  <tr><td>\#ATSLANGWEBHOME$(<a href="http://www.ats-lang.org/htdocs-old/ATS.html">old</a>)</td></tr>
   <tr><td>\#ATSLANGWEBDOWNLOAD$</td></tr>
   <tr><td>\#ATSLANGWEBDOCUMENT$</td></tr>
   <tr><td>\#ATSLANGWEBLIBRARY$</td></tr>

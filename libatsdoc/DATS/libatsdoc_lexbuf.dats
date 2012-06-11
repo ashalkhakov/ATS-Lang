@@ -217,7 +217,7 @@ implement
 lexbuf_get_char
   (buf, nchr) = let
 //
-  prval () = $Q.queue_param_lemma (buf.cbuf)
+  prval () = $Q.lemma_queue_param (buf.cbuf)
 //
   val nchr = (u2sz)nchr
   val nchr = (size1)nchr
@@ -267,7 +267,7 @@ implement
 lexbuf_incby_count
   (buf, cnt) = let
 //
-  prval () = $Q.queue_param_lemma (buf.cbuf)
+  prval () = $Q.lemma_queue_param (buf.cbuf)
 //
   val nchr = u2sz(cnt)
   val nchr = (size1)nchr
@@ -294,7 +294,7 @@ implement
 lexbuf_reset_position
   (buf, pos) = let
 //
-  prval () = $Q.queue_param_lemma (buf.cbuf)
+  prval () = $Q.lemma_queue_param (buf.cbuf)
 //
   val ntot = $LOC.position_get_ntot (pos)
   val nchr = ntot - buf.base
@@ -366,7 +366,7 @@ implement
 lexbuf_get_substrptr0
   (buf, st, ln) = let
 //
-  prval () = $Q.queue_param_lemma (buf.cbuf)
+  prval () = $Q.lemma_queue_param (buf.cbuf)
 //
   val i = u2sz(st)
   val i = (size1)i

@@ -150,6 +150,12 @@ cleanall:: ; $(RMF) PAPER/atslangweb_paper.html
 cleanall:: ; $(RMF) styles/atslangweb_paper.css
 
 ######
+#
+# for creating a shell, please do
+#
+# ssh -t ats-hwxi,ats-lang@shell.sourceforge.net create
+#
+######
 
 upload:: upload_home
 upload_home:: ; scp atslangweb_home.html \

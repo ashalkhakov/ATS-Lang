@@ -62,7 +62,11 @@ fn litxt (x: atext): atext =
 
 (* ****** ****** *)
 
-fn HR (sz: int) =
+fn BR (): atext = atext_apptxt2 (strcst"<br>", strcst"</br>")
+
+(* ****** ****** *)
+
+fn HR (sz: int): atext =
   strcst_of_strptr (sprintf ("<hr style=\"background-color: #E0E0E0; height: %ipx;\"></hr>", @(sz)))
 // end of [HR]
 

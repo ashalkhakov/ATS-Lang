@@ -58,14 +58,79 @@ padding-right: 10px ;
 <h1>Libraries</h1>
 
 #menu('\
-#litxt(#ulink("\#ATSHOME_prelude", "ATS/prelude"))
-#litxt(#ulink("\#ATSHOME_libc", "ATS/libc"))
-#litxt(#ulink("\#ATSHOME_libats", "ATS/libats"))
-#litxt(#ulink("\#ATSHOME_libats_smlbas", "ATS/libats/smlbas"))
-#litxt(#ulink("\#ATSHOME_contrib", "ATS/contrib"))
+#lisub("#ulink("\#ATSHOME_prelude", "ATS/prelude"):
+contains essential library packages for supporting basic programming
+with ATS.\
+")
+
+#lisub("#ulink("\#ATSHOME_libc", "ATS/libc"):
+contains library packages that are mostly like API in ATS for their counterparts
+in C.\
+")
+
+#lisub("#ulink("\#ATSHOME_libats", "ATS/libats"):
+contains library packages implemented in ATS that often make advanced use
+of the type system of ATS.\
+")
+
+#lisub("#ulink("\#ATSHOME_libats_mlstyle", "ATS/libats/mlstyle"):
+contains library packages for supporting ML-like functional style of programming with
+ATS.\
+")
+
+#lisub("#ulink("\#ATSHOME_contrib", "ATS/contrib"):
+contains a variety of contributed library packages for general programming with
+ATS.\
+")
+
 ')#comment("menu")
 
 #HR(2)
+
+<h2>#uid("ATSHOME_prelude", "ATS/prelude")</h2>
+
+<h4>Primary</h4>
+#menu('\
+#comment("Primary")
+#litxt(#ulink("\#ATSHOME_prelude_bool", "ATS/prelude/bool"))
+#litxt(#ulink("\#ATSHOME_prelude_char", "ATS/prelude/char"))
+#litxt(#ulink("\#ATSHOME_prelude_char", "ATS/prelude/float"))
+#litxt(#ulink("\#ATSHOME_prelude_char", "ATS/prelude/filebas"))
+#litxt(#ulink("\#ATSHOME_prelude_integer", "ATS/prelude/integer"))
+#litxt(#ulink("\#ATSHOME_prelude_integer", "ATS/prelude/pointer"))
+#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/reference"))
+#litxt(#ulink("\#ATSHOME_prelude_integer", "ATS/prelude/string"))
+')#comment("menu")
+
+<h4>Secondary</h4>
+#menu('\
+#comment("Secondary")
+#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/array"))
+#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/arrayptr"))
+#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/arrayref"))
+#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/list"))
+#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/list_vt"))
+#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/option"))
+#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/option_vt"))
+')#comment("menu")
+
+#HR(1)
+
+<h2>#uid("ATSHOME_libc", "ATS/libc")</h2>
+
+#menu('\
+#litxt(#ulink("\#ATSHOME_libc_stdio", "ATS/libc/stdio"))
+#litxt(#ulink("\#ATSHOME_libc_stdlib", "ATS/libc/stdlib"))
+')#comment("menu")
+
+#HR(1)
+
+<h2>#uid("ATSHOME_libats", "ATS/libats")</h2>
+
+#menu('\
+#litxt(#ulink("\#ATSHOME_libats_funset", "ATS/libats/funset"))
+#litxt(#ulink("\#ATSHOME_libats_linset", "ATS/libats/linset"))
+')#comment("menu")
 
 <!-- ****** ****** -->
 

@@ -452,7 +452,7 @@ end // end of [local]
 (* ****** ****** *)
 
 implement
-fprint_atext (out, x) =
+fprint_atext (out, x) = (
   case+ x of
 //
   | ATEXTnil () => ()
@@ -483,7 +483,7 @@ fprint_atext (out, x) =
   | ATEXTconcatxt (xs) => fprint_atextlst (out, xs)
   | ATEXTconcatxtsep (xs, sep) => fprint_atextlst_sep (out, xs, sep)
 //
-(* end of [fprint_atext] *)
+) (* end of [fprint_atext] *)
 
 implement
 fprint_atextlst (out, xs) =

@@ -251,7 +251,7 @@ typechecking. In particular, there is no proof construction at run-time.
 <h2>#uid("FURTHERexamples", "Further Examples")</h2>
 
 Please find
-#ulink1("#ATSLANGWEBROOTget()/EXAMPLE/example.html", "on-line")
+#ulink1("#ATSLANGWEBROOTget()/htdocs-old/EXAMPLE/example.html", "on-line")
 a large variety of programs written in ATS.
 
 #para("")
