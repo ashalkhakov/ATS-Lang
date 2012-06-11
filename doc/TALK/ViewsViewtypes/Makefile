@@ -28,7 +28,7 @@ bin/ViewsViewtypesPresent: ViewsViewtypesPresent.dats ; \
 ######
 
 ViewsViewtypes.dvi: ViewsViewtypes.tex; pslatex $<
-ViewsViewtypes.ps: ViewsViewtypes.dvi; dvips -P cmz -t letter -o $@ $<
+ViewsViewtypes.ps: ViewsViewtypes.dvi; dvips -t letter -o $@ $<
 
 ##
 ## This for generating image data for the slide presentation

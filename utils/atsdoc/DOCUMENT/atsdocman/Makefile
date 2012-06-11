@@ -24,7 +24,7 @@ uploadloc:: atsdocman.html
 	$(CPF) $< $(HOME)/public_html/ATS/DOCUMENT/atsdocman.html
 
 upload:: atsdocman.html atsdocman.atxt
-	scp -r $^ ats-hwxi,ats-lang@web.sourceforge.net:htdocs/DOCUMENT/atsdocman/
+	scp -r $^ ats-hwxi,ats-lang@web.sourceforge.net:htdocs/htdocs-old/DOCUMENT/atsdocman/
 
 ######
 

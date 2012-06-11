@@ -294,7 +294,7 @@ Let #filename("foo2.atxt") be a file of the following content:
 //
 dynload "libatsdoc/dynloadall.dats"
 //
-staload "libatsdoc/SATS/atsdoc_text.sats"
+staload "libatsdoc/SATS/libatsdoc_text.sats"
 //
 %}
 
@@ -362,7 +362,7 @@ Time of the last modification: Wed Aug 24 20:31:59 2011
 
 The functions #code("author") and #code("timestamp") presented above do not
 return strings. Instead, they return values of the type #code("text"),
-which is declared in #myatsdoclink("libatsdoc/SATS/atsdoc_text.sats", "libatsdoc/SATS/atsdoc_text.sats") as
+which is declared in #myatsdoclink("libatsdoc/SATS/libatsdoc_text.sats", "libatsdoc/SATS/libatsdoc_text.sats") as
 follows:
 
 #atscode2xmls("\
@@ -397,7 +397,7 @@ symbols formed by placing identifiers between the two characters '\\\#' and
 string str, we must replace each marked token in str with the string it
 represents. For further details, please see the implementation of
 #code("fprint_strsub") in
-#myatsdoclink("libatsdoc/DATS/atsdoc_text.dats", "libatsdoc/DATS/atsdoc_text.dats").
+#myatsdoclink("libatsdoc/DATS/libatsdoc_text.dats", "libatsdoc/DATS/libatsdoc_text.dats").
 
 ")#comment("para")
 
