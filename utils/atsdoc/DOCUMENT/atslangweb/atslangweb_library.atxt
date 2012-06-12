@@ -33,6 +33,22 @@ end // end of [addcssrule]
 //
 %}
 
+<!-- ****** ****** -->
+
+%{
+fun myliblink (
+  path: string, fname: string
+) : atext = let
+  val res = sprintf (
+    "<a href=\"%s/%s.html\">ATSLIB/%s/%s</a>", @(path, fname, path, fname)
+  ) // end of [val]
+in
+  atext_strptr (res)
+end // end of [myliblink]
+%}
+
+<!-- ****** ****** -->
+
 #strsub[theStyleSheetLink]("\
 #ATSLANGWEBROOTget()/styles/atslangweb_library.css\
 ")
@@ -57,79 +73,99 @@ padding-right: 10px ;
 
 <h1>Libraries</h1>
 
+#para('\
+ATS is exceptionally feature-rich. It can accommodate low-level C-style
+imperative programming as well as high-level ML-style functional
+programming. As different programming styles often require different kinds
+of library support, it is probably unsurprising that there are several
+varieties of libraries in ATS available for meeting certain distinct needs of
+programmers (such as runtime with or without GC).\
+')
+
+#para('\
+In the following presentation, let us use ATSLIB to refer to the root
+directory where ATS libraries are stored, which usually coincides with the
+ATS home directory.\
+')
+
 #menu('\
-#lisub("#ulink("\#ATSHOME_prelude", "ATS/prelude"):
+#lisub("\
+#ulink("\#ATSLIB_prelude", "ATSLIB/prelude"):
 contains essential library packages for supporting basic programming
 with ATS.\
 ")
 
-#lisub("#ulink("\#ATSHOME_libc", "ATS/libc"):
+#lisub("\
+#ulink("\#ATSLIB_libc", "ATSLIB/libc"):
 contains library packages that are mostly like API in ATS for their counterparts
 in C.\
 ")
 
-#lisub("#ulink("\#ATSHOME_libats", "ATS/libats"):
+#lisub("\
+#ulink("\#ATSLIB_libats", "ATSLIB/libats"):
 contains library packages implemented in ATS that often make advanced use
 of the type system of ATS.\
 ")
 
-#lisub("#ulink("\#ATSHOME_libats_mlstyle", "ATS/libats/mlstyle"):
+#lisub("\
+#ulink("\#ATSLIB_libats_mlstyle", "ATSLIB/libats/mlstyle"):
 contains library packages for supporting ML-like functional style of programming with
 ATS.\
 ")
 
-#lisub("#ulink("\#ATSHOME_contrib", "ATS/contrib"):
-contains a variety of contributed library packages for general programming with
-ATS.\
+#lisub("\
+#ulink("\#ATSLIB_contrib", "ATSLIB/contrib"):
+contains mostly uncategorized collection of library packages contributed
+for purpose of supporting general programming with ATS. This is also a
+place for testing library packages before they are moved into one of the
+above libraries.
 ")
 
 ')#comment("menu")
 
 #HR(2)
 
-<h2>#uid("ATSHOME_prelude", "ATS/prelude")</h2>
+<h2>#uid("ATSLIB_prelude", "ATSLIB/prelude")</h2>
 
 <h4>Primary</h4>
 #menu('\
 #comment("Primary")
-#litxt(#ulink("\#ATSHOME_prelude_bool", "ATS/prelude/bool"))
-#litxt(#ulink("\#ATSHOME_prelude_char", "ATS/prelude/char"))
-#litxt(#ulink("\#ATSHOME_prelude_char", "ATS/prelude/float"))
-#litxt(#ulink("\#ATSHOME_prelude_char", "ATS/prelude/filebas"))
-#litxt(#ulink("\#ATSHOME_prelude_integer", "ATS/prelude/integer"))
-#litxt(#ulink("\#ATSHOME_prelude_integer", "ATS/prelude/pointer"))
-#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/reference"))
-#litxt(#ulink("\#ATSHOME_prelude_integer", "ATS/prelude/string"))
+#litxt(#myliblink("prelude", "bool"))
+#litxt(#myliblink("prelude", "char"))
+#litxt(#myliblink("prelude", "filebas"))
+#litxt(#myliblink("prelude", "float"))
+#litxt(#myliblink("prelude", "integer"))
+#litxt(#myliblink("prelude", "pointer"))
+#litxt(#myliblink("prelude", "reference"))
+#litxt(#myliblink("prelude", "string"))
 ')#comment("menu")
 
 <h4>Secondary</h4>
 #menu('\
 #comment("Secondary")
-#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/array"))
-#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/arrayptr"))
-#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/arrayref"))
-#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/list"))
-#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/list_vt"))
-#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/option"))
-#litxt(#ulink("\#ATSHOME_prelude_array", "ATS/prelude/option_vt"))
+#litxt(#myliblink("prelude", "array"))
+#litxt(#myliblink("prelude", "arrayptr"))
+#litxt(#myliblink("prelude", "arrayref"))
+#litxt(#myliblink("prelude", "list"))
+#litxt(#myliblink("prelude", "list_vt"))
+#litxt(#myliblink("prelude", "option"))
+#litxt(#myliblink("prelude", "option_vt"))
 ')#comment("menu")
 
 #HR(1)
 
-<h2>#uid("ATSHOME_libc", "ATS/libc")</h2>
+<h2>#uid("ATSLIB_libc", "ATSLIB/libc")</h2>
 
 #menu('\
-#litxt(#ulink("\#ATSHOME_libc_stdio", "ATS/libc/stdio"))
-#litxt(#ulink("\#ATSHOME_libc_stdlib", "ATS/libc/stdlib"))
+#litxt(#myliblink("libc", "stdio"))
+#litxt(#myliblink("libc", "stdlib"))
 ')#comment("menu")
 
 #HR(1)
 
-<h2>#uid("ATSHOME_libats", "ATS/libats")</h2>
+<h2>#uid("ATSLIB_libats", "ATSLIB/libats")</h2>
 
 #menu('\
-#litxt(#ulink("\#ATSHOME_libats_funset", "ATS/libats/funset"))
-#litxt(#ulink("\#ATSHOME_libats_linset", "ATS/libats/linset"))
 ')#comment("menu")
 
 <!-- ****** ****** -->

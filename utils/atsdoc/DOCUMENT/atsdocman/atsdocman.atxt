@@ -100,7 +100,8 @@ fun atslink (): atext =
   atext_strcst "<a href=\"http://www.ats-lang.org/\">ATS</a>"
 // end of [atslink]
 
-#define MYDOCROOT "http://www.ats-lang.org/DOCUMENT"
+#define MYDOCROOT "../../DOCUMENT"
+#define MYIMPROOT "../../IMPLEMENT"
 
 fun mydoclink (
   codepath: string, linkname: string
@@ -108,21 +109,19 @@ fun mydoclink (
   val res = sprintf (
     "<a href=\"%s/atsdocman/%s\">%s</a>", @(MYDOCROOT, codepath, linkname)
   ) // end of [val]
-  val res = string_of_strptr (res)
 in
-  atext_strcst (res)
+  atext_strptr (res)
 end // end of [mydoclink]
 
-fun myatsdoclink (
+fun myatsimplink (
   codepath: string, linkname: string
 ) : atext = let
   val res = sprintf (
-    "<a href=\"%s/ANAIRIATS/%s\">%s</a>", @(MYDOCROOT, codepath, linkname)
+    "<a href=\"%s/Anairiats/%s\">%s</a>", @(MYIMPROOT, codepath, linkname)
   ) // end of [val]
-  val res = string_of_strptr (res)
 in
-  atext_strcst (res)
-end // end of [myatsdoclink]
+  atext_strptr (res)
+end // end of [myatsimplink]
 
 macdef filename(x) = xmltagging ("I", ,(x)) // italic
 
@@ -362,7 +361,7 @@ Time of the last modification: Wed Aug 24 20:31:59 2011
 
 The functions #code("author") and #code("timestamp") presented above do not
 return strings. Instead, they return values of the type #code("text"),
-which is declared in #myatsdoclink("libatsdoc/SATS/libatsdoc_text.sats", "libatsdoc/SATS/libatsdoc_text.sats") as
+which is declared in #myatsimplink("libatsdoc/SATS/libatsdoc_text.sats", "libatsdoc/SATS/libatsdoc_text.sats") as
 follows:
 
 #atscode2xmls("\
@@ -397,7 +396,7 @@ symbols formed by placing identifiers between the two characters '\\\#' and
 string str, we must replace each marked token in str with the string it
 represents. For further details, please see the implementation of
 #code("fprint_strsub") in
-#myatsdoclink("libatsdoc/DATS/libatsdoc_text.dats", "libatsdoc/DATS/libatsdoc_text.dats").
+#myatsimplink("libatsdoc/DATS/libatsdoc_text.dats", "libatsdoc/DATS/libatsdoc_text.dats").
 
 ")#comment("para")
 

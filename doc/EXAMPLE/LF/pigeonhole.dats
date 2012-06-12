@@ -21,7 +21,8 @@ such that both P (i1, j) and P (i2, j) hold.
 
 *)
 
-sortdef int2rel = (int, int) -> prop // for binary relations on integers
+sortdef
+int2rel = (int, int) -> prop // for binary relations on integers
 
 prfun pigeonhole
   {P: int2rel} {m,n:nat | m > n; n >= 1} .<m>. (
@@ -41,7 +42,7 @@ prfun pigeonhole
       (sif j == x then P1r1 (pf) else P1r3 (pf))
     // end of [sif]
   end // end of [fpf1]
-  val [i1,i2,j:int] (pf1, pf2) = pigeonhole {P1} {m-1,n-1} (fpf1)
+  val (pf1, pf2) = pigeonhole {P1} {m-1,n-1} (fpf1)
 in
   case+ pf1 of
   | P1r1 (pf1) => (pf1, pf0)
