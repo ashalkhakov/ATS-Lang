@@ -68,7 +68,8 @@ padding-right: 10px ;
 
 #HR(2)
 
-<h2>#uid("DMLpaper",'Dependent ML: <span style="font-size:80%;">an approach to practical programming with dependent types</span>')
+<h2>#uid("DMLpaper",'Dependent ML:<br>
+<span style="font-size:87.5%;">an approach to practical programming with dependent types</span>')
 </h2>
 
 <table>

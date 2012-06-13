@@ -74,11 +74,11 @@ padding-right: 10px ;
 <h1>Libraries</h1>
 
 #para('\
-ATS is exceptionally feature-rich. It can accommodate low-level C-style
+ATS is feature-rich. It can accommodate low-level C-style
 imperative programming as well as high-level ML-style functional
 programming. As different programming styles often require different kinds
 of library support, it is probably unsurprising that there are several
-varieties of libraries in ATS available for meeting certain distinct needs of
+varieties of libraries in ATS available to meet certain distinct needs of
 programmers (such as runtime with or without GC).\
 ')
 

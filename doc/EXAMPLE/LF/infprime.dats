@@ -66,7 +66,7 @@ in
     prval () = mul_nat_nat_nat (pf4_mul)
     prval pf5_res = mul_istot {k,i} ()
     prval () = mul_nat_nat_nat (pf5_res)
-    prval () = mul_associate (pf4_mul, pf3_res, pf5_res, pf2_mul)
+    prval () = mul_is_associative (pf4_mul, pf3_res, pf5_res, pf2_mul)
   in
     pf5_res
   end else let
