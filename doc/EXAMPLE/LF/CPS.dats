@@ -109,7 +109,7 @@ datatype EXP' (env, ty) =
 
 typedef EXP0' (t:ty) = EXP' (nil, t)
 
-typedef SUB (G1:env, G2:env) = {t:ty} VAR(G1,t) -> EXP' (G2,t)
+typedef SUB (G1:env, G2:env) = {t:ty} VAR(G1,t) -<cloref1> EXP' (G2,t)
 
 //
 
@@ -143,21 +143,29 @@ val shiSub = (lam x => EXPvar' (VARshi x))
 
 //
 
-fun subst {G1,G2:env} {t:ty}
-   (sub: SUB(G1,G2)) (e: EXP' (G1,t))
-  : EXP' (G2,t) = begin case+ e of
+fun subst
+  {G1,G2:env}
+  {t:ty} (
+  sub: SUB(G1,G2)
+) : EXP' (G1,t) -<cloref1> EXP' (G2,t) =
+  lam (e) => (
+  case+ e of
   | EXPvar' x => sub (x)
   | EXPlam' e => EXPlam' (subst (subLam sub) e)
   | EXPapp' (e1, e2) => EXPapp' (subst sub e1, subst sub e2)
   | EXPlet' (e1, e2) => EXPlet' (subst sub e1, subst (subLam sub) e2)
-end // end of [subst]
+) // end of [subst]
 
-and subLam {G1,G2:env} {t:ty}
-  (sub: SUB (G1,G2)): SUB (t::G1,t::G2) = begin
-  lam x => case+ x of
-    | VARone () => EXPvar' (VARone)
-    | VARshi x' => subst (shiSub {..} {..}) (sub x')
-end // end of [subLam]
+and subLam
+  {G1,G2:env}
+  {t:ty} (
+  sub: SUB (G1,G2)
+) : SUB (t::G1,t::G2) =
+  lam x => (
+  case+ x of
+  | VARone () => EXPvar' (VARone)
+  | VARshi x' => subst (shiSub {..} {..}) (sub x')
+) // end of [subLam]
 
 //
 
@@ -172,47 +180,54 @@ fn expShi {G:env} {t1,t2:ty} (e: EXP' (G, t1)): EXP' (t2 :: G, t1) =
 
 //
 
-typedef VM (G1: env, G2: env) =
-  {t1:ty} VAR (G1, t1) -> [t2: ty] (RT20 (t1, t2) | VAR (G2, t2))
+typedef
+VM (G1: env, G2: env) =
+  {t1:ty} VAR (G1, t1) -<cloref1> [t2: ty] (RT20 (t1, t2) | VAR (G2, t2))
+// end of [typedef]
 
 val vmNil =
-  (lam x => case+ x of VARone _ =/=> () | VARshi _ =/=> ())
-  : VM (nil, nil)
+  (lam x => case+ x of VARone _ =/=> () | VARshi _ =/=> ()): VM (nil, nil)
+// end of [val]
 
-//
+fn vmShi
+  {G1,G2:env}
+  {t:ty} (
+  vm: VM (G1, G2)
+) = (
+  lam x1 =<cloref1> let val (pf | x2) = vm x1 in (pf | VARshi x2) end
+) : VM (G1, t :: G2)
 
-fn vmShi {G1,G2:env} {t:ty} (vm: VM (G1, G2)) =
-  (lam x1 => let val (pf | x2) = vm x1 in (pf | VARshi x2) end)
-  : VM (G1, t :: G2)
+fn vmLam
+  {G1,G2:env}
+  {t1,t2:ty} (
+  pf: RT20 (t1, t2) | vm: VM (G1, G2)
+) : VM (t1 :: G1, t2 :: G2) = (
+  lam x1 =>
+  case+ x1 of
+  | VARone () => (pf | VARone)
+  | VARshi x1 => let val (pf | x2) = vm x1 in (pf | VARshi x2) end
+) // end of [vmLam]
 
-fn vmLam {G1,G2:env} {t1,t2:ty}
-   (pf: RT20 (t1, t2) | vm: VM (G1, G2)): VM (t1 :: G1, t2 :: G2) =
-  lam x1 => case+ x1 of
-    | VARone () => (pf | VARone)
-    | VARshi x1 => let val (pf | x2) = vm x1 in (pf | VARshi x2) end
-
-//
-
-fun cps {G1,G2:env} {t1,t2:ty}
-   (pf: RT10 (t1, t2) | vm: VM (G1, G2), e: EXP (G1, t1)): EXP' (G2, t2) =
+fun cps {G1,G2:env} {t1,t2:ty} (
+  pf: RT10 (t1, t2) | vm: VM (G1, G2), e: EXP (G1, t1)
+) : EXP' (G2, t2) =
   let prval RT1 (pf) = pf in EXPlam' (cpsw (pf | vmShi vm, EXPone1 (), e)) end
+// end of [cps]
 
-and cpsw {G1,G2:env} {t1,t2:ty}
-   (pf: RT20 (t1, t2) | vm: VM (G1, G2), k: EXP' (G2, t2 ->> bot), e: EXP (G1, t1))
-  : EXP' (G2, bot) = begin case+ e of
+and cpsw {G1,G2:env} {t1,t2:ty} (
+  pf: RT20 (t1, t2) | vm: VM (G1, G2), k: EXP' (G2, t2 ->> bot), e: EXP (G1, t1)
+) : EXP' (G2, bot) = begin case+ e of
   | EXPvar x1 => let
       val (pf' | x2) = vm x1
       prval TYEQ () = rt2eq (pf, pf')
     in
       EXPapp' (k, EXPvar' x2)
     end
-
   | EXPlam e => let
       prval RT2fun (pf1, pf2) = pf
     in
       EXPapp' (k, EXPlam' (cps (pf2 | vmLam (pf1 | vm), e)))
     end
-
   | EXPapp {..} {t, _} (e1, e2) => let
       prval pf1 = rt2fun {t} ()
       val k = EXPlam' (EXPapp' (EXPapp' (EXPtwo1 (), EXPone1 ()), expShi (expShi k)))
@@ -220,7 +235,6 @@ and cpsw {G1,G2:env} {t1,t2:ty}
     in
       cpsw (RT2fun (pf1, RT1 pf) | vm, k, e1)
     end
-
   | EXPlet {..} {t, _} (e1, e2) => let
       prval pf1 = rt2fun {t} ()
       val k = EXPlam' (
@@ -229,14 +243,12 @@ and cpsw {G1,G2:env} {t1,t2:ty}
     in
        cpsw (pf1 | vm, k, e1)
     end
-
   | EXPcal e => let
       val k = expShi k
       val k = EXPlam' (EXPapp' (EXPapp' (EXPone1 (), k), k))
     in
       cpsw (RT2fun (RT2cont pf, RT1 pf) | vm, k, e)
     end
-
   | EXPthr {..} {t,_} (e1, e2) => let
       prval pf1 = rt2fun {t} ()
       val k = EXPlam' (cpsw (pf1 | vmShi vm, EXPone1 (), e2))
