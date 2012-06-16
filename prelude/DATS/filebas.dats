@@ -269,6 +269,40 @@ end // end of [local]
 (* ****** ****** *)
 
 implement
+char_list_vt_make_file
+  (fil) = let
+//
+viewtypedef res = List_vt (char)
+//
+fun loop (
+  fil: FILEref, res: &res? >> res
+) : void = let
+  val i = fgetc0_err (fil)
+in
+  if (i >= 0) then let
+    val c = char_of_int (i)
+    val () = res :=
+      list_vt_cons {char}{0} (c, ?)
+    val+ list_vt_cons (_, !p_res) = res
+    val () = loop (fil, !p_res)
+    prval () = fold@ (res)
+  in
+    // nothing
+  end else
+    res := list_vt_nil ()
+  // end of [if]
+end // end of [loop]
+//
+var res: res
+val () = loop (fil, res)
+//
+in
+  res
+end // end of [char_list_vt_make_file]
+
+(* ****** ****** *)
+
+implement
 char_stream_make_file
   (fil) = $delay (let
   val c = fgetc0_err (fil)

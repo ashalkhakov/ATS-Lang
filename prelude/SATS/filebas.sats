@@ -139,6 +139,10 @@ fun input_line_vt (fil: FILEref): strptr0
 fun output_line (fil: FILEref, line: string): void
 
 (* ****** ****** *)
+
+fun char_list_vt_make_file (fil: FILEref): List_vt (char)
+
+(* ****** ****** *)
 //
 // HX: making a lazy char stream out of a file handle
 //
