@@ -124,10 +124,11 @@ fn comarg_warning
 
 datatype
 waitkind =
-  | WAITKINDnone of ()
-  | WAITKINDinput of () // -i ...
-  | WAITKINDtoutput of () // -co ... // code
-  | WAITKINDdoutput of () // -do ... // data
+  | WTKnone of ()
+  | WTKinput of () // -i ...
+  | WTKoutcode of () // --outcode ... // data
+  | WTKoutdata of () // --outdata ... // code
+  | WTKprefix of () // --prefix
 // end of [waitkind]
 
 typedef
@@ -142,85 +143,118 @@ cmdstate = @{
 
 (* ****** ****** *)
 
-fn isinpwait
+fn isWTKinput
   (state: cmdstate): bool =
   case+ state.waitkind of
-  | WAITKINDinput () => true | _ => false
-// end of [isinpwait]
+  | WTKinput () => true | _ => false
+// end of [isWTKinput]
 
-fn istoutwait
+fn isWTKoutcode
   (state: cmdstate): bool =
   case+ state.waitkind of
-  | WAITKINDtoutput () => true | _ => false
-// end of [istoutwait]
+  | WTKoutcode () => true | _ => false
+// end of [isWTKoutcode]
 
-fn isdoutwait
+fn isWTKoutdata
   (state: cmdstate): bool =
   case+ state.waitkind of
-  | WAITKINDdoutput () => true | _ => false
-// end of [isdoutwait]
+  | WTKoutdata () => true | _ => false
+// end of [isWTKoutdata]
+
+fn isWTKprefix
+  (state: cmdstate): bool =
+  case+ state.waitkind of
+  | WTKprefix () => true | _ => false
+// end of [isWTKprefix]
+
+(* ****** ****** *)
+
+datatype outchan =
+  | OUTCHANptr of FILEref | OUTCHANref of FILEref
+// end of [OUTCHAN]
+
+fun outchan_get_fileref
+  (x: outchan): FILEref = (
+  case+ x of
+  | OUTCHANref (filr) => filr | OUTCHANptr (filp) => filp
+) // end of [outchan_get_fileref]
+
+fun outchan_close
+  (x: outchan): void =
+  case+ x of
+  | OUTCHANptr (filp) => fclose0_exn (filp)
+  | OUTCHANref (filr) => ()
+// end of [outchan_close]
 
 (* ****** ****** *)
 
 local
 //
-typedef FILErefopt = Option (FILEref)
+val stdoutchan = OUTCHANref (stdout_ref)
+val the_outcode = ref<outchan> (stdoutchan)
+val the_outdata = ref<outchan> (stdoutchan)
 //
-val theCout = ref<FILEref> (stdout_ref)
-val theDout = ref<FILErefopt> (None ())
-
 in // in of [local]
 
-fun tout_get (): FILEref = !theCout
-fun tout_set
-  (x: FILEref) : void = let
-  val () = fclose_exn (!theCout) in !theCout := x
-end  // end of [tout_set]
-
-fun dout_get (): FILErefopt = !theDout
-fun dout_set (
-  x: FILErefopt
-) : void = let
-  val () = (case+ !theDout of
-    | Some fil => fclose_exn (fil) | None () => ()
-  ) : void // end of [val]
+fun outcode_get
+  (): outchan = !the_outcode
+fun outcode_set
+  (_new: outchan): void = let
+  val _old = !the_outcode
+  val () = !the_outcode := _new
 in
-  !theDout := x
-end  // end of [dout_set]
+  outchan_close (_old)
+end  // end of [outcode_set]
+
+fun outdata_get
+  (): outchan = !the_outdata
+fun outdata_set
+  (_new: outchan): void = let
+  val _old = !the_outdata
+  val () = !the_outdata := _new
+in
+  outchan_close (_old)
+end  // end of [outdata_set]
 
 end // end of [local]
 
-fun tout_set_filename
-  (path: string): void = let
-  val (pfopt | filp) = fopen_err (path, file_mode_w)
-in
-  if filp > null then let
-    prval Some_v (pffil) = pfopt
-    val fil = __cast (pffil | filp) where {
-      extern castfn __cast {m:fm} {l:addr} (pf: FILE (m) @ l | p: ptr l): FILEref 
-    } // end of [val]
-  in
-    tout_set (fil)
-  end else let
-    prval None_v () = pfopt in (*nothing*)
-  end // end of [if]
-end // end of [tout_set_filename]
+(* ****** ****** *)
 
-fun dout_set_filename
+fun outcode_set_filename
   (path: string): void = let
   val (pfopt | filp) = fopen_err (path, file_mode_w)
 in
-  if filp > null then let
-    prval Some_v (pffil) = pfopt
-    val fil = __cast (pffil | filp) where {
-      extern castfn __cast {m:fm} {l:addr} (pf: FILE (m) @ l | p: ptr l): FILEref 
-    } // end of [val]
-  in
-    dout_set (Some fil)
-  end else let
-    prval None_v () = pfopt in dout_set (None)
-  end // end of [if]
-end // end of [dout_set_filename]
+//
+if filp > null then let
+  prval Some_v (pffil) = pfopt
+  val filp = __cast (pffil | filp) where {
+    extern castfn __cast {m:fm} {l:addr} (pf: FILE (m) @ l | p: ptr l): FILEref 
+  } // end of [val]
+in
+  outcode_set (OUTCHANptr (filp))
+end else let
+  prval None_v () = pfopt in outcode_set (OUTCHANref (stderr_ref))
+end // end of [if]
+//
+end // end of [outcode_set_filename]
+
+fun outdata_set_filename
+  (path: string): void = let
+  val (pfopt | filp) = fopen_err (path, file_mode_w)
+in
+//
+if filp > null then let
+  prval Some_v (pffil) = pfopt
+  val filp = __cast (pffil | filp) where {
+    extern castfn __cast {m:fm} {l:addr} (pf: FILE (m) @ l | p: ptr l): FILEref 
+  } // end of [val]
+in
+  outdata_set (OUTCHANptr (filp))
+end else let
+  prval None_v () = pfopt in outdata_set (OUTCHANref (stderr_ref))
+end // end of [if]
+//
+end // end of [outdata_set_filename]
 
 (* ****** ****** *)
 
@@ -228,7 +262,7 @@ local
 
 val argv0 = ref<string> ("")
 
-in
+in // in of [local]
 
 fn argv0_get (): string = !argv0
 fn argv0_set (cmd: string): void = !argv0 := cmd
@@ -239,12 +273,12 @@ fn atsdoc_usage (): void = {
   val cmd = argv0_get () // [argv0] is already set
   val () = printf ("usage: %s <command> ... <command>\n\n", @(cmd))
   val () = printf ("where each <command> is of one of the following forms:\n\n", @())
-  val () = printf ("  -to filename (outputing texting data to <filename>)\n", @())
-  val () = printf ("  --toutput filename (outputing texting to <filename>)\n", @())
-  val () = printf ("  -do filename (outputing ATS code to <filename>)\n", @())
-  val () = printf ("  --doutput filename (outputing ATS code to <filename>)\n", @())
   val () = printf ("  -i filenames (for taking input from <filenames>)\n", @())
   val () = printf ("  --input filenames (for taking input from <filenames>)\n", @())
+  val () = printf ("  -oc filename (outputing texting code to <filename>)\n", @())
+  val () = printf ("  --outcode filename (outputing texting code to <filename>)\n", @())
+  val () = printf ("  -od filename (outputing texting data to <filename>)\n", @())
+  val () = printf ("  --outdata filename (outputing texting data to <filename>)\n", @())
   val () = printf ("  -h (for printing out the usage)\n", @())
   val () = printf ("  --help (for printing out the usage)\n", @())
   val () = printf ("\n", @())
@@ -268,12 +302,15 @@ case+ arglst of
   ) // endof [list_vt_cons]
 | ~list_vt_nil ()
     when state.ninputfile = 0 => let
-    val tout = tout_get ()
-    val () = trans_top_from_stdin (tout)
-    val dout = dout_get ()
-    val () = (case+ dout of
-      | Some filr => fprint_the_tranitmlst (filr, "STDIN") | None () => ()
-    ) : void // end of [val]
+//
+    val outdata = outdata_get ()
+    val filr = outchan_get_fileref (outdata)
+    val () = trans_top_from_stdin (filr)
+//
+    val outcode = outcode_get ()
+    val filr = outchan_get_fileref (outcode)
+    val () = fprint_the_tranitmlst (filr, "STDIN")
+//
   in
     // nothing
   end // end of [list_vt_nil when ...]
@@ -290,9 +327,9 @@ process_cmdline2
 in
 //
 case+ arg of
-| _ when isinpwait (state) => let
+| _ when isWTKinput (state) => let
 //
-// HX: the [inpwait] state stays unchanged
+// HX: the [WTKinput] state stays unchanged
 //
     val nif = state.ninputfile
   in
@@ -303,36 +340,46 @@ case+ arg of
         process_cmdline2_COMARGkey2 (state, arglst, key)
     | COMARGkey (_, basename) => let
         val () = state.ninputfile := state.ninputfile + 1
-        val tout = tout_get ()
-        val () = trans_top_from_basename (tout, basename)
-        val dout = dout_get ()
-        val () = (case+ dout of
-          | Some filr => fprint_the_tranitmlst (filr, basename) | None () => ()
-        ) : void // end of [val]
+        val outdata = outdata_get ()
+        val filr = outchan_get_fileref (outdata)
+        val () = trans_top_from_basename (filr, basename)
+        val outcode = outcode_get ()
+        val filr = outchan_get_fileref (outcode)
+        val () = fprint_the_tranitmlst (filr, basename)
       in
         process_cmdline (state, arglst)
       end (* end of [_] *)
-  end // end of [_ when isinpwait]
-| _ when istoutwait (state) => let
-    val () = state.waitkind := WAITKINDnone ()
+  end // end of [_ when isWTKinput]
+//
+| _ when isWTKoutcode (state) => let
+    val () = state.waitkind := WTKnone ()
     val COMARGkey (_, basename) = arg
-    val () = tout_set_filename (basename)
+    val () = outcode_set_filename (basename)
   in
     process_cmdline (state, arglst)
-  end // end of [_ when istoutwait]
-| _ when isdoutwait (state) => let
-    val () = state.waitkind := WAITKINDnone ()
+  end // end of [_ when isWTKoutcode]
+| _ when isWTKoutdata (state) => let
+    val () = state.waitkind := WTKnone ()
     val COMARGkey (_, basename) = arg
-    val () = dout_set_filename (basename)
+    val () = outdata_set_filename (basename)
   in
     process_cmdline (state, arglst)
-  end // end of [_ when isdoutwait]
+  end // end of [_ when isWTKoutdata]
+//
+| _ when isWTKprefix (state) => let
+    val () = state.waitkind := WTKnone ()
+    val COMARGkey (_, prfx) = arg
+    val () = funres_set_prfx (prfx) // HX: prefix for return names
+  in
+    process_cmdline (state, arglst)
+  end // end of [_ when isWTKoutdata]
+//
 | COMARGkey (1, key) =>
     process_cmdline2_COMARGkey1 (state, arglst, key)
 | COMARGkey (2, key) =>
     process_cmdline2_COMARGkey2 (state, arglst, key)
 | COMARGkey (_, key) => let
-    val () = state.waitkind := WAITKINDnone ()
+    val () = state.waitkind := WTKnone ()
     val () = comarg_warning (key)
   in
     process_cmdline (state, arglst)
@@ -347,20 +394,22 @@ process_cmdline2_COMARGkey1
 , arglst: comarglst (i)
 , key: string
 ) :<fun1> void = let
-  val () = state.waitkind := WAITKINDnone ()
+  val () = state.waitkind := WTKnone ()
   val () = (case+ key of
     | "-i" => {
         val () = state.ninputfile := 0
-        val () = state.waitkind := WAITKINDinput ()
+        val () = state.waitkind := WTKinput ()
       }
-    | "-to" => {
-        val () = state.waitkind := WAITKINDtoutput ()
+    | "-oc" => {
+        val () = state.ninputfile := 0
+        val () = state.waitkind := WTKoutcode ()
       }
-    | "-do" => {
-        val () = state.waitkind := WAITKINDdoutput ()
+    | "-od" => {
+        val () = state.ninputfile := 0
+        val () = state.waitkind := WTKoutdata ()
       }
     | "-h" => {
-        val () = state.waitkind := WAITKINDnone ()
+        val () = state.waitkind := WTKnone ()
         val () = state.ninputfile := state.ninputfile + 1 // HX: cutting a corner!
         val () = atsdoc_usage () // print out usage
       }
@@ -380,20 +429,23 @@ process_cmdline2_COMARGkey2
 , arglst: comarglst (i)
 , key: string
 ) :<fun1> void = let
-  val () = state.waitkind := WAITKINDnone ()
+  val () = state.waitkind := WTKnone ()
   val () = (case+ key of
     | "--input" => {
         val () = state.ninputfile := 0
-        val () = state.waitkind := WAITKINDinput
+        val () = state.waitkind := WTKinput
       }
-    | "--toutput" => {
-        val () = state.waitkind := WAITKINDtoutput ()
+    | "--outcode" => {
+        val () = state.waitkind := WTKoutcode ()
       }
-    | "--doutput" => {
-        val () = state.waitkind := WAITKINDdoutput ()
+    | "--outdata" => {
+        val () = state.waitkind := WTKoutdata ()
+      }
+    | "--prefix" => {
+        val () = state.waitkind := WTKprefix ()
       }
     | "--help" => {
-        val () = state.waitkind := WAITKINDnone ()
+        val () = state.waitkind := WTKnone ()
         val () = state.ninputfile := state.ninputfile + 1 // HX: cutting a corner!
         val () = atsdoc_usage () // print out usage
       }
@@ -423,7 +475,7 @@ val ~list_vt_cons (arg0, arglst) = arglst
 var state = @{
   comarg0 = arg0
 //
-, waitkind= WAITKINDnone ()
+, waitkind= WTKnone ()
 //
 , ninputfile= 0
 //
@@ -431,12 +483,8 @@ var state = @{
 //
 val () = process_cmdline (state, arglst)
 //
-val tout = tout_get ()
-val () = fclose_exn (tout)
-val dout = dout_get ()
-val () = (case+ dout of
-  | Some fil => fclose_exn (fil) | None () => ()
-) : void // end of [val]
+val () = outchan_close (outcode_get ())
+val () = outchan_close (outdata_get ())
 //
 } // end of [main]
 

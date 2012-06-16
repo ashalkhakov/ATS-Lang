@@ -16,7 +16,7 @@ all:: atsdocman.html
 atsdocman: atsdocman_atxt.dats
 	$(ATSCC) -o $@ atsdocman_atxt.dats -latsdoc
 atsdocman_atxt.dats: atsdocman.atxt
-	$(ATSDOC) -do $@ -i atsdocman.atxt > atsdocman_atxt.txt
+	$(ATSDOC) --outcode $@ -i atsdocman.atxt > atsdocman_atxt.txt
 atsdocman.html: atsdocman
 	./atsdocman > $@
 

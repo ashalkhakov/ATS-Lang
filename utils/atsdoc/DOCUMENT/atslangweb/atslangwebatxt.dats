@@ -31,7 +31,6 @@ staload _(*anon*) = "libatsdoc/DATS/libatsdoc_text.dats"
 macdef strcst (x) = atext_strcst ,(x)
 macdef strsub (x) = atext_strsub ,(x)
 //
-fun strcst_of_strptr (x: strptr1): atext = atext_strcst ((s2s)x)
 fun strsub_of_strptr (x: strptr1): atext = atext_strsub ((s2s)x)
 //
 (* ****** ****** *)
@@ -66,23 +65,33 @@ fn BR (): atext = atext_apptxt2 (strcst"<br>", strcst"</br>")
 
 (* ****** ****** *)
 
-fn HR (sz: int): atext =
-  strcst_of_strptr (sprintf ("<hr style=\"background-color: #E0E0E0; height: %ipx;\"></hr>", @(sz)))
-// end of [HR]
+fn HR (sz: int): atext = let
+  val str = sprintf ("<hr style=\"background-color: #E0E0E0; height: %ipx;\"></hr>", @(sz))
+in
+  atext_strptr (str)
+end // end of [HR]
 
 (* ****** ****** *)
 
-fun uid (id: string, name: string): atext =
-  strcst_of_strptr (sprintf ("<a id=\"%s\">%s</a>", @(id, name)))
+fun uid (
+  id: string, name: string
+) : atext =
+  atext_strptr (sprintf ("<a id=\"%s\">%s</a>", @(id, name)))
 // end of [uid]
 
-fun ulink (link: string, name: string): atext =
-  strcst_of_strptr (sprintf ("<a href=\"%s\">%s</a>", @(link, name)))
+fun ulink (
+  link: string, name: string
+) : atext =
+  atext_strptr (sprintf ("<a href=\"%s\">%s</a>", @(link, name)))
 // end of [ulink]
 
-fun ulink1 (link: string, name: string): atext =
-  strsub_of_strptr (sprintf ("<a href=\"%s\">%s</a>", @(link, name)))
-// end of [ulink1]
+fun ulink1 (
+  link: string, name: string
+) : atext = let
+  val str = sprintf ("<a href=\"%s\">%s</a>", @(link, name))
+in
+  atext_strsub ((s2s)str)
+end // end of [ulink1]
 
 (* ****** ****** *)
 

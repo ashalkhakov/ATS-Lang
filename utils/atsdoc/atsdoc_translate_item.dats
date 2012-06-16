@@ -656,7 +656,7 @@ if k >= 0 then let
   val k = uint_of_int (k)
   val fnam = lexbuf_get_substrptr1 (buf, st, k)
   val fnam = string_of_strptr (fnam)
-  val fres = funcall_fres () // HX: incrementally stamped
+  val fres = funcall_get_fres () // HX: incrementally stamped
 //
 // HX: [fres] may be supplied by the user
 //

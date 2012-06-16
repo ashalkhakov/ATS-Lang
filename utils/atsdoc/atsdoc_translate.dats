@@ -83,7 +83,18 @@ neof (i) = (,(i) != EOF)
 
 (* ****** ****** *)
 
-fun funres_prfx () = "_tok"
+local
+
+val the_funres_prefix = ref<string> ("__tok")
+
+in
+
+implement
+funres_get_prfx () = !the_funres_prefix
+implement
+funres_set_prfx (prfx) = !the_funres_prefix := prfx
+
+end // end of [local]
 
 (* ****** ****** *)
 
@@ -91,20 +102,20 @@ local
 
 val cntref = ref<int> (1)
 
-fun funres_count () = let
+fun funres_get_count (): int = let
   val n = !cntref; val () = !cntref := n + 1 in n
 end // end of [funres_count]
 
 in // in of [local]
 
 implement
-funcall_fres () = let
-  val s = funres_prfx ()
-  val n = funres_count ()
-  val fres = sprintf ("%s%i", @(s, n))
+funcall_get_fres () = let
+  val prfx = funres_get_prfx ()
+  val count = funres_get_count ()
+  val fres = sprintf ("%s%i", @(prfx, count))
 in
   string_of_strptr (fres)
-end // end of [funcall_fres]
+end // end of [funcall_get_fres]
 
 end // end of [local]
 

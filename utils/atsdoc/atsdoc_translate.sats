@@ -112,9 +112,12 @@ fun tranitm_make (loc: location, node: tranitm_node): tranitm
 fun fprint_tranitm (out: FILEref, x: tranitm): void
 
 (* ****** ****** *)
-
-fun funcall_fres (): string // HX: using a counter to general unique names
-
+//
+fun funres_get_prfx (): string // HX: get the prefix for return names
+fun funres_set_prfx (prf: string): void // HX: set the prefix for return names
+//
+fun funcall_get_fres (): string // HX: using a counter to general unique return names
+//
 (* ****** ****** *)
 
 fun DIGIT_test (c: char): bool

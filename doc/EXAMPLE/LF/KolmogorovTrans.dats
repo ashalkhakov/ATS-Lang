@@ -102,23 +102,21 @@ prfun fmeq {A,A',A'':form} {n1,n2:nat} .<n1>.
     end
 end // end of [fmeq]
 
-(*
 
-prfun KOLMfun {A:form}: [A':form] KOLM (A, A') =
-  scase A of
-    | lfalse => dneg (A)
-    | ltrue => dneg (A)
-    | lnot A => ...
-    | land of (form, form)
-    | lor of (form, form)
-    | limp of (form, form)
-
-*)
-
+//
 // Existence of Kolmogorov's translation 
 // Given a formula A, there exists A', such that KOLM (A, A')
+//
+prfun KOLMfun {A:form} .<A>. (): [A':form] KOLM0 (A, dneg A') =
+  scase A of
+  | ltrue () => KOLMtrue ()
+//  | lfalse () => KOLMfalse ()
+  | lnot (A1) => KOLMnot (KOLMfun {A1} ())
+  | land (A1, A2) => KOLMand (KOLMfun {A1} (), KOLMfun {A2} ())
+  | lor (A1, A2) => KOLMor (KOLMfun {A1} (), KOLMfun {A2} ())
+  | limp (A1, A2) => KOLMimp (KOLMfun {A1} (), KOLMfun {A2} ())
+// end of [KOLMfun]
 
-extern prval KOLMfun : {A:form}[A':form] KOLM0 (A, dneg A')
 
 // Kolmogrov's translation on contexts
   
@@ -335,7 +333,7 @@ prfun trans {G,G':forms} {A:form} {n:nat} .<n>.
 
   | NKfalse kpf => let
       prval (KOLMfalse (), jpf) = trans (ks, kpf)
-      prval k' = KOLMfun {...}
+      prval k' = KOLMfun ()
     in
       (k', NJfalse (proposition31 jpf))
     end
@@ -373,14 +371,14 @@ prfun trans {G,G':forms} {A:form} {n:nat} .<n>.
 
   | NKoril kpf => let
       prval (k1, jpf) = trans (ks, kpf)
-      prval k2 = KOLMfun {...}
+      prval k2 = KOLMfun ()
     in
       (KOLMor (k1, k2), proposition21 (NJoril jpf))
     end
 
   | NKorir kpf => let
       prval (k2, jpf) = trans (ks, kpf)
-      prval k1 = KOLMfun {...}
+      prval k1 = KOLMfun ()
     in
       (KOLMor (k1, k2), proposition21 (NJorir jpf))
     end
@@ -390,7 +388,7 @@ prfun trans {G,G':forms} {A:form} {n:nat} .<n>.
       prval (k2, jpf2) = trans (KOLMScons (k11, ks), kpf2)
       prval (k3, jpf3) = trans (KOLMScons (k12, ks), kpf3)
       prval FMEQ () = fmeq (k2, k3)
-      prval [A3':form] k4 = KOLMfun {A3}
+      prval [A3':form] k4 = KOLMfun {A3} ()
       prval jpf4 = proposition45 (proposition44 jpf2)
       prval jpf4 = proposition45 (proposition44 jpf4)
       prval jpf5 = proposition45 (proposition44 jpf3)
@@ -406,7 +404,7 @@ prfun trans {G,G':forms} {A:form} {n:nat} .<n>.
     end
 
   | NKnoti kpf => let (* kpf: NK (A::G, lfalse) *)
-      prval k1 = KOLMfun {...} 
+      prval k1 = KOLMfun ()
       prval (KOLMfalse (), jpf) = trans (KOLMScons (k1, ks), kpf)
       prval pf1 = proposition31 jpf
       prval pf2 = NJnoti pf1
@@ -427,7 +425,7 @@ prfun trans {G,G':forms} {A:form} {n:nat} .<n>.
     end   
 
   | NKimpi kpf => let
-      prval k1 = KOLMfun {...} 
+      prval k1 = KOLMfun ()
       prval (k2, jpf) = trans (KOLMScons (k1, ks), kpf)
     in
       (KOLMimp (k1, k2), proposition21 (NJimpi jpf))
@@ -437,7 +435,7 @@ prfun trans {G,G':forms} {A:form} {n:nat} .<n>.
       prval [A':form] (KOLMimp (k1, k2), jpf1) = trans (ks, kpf1)
       prval (k3, jpf2) = trans (ks, kpf2)
       prval FMEQ () = fmeq (k1, k3)
-      prval [A2':form] k4 = KOLMfun {A2}
+      prval [A2':form] k4 = KOLMfun {A2} ()
       prval pf0 = proposition44 (proposition44 jpf2)
       prval FMEQ () = fmeq (k2, k4)
       prval pf1 = NJimpe (NJhyp (INone {lnot A2' :: G'} {A'}), pf0)
