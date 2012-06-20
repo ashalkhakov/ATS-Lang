@@ -51,7 +51,7 @@ staload
 STDIO = "libc/SATS/stdio.sats"
 staload TIME = "libc/SATS/time.sats"
 //
-staload "libatsdoc/SATS/libatsdoc_text.sats"
+staload "libatsdoc/SATS/libatsdoc_atext.sats"
 //
 (* ****** ****** *)
 

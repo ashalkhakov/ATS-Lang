@@ -73,8 +73,8 @@ SOURCES := \
   libatsdoc_reader.dats \
   libatsdoc_lexbuf.sats \
   libatsdoc_lexbuf.dats \
-  libatsdoc_text.sats \
-  libatsdoc_text.dats \
+  libatsdoc_atext.sats \
+  libatsdoc_atext.dats \
 
 SOURCESsta := $(filter %.sats, $(SOURCES))
 SOURCESdyn := $(filter %.dats, $(SOURCES))
@@ -99,8 +99,8 @@ libatsdoc_reader_sats.o : SATS/libatsdoc_reader.sats; $(ATSCC) $(ATSCCFLAGS) -c 
 libatsdoc_reader_dats.o : DATS/libatsdoc_reader.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
 libatsdoc_lexbuf_sats.o : SATS/libatsdoc_lexbuf.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
 libatsdoc_lexbuf_dats.o : DATS/libatsdoc_lexbuf.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_text_sats.o : SATS/libatsdoc_text.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_text_dats.o : DATS/libatsdoc_text.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_atext_sats.o : SATS/libatsdoc_atext.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
+libatsdoc_atext_dats.o : DATS/libatsdoc_atext.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
 
 ######
 

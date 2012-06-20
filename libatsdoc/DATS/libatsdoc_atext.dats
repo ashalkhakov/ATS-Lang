@@ -72,7 +72,7 @@ staload "libatsdoc/SATS/libatsdoc_symmap.sats"
 
 (* ****** ****** *)
 
-staload "libatsdoc/SATS/libatsdoc_text.sats"
+staload "libatsdoc/SATS/libatsdoc_atext.sats"
 
 (* ****** ****** *)
 
@@ -713,4 +713,4 @@ end // end of [fprint_filsub]
 
 (* ****** ****** *)
 
-(* end of [libatsdoc_text.dats] *)
+(* end of [libatsdoc_atext.dats] *)

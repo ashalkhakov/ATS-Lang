@@ -101,9 +101,17 @@ in
   atext_apptxt3 (_beg, atext_strsub(x), _end)
 end // end of [stacode]
 
+fn prfcode
+  (x: string): atext = let
+  val _beg = atext_strcst"<span class=\"patsyntaxprfexp\">"
+  val _end = atext_strcst"</span>"
+in
+  atext_apptxt3 (_beg, atext_strsub(x), _end)
+end // end of [prfcode]
+
 fn dyncode
   (x: string): atext = let
-  val _beg = atext_strcst"<span class=\"patsyntaxstaexp\">"
+  val _beg = atext_strcst"<span class=\"patsyntaxdynexp\">"
   val _end = atext_strcst"</span>"
 in
   atext_apptxt3 (_beg, atext_strsub(x), _end)
@@ -111,19 +119,10 @@ end // end of [dyncode]
 
 (* ****** ****** *)
 
-local
-
-implement
-psynmark_process<>
-  (psm, putc) = psynmark_process_xhtml_bground (psm, putc)
-// end of [psynmark_process<>]
-
-in // in of [local]
-
 fn pats2xhtmls
   (code: string): atext = let
   val _beg = atext_strcst ("<pre class=\"patsyntax\">")
-  val code = atext_strptr (string_pats2xhtmlize<> (0(*stadyn*), code))
+  val code = atext_strptr (string_pats2xhtmlize_bground (0(*stadyn*), code))
   val _end = atext_strcst ("</pre>")
 in
   atext_apptxt3 (_beg, code, _end)
@@ -132,13 +131,11 @@ end // end of [pats2xhtmls]
 fn pats2xhtmld
   (code: string): atext = let
   val _beg = atext_strcst ("<pre class=\"patsyntax\">")
-  val code = atext_strptr (string_pats2xhtmlize<> (1(*stadyn*), code))
+  val code = atext_strptr (string_pats2xhtmlize_bground (1(*stadyn*), code))
   val _end = atext_strcst ("</pre>")
 in
   atext_apptxt3 (_beg, code, _end)
 end // end of [pats2xhtmld]
-
-end // end of [local]
 
 (* ****** ****** *)
 

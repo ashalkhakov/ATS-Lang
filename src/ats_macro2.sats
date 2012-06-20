@@ -55,4 +55,4 @@ fun macro_eval_app_short
 
 (* ****** ****** *)
 
-(* end of [ats_macro.sats] *)
+(* end of [ats_macro2.sats] *)

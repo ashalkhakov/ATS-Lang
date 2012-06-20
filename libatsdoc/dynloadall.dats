@@ -46,7 +46,7 @@ dynload "libatsdoc/DATS/libatsdoc_reader.dats"
 dynload "libatsdoc/DATS/libatsdoc_lexbuf.dats"
 dynload "libatsdoc/DATS/libatsdoc_symbol.dats"
 dynload "libatsdoc/DATS/libatsdoc_symmap.dats"
-dynload "libatsdoc/DATS/libatsdoc_text.dats"
+dynload "libatsdoc/DATS/libatsdoc_atext.dats"
 
 (* ****** ****** *)
 

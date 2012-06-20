@@ -1,5 +1,7 @@
 %{
 //
+dynload "libatsdoc/dynloadall.dats"
+//
 staload STDIO = "libc/SATS/stdio.sats"
 //
 (* ****** ****** *)

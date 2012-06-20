@@ -1,5 +1,7 @@
 %{
 //
+dynload "libatsdoc/dynloadall.dats"
+//
 staload STDIO = "libc/SATS/stdio.sats"
 //
 (* ****** ****** *)
@@ -108,7 +110,7 @@ of the type system of ATS.\
 ")
 
 #lisub("\
-#ulink("\#ATSLIB_libats_mlstyle", "ATSLIB/libats/mlstyle"):
+#ulink("\#ATSLIB_libats_ML", "ATSLIB/libats/ML"):
 contains library packages for supporting ML-like functional style of programming with
 ATS.\
 ")
@@ -144,12 +146,15 @@ above libraries.
 #menu('\
 #comment("Secondary")
 #litxt(#myliblink("prelude", "array"))
+#litxt(#myliblink("prelude", "array_prf"))
 #litxt(#myliblink("prelude", "arrayptr"))
 #litxt(#myliblink("prelude", "arrayref"))
 #litxt(#myliblink("prelude", "list"))
 #litxt(#myliblink("prelude", "list_vt"))
 #litxt(#myliblink("prelude", "option"))
 #litxt(#myliblink("prelude", "option_vt"))
+#litxt(#myliblink("prelude", "matrix"))
+#litxt(#myliblink("prelude", "unsafe"))
 ')#comment("menu")
 
 #HR(1)
@@ -166,6 +171,15 @@ above libraries.
 <h2>#uid("ATSLIB_libats", "ATSLIB/libats")</h2>
 
 #menu('\
+')#comment("menu")
+
+#HR(1)
+
+<h2>#uid("ATSLIB_libats_ML", "ATSLIB/libats/ML")</h2>
+
+#menu('\
+#litxt(#myliblink("libats/ML", "list0"))
+#litxt(#myliblink("libats/ML", "option0"))
 ')#comment("menu")
 
 <!-- ****** ****** -->
