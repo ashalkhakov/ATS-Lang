@@ -132,6 +132,7 @@ above libraries.
 <h4>Primary</h4>
 #menu('\
 #comment("Primary")
+#litxt(#myliblink("prelude", "arith_prf"))
 #litxt(#myliblink("prelude", "bool"))
 #litxt(#myliblink("prelude", "char"))
 #litxt(#myliblink("prelude", "filebas"))
