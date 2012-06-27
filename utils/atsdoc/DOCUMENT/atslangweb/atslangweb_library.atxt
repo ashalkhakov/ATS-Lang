@@ -141,6 +141,8 @@ above libraries.
 #litxt(#myliblink("prelude", "pointer"))
 #litxt(#myliblink("prelude", "reference"))
 #litxt(#myliblink("prelude", "string"))
+#litxt(#myliblink("prelude", "strptr"))
+#litxt(#myliblink("prelude", "unsafe"))
 ')#comment("menu")
 
 <h4>Secondary</h4>
@@ -155,7 +157,10 @@ above libraries.
 #litxt(#myliblink("prelude", "option"))
 #litxt(#myliblink("prelude", "option_vt"))
 #litxt(#myliblink("prelude", "matrix"))
-#litxt(#myliblink("prelude", "unsafe"))
+
+#litxt(#myliblink("prelude", "iterator"))
+#litxt(#myliblink("prelude", "fcontainer"))
+
 ')#comment("menu")
 
 #HR(1)
