@@ -122,19 +122,19 @@ end // end of [dyncode]
 fn pats2xhtmls
   (code: string): atext = let
   val _beg = atext_strcst ("<pre class=\"patsyntax\">")
-  val code = atext_strptr (string_pats2xhtmlize_bground (0(*stadyn*), code))
+  val _code = atext_strptr (string_pats2xhtmlize_bground (0(*stadyn*), code))
   val _end = atext_strcst ("</pre>")
 in
-  atext_apptxt3 (_beg, code, _end)
+  atext_apptxt3 (_beg, _code, _end)
 end // end of [pats2xhtmls]
 
 fn pats2xhtmld
   (code: string): atext = let
   val _beg = atext_strcst ("<pre class=\"patsyntax\">")
-  val code = atext_strptr (string_pats2xhtmlize_bground (1(*stadyn*), code))
+  val _code = atext_strptr (string_pats2xhtmlize_bground (1(*stadyn*), code))
   val _end = atext_strcst ("</pre>")
 in
-  atext_apptxt3 (_beg, code, _end)
+  atext_apptxt3 (_beg, _code, _end)
 end // end of [pats2xhtmld]
 
 (* ****** ****** *)
