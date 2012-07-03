@@ -16,7 +16,7 @@ staload _(*anon*) = "prelude/DATS/reference.dats"
 macdef para (x) = xmltagging ("p", ,(x))
 macdef emph (x) = xmltagging ("em", ,(x))
 //
-staload _(*anon*) = "libatsdoc/DATS/libatsdoc_atext.dats"
+staload _ = "libatsdoc/DATS/libatsdoc_atext.dats"
 //
 (* ****** ****** *)
 
@@ -277,13 +277,33 @@ end // end of [dynexp]
 (* ****** ****** *)
 //
 local
-(*
-** nothing
-*)
+
+staload "utils/atsyntax/SATS/ats2xhtml.sats"
+dynload "utils/atsyntax/DATS/ats2xhtml.dats"
+
 in
 //
-fun atscode2xmls (x: string): atext = atscode2xml_strcode (0, x)
-fun atscode2xmld (x: string): atext = atscode2xml_strcode (1, x)
+fun ats2xhtmls
+  (x: string): atext = let
+  val [l:addr]
+    str = ats2xhtml_strcode (0(*stadyn*), x)
+  prval () = addr_is_gtez {l} ()
+in
+  if strptr_is_null (str) then let
+    val _ = strptr_free_null (str) in atext_nil ()
+  end else atext_strptr (str) // end of [if]
+end // end of [atx2xhtmls]
+
+fun ats2xhtmld
+  (x: string): atext = let
+  val [l:addr]
+    str = ats2xhtml_strcode (1(*stadyn*), x)
+  prval () = addr_is_gtez {l} ()
+in
+  if strptr_is_null (str) then let
+    val _ = strptr_free_null (str) in atext_nil ()
+  end else atext_strptr (str) // end of [if]
+end // end of [atx2xhtmld]
 //
 end // end of [local]
 //

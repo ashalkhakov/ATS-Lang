@@ -138,6 +138,7 @@ above libraries.
 #litxt(#myliblink("prelude", "filebas"))
 #litxt(#myliblink("prelude", "float"))
 #litxt(#myliblink("prelude", "integer"))
+#litxt(#myliblink("prelude", "intrange"))
 #litxt(#myliblink("prelude", "pointer"))
 #litxt(#myliblink("prelude", "reference"))
 #litxt(#myliblink("prelude", "string"))
@@ -148,14 +149,14 @@ above libraries.
 <h4>Secondary</h4>
 #menu('\
 #comment("Secondary")
-#litxt(#myliblink("prelude", "array"))
-#litxt(#myliblink("prelude", "array_prf"))
-#litxt(#myliblink("prelude", "arrayptr"))
-#litxt(#myliblink("prelude", "arrayref"))
 #litxt(#myliblink("prelude", "list"))
 #litxt(#myliblink("prelude", "list_vt"))
 #litxt(#myliblink("prelude", "option"))
 #litxt(#myliblink("prelude", "option_vt"))
+#litxt(#myliblink("prelude", "array"))
+#litxt(#myliblink("prelude", "array_prf"))
+#litxt(#myliblink("prelude", "arrayptr"))
+#litxt(#myliblink("prelude", "arrayref"))
 #litxt(#myliblink("prelude", "matrix"))
 
 #litxt(#myliblink("prelude", "iterator"))
@@ -170,6 +171,7 @@ above libraries.
 #menu('\
 #litxt(#myliblink("libc", "stdio"))
 #litxt(#myliblink("libc", "stdlib"))
+#litxt(#myliblink("libc", "unistd"))
 ')#comment("menu")
 
 #HR(1)
@@ -186,6 +188,14 @@ above libraries.
 #menu('\
 #litxt(#myliblink("libats/ML", "list0"))
 #litxt(#myliblink("libats/ML", "option0"))
+#litxt(#myliblink("libats/ML", "array0"))
+')#comment("menu")
+
+#HR(1)
+
+<h2>#uid("ATSLIB_contrib", "ATSLIB/contrib")</h2>
+
+#menu('\
 ')#comment("menu")
 
 <!-- ****** ****** -->

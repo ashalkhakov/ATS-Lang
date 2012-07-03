@@ -29,8 +29,8 @@
 
 (* ****** ****** *)
 
-#ifndef ATSDOC_PATS2HTMLATXT
-#define ATSDOC_PATS2HTMLATXT 1
+#ifndef ATSDOC_PATS2XHTMLATXT
+#define ATSDOC_PATS2XHTMLATXT 1
 
 (* ****** ****** *)
 
@@ -139,7 +139,7 @@ end // end of [pats2xhtmld]
 
 (* ****** ****** *)
 
-#endif // end of [ATSDOC_PATS2HTMLATXT]
+#endif // end of [ATSDOC_PATS2XHTMLATXT]
 
 (* ****** ****** *)
 

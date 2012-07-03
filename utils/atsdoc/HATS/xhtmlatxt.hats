@@ -55,10 +55,6 @@ staload "libatsdoc/SATS/libatsdoc_atext.sats"
 //
 (* ****** ****** *)
 
-val atext_newline = atext_strcst"\n"
-
-(* ****** ****** *)
-
 local
 //
 val LT = "<"

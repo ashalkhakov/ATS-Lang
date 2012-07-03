@@ -76,7 +76,7 @@ Following is a complete program in ATS for printing out the string
 "Hello, world!" plus a newline:
 ')#comment("para")
 
-#atscode2xmld('\
+#ats2xhtmld('\
 implement main () = print ("Hello, world!\\\n")
 ')
 
@@ -125,7 +125,7 @@ fib(n+2) = fib(n) + fib(n+1) for n >= 0
 Following is a direct implementation of this specified function in ATS:
 ")
 
-#atscode2xmld('\
+#ats2xhtmld('\
 fun fib (n: int): int =
   if n >= 2 then fib (n-2) + fib (n-1) else n
 // end of [fib]
@@ -148,7 +148,7 @@ int fibc (int n) {
 
 If translated into ATS, the function fibc can essentially be implemented
 as follows:
-#atscode2xmld('\
+#ats2xhtmld('\
 fun fibc (n: int): int = let
   fun loop (n: int, f0: int, f1: int) =
     if n > 0 then loop (n-1, f1, f0+f1) else f0
@@ -164,7 +164,7 @@ be given that completely bridges this gap. First, the specification of fib
 needs to be encoded into ATS, which is fulfilled by the declaration of the
 following dataprop:
 
-#atscode2xmls('\
+#ats2xhtmls('\
 dataprop FIB (int, int) =
   | FIB0 (0, 0) | FIB1 (1, 1)
   | {n:nat} {r0,r1:int} FIB2 (n+2, r0+r1) of (FIB (n, r0), FIB (n+1, r1))
@@ -202,7 +202,7 @@ A fully verified implementaion of the fib function in ATS can now be given
 as follows:
 ')
 
-#atscode2xmld('\
+#ats2xhtmld('\
 fun fibats
   {n:nat} (n: int n)
   : [r:int] (FIB (n, r) | int r) = let
@@ -210,13 +210,13 @@ fun fibats
     pf0: FIB (i, r0), pf1: FIB (i+1, r1) | ni: int (n-i), r0: int r0, r1: int r1
   ) : [r:int] (FIB (n, r) | int r) =
     if ni > 0 then
-     loop {i+1} (pf1, FIB2 (pf0, pf1) | ni - 1, r1, r0 + r1)
+      loop {i+1} (pf1, FIB2 (pf0, pf1) | ni - 1, r1, r0 + r1)
     else (pf0 | r0)
   // end of [loop]
 in
   loop {0} (FIB0 (), FIB1 () | n, 0, 1)
 end // end of [fibats]
-')#comment("atscode2xmld")
+')#comment("ats2xhtmld")
 
 #para("\
 Note that fibats is assigned the following type:

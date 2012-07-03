@@ -112,25 +112,35 @@ macdef programlisting (x) = xmltagging ("programlisting", ,(x))
 macdef informalexample (x) = xmltagging ("informalexample", ,(x))
 
 (* ****** ****** *)
+
+fun ulink
+  (link: string, name: string): atext = let
+  val res = sprintf ("<ulink url=\"%s\">%s</ulink>", @(link, name))
+in
+  atext_strptr (res)
+end // end of [ulink]
+
+(* ****** ****** *)
 //
 local
 //
-val ATSCODEopn = "<informalexample><programlisting><![CDATA["
-val ATSCODEcls = "]]></programlisting></informalexample>"
-//
+val _opn = "\
+<informalexample><programlisting><![CDATA[\
+" // end of [val]
+val _cls =
+  "]]></programlisting></informalexample>\n"
+// end of [val]
 in
 //
 fun atscode
-  (x: string): atext = atext_appstr3 (ATSCODEopn, x, ATSCODEcls)
+  (x: string): atext = atext_appstr3 (_opn, x, _cls)
+//
 fun atscodefil
   (path: string): atext = let
-  val code = filename2text (path) in
-  atext_apptxt3 (atext_strcst(ATSCODEopn), code, atext_strcst(ATSCODEcls))
-end // end of [atscode1]
-(*
-fun atscode2xmls (x: string): atext = atscode2xml_strcode (0, x)
-fun atscode2xmld (x: string): atext = atscode2xml_strcode (1, x)
-*)
+  val code = filename2text (path)
+in
+  atext_apptxt3 (atext_strcst(_opn), code, atext_strcst(_cls))
+end // end of [atscodefil]
 //
 end // end of [local]
 //

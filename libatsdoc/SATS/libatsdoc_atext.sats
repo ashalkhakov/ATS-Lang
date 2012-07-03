@@ -35,6 +35,12 @@
 (* ****** ****** *)
 
 staload
+F = "libc/SATS/fcntl.sats"
+stadef fildes_v = $F.fildes_v
+
+(* ****** ****** *)
+
+staload
 SYM = "libatsdoc/SATS/libatsdoc_symbol.sats"
 typedef symbol = $SYM.symbol
 
@@ -61,17 +67,15 @@ fun atext_concatxtsep (xs: atextlst, sep: atext): atext
 
 (* ****** ****** *)
 
-val atext_newline : atext
+fun atext_newline ((*void*)): atext
+
+(* ****** ****** *)
+
 fun atext_strptr (x: strptr1): atext
 
 (* ****** ****** *)
 
 fun filename2text (path: string): atext
-
-(* ****** ****** *)
-
-fun atscode2xml_strcode (stadyn: int, code: string): atext
-fun atscode2xml_filcode (stadyn: int, path: string): atext
 
 (* ****** ****** *)
 
@@ -89,6 +93,14 @@ fun fprint_atextlst_sep (out: FILEref, xs: atextlst, sep: atext): void
 
 fun fprint_strsub (out: FILEref, sub: string): void
 fun fprint_filsub (out: FILEref, path: string): void
+
+(* ****** ****** *)
+//
+// HX: [fd] is regular: no support for pipe
+//
+fun file2strptr {fd:int} (
+  pf: !fildes_v fd  | fd: int fd
+) : strptr0 = "libatsdoc_file2strptr" // end of [file2strptr]
 
 (* ****** ****** *)
 //
