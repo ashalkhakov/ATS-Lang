@@ -35,97 +35,24 @@
 ######
 
 ATSHOMEQ="$(ATSHOME)"
-ATSCC=$(ATSHOMEQ)/bin/atscc
-ATSOPT=$(ATSHOMEQ)/bin/atsopt
 
 ######
 
-ATSGCFLAG=
-ATSGCFLAG=-D_ATS_GCATS
-
-ATSCCFLAGS=-g
-ATSCCFLAGS=-g -O
-ATSCCFLAGS=-g -O2
+GCC=gcc
 
 ######
 
-ATSLIB=$(ATSHOMEQ)/ccomp/lib
-ATSLIB=$(ATSHOMEQ)/ccomp/lib64
+all:: Makefile_out
+all:: ; make -f Makefile_out
+all:: cleanall
 
 ######
 
-all:: libatsdoc clean
+Makefile_out: Makefile_inp ; $(GCC) -I $(ATSHOMEQ) -E -P -o $@ -x c $<
 
 ######
 
-SOURCES := \
-  libatsdoc_error.sats \
-  libatsdoc_error.dats \
-  libatsdoc_symbol.sats \
-  libatsdoc_symbol.dats \
-  libatsdoc_symmap.sats \
-  libatsdoc_symmap.dats \
-  libatsdoc_filename.sats \
-  libatsdoc_filename.dats \
-  libatsdoc_location.sats \
-  libatsdoc_location.dats \
-  libatsdoc_reader.sats \
-  libatsdoc_reader.dats \
-  libatsdoc_lexbuf.sats \
-  libatsdoc_lexbuf.dats \
-  libatsdoc_atext.sats \
-  libatsdoc_atext.dats \
-
-SOURCESsta := $(filter %.sats, $(SOURCES))
-SOURCESdyn := $(filter %.dats, $(SOURCES))
-
-OBJECTS := $(SOURCES)
-OBJECTS := $(patsubst %.sats, %_sats.o, $(OBJECTS))
-OBJECTS := $(patsubst %.dats, %_dats.o, $(OBJECTS))
-
-######
-
-libatsdoc_error_sats.o : SATS/libatsdoc_error.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_error_dats.o : DATS/libatsdoc_error.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_symbol_sats.o : SATS/libatsdoc_symbol.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_symbol_dats.o : DATS/libatsdoc_symbol.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_symmap_sats.o : SATS/libatsdoc_symmap.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_symmap_dats.o : DATS/libatsdoc_symmap.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_filename_sats.o : SATS/libatsdoc_filename.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_filename_dats.o : DATS/libatsdoc_filename.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_location_sats.o : SATS/libatsdoc_location.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_location_dats.o : DATS/libatsdoc_location.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_reader_sats.o : SATS/libatsdoc_reader.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_reader_dats.o : DATS/libatsdoc_reader.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_lexbuf_sats.o : SATS/libatsdoc_lexbuf.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_lexbuf_dats.o : DATS/libatsdoc_lexbuf.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_atext_sats.o : SATS/libatsdoc_atext.sats; $(ATSCC) $(ATSCCFLAGS) -c $<
-libatsdoc_atext_dats.o : DATS/libatsdoc_atext.dats; $(ATSCC) $(ATSCCFLAGS) -c $<
-
-######
-
-libatsdoc: dynloadall.dats $(OBJECTS)
-	$(ATSCC) $(ATSCCFLAGS) -c dynloadall.dats
-	$(ARR) $(ATSLIB)/libatsdoc.a dynloadall_dats.o $(OBJECTS)
-
-######
-#
-# %_sats.o: %.sats
-#	$(ATSCC) $(ATSCCFLAGS) -c $<
-#
-# %_dats.o: %.dats
-#	$(ATSCC) $(ATSCCFLAGS) -c $<
-#
-######
-
-ARR=ar -r
-CPF=cp -f
 RMF=rm -f
-WCL=wc -l
-
-######
-
-srclines:: ; $(WCL) $(SOURCES)
 
 ######
 
@@ -134,6 +61,7 @@ clean:: ; $(RMF) *_?ats.o
 clean:: ; $(RMF) *_?ats.c
 
 cleanall:: clean
+cleanall:: ; $(RMF) Makefile_out
 cleanall:: ; $(RMF) libatsdoc.a
 
 ###### end of [Makefile] ######
