@@ -137,9 +137,11 @@ fun atscode
 //
 fun atscodefil
   (path: string): atext = let
-  val code = filename2text (path)
+  val _opn = atext_strcst(_opn)
+  val _code = atext_filepath (path)
+  val _cls = atext_strcst(_cls)
 in
-  atext_apptxt3 (atext_strcst(_opn), code, atext_strcst(_cls))
+  atext_apptxt3 (_opn, _code, _cls)
 end // end of [atscodefil]
 //
 end // end of [local]

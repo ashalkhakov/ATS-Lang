@@ -75,7 +75,7 @@ fun atext_strptr (x: strptr1): atext
 
 (* ****** ****** *)
 
-fun filename2text (path: string): atext
+fun atext_filepath (path: string): atext
 
 (* ****** ****** *)
 

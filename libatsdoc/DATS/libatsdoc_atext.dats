@@ -215,8 +215,10 @@ tostring_strsub (sub) =
 
 (* ****** ****** *)
 
-implement
-filename2text (path) = let
+local
+
+fun filepath2string
+  (path: string): strptr0 = let
   val [l:addr] (pfopt | filp) = fopen_err (path, file_mode_r)
 in
   if filp > null then let
@@ -224,25 +226,36 @@ in
     val filr = __cast (pffil | filp) where {
       extern castfn __cast {m:fm} (pffil: FILE_v (m, l) | p: ptr l): FILEref
     } // end of [val]
-//
-    fun fpr (out: FILEref, inp: FILEref): void = let
-      val c = fgetc_err (inp)
-    in
-      if (c != EOF) then (fprint_char (out, (char_of_int)c); fpr (out, inp)) else ()
-    end // end of [fpr]
-//
-    val res = tostring_fprint ("libatsdoc_filename2text", fpr, filr)
+    val cs = char_list_vt_make_file (filr)
     val _err = fclose_err (filr)
+    val cs1 = $UN.castvwtp1 {List(char)} (cs)
+    val n = list_length (cs1)
+    val sbf = string_make_list_int (cs1, n)
+    val () = list_vt_free (cs)
   in
-    if strptr_isnot_null (res) then
-      ATEXTstrcst ((string_of_strptr)res)
-    else let
-      val () = strptr_free (res) in ATEXTnil ()
-    end (* end of [if] *)
+    strptr_of_strbuf (sbf)
   end else let
-    prval None_v () = pfopt in ATEXTnil ()
-  end (* end of [if] *)
-end // end of [filename2text]
+    prval None_v () = pfopt in strptr_null ()
+  end // end of [if]
+end // end of [filepath2string]
+
+in // in of [local]
+
+implement
+atext_filepath (path) = let
+  val [l:addr]
+    str = filepath2string (path)
+  prval () = addr_is_gtez {l} ()
+  val isnotnull = strptr_isnot_null (str)
+in
+  if isnotnull then
+    atext_strptr (str)
+  else let
+    val _ = strptr_free_null (str) in atext_nil ()
+  end // end of [if]
+end // end of [atext_filepath]
+
+end // end of [local]
 
 (* ****** ****** *)
 
