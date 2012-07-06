@@ -22,15 +22,15 @@ all:: PAPER
 
 ######
 
-ATSYNTAX=$(ATSHOME)/utils/atsyntax/atsyntax.o
-ATSWEBPAGE=$(ATSHOME)/contrib/atswebpage/atsctrb_atswebpage.o
+OATSYNTAX=$(ATSHOME)/utils/atsyntax/atsyntax.o
+OATSWEBPAGE=$(ATSHOME)/contrib/atswebpage/atsctrb_atswebpage.o
 
 ######
 
 atslangweb_layout.dats: atslangweb_params.hats ; touch $@
 
 atslangweb_temp: \
-  atslangweb_temp_atxt.dats ; $(ATSCC) -o $@ $< $(ATSYNTAX) $(ATSWEBPAGE) -latsdoc
+  atslangweb_temp_atxt.dats ; $(ATSCC) -o $@ $< $(OATSYNTAX) $(OATSWEBPAGE) -latsdoc
 atslangweb_temp_atxt.dats: atslangweb_layout.dats \
   atslangweb_temp.atxt ; $(ATSDOC) --outcode $@ -i atslangweb_temp.atxt > atslangweb_temp_atxt.txt
 atslangweb_temp.html: atslangweb_temp ; ./$< > $@
@@ -55,7 +55,7 @@ cleanall:: ; $(RMF) images/thePageBody_bgimage.png
 ######
 
 atslangweb_home: \
-  atslangweb_home_atxt.dats ; $(ATSCC) -o $@ $< $(ATSYNTAX) $(ATSWEBPAGE) -latsdoc
+  atslangweb_home_atxt.dats ; $(ATSCC) -o $@ $< $(OATSYNTAX) $(OATSWEBPAGE) -latsdoc
 atslangweb_home_atxt.dats: \
   atslangweb_home.atxt ; $(ATSDOC) --outcode $@ -i atslangweb_home.atxt > atslangweb_home_atxt.txt
 HOME: atslangweb_home atslangweb_temp.html ; ./$< > atslangweb_home.html
@@ -67,7 +67,7 @@ cleanall:: ; $(RMF) styles/atslangweb_home.css
 ######
 
 atslangweb_download: \
-  atslangweb_download_atxt.dats ; $(ATSCC) -o $@ $< $(ATSYNTAX) $(ATSWEBPAGE) -latsdoc
+  atslangweb_download_atxt.dats ; $(ATSCC) -o $@ $< $(OATSYNTAX) $(OATSWEBPAGE) -latsdoc
 atslangweb_download_atxt.dats: \
   atslangweb_download.atxt ; $(ATSDOC) --outcode $@ -i atslangweb_download.atxt > atslangweb_download_atxt.txt
 DOWNLOAD:: atslangweb_download atslangweb_temp.html ; ./$< > $@/atslangweb_download.html
@@ -79,7 +79,7 @@ cleanall:: ; $(RMF) styles/atslangweb_download.css
 ######
 
 atslangweb_document: \
-  atslangweb_document_atxt.dats ; $(ATSCC) -o $@ $< $(ATSYNTAX) $(ATSWEBPAGE) -latsdoc
+  atslangweb_document_atxt.dats ; $(ATSCC) -o $@ $< $(OATSYNTAX) $(OATSWEBPAGE) -latsdoc
 atslangweb_document_atxt.dats: \
   atslangweb_document.atxt ; $(ATSDOC) --outcode $@ -i atslangweb_document.atxt > atslangweb_document_atxt.txt
 DOCUMENT:: atslangweb_document atslangweb_temp.html ; ./$< > $@/atslangweb_document.html
@@ -91,7 +91,7 @@ cleanall:: ; $(RMF) styles/atslangweb_document.css
 ######
 
 atslangweb_library: \
-  atslangweb_library_atxt.dats ; $(ATSCC) -o $@ $< $(ATSYNTAX) $(ATSWEBPAGE) -latsdoc
+  atslangweb_library_atxt.dats ; $(ATSCC) -o $@ $< $(OATSYNTAX) $(OATSWEBPAGE) -latsdoc
 atslangweb_library_atxt.dats: \
   atslangweb_library.atxt ; $(ATSDOC) --outcode $@ -i atslangweb_library.atxt > atslangweb_library_atxt.txt
 LIBRARY:: atslangweb_library atslangweb_temp.html ; ./$< > $@/atslangweb_library.html
@@ -103,7 +103,7 @@ cleanall:: ; $(RMF) styles/atslangweb_library.css
 ######
 
 atslangweb_resource: \
-  atslangweb_resource_atxt.dats ; $(ATSCC) -o $@ $< $(ATSYNTAX) $(ATSWEBPAGE) -latsdoc
+  atslangweb_resource_atxt.dats ; $(ATSCC) -o $@ $< $(OATSYNTAX) $(OATSWEBPAGE) -latsdoc
 atslangweb_resource_atxt.dats: \
   atslangweb_resource.atxt ; $(ATSDOC) --outcode $@ -i atslangweb_resource.atxt > atslangweb_resource_atxt.txt
 RESOURCE:: atslangweb_resource atslangweb_temp.html ; ./$< > $@/atslangweb_resource.html
@@ -115,7 +115,7 @@ cleanall:: ; $(RMF) styles/atslangweb_resource.css
 ######
 
 atslangweb_community: \
-  atslangweb_community_atxt.dats ; $(ATSCC) -o $@ $< $(ATSYNTAX) $(ATSWEBPAGE) -latsdoc
+  atslangweb_community_atxt.dats ; $(ATSCC) -o $@ $< $(OATSYNTAX) $(OATSWEBPAGE) -latsdoc
 atslangweb_community_atxt.dats: \
   atslangweb_community.atxt ; $(ATSDOC) --outcode $@ -i atslangweb_community.atxt > atslangweb_community_atxt.txt
 COMMUNITY:: atslangweb_community atslangweb_temp.html ; ./$< > $@/atslangweb_community.html
@@ -127,7 +127,7 @@ cleanall:: ; $(RMF) styles/atslangweb_community.css
 ######
 
 atslangweb_example: \
-  atslangweb_example_atxt.dats ; $(ATSCC) -o $@ $< $(ATSYNTAX) $(ATSWEBPAGE) -latsdoc
+  atslangweb_example_atxt.dats ; $(ATSCC) -o $@ $< $(OATSYNTAX) $(OATSWEBPAGE) -latsdoc
 atslangweb_example_atxt.dats: \
   atslangweb_example.atxt ; $(ATSDOC) --outcode $@ -i atslangweb_example.atxt > atslangweb_example_atxt.txt
 EXAMPLE:: atslangweb_example atslangweb_temp.html ; ./$< > $@/atslangweb_example.html
@@ -139,7 +139,7 @@ cleanall:: ; $(RMF) styles/atslangweb_example.css
 ######
 
 atslangweb_implement: \
-  atslangweb_implement_atxt.dats ; $(ATSCC) -o $@ $< $(ATSYNTAX) $(ATSWEBPAGE) -latsdoc
+  atslangweb_implement_atxt.dats ; $(ATSCC) -o $@ $< $(OATSYNTAX) $(OATSWEBPAGE) -latsdoc
 atslangweb_implement_atxt.dats: \
   atslangweb_implement.atxt ; $(ATSDOC) --outcode $@ -i atslangweb_implement.atxt > atslangweb_implement_atxt.txt
 IMPLEMENT:: atslangweb_implement atslangweb_temp.html ; ./$< > $@/atslangweb_implement.html
@@ -151,7 +151,7 @@ cleanall:: ; $(RMF) styles/atslangweb_implement.css
 ######
 
 atslangweb_paper: \
-  atslangweb_paper_atxt.dats ; $(ATSCC) -o $@ $< $(ATSYNTAX) $(ATSWEBPAGE) -latsdoc
+  atslangweb_paper_atxt.dats ; $(ATSCC) -o $@ $< $(OATSYNTAX) $(OATSWEBPAGE) -latsdoc
 atslangweb_paper_atxt.dats: \
   atslangweb_paper.atxt ; $(ATSDOC) --outcode $@ -i atslangweb_paper.atxt > atslangweb_paper_atxt.txt
 PAPER:: atslangweb_paper atslangweb_temp.html ; ./$< > $@/atslangweb_paper.html
@@ -168,46 +168,46 @@ cleanall:: ; $(RMF) styles/atslangweb_paper.css
 #
 ######
 
-upload:: upload_home
+uploadall:: upload_home
 upload_home:: ; scp atslangweb_home.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/
 
-upload:: upload_download
+uploadall:: upload_download
 upload_download:: ; scp DOWNLOAD/atslangweb_download.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/DOWNLOAD
 
-upload:: upload_document
+uploadall:: upload_document
 upload_document:: ; scp DOCUMENT/atslangweb_document.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/DOCUMENT
 
-upload:: upload_library
+uploadall:: upload_library
 upload_library:: ; scp LIBRARY/atslangweb_library.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/LIBRARY
 
-upload:: upload_resource
+uploadall:: upload_resource
 upload_resource:: ; scp RESOURCE/atslangweb_resource.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/RESOURCE
 
-upload:: upload_community
+uploadall:: upload_community
 upload_community:: ; scp COMMUNITY/atslangweb_community.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/COMMUNITY
 
-upload:: upload_example
+uploadall:: upload_example
 upload_example:: ; scp EXAMPLE/atslangweb_example.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/EXAMPLE
 
-upload:: upload_implement
+uploadall:: upload_implement
 upload_implement:: ; scp IMPLEMENT/atslangweb_implement.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/IMPLEMENT
 
-upload:: upload_paper
+uploadall:: upload_paper
 upload_paper:: ; scp PAPER/atslangweb_paper.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/PAPER
 
-upload:: upload_styles
+uploadall:: upload_styles
 upload_styles: ; scp -r styles/*.css \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/styles
-upload:: upload_images
+uploadall:: upload_images
 upload_images: ; scp -r images/*.png \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/images
 
@@ -218,7 +218,7 @@ upload_images: ; scp -r images/*.png \
 #   DOCUMENT/atslangweb_document.html \				    #
 #   LIBRARY/atslangweb_library.html \				    #
 #   RESOURCE/atslangweb_resource.html \				    #
-#   COMMUNITY/atslangweb_community.html \				    #
+#   COMMUNITY/atslangweb_community.html \                           #
 #   EXAMPLE/atslangweb_example.html \				    #
 #   IMPLEMENT/atslangweb_implement.html \			    #
 #   PAPER/atslangweb_paper.html \				    #

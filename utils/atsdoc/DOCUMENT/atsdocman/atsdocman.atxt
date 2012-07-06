@@ -11,6 +11,9 @@ dynload "libatsdoc/dynloadall.dats"
 //
 staload "libatsdoc/SATS/libatsdoc_atext.sats"
 //
+dynload "utils/atsyntax/DATS/ats2xhtml.dats"
+staload "utils/atsyntax/SATS/ats2xhtml.sats"
+//
 %}
 
 %{
@@ -86,11 +89,23 @@ in
   end (* end of [if] *)
 end // end of [sub2str]
 
-fun atscode2xmls (x: string): atext = atscode2xml_strcode (0, x)
-fun atscode2xmld (x: string): atext = atscode2xml_strcode (1, x)
+(* ****** ****** *)
 
-fun atscode2xmlss (x: string): atext = atscode2xml_strcode (0, sub2str x)
-fun atscode2xmldd (x: string): atext = atscode2xml_strcode (1, sub2str x)
+fun ats2xhtmls
+  (x: string): atext =
+  atext_strptr0 (ats2xhtml_strcode (0, x))
+fun ats2xhtmld
+  (x: string): atext =
+  atext_strptr0 (ats2xhtml_strcode (1, x))
+
+fun ats2xhtmlss
+  (x: string): atext =
+  atext_strptr0 (ats2xhtml_strcode (0, sub2str x))
+fun ats2xhtmldd
+  (x: string): atext =
+  atext_strptr0 (ats2xhtml_strcode (1, sub2str x))
+
+(* ****** ****** *)
 
 fun DQ () = atext_strcst ("\"")
 
@@ -239,19 +254,19 @@ following command-line:
 #para("\
 The content of #filename("foo_atxt.dats") is listed as follows:
 
-#atscode2xmld('\
+#ats2xhtmld('\
 (*
 foo.atxt: 2(line=1, offs=2) -- 12(line=1, offs=12)
 *)
 val _tok1 = author()
-val () = theTextMap_insert_str ("_tok1", _tok1)
+val () = theAtextMap_insert_str ("_tok1", _tok1)
 
 (*
 foo.atxt: 45(line=2, offs=33) -- 61(line=2, offs=49)
 *)
 val NOW = timestamp()
-val () = theTextMap_insert_str ("NOW", NOW)
-')#comment("atscode2xmld")
+val () = theAtextMap_insert_str ("NOW", NOW)
+')#comment("ats2xhtmld")
 
 Note that the name of the identifier #code("_tok1") is generated
 automatically while the name of the identifer #code("NOW") is taken from
@@ -364,7 +379,7 @@ return strings. Instead, they return values of the type #code("text"),
 which is declared in #myatsimplink("libatsdoc/SATS/libatsdoc_atext.sats", "libatsdoc/SATS/libatsdoc_atext.sats") as
 follows:
 
-#atscode2xmls("\
+#ats2xhtmls("\
 datatype text =
 //
   | ATEXTnil of () // empty text
@@ -386,7 +401,7 @@ where
 textlst = List (text)
 and
 stringlst = List (string)
-")#comment("atscode2xmls")
+")#comment("ats2xhtmls")
 
 The meaning of all the data constructors associated with the datatype
 #code("text") should be easily understood except #code("ATEXTstrsub"), which

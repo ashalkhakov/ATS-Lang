@@ -28,11 +28,13 @@ macdef LI (x) = xmltagging ("listitem", ,(x))
 //
 fun itemizedlist
   (xs: atextlst): atext = let
-  val opn = atext_strcst "<itemizedlist>\n"
-  val cls = atext_strcst "\n</itemizedlist>"
+  val sep = atext_newline ()
+  val _itms = atext_concatxtsep (xs, sep)
+  val _beg = atext_strcst "<itemizedlist>\n"
+  val _end = atext_strcst "\n</itemizedlist>"
 in
-  atext_apptxt3 (opn, atext_concatxtsep (xs, atext_newline), cls)
-end
+  atext_apptxt3 (_beg, _itms, _end)
+end // end of [itemizedlist]
 //
 (* ****** ****** *)
 

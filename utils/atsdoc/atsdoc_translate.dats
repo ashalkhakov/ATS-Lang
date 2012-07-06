@@ -141,7 +141,7 @@ fprint_tranitm
       val () = fprint_funarglst (out, xs)
       val () = fprint_newline (out)
       val () = fprintf (
-        out, "val () = theTextMap_insert_str (\"%s\", %s)", @(fres, fres)
+        out, "val () = theAtextMap_insert_str (\"%s\", %s)", @(fres, fres)
       ) // end of [val]
       val () = fprint_newline (out)
     in

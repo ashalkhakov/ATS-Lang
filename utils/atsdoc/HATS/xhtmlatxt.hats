@@ -109,6 +109,8 @@ fun ignoretxt (x: atext): atext = atext_nil ()
 
 (* ****** ****** *)
 
+macdef emph(x) = xmltagging ("em", ,(x))
+
 macdef strong(x) =
   xmltagging ("strong", ,(x)) // <strong> ... </strong>
 // end of [strong]

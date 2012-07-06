@@ -120,9 +120,24 @@ implement atext_concatxtsep (xs, sep) = ATEXTconcatxtsep (xs, sep)
 implement atext_newline () = ATEXTstrcst ("\n")
 
 (* ****** ****** *)
+//
+implement
+atext_strptr (x) = ATEXTstrcst ((string_of_strptr)x)
 
-implement atext_strptr (x) = ATEXTstrcst ((string_of_strptr)x)
-
+implement
+atext_strptr0 (x) = let
+  val notnull = strptr_isnot_null (x)
+in
+  if notnull then
+    atext_strptr (x)
+  else let
+    val () = strptr_free (x) in atext_nil ()
+  end // end of [if]
+end // end of [atext_strptr0]
+//
+implement atext_strcstptr (x) = ATEXTstrcst ((string_of_strptr)x)
+implement atext_strsubptr (x) = ATEXTstrsub ((string_of_strptr)x)
+//
 (* ****** ****** *)
 
 local
@@ -251,7 +266,7 @@ in
   if isnotnull then
     atext_strptr (str)
   else let
-    val _ = strptr_free_null (str) in atext_nil ()
+    val _(*null*) = strptr_free_null (str) in atext_nil ()
   end // end of [if]
 end // end of [atext_filepath]
 
@@ -269,28 +284,28 @@ viewtypedef
 atextmap = symmap (atext)
 
 val map0 = symmap_make_nil ()
-val theTextMap = ref<atextmap> (map0)
+val theAtextMap = ref<atextmap> (map0)
 
 in // in of [local]
 
 implement
-theTextMap_search (s) = let
-  val (vbox pf | p) = ref_get_view_ptr (theTextMap)
+theAtextMap_search (s) = let
+  val (vbox pf | p) = ref_get_view_ptr (theAtextMap)
 in
   symmap_search (!p, s)
-end // end of [theTextMap_search]
+end // end of [theAtextMap_search]
 
 implement
-theTextMap_insert (s, x) = let
-  val (vbox pf | p) = ref_get_view_ptr (theTextMap)
+theAtextMap_insert (s, x) = let
+  val (vbox pf | p) = ref_get_view_ptr (theAtextMap)
 in
   symmap_insert (!p, s, x)
-end // end of [theTextMap_insert]
+end // end of [theAtextMap_insert]
 
 implement
-theTextMap_insert_str (s, x) = let
-  val s = symbol_make_string (s) in theTextMap_insert (s, x)
-end // end of [theTextMap_insert_str]
+theAtextMap_insert_str (s, x) = let
+  val s = symbol_make_string (s) in theAtextMap_insert (s, x)
+end // end of [theAtextMap_insert_str]
 
 end // end of [local]
 
@@ -419,10 +434,12 @@ fun fprsub_ident {n:nat} (
   val n = list_vt_length (cs)
 in
   if n > 0 then let
-    val id = string_make_list_int ($UN.castvwtp1(cs), n)
+    val cs1 = $UN.castvwtp1(cs)
+    val id =
+      string_make_list_int (cs1, n)
     val id = string_of_strbuf (id)
     val sym = symbol_make_string (id)
-    val ans = theTextMap_search (sym)
+    val ans = theAtextMap_search (sym)
     val () = (case+ ans of
       | ~Some_vt xt => fprint_atext (out, xt)
       | ~None_vt () => fprintf (out, "#%s$", @(id))

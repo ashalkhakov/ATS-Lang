@@ -12,7 +12,7 @@ staload STDIO = "libc/SATS/stdio.sats"
 //
 val _ATSLANGWEBHOME: atext =
   strcst"<strong>Home</strong>"
-val () = theTextMap_insert_str ("ATSLANGWEBHOME", _ATSLANGWEBHOME)
+val () = theAtextMap_insert_str ("ATSLANGWEBHOME", _ATSLANGWEBHOME)
 //
 (* ****** ****** *)
 //
@@ -24,6 +24,9 @@ val theCSSfilr =
   $STDIO.fopen_ref_exn ("styles/atslangweb_home.css", file_mode_w)
 val () = fprintf (theCSSfilr,
   "@import url(%s/styles/atslangweb_temp.css);\n\n", @(ATSLANGWEBROOT)
+) // end of [val]
+val () = fprintf (theCSSfilr,
+  "@import url(%s/styles/atslangweb_jsddm_menu.css);\n\n", @(ATSLANGWEBROOT)
 ) // end of [val]
 
 fun addcssrule
@@ -42,7 +45,7 @@ end // end of [addcssrule]
 #ignoretxt(
 #strsub[thePageHeaderSeparator]('\
 <div class="Page-mysitelinks">
-#mysitelinks("HOME")
+#mysitelinks2("HOME")
 </div>
 '))
 
@@ -200,7 +203,7 @@ NSF.</em>
 #ignoretxt(
 #strsub[thePageFooterSeparator]('\
 <div class="Page-mysitelinks">
-#mysitelinks("HOME")
+#mysitelinks3("HOME")
 </div>
 '))
 

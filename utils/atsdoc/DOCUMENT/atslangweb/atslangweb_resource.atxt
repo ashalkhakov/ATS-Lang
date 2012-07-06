@@ -12,7 +12,7 @@ staload STDIO = "libc/SATS/stdio.sats"
 //
 val _ATSLANGWEBRESOURCE: atext =
   strcst"<strong>Resources</strong>"
-val () = theTextMap_insert_str ("ATSLANGWEBRESOURCE", _ATSLANGWEBRESOURCE)
+val () = theAtextMap_insert_str ("ATSLANGWEBRESOURCE", _ATSLANGWEBRESOURCE)
 //
 (* ****** ****** *)
 //
@@ -24,6 +24,9 @@ val theCSSfilr =
   $STDIO.fopen_ref_exn ("styles/atslangweb_library.css", file_mode_w)
 val () = fprintf (theCSSfilr,
   "@import url(%s/styles/atslangweb_temp.css);\n\n", @(ATSLANGWEBROOT)
+) // end of [val]
+val () = fprintf (theCSSfilr,
+  "@import url(%s/styles/atslangweb_jsddm_menu.css);\n\n", @(ATSLANGWEBROOT)
 ) // end of [val]
 
 fun addcssrule
@@ -42,7 +45,7 @@ end // end of [addcssrule]
 #ignoretxt(
 #strsub[thePageHeaderSeparator]('\
 <div class="Page-mysitelinks">
-#mysitelinks("RESOURCE")
+#mysitelinks2("RESOURCE")
 </div>
 '))
 
@@ -63,7 +66,7 @@ padding-right: 10px ;
 #litxt(#ulink("\#ATS_edit", "Editing ATS source code"))
 #litxt(#ulink("\#ATS_crossref", "Viewing ATS source code"))
 #litxt(#ulink("\#ATS_mler", "ML programmer\'s guide to ATS"))
-#litxt(#ulink("\#ATS_courses", "Courses based on ATS"))
+#litxt(#ulink("\#ATS_courses", "Courses about ATS and based on ATS"))
 ')#comment("menu")
 
 #HR(2)
@@ -91,7 +94,7 @@ for viewing ATS source code with cross-reference support.
 
 #HR(1)
 
-<h2>#uid("ATS_courses", "Courses based on ATS")</h2>
+<h2>#uid("ATS_courses", "Courses about ATS and based on ATS")</h2>
 
 #menu('\
 #lisub("\
@@ -159,7 +162,7 @@ ATS is mostly used like SML in this undergraduate-level course:
 #ignoretxt(
 #strsub[thePageFooterSeparator]('\
 <div class="Page-mysitelinks">
-#mysitelinks("RESOURCE")
+#mysitelinks3("RESOURCE")
 </div>
 '))
 

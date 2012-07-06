@@ -70,18 +70,24 @@ fun atext_concatxtsep (xs: atextlst, sep: atext): atext
 fun atext_newline ((*void*)): atext
 
 (* ****** ****** *)
-
-fun atext_strptr (x: strptr1): atext
-
+//
+// HX: s2s = string_of_strptr
+//
+fun atext_strptr (x: strptr1): atext // atext_strcst ((s2s)x)
+fun atext_strptr0 (x: strptr0): atext // atext_strptr or atext_nil
+//
+fun atext_strcstptr (x: strptr1): atext // atext_strcst ((s2s)x)
+fun atext_strsubptr (x: strptr1): atext // atext_strsub ((s2s)x)
+//
 (* ****** ****** *)
 
 fun atext_filepath (path: string): atext
 
 (* ****** ****** *)
 
-fun theTextMap_search (s: symbol): Option_vt (atext)
-fun theTextMap_insert (s: symbol, txt: atext): void
-fun theTextMap_insert_str (s: string, txt: atext): void
+fun theAtextMap_search (s: symbol): atextopt_vt
+fun theAtextMap_insert (s: symbol, txt: atext): void
+fun theAtextMap_insert_str (s: string, txt: atext): void
 
 (* ****** ****** *)
 

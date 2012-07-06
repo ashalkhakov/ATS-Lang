@@ -31,7 +31,7 @@ staload _ = "libatsdoc/DATS/libatsdoc_atext.dats"
 macdef strcst (x) = atext_strcst ,(x)
 macdef strsub (x) = atext_strsub ,(x)
 //
-fun strsub_of_strptr (x: strptr1): atext = atext_strsub ((s2s)x)
+fun atext_strsubptr (x: strptr1): atext = atext_strsub ((s2s)x)
 //
 (* ****** ****** *)
 
@@ -133,20 +133,22 @@ val ATSLANGWEBPAPER: atext = strcst ((s2s)res) where {
   val res = sprintf ("<a href=\"%s/PAPER/\">Papers</a>", @(ATSLANGWEBROOT))
 }
 
+(* ****** ****** *)
+
 #ifndef ISTEMP
 #define ISTEMP 0
 #endif
 #if(ISTEMP==0)
-val () = theTextMap_insert_str ("ATSLANGWEBHOME", ATSLANGWEBHOME)
-val () = theTextMap_insert_str ("ATSLANGWEBDOWNLOAD", ATSLANGWEBDOWNLOAD)
-val () = theTextMap_insert_str ("ATSLANGWEBDOCUMENT", ATSLANGWEBDOCUMENT)
-val () = theTextMap_insert_str ("ATSLANGWEBLIBRARY", ATSLANGWEBLIBRARY)
-val () = theTextMap_insert_str ("ATSLANGWEBRESOURCE", ATSLANGWEBRESOURCE)
-val () = theTextMap_insert_str ("ATSLANGWEBCOMMUNITY", ATSLANGWEBCOMMUNITY)
-val () = theTextMap_insert_str ("ATSLANGWEBEXAMPLE", ATSLANGWEBEXAMPLE)
-val () = theTextMap_insert_str ("ATSLANGWEBIMPLEMENT", ATSLANGWEBIMPLEMENT)
-val () = theTextMap_insert_str ("ATSLANGWEBPAPER", ATSLANGWEBPAPER)
-#endif
+val () = theAtextMap_insert_str ("ATSLANGWEBHOME", ATSLANGWEBHOME)
+val () = theAtextMap_insert_str ("ATSLANGWEBDOWNLOAD", ATSLANGWEBDOWNLOAD)
+val () = theAtextMap_insert_str ("ATSLANGWEBDOCUMENT", ATSLANGWEBDOCUMENT)
+val () = theAtextMap_insert_str ("ATSLANGWEBLIBRARY", ATSLANGWEBLIBRARY)
+val () = theAtextMap_insert_str ("ATSLANGWEBRESOURCE", ATSLANGWEBRESOURCE)
+val () = theAtextMap_insert_str ("ATSLANGWEBCOMMUNITY", ATSLANGWEBCOMMUNITY)
+val () = theAtextMap_insert_str ("ATSLANGWEBEXAMPLE", ATSLANGWEBEXAMPLE)
+val () = theAtextMap_insert_str ("ATSLANGWEBIMPLEMENT", ATSLANGWEBIMPLEMENT)
+val () = theAtextMap_insert_str ("ATSLANGWEBPAPER", ATSLANGWEBPAPER)
+#endif // end of [#if(ISTEMP==0)]
 
 (* ****** ****** *)
 
@@ -228,35 +230,227 @@ end // end of [local]
 
 (* ****** ****** *)
 
-fn mysitelinks (current: string) = let
+fn mysitelinks
+  (ent: string): atext = let
 //
-  val flag = (if (current = "HOME") then 1 else 0): int
-  val HOME = strcst (HOME_ahref (flag))
+val flag = (if (ent = "HOME") then 1 else 0): int
+val HOME = strcst (HOME_ahref (flag))
 //
-  val flag = (if (current = "DOWNLOAD") then 1 else 0): int
-  val DOWNLOAD = strcst (DOWNLOAD_ahref (flag))
+val flag = (if (ent = "DOWNLOAD") then 1 else 0): int
+val DOWNLOAD = strcst (DOWNLOAD_ahref (flag))
 //
-  val flag = (if (current = "DOCUMENT") then 1 else 0): int
-  val DOCUMENT = strcst (DOCUMENT_ahref (flag))
+val flag = (if (ent = "DOCUMENT") then 1 else 0): int
+val DOCUMENT = strcst (DOCUMENT_ahref (flag))
 //
-  val flag = (if (current = "LIBRARY") then 1 else 0): int
-  val LIBRARY = strcst (LIBRARY_ahref (flag))
+val flag = (if (ent = "LIBRARY") then 1 else 0): int
+val LIBRARY = strcst (LIBRARY_ahref (flag))
 //
-  val flag = (if (current = "RESOURCE") then 1 else 0): int
-  val RESOURCE = strcst (RESOURCE_ahref (flag))
+val flag = (if (ent = "RESOURCE") then 1 else 0): int
+val RESOURCE = strcst (RESOURCE_ahref (flag))
 //
-  val flag = (if (current = "COMMUNITY") then 1 else 0): int
-  val COMMUNITY = strcst (COMMUNITY_ahref (flag))
+val flag = (if (ent = "COMMUNITY") then 1 else 0): int
+val COMMUNITY = strcst (COMMUNITY_ahref (flag))
 //
-  val xs = $lst {atext} (
-    HOME, DOWNLOAD, DOCUMENT, LIBRARY, RESOURCE, COMMUNITY
-  ) // end of [val]
+val xs = $lst {atext} (
+  HOME, DOWNLOAD, DOCUMENT, LIBRARY, RESOURCE, COMMUNITY
+) // end of [val]
 //
-  val sep = strcst ("<span class=\"separator\"> | </span>")
+val sep = strcst ("<span class=\"separator\"> | </span>")
 //
 in
   atext_concatxtsep (xs, sep)
 end // end of [mysitelinks]
+
+(* ****** ****** *)
+
+local
+
+(* ****** ****** *)
+
+fun get_name
+  (ent: string): string = let
+in
+//
+case+ ent of
+| "HOME" => "Home"
+| "DOWNLOAD" => "Download"
+| "DOCUMENT" => "Documentation"
+| "LIBRARY" => "Libraries"
+| "RESOURCE" => "Resources"
+| "COMMUNITY" => "Community"
+| _ => "__ERROR__"
+//
+end // end of [get_name]
+
+(* ****** ****** *)
+
+fun get_path
+  (ent: string): string = let
+in
+  case+ ent of
+  | "HOME" => ATSLANGWEBROOT
+  | _ => let
+      val res = sprintf ("%s/%s", @(ATSLANGWEBROOT, ent)) in s2s(res)
+    end // end of [_]
+end // end of [get_path]
+
+(* ****** ****** *)
+
+typedef stringlst = List (string)
+
+val _HOME = $lst{string}(
+  "what_is_ats", "What is ATS?"
+, "what_is_ats_good_for", "What is ATS good for?"
+, "acknowledgments", "Acknowledgments"
+) // end of [val]
+val _DOWNLOAD = $lst{string}(
+  "ATS_packages", "ATS packages for download"
+, "installation_require", "Requirements for installation"
+, "installation_precomp", "Installation from a precompiled package"
+, "installation_srccomp", "Installation through source compilation"
+, "installation_bootstrap", "Installation through bootstrapping"
+) // end of [val]
+val _DOCUMENT = $lst{string}(
+  "ATSINTRObook", "Introduction to Programming in ATS"
+, "ATSTUTORbook", "A Tutorial on Programming Features in ATS"
+, "ATSCAIRObook", "ATS/Cairo Tutorial"
+) // end of [val]
+val _LIBRARY = $lst{string}(
+  "ATSLIB_prelude", "ATSLIB/prelude"
+, "ATSLIB_libc", "ATSLIB/libc"
+, "ATSLIB_libats", "ATSLIB/libats"
+, "ATSLIB_libats_ML", "ATSLIB/libats/ML"
+, "ATSLIB_contrib", "ATSLIB/contrib"
+) // end of [val]
+val _RESOURCE = $lst{string}(
+  "ATS_edit", "Editing ATS source code"
+, "ATS_crossref", "Viewing ATS source code"
+, "ATS_courses", "Courses about ATS and based on ATS"
+) // end of [val]
+val _COMMUNITY = $lst{string}(
+  "ATS_mailinglist", "Mailing-list for ATS users"
+, "ATS_irc_channel", "IRC channel for ATS users: ##ats"
+) // end of [val]
+
+fun get_xylst
+  (ent: string): stringlst = let
+in
+  case+ ent of
+  | "HOME" => _HOME
+  | "DOWNLOAD" => _DOWNLOAD
+  | "DOCUMENT" => _DOCUMENT
+  | "LIBRARY" => _LIBRARY
+  | "RESOURCE" => _RESOURCE
+  | "COMMUNITY" => _COMMUNITY
+  | _ => list_nil ()
+end // end of [get_xylst]
+
+(* ****** ****** *)
+
+fun menugen (
+  path: string, xys: List(string)
+) : atextlst = let
+in
+  case+ xys of
+  | list_cons (x, xys) => let
+      val link =
+        sprintf ("%s#%s", @(path, x))
+      val link = s2s(link)
+      val- list_cons (y, xys) = xys
+      val itm = litxt (ulink (link, y))
+    in
+      list_cons (itm, menugen (path, xys))
+    end // end of [list_cons]
+  | list_nil () => list_nil ()
+end // end of [menugen]
+
+fun sitelink_li
+  (knd: int, myent: string, ent: string): atext = let
+//
+val ismy = (myent = ent): bool
+//
+fun sitelink_li_ul
+  (ent: string): atext = let
+  val path = get_path (ent)
+  val xylst = get_xylst (ent)
+  val itmlst = menugen (path, xylst)
+  val sep = atext_newline()
+  val _beg = atext_strcst ("<ul>\n")
+  val _itmlst = atext_concatxtsep (itmlst, sep)
+  val _end = atext_strcst ("\n</ul>\n")
+in
+  atext_apptxt3 (_beg, _itmlst, _end)
+end // end of [sitelink_li_ul]
+//
+val path = get_path (ent)
+val name = get_name (ent)
+val name = (
+  if ismy then let
+    val name = sprintf ("<strong>%s</strong>", @(name))
+  in
+    s2s(name)
+  end else let
+    val name = sprintf ("<span style=\"text-decoration: underline\">%s</span>", @(name))
+  in
+    s2s(name)
+  end // end of [if]
+) : string // end of [val]
+val _lnk = (
+  if ismy then ulink ("#", name) else ulink (path, name)
+) : atext // end of [val]
+val _itm = (
+  if ismy then _lnk
+  else if knd = 2 then let
+    val _menu = sitelink_li_ul (ent) in atext_apptxt2 (_lnk, _menu)
+  end else _lnk // end of [if]
+) : atext // end of [val]
+//
+val _beg = atext_strcst "<li>"
+val _end = atext_strcst "</li>\n"
+//
+in
+  atext_apptxt3 (_beg, _itm, _end)
+end // end of [sitelink_li]
+
+in // in of [local]
+
+fun mysitelinks23
+  (knd: int, ent: string): atext = let
+//
+  val res = list_nil {atext} ()
+  val li = sitelink_li (knd, ent, "HOME")
+  val res = list_cons (li, res)
+  val li = sitelink_li (knd, ent, "DOWNLOAD")
+  val res = list_cons (li, res)
+  val li = sitelink_li (knd, ent, "DOCUMENT")
+  val res = list_cons (li, res)
+  val li = sitelink_li (knd, ent, "LIBRARY")
+  val res = list_cons (li, res)
+  val li = sitelink_li (knd, ent, "RESOURCE")
+  val res = list_cons (li, res)
+  val li = sitelink_li (knd, ent, "COMMUNITY")
+  val res = list_cons (li, res)
+//
+  val res = list_reverse (res)
+  val res = list_of_list_vt (res)
+//
+  val sep = atext_newline ()
+//
+  val _beg =
+    atext_strcst ("<ul id=\"jsddm\">\n")
+  val _lis = atext_concatxtsep (res, sep)
+  val _end = atext_strcst ("\n</ul>\n")
+//
+in
+  atext_apptxt3 (_beg, _lis, _end)
+end // end of [mysitelinks23]
+
+fun mysitelinks2
+  (ent: string): atext = mysitelinks23 (2, ent)
+fun mysitelinks3
+  (ent: string): atext = mysitelinks23 (3, ent)
+
+end // end of [local]
 
 (* ****** ****** *)
 
@@ -277,10 +471,10 @@ end // end of [dynexp]
 (* ****** ****** *)
 //
 local
-
+//
 staload "utils/atsyntax/SATS/ats2xhtml.sats"
 dynload "utils/atsyntax/DATS/ats2xhtml.dats"
-
+//
 in
 //
 fun ats2xhtmls

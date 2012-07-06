@@ -12,7 +12,7 @@ staload STDIO = "libc/SATS/stdio.sats"
 //
 val _ATSLANGWEBPAPER: atext =
   strcst"<strong>Papers</strong>"
-val () = theTextMap_insert_str ("ATSLANGWEBPAPER", _ATSLANGWEBPAPER)
+val () = theAtextMap_insert_str ("ATSLANGWEBPAPER", _ATSLANGWEBPAPER)
 //
 (* ****** ****** *)
 //
@@ -24,6 +24,9 @@ val theCSSfilr =
   $STDIO.fopen_ref_exn ("styles/atslangweb_paper.css", file_mode_w)
 val () = fprintf (theCSSfilr,
   "@import url(%s/styles/atslangweb_temp.css);\n\n", @(ATSLANGWEBROOT)
+) // end of [val]
+val () = fprintf (theCSSfilr,
+  "@import url(%s/styles/atslangweb_jsddm_menu.css);\n\n", @(ATSLANGWEBROOT)
 ) // end of [val]
 
 fun addcssrule

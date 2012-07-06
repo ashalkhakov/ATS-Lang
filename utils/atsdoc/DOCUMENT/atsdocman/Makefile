@@ -6,6 +6,7 @@
 
 ATSCC=$(ATSHOME)/bin/atscc
 ATSDOC=$(ATSHOME)/bin/atsdoc
+OATSYNTAX=$(ATSHOME)/utils/atsyntax/atsyntax.o
 
 ######
 
@@ -14,7 +15,7 @@ all:: atsdocman.html
 ######
 
 atsdocman: atsdocman_atxt.dats
-	$(ATSCC) -o $@ atsdocman_atxt.dats -latsdoc
+	$(ATSCC) -o $@ atsdocman_atxt.dats $(OATSYNTAX) -latsdoc
 atsdocman_atxt.dats: atsdocman.atxt
 	$(ATSDOC) --outcode $@ -i atsdocman.atxt > atsdocman_atxt.txt
 atsdocman.html: atsdocman

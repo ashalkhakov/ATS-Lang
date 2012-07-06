@@ -12,7 +12,7 @@ staload STDIO = "libc/SATS/stdio.sats"
 //
 val _ATSLANGWEBDOCUMENT: atext =
   strcst"<strong>Documentation</strong>"
-val () = theTextMap_insert_str ("ATSLANGWEBDOCUMENT", _ATSLANGWEBDOCUMENT)
+val () = theAtextMap_insert_str ("ATSLANGWEBDOCUMENT", _ATSLANGWEBDOCUMENT)
 //
 (* ****** ****** *)
 //
@@ -24,6 +24,9 @@ val theCSSfilr =
   $STDIO.fopen_ref_exn ("styles/atslangweb_document.css", file_mode_w)
 val () = fprintf (theCSSfilr,
   "@import url(%s/styles/atslangweb_temp.css);\n\n", @(ATSLANGWEBROOT)
+) // end of [val]
+val () = fprintf (theCSSfilr,
+  "@import url(%s/styles/atslangweb_jsddm_menu.css);\n\n", @(ATSLANGWEBROOT)
 ) // end of [val]
 
 fun addcssrule
@@ -42,7 +45,7 @@ end // end of [addcssrule]
 #ignoretxt(
 #strsub[thePageHeaderSeparator]('\
 <div class="Page-mysitelinks">
-#mysitelinks("DOCUMENT")
+#mysitelinks2("DOCUMENT")
 </div>
 '))
 
@@ -60,8 +63,8 @@ padding-right: 10px ;
 <h1>Documentation</h1>
 
 #menu('\
-#litxt(#ulink("\#INTPROGINATSbook", "Introduction to Programming in ATS"))
-#litxt(#ulink("\#TUTORIALATSbook", "A Tutorial on Programming Features in ATS"))
+#litxt(#ulink("\#ATSINTRObook", "Introduction to Programming in ATS"))
+#litxt(#ulink("\#ATSTUTORbook", "A Tutorial on Programming Features in ATS"))
 #lisub("ATS Utility Commands")
 #lisub("The Formal Grammar of ATS/Anairiats")
 #litxt(#ulink("\#ATSCAIRObook", "ATS/Cairo Tutorial"))
@@ -69,7 +72,7 @@ padding-right: 10px ;
 
 #HR(2)
 
-<h2>#uid("INTPROGINATSbook", "Introduction to Programming in ATS")</h2>
+<h2>#uid("ATSINTRObook", "Introduction to Programming in ATS")</h2>
 
 <table>
 <tr><td>
@@ -88,7 +91,7 @@ Links:
 
 #HR(2)
 
-<h2>#uid("TUTORIALATSbook", "A Tutorial on Programming Features in ATS")</h2>
+<h2>#uid("ATSTUTORbook", "A Tutorial on Programming Features in ATS")</h2>
 
 <table>
 <tr><td>
@@ -144,7 +147,7 @@ Links:
 #ignoretxt(
 #strsub[thePageFooterSeparator]('\
 <div class="Page-mysitelinks">
-#mysitelinks("DOCUMENT")
+#mysitelinks3("DOCUMENT")
 </div>
 '))
 
