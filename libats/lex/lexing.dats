@@ -195,7 +195,7 @@ infile_make_strptr
     prval pf1_at = pf.1 
     prval pf2_at = pf.3
     val i = !p
-    val isend = strbuf_is_at_end (!p_sb, i)
+    val isend = strbuf_is_atend (!p_sb, i)
     val ans = 
       if :(pf2_at: T @ l2) => isend then ~1 else begin
         !p := i+1; int_of_char (strbuf_get_char_at (!p_sb, i))

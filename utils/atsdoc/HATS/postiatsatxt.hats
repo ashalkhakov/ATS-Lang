@@ -71,7 +71,7 @@ fun timestamp
     {n,i:nat | i <= n} (
     str: string n, i: size_t i
   ) : sizeLte (n) =
-    if string_isnot_at_end (str, i) then let
+    if string_isnot_atend (str, i) then let
       val c = str[i]
     in
       if c <> '\n' then loop (str, i+1) else i
