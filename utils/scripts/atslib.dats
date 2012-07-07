@@ -170,7 +170,7 @@ fun library_make_loop
 fn line_is_comment
   (name: String): bool = let
 in
-  if string_isnot_at_end (name, 0) then
+  if string_isnot_atend (name, 0) then
     if name[0] = '#' then true else false
   else true // end of [if]
 end // end of [line_is_comment]

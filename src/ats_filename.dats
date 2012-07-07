@@ -104,7 +104,7 @@ filename_is_relative (name) = let
   val name = string1_of_string name
   fn aux {n,i:nat | i <= n}
     (name: string n, i: size_t i, dirsep: char): bool =
-    if string_is_at_end (name, i) then true else name[i] <> dirsep
+    if string_is_atend (name, i) then true else name[i] <> dirsep
   // end of [aux]
   val dirsep = theDirsep_get ()
 in

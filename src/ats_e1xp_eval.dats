@@ -163,13 +163,13 @@ fun e1xp_eval_int (s: string): int = let
 //
   fun loop1 {i:nat | i <= n} .<n-i>.
     (sgn: int, s: string n, i: size_t i): int =
-    if string_isnot_at_end (s, i) then let
+    if string_isnot_atend (s, i) then let
       val c0 = s[i]
     in
       if c0 <> '0' then begin
         sgn * loop2 (10(*base*), s, i+1, c0 - '0') // s = [1-9]...
       end else begin
-        if string_isnot_at_end (s, i+1) then let
+        if string_isnot_atend (s, i+1) then let
           val c1 = s[i+1]
         in
           if char_isdigit (c1) then
@@ -189,7 +189,7 @@ fun e1xp_eval_int (s: string): int = let
   and loop2 {i:nat | i <= n} .<n-i>. (
       base: int, s: string n, i: size_t i, res: int
     ) : int =
-    if string_isnot_at_end (s, i) then let
+    if string_isnot_atend (s, i) then let
       val c = s[i]; val d = begin
         if char_isdigit c then c - '0' else
           10 + (if char_isupper c then c - 'A' else c - 'a' : int)
@@ -204,7 +204,7 @@ fun e1xp_eval_int (s: string): int = let
 //
 in
 //
-  if string_isnot_at_end (s, 0) then let
+  if string_isnot_atend (s, 0) then let
     val c0 = s[0]
   in
     if c0 <> '~' then loop1 (1(*sgn*), s, 0) else loop1 (~1(*sgn*), s, 1)

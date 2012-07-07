@@ -281,19 +281,19 @@ atspre_string_isnot_empty
 
 ATSinline()
 ats_bool_type
-atspre_string_is_at_end (
+atspre_string_is_atend (
   ats_ptr_type s, ats_size_type i
 ) {
   return (*((char*)s + i) == '\000' ? ats_true_bool : ats_false_bool) ;
-} // end of [atspre_string_is_at_end]
+} // end of [atspre_string_is_atend]
 
 ATSinline()
 ats_bool_type
-atspre_string_isnot_at_end (
+atspre_string_isnot_atend (
   ats_ptr_type s, ats_size_type i
 ) {
   return (*((char*)s + i) != '\000' ? ats_true_bool : ats_false_bool) ;
-} // end of [atspre_string_isnot_at_end]
+} // end of [atspre_string_isnot_atend]
 
 /* ****** ****** */
 

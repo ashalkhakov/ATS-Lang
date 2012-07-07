@@ -96,7 +96,7 @@ fun fprint_target {m:file_mode} (
           out: &FILE m
         , basename: string n, k: size_t, i: size_t i
         ) : void =
-        if string_isnot_at_end (basename, i) then let
+        if string_isnot_atend (basename, i) then let
           val c =  if i = k then '_' else basename[i]
           val () = fprint_char (pf | out, c)
         in

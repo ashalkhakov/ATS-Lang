@@ -65,7 +65,7 @@ charlst_add_string {m,n}
   fun loop {m,i:nat | i <= n} .<n-i>.
     (str: string n, i: size_t i, cs: charlst_vt m)
     : charlst_vt (m+n-i) =
-    if string_isnot_at_end (str, i) then
+    if string_isnot_atend (str, i) then
       loop (str, i+1, CHARLSTcons (str[i], cs))
     else cs
   // end of [loop]

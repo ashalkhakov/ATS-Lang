@@ -123,7 +123,7 @@ fn pats2xhtmls
   (code: string): atext = let
   val _beg = atext_strcst ("<pre class=\"patsyntax\">")
   val _code = atext_strptr (string_pats2xhtmlize_bground (0(*stadyn*), code))
-  val _end = atext_strcst ("</pre>")
+  val _end = atext_strcst ("</pre>\n")
 in
   atext_apptxt3 (_beg, _code, _end)
 end // end of [pats2xhtmls]
@@ -132,10 +132,48 @@ fn pats2xhtmld
   (code: string): atext = let
   val _beg = atext_strcst ("<pre class=\"patsyntax\">")
   val _code = atext_strptr (string_pats2xhtmlize_bground (1(*stadyn*), code))
-  val _end = atext_strcst ("</pre>")
+  val _end = atext_strcst ("</pre>\n")
 in
   atext_apptxt3 (_beg, _code, _end)
 end // end of [pats2xhtmld]
+
+(* ****** ****** *)
+
+fn pats2xhtmls_tryit
+  (code: string): atext = let
+  val _code = pats2xhtmls (code)
+  val _tryit = atext_strcst (
+"\
+<p>\
+<input \
+type=\"button\" \
+value=\"Try it yourself!\" \
+onclick=\"patscode_tryit()\" \
+/>\
+</p>\n\
+"
+  ) // end of [val]
+in
+  atext_apptxt2 (_code, _tryit)
+end // end of [pats2xhtmls_tryit]
+
+fn pats2xhtmld_tryit
+  (code: string): atext = let
+  val _code = pats2xhtmld (code)
+  val _tryit = atext_strcst (
+"\
+<p>\
+<input \
+type=\"button\" \
+value=\"Try it yourself!\" \
+onclick=\"patscode_tryit()\" \
+/>\
+</p>\n\
+"
+  ) // end of [val]
+in
+  atext_apptxt2 (_code, _tryit)
+end // end of [pats2xhtmld_tryit]
 
 (* ****** ****** *)
 

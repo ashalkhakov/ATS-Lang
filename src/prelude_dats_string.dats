@@ -70,7 +70,7 @@ stringlst_concat (ss) = let
     s0: &strbuf (m0, n0)
   , n0: size_t n0, i0: size_t i0, s: string n, i: size_t i
   ) :<> [i0: nat | i0 <= n0] size_t i0 = begin
-    if string_is_at_end (s, i) then i0 else let
+    if string_is_atend (s, i) then i0 else let
       val c = $effmask_ref (s[i])
     in
       if i0 < n0 then (s0[i0] := c; loop1 (s0, n0, i0+1, s, i+1)) else i0

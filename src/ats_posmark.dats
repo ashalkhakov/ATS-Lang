@@ -587,7 +587,7 @@ fn posmark_process_htm (
     val name = string1_of_string (name)
     fun loop {n,i:nat | i <= n} .<n-i>.
       (fil_d: &FILE w, name: string n, i: size_t i): void =
-      if string_isnot_at_end (name, i) then let
+      if string_isnot_atend (name, i) then let
         val c = name[i]; val () = case+ c of
           | _ when char_isalnum c => fprint_char (pf_mod | fil_d, c)
           | _ => let
@@ -793,7 +793,7 @@ fun posmark_xref_testnot
   (flag: string, name: string): Stropt = let
   fun loop {n,i:nat | i <= n} .<n-i>.
     (name: string n, i: size_t i, cs: Charlst_vt): Charlst_vt =
-    if string_isnot_at_end (name, i) then let
+    if string_isnot_atend (name, i) then let
       val c = name[i]
       val cs = (case+ c of
         | _ when char_isalnum c => CHARLSTcons (c, cs)

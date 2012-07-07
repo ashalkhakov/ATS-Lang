@@ -95,7 +95,7 @@ val the_legal_zero_string: string = "aAdeEfFgGiouxX"
 
 fun flagstr_verify {n,i:nat | i <= n}
   (spec: char, flagstr: string n, i: size_t i): bool = begin
-  if string_is_at_end (flagstr, i) then true else let
+  if string_is_atend (flagstr, i) then true else let
     val flag = flagstr[i]
   in
     case+ flag of

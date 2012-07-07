@@ -514,23 +514,31 @@ overload string_isnot_empty with string1_isnot_empty
 
 (* ****** ****** *)
 
-fun strbuf_is_at_end {m,n,i:nat | i <= n}
+fun strbuf_is_atend
+  {m,n,i:nat | i <= n}
   (sbf: &strbuf (m, n), i: size_t i):<> bool (i == n)
-  = "atspre_string_is_at_end"
+  = "atspre_string_is_atend"
+// end of [strbuf_is_atend]
 
-fun string_is_at_end {n,i:nat | i <= n}
+fun string_is_atend
+  {n,i:nat | i <= n}
   (str: string n, i: size_t i):<> bool (i == n)
-  = "atspre_string_is_at_end"
+  = "atspre_string_is_atend"
+// end of [string_is_atend]
 
 (* ****** ****** *)
 
-fun strbuf_isnot_at_end {m,n,i:nat | i <= n}
+fun strbuf_isnot_atend
+  {m,n,i:nat | i <= n}
   (sbf: &strbuf (m, n), i: size_t i):<> bool (i <> n)
-  = "atspre_string_isnot_at_end"
+  = "atspre_string_isnot_atend"
+// end of [strbuf_isnot_atend]
 
-fun string_isnot_at_end {n,i:nat | i <= n}
+fun string_isnot_atend
+  {n,i:nat | i <= n}
   (str: string n, i: size_t i):<> bool (i <> n)
-  = "atspre_string_isnot_at_end"
+  = "atspre_string_isnot_atend"
+// end of [string_isnot_atend]
 
 (* ****** ****** *)
 

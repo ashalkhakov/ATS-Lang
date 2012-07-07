@@ -66,6 +66,13 @@ end // end of [pats2xhtmld]
 
 (* ****** ****** *)
 
+fn pats2xhtmls_tryit
+  (code: string): atext = pats2xhtmls (code)
+fn pats2xhtmld_tryit
+  (code: string): atext = pats2xhtmld (code)
+
+(* ****** ****** *)
+
 #endif // end of [ATSDOC_PATS2DBOOKATXT]
 
 (* ****** ****** *)

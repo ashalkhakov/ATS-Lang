@@ -82,7 +82,7 @@ main {n} (argc, argv) = let
     ) : void =
     if i < argc then let
       val arg = string1_of_string (argv.[i])
-      val isempty = string_is_at_end (arg, 0)
+      val isempty = string_is_atend (arg, 0)
       val () = if isempty then begin
         // empty // skip the empty argument
       end else begin case+ arg of

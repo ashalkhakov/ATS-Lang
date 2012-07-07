@@ -272,7 +272,7 @@ string_foreach__main {v} {vt} {n} {f:eff}
       pf: !v
     | str: string n, f: (!v | c1har, !vt) -<f> void, env: !vt, i: size_t i
     ) :<f> void =
-    if string_isnot_at_end (str, i) then (f (pf | str[i], env); loop (pf | str, f, env, i+1))
+    if string_isnot_atend (str, i) then (f (pf | str[i], env); loop (pf | str, f, env, i+1))
   // end of [loop]
 } // end of [strbuf_foreach__main]
 

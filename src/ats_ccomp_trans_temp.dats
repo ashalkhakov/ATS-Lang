@@ -238,7 +238,7 @@ template_name_make
 //
   fun aux_string {n,i:nat | i <= n}
      (cs: &T, s: string n, i: size_t i): void =
-    if string_is_at_end (s, i) then () else begin
+    if string_is_atend (s, i) then () else begin
       cs := $CS.CHARLSTcons (s[i], cs); aux_string (cs, s, i+1)
     end // end of [if]
   (* end of [aux_string] *)
