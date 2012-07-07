@@ -12,14 +12,14 @@ implement atof (s) = let
   val () = i := loop (s, 0) where {
     fun loop {i:nat | i <= n} .<n-i>.
       (s: string n, i: size_t i):<> sizeLte n =
-      if string_is_at_end (s, i) then i else let
+      if string_is_atend (s, i) then i else let
         val c = s[i]
       in
         if char_isspace c then loop (s, i+1) else i
       end // end of [if]
   } // end of [val]
   var sgn: int = 1; val () =
-    if string_is_at_end (s, i) then () else let
+    if string_is_atend (s, i) then () else let
       val c = s[i] in case+ c of
         | '-' => (i := i + 1; sgn := ~1) | '+' => (i := i + 1)
         | _ (* no sign *) => ()
@@ -28,7 +28,7 @@ implement atof (s) = let
   val () = i := loop (s, i, d) where {
     fun loop {i:nat | i <= n} .<n-i>.
       (s: string n, i: size_t i, d: &double):<> sizeLte n =
-      if string_is_at_end (s, i) then i else let
+      if string_is_atend (s, i) then i else let
         val c = s[i]
       in
         if char_isdigit c then begin
@@ -39,14 +39,14 @@ implement atof (s) = let
       end // end of [if]
   } // end of [val]
   val () =
-    if string_is_at_end (s, i) then () else (
+    if string_is_atend (s, i) then () else (
       if (s[i] = '.') then (i := i + 1) else ()
     ) // end of [if]
   var pow: double = 1.0
   val () = i := loop (s, i, pow, d) where {
     fun loop {i:nat | i <= n} .<n-i>.
       (s: string n, i: size_t i, pow: &double, d: &double):<> sizeLte n =
-      if string_is_at_end (s, i) then i (* loop exists *) else let
+      if string_is_atend (s, i) then i (* loop exists *) else let
         val c = s[i]
       in
         if char_isdigit c then begin

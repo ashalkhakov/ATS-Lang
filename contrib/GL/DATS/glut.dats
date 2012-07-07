@@ -47,7 +47,7 @@ glutStrokeString (font, s) = let
   val [n:int] s = string1_of_string s
   var i: sizeLte n = size1_of_int1 (0)
 in
-  while (string_isnot_at_end (s, i)) let
+  while (string_isnot_atend (s, i)) let
     val () = glutStrokeCharacter (font, s[i]) in i := i+1
   end // end of [while]
 end // end of [glutStrokeString]
@@ -59,7 +59,7 @@ glutBitmapString (font, s) = let
   val [n:int] s = string1_of_string s
   var i: sizeLte n = size1_of_int1 (0)
 in
-  while (string_isnot_at_end (s, i)) let
+  while (string_isnot_atend (s, i)) let
     val () = glutBitmapCharacter (font, s[i]) in i := i+1
   end // end of [while]
 end // end of [glutBitmapString]

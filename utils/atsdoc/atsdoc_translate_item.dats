@@ -179,7 +179,7 @@ stroutptr_add_string
   {l} (out, x) = let
   fun loop {n,i:nat | i <= n}
     (out: !stroutptr l, x: string n, i: size_t i): void =
-    if string_isnot_at_end (x, i) then let
+    if string_isnot_atend (x, i) then let
       val () = stroutptr_add_char (out, x[i]) in loop (out, x, i+1)
     end // end of [if]
   val x = string1_of_string (x)

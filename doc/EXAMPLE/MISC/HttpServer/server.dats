@@ -667,13 +667,13 @@ end // end of [directory_send]
 
 fun request_is_get
   {n:nat} (s: string n): bool =
-  if string_is_at_end (s, 0) then false
+  if string_is_atend (s, 0) then false
   else if s[0] <> 'G' then false
-  else if string_is_at_end (s, 1) then false
+  else if string_is_atend (s, 1) then false
   else if s[1] <> 'E' then false
-  else if string_is_at_end (s, 2) then false
+  else if string_is_atend (s, 2) then false
   else if s[2] <> 'T' then false
-  else if string_is_at_end (s, 3) then false  
+  else if string_is_atend (s, 3) then false  
   else if s[3] <> ' ' then false
   else true
 // end of [request_is_get]

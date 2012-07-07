@@ -36,13 +36,13 @@ implement atoi {m,n} (buf) = let
   var i: sizeLte n = loop (buf, 0) where { // skip white space
     fun loop {i:nat | i <= n} .<n-i>.
       (buf: &buf_t, i: size_t i):<> sizeLte n =
-      if strbuf_is_at_end (buf, i) then i else begin
+      if strbuf_is_atend (buf, i) then i else begin
         if char_isspace buf[i] then loop (buf, i+1) else i
       end // end of [if]
     // end of [loop]
   } // end of [val]
 in
-  if strbuf_is_at_end (buf, i) then 0 else let
+  if strbuf_is_atend (buf, i) then 0 else let
     val c = buf[i]
     val sgn = (if c = '-' then ~1 else 1): int; val () = begin
       if c = '+' then i := i + 1 else if c = '-' then i := i + 1 else ()
@@ -50,7 +50,7 @@ in
     val n = loop (buf, i, 0) where {
       fun loop {i:nat | i <= n} .<n-i>.
         (buf: &buf_t, i: size_t i, res: int):<> int =
-        if strbuf_is_at_end (buf, i) then res else let
+        if strbuf_is_atend (buf, i) then res else let
           val d = digit_val_get buf[i]
         in
           if d >= 0 then loop (buf, i+1, 10 * res + d) else res

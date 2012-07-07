@@ -594,13 +594,17 @@ fun strbuf_is_atend
   {m,n:int} {i:nat | i <= n}
   (sbf: &strbuf (m, n), i: size_t i):<> bool (i == n)
   = "atspre_string_is_atend"
+(*
 macdef strbuf_is_at_end = strbuf_is_atend // backward compatibility
+*)
 
 fun string_is_atend
   {n:int} {i:nat | i <= n}
   (str: string n, i: size_t i):<> bool (i == n)
   = "atspre_string_is_atend"
+(*
 macdef string_is_at_end = string_is_atend // backward compatibility
+*)
 
 (* ****** ****** *)
 
@@ -608,13 +612,17 @@ fun strbuf_isnot_atend
   {m,n:int} {i:nat | i <= n}
   (sbf: &strbuf (m, n), i: size_t i):<> bool (i < n)
   = "atspre_string_isnot_atend"
+(*
 macdef strbuf_isnot_at_end = strbuf_isnot_atend // backward compatibility
+*)
 
 fun string_isnot_atend
   {n:int} {i:nat | i <= n}
   (str: string n, i: size_t i):<> bool (i < n)
   = "atspre_string_isnot_atend"
+(*
 macdef string_isnot_at_end = string_isnot_atend // backward compatibility
+*)
 
 (* ****** ****** *)
 

@@ -21,7 +21,7 @@ fun strlen {m,n:nat} (buf: &strbuf (m, n)):<> size_t n
 implement strlen {m,n} (buf) = loop (buf, 0) where {
   fun loop {i:nat | i <= n} .<n-i>.
     (buf: &strbuf (m, n), i: size_t i):<> size_t n =
-    if strbuf_is_at_end (buf, i) then i else loop (buf, i+1)
+    if strbuf_is_atend (buf, i) then i else loop (buf, i+1)
 } // end of [strlen]
 
 (* ****** ****** *)
