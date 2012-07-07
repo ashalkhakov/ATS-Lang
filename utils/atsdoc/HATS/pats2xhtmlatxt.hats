@@ -71,7 +71,21 @@ fn patsyntax_style (): atext = atext_strcst("\
   .patsyntax span.dyncstdec  {text-decoration:none;}\n\
   .patsyntax span.dyncstuse  {color:#B80000;text-decoration:underline;}\n\
   .patsyntax span.dyncst_implement  {color:#B80000;text-decoration:underline;}\n\
-</style>\
+</style>\n\
+")
+
+(* ****** ****** *)
+
+fn patscode_tryit_js (): atext = atext_strcst("\
+<script\n\
+type=\"text/javascript\">\n\
+function\n\
+patscode_tryit(path)\n\
+{\n\
+// HX: [path] contains the code to be tried\n\
+mywin=window.open(path, 'mywin', '') ; mywin.focus() ; return ;\n\
+}\n\
+</script>\n\
 ")
 
 (* ****** ****** *)
@@ -119,20 +133,72 @@ end // end of [dyncode]
 
 (* ****** ****** *)
 
+local
+
+val theCount = ref<int> (0)
+
+in // in of [local]
+
+fn pats2xhtml_count_getinc (): int = let
+  val n = !theCount in !theCount := n+1; n
+end // end of [getinc]
+
+fn pats2xhtml_count_reset (): void = !theCount := 0
+
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+
+val thePrefix = ref<string> ("")
+
+in // in of [local]
+
+fn pats2xhtml_prefix_get (): string = !thePrefix
+fn pats2xhtml_prefix_set (x: string): void = !thePrefix := x
+
+end // end of [local]
+
+(* ****** ****** *)
+
+fn pats2xhtmld_code_save
+  (code: string): void = let
+//
+val prfx = pats2xhtml_prefix_get ()
+val count = pats2xhtml_count_getinc ()
+val path = sprintf ("%s_%i.dats", @(prfx, count))
+val path = string_of_strptr (path)
+val out = open_file_exn (path, file_mode_w)
+val () = fprint_string (out, code)
+//
+in
+  close_file_exn (out)
+end // end of [pats2xhtmld_code_save]
+
+(* ****** ****** *)
+
 fn pats2xhtmls
   (code: string): atext = let
-  val _beg = atext_strcst ("<pre class=\"patsyntax\">")
-  val _code = atext_strptr (string_pats2xhtmlize_bground (0(*stadyn*), code))
-  val _end = atext_strcst ("</pre>\n")
+//
+val _beg = atext_strcst ("<pre class=\"patsyntax\">")
+val _code = atext_strptr (string_pats2xhtmlize_bground (0(*stadyn*), code))
+val _end = atext_strcst ("</pre>\n")
+//
 in
   atext_apptxt3 (_beg, _code, _end)
 end // end of [pats2xhtmls]
 
 fn pats2xhtmld
   (code: string): atext = let
-  val _beg = atext_strcst ("<pre class=\"patsyntax\">")
-  val _code = atext_strptr (string_pats2xhtmlize_bground (1(*stadyn*), code))
-  val _end = atext_strcst ("</pre>\n")
+//
+// #ifdef ATSCODESAVE
+val () = pats2xhtmld_code_save (code)
+// #endif // end of [#ifdef]
+//
+val _beg = atext_strcst ("<pre class=\"patsyntax\">")
+val _code = atext_strptr (string_pats2xhtmlize_bground (1(*stadyn*), code))
+val _end = atext_strcst ("</pre>\n")
 in
   atext_apptxt3 (_beg, _code, _end)
 end // end of [pats2xhtmld]
