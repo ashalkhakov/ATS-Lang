@@ -618,7 +618,7 @@ val vfval_ord = lam (vs: valuelst): value => let
   val- list_cons (v, _) = vs
   val- VALstring s = v
   val s = string1_of_string s
-  val () = assert (string_isnot_at_end (s, 0))
+  val () = assert (string_isnot_atend (s, 0))
   val c = s[0]
   val i = int_of_char c
 in

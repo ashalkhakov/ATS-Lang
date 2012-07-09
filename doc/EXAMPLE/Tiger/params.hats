@@ -13,12 +13,12 @@
 
 /* ****** ****** */
 
-/*
+// /*
 // please uncomment this one if you need to generate a compiler //
 // for Tiger that spills out MIPS code (or more precisely, SPIM code)
 #define MARCH "SPIM" // the emitted code is intended to be run
 // by the SPIM simulator
-*/
+// */
 
 /* ****** ****** */
 

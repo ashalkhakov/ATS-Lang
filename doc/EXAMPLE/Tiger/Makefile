@@ -22,14 +22,17 @@ ATSOPT=$(ATSUSRQ)/bin/atsopt
 ######
 
 .PHONY: all
-all:  tigcomp
+
+######
+
+all: tigcomp
 
 ######
 
 CCFLAGS=
 CCFLAGS=-DATSMARCH=x86_32 -g
 #CCFLAGS=-DATSMARCH=x86_64 -g
-#CCFLAGS=-DATSMARCH=SPIM -g
+CCFLAGS=-DATSMARCH=SPIM -g
 GCFLAG=-D_ATS_GCATS
 
 ######

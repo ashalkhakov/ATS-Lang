@@ -237,7 +237,7 @@ fn emit_string_def
     val def = string1_of_string def
     fun loop {n,i:nat | i <= n}
       (str: string n, i: size_t i): void =
-      if string_isnot_at_end (str, i)
+      if string_isnot_atend (str, i)
         then (emit_char str[i]; loop (str, i+1))
       // end of [if]
     // end of [loop]

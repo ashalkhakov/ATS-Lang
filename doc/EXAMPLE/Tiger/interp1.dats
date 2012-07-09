@@ -233,7 +233,7 @@ val () = the_labmap_insert (
     val- list_cons (v, vs) = vs
     val str = string_of_v1al (v)
     val str = string1_of_string str
-    val () = assert (string_isnot_at_end (str, 0))
+    val () = assert (string_isnot_atend (str, 0))
     val c = str[0]
     val i = int_of_char c
   in

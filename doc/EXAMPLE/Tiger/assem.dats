@@ -121,7 +121,7 @@ implement revapp_string_list_vt (str, cs) = loop (str, cs, 0) where {
   val str = string1_of_string (str)
   fun loop {m,n:nat} {i:nat | i <= m} .<m-i>.
     (str: string m, cs: list_vt (char, n), i: size_t i): list_vt (char, m+n-i) =
-    if string_is_at_end (str, i) then cs else
+    if string_is_atend (str, i) then cs else
       loop (str, list_vt_cons (str[i], cs), i+1)
     // end of [if]
   // end of [loop]
@@ -150,7 +150,7 @@ implement instr_format (tmpfmt, ins) = let
     , src: templst, dst: templst, jump: lablstopt, i: size_t i
     , res: charlst_vt
     ) :<cloref1> string =
-    if string_isnot_at_end (asm, i) then let
+    if string_isnot_atend (asm, i) then let
       val c = asm[i]
     in
       if c <> '`' then let
@@ -169,7 +169,7 @@ implement instr_format (tmpfmt, ins) = let
     , src: templst, dst: templst, jump: lablstopt, i: size_t i
     , res: charlst_vt
     ) :<cloref1> string =
-    if string_isnot_at_end (asm, i) then let
+    if string_isnot_atend (asm, i) then let
       val c = asm[i]
     in
       case+ c of
@@ -190,7 +190,7 @@ implement instr_format (tmpfmt, ins) = let
     , src: templst, dst: templst, jump: lablstopt, c: int, i: size_t i
     , res: charlst_vt  
     ) :<cloref1> string =
-    if string_isnot_at_end (asm, i) then let
+    if string_isnot_atend (asm, i) then let
       val c = i2c c; val c1 = asm[i]
     in
       if char_isdigit (c1) then let

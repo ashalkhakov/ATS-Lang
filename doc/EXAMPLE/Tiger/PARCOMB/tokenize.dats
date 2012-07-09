@@ -216,7 +216,7 @@ fn litword {n:int | n >= 2}
     (s: string n, i: size_t i):<> charpar (charpos) = let
     val c = $effmask_ref (s[i])
   in
-    if string_is_at_end (s, i+1) then litchar c else litchar c >> aux (s, i+1)
+    if string_is_atend (s, i+1) then litchar c else litchar c >> aux (s, i+1)
   end // end of [aux]
   fn f (cp0: charpos, cp1: charpos):<> loc_t = location_make (cp0.1, cp1.1)
   val c0 = $effmask_ref (s[0])
