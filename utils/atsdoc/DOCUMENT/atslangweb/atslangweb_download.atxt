@@ -65,7 +65,7 @@ padding-right: 10px ;
 #ulink("\#ATS_packages", "ATS packages for download")
 )
 #litxt(
-#ulink("\#installation_require", "Installation requirements")
+#ulink("\#installation_require", "Requirements for installation")
 )
 #litxt(
 #ulink("\#installation_precomp", "Installation from a precompiled package")
@@ -112,7 +112,7 @@ The current #strong("unstable") version is
 
 #HR(1)
 
-<h2>#uid("installation_require", "Installation requirements")</h2>
+<h2>#uid("installation_require", "Requirements for installation")</h2>
 
 #para('\
 

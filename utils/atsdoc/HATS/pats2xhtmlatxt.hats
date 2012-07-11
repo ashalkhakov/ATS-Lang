@@ -76,15 +76,10 @@ fn patsyntax_style (): atext = atext_strcst("\
 
 (* ****** ****** *)
 
-fn patscode_tryit_js (): atext = atext_strcst("\
+fn patscode_tryit_bind_all_js (): atext = atext_strcst("\
 <script\n\
+src=\"http://www.ats-lang.org/scripts/patscode_tryit_bind_all.js\" \
 type=\"text/javascript\">\n\
-function\n\
-patscode_tryit(path)\n\
-{\n\
-// HX: [path] contains the code to be tried\n\
-mywin=window.open(path, 'mywin', '') ; mywin.focus() ; return ;\n\
-}\n\
 </script>\n\
 ")
 
@@ -139,11 +134,11 @@ val theCount = ref<int> (0)
 
 in // in of [local]
 
-fn pats2xhtml_count_getinc (): int = let
+fn patscode_count_getinc (): int = let
   val n = !theCount in !theCount := n+1; n
 end // end of [getinc]
 
-fn pats2xhtml_count_reset (): void = !theCount := 0
+fn patscode_count_reset (): void = !theCount := 0
 
 end // end of [local]
 
@@ -155,26 +150,38 @@ val thePrefix = ref<string> ("")
 
 in // in of [local]
 
-fn pats2xhtml_prefix_get (): string = !thePrefix
-fn pats2xhtml_prefix_set (x: string): void = !thePrefix := x
+fn patscode_prefix_get (): string = !thePrefix
+fn patscode_prefix_set (x: string): void = !thePrefix := x
 
 end // end of [local]
 
 (* ****** ****** *)
 
-fn pats2xhtmld_code_save
-  (code: string): void = let
+fn patscode_save (
+  stadyn: int, code: string
+) : Option (string) = let
 //
-val prfx = pats2xhtml_prefix_get ()
-val count = pats2xhtml_count_getinc ()
-val path = sprintf ("%s_%i.dats", @(prfx, count))
-val path = string_of_strptr (path)
-val out = open_file_exn (path, file_mode_w)
-val () = fprint_string (out, code)
+val prfx = patscode_prefix_get ()
 //
 in
-  close_file_exn (out)
-end // end of [pats2xhtmld_code_save]
+//
+if prfx != "" then let
+  val cnt = patscode_count_getinc ()
+  val path = sprintf ("%s_%i", @(prfx, cnt))
+  val path = string_of_strptr (path)
+  val ext = (
+    if stadyn = 0 then "sats" else "dats"
+  ) : string // end of [val]
+  val pathext = sprintf ("%s.%s", @(path, ext))
+  val pathext = string_of_strptr (pathext)
+  val out = open_file_exn (pathext, file_mode_w)
+  val () = fprint_string (out, code)
+  val () = close_file_exn (out)
+in
+  Some (path)
+end else None () // end of [if]
+//
+end // end of [patscoded_save]
 
 (* ****** ****** *)
 
@@ -192,10 +199,6 @@ end // end of [pats2xhtmls]
 fn pats2xhtmld
   (code: string): atext = let
 //
-// #ifdef ATSCODESAVE
-val () = pats2xhtmld_code_save (code)
-// #endif // end of [#ifdef]
-//
 val _beg = atext_strcst ("<pre class=\"patsyntax\">")
 val _code = atext_strptr (string_pats2xhtmlize_bground (1(*stadyn*), code))
 val _end = atext_strcst ("</pre>\n")
@@ -205,40 +208,42 @@ end // end of [pats2xhtmld]
 
 (* ****** ****** *)
 
-fn pats2xhtmls_tryit
+fn pats2xhtmld_save
   (code: string): atext = let
-  val _code = pats2xhtmls (code)
-  val _tryit = atext_strcst (
-"\
-<p>\
-<input \
-type=\"button\" \
-value=\"Try it yourself!\" \
-onclick=\"patscode_tryit()\" \
-/>\
-</p>\n\
-"
-  ) // end of [val]
+//
+val _(*path*) =
+  patscode_save (1(*stadyn*), code)
+//
 in
-  atext_apptxt2 (_code, _tryit)
-end // end of [pats2xhtmls_tryit]
+  pats2xhtmld (code)
+end // end of [pats2xhtmld_save]
+
+(* ****** ****** *)
 
 fn pats2xhtmld_tryit
   (code: string): atext = let
-  val _code = pats2xhtmld (code)
-  val _tryit = atext_strcst (
-"\
-<p>\
-<input \
-type=\"button\" \
-value=\"Try it yourself!\" \
-onclick=\"patscode_tryit()\" \
-/>\
-</p>\n\
-"
+val opt =
+  patscode_save (1(*stadyn*), code)
+val name = (
+  case+ opt of
+  | Some path => let
+      val x = sprintf ("%s.dats", @(path)) in string_of_strptr (x)
+    end // end of [Some]
+  | None () => "patscode_tryit_nameless.dats"
+) : string // end of [val]
+//
+val _beg = let
+  val x = sprintf (
+    "<pre class=\"patsyntax patscode_tryit\" name=\"%s\">", @(name)
   ) // end of [val]
 in
-  atext_apptxt2 (_code, _tryit)
+  atext_strptr (x)
+end // end of [val]
+val _code = atext_strptr (string_pats2xhtmlize_bground (1(*stadyn*), code))
+val _end = atext_strcst ("</pre>\n")
+//
+in
+  atext_apptxt3 (_beg, _code, _end)
 end // end of [pats2xhtmld_tryit]
 
 (* ****** ****** *)

@@ -11,7 +11,7 @@ staload STDIO = "libc/SATS/stdio.sats"
 #include "atslangwebatxt.dats"
 //
 val _ATSLANGWEBDOCUMENT: atext =
-  strcst"<strong>Documentation</strong>"
+  strcst"<strong>Documents</strong>"
 val () = theAtextMap_insert_str ("ATSLANGWEBDOCUMENT", _ATSLANGWEBDOCUMENT)
 //
 (* ****** ****** *)

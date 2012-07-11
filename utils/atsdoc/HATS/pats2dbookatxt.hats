@@ -66,6 +66,11 @@ end // end of [pats2xhtmld]
 
 (* ****** ****** *)
 
+fn pats2xhtmls_save
+  (code: string): atext = pats2xhtmls (code)
+
+(* ****** ****** *)
+
 fn pats2xhtmls_tryit
   (code: string): atext = pats2xhtmls (code)
 fn pats2xhtmld_tryit

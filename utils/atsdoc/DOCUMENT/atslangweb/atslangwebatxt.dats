@@ -112,7 +112,7 @@ val ATSLANGWEBDOWNLOAD: atext = strcst ((s2s)res) where {
   val res = sprintf ("<a href=\"%s/DOWNLOAD/\">Download</a>", @(ATSLANGWEBROOT))
 }
 val ATSLANGWEBDOCUMENT: atext = strcst ((s2s)res) where {
-  val res = sprintf ("<a href=\"%s/DOCUMENT/\">Documentation</a>", @(ATSLANGWEBROOT))
+  val res = sprintf ("<a href=\"%s/DOCUMENT/\">Documents</a>", @(ATSLANGWEBROOT))
 }
 val ATSLANGWEBLIBRARY: atext = strcst ((s2s)res) where {
   val res = sprintf ("<a href=\"%s/LIBRARY/\">Libraries</a>", @(ATSLANGWEBROOT))
@@ -199,7 +199,7 @@ fn DOCUMENT_ahref
   val link = sprintf ("%s/%s", @(root, "DOCUMENT"))
   val link = (s2s)link
 in
-  subpage_ahref (flag, link, "Documentation")
+  subpage_ahref (flag, link, "Documents")
 end // end of [DOCUMENT_ahref]
 
 fn LIBRARY_ahref
@@ -274,7 +274,7 @@ in
 case+ ent of
 | "HOME" => "Home"
 | "DOWNLOAD" => "Download"
-| "DOCUMENT" => "Documentation"
+| "DOCUMENT" => "Documents"
 | "LIBRARY" => "Libraries"
 | "RESOURCE" => "Resources"
 | "COMMUNITY" => "Community"

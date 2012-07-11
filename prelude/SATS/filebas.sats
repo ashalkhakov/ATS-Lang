@@ -141,6 +141,7 @@ fun output_line (fil: FILEref, line: string): void
 (* ****** ****** *)
 
 fun char_list_vt_make_file (fil: FILEref): List_vt (char)
+fun char_list_vt_make_file_len (fil: FILEref, n: size_t): List_vt (char)
 
 (* ****** ****** *)
 //

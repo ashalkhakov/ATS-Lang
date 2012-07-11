@@ -268,15 +268,18 @@ end // end of [local]
 
 (* ****** ****** *)
 
-implement
-char_list_vt_make_file
-  (fil) = let
-//
+local
+
+#define i2ssz ssize1_of_int1
+#define sz2ssz ssize1_of_size1
 viewtypedef res = List_vt (char)
-//
-fun loop (
-  fil: FILEref, res: &res? >> res
+
+fun loop {n:int} (
+  fil: FILEref, res: &res? >> res, n: ssize_t n
 ) : void = let
+in
+//
+if n != (i2ssz)0 then let
   val i = fgetc0_err (fil)
 in
   if (i >= 0) then let
@@ -284,21 +287,45 @@ in
     val () = res :=
       list_vt_cons {char}{0} (c, ?)
     val+ list_vt_cons (_, !p_res) = res
-    val () = loop (fil, !p_res)
+    val () = loop (fil, !p_res, n-(i2ssz)1)
     prval () = fold@ (res)
   in
     // nothing
   end else
     res := list_vt_nil ()
   // end of [if]
+end else (
+  res := list_vt_nil ()
+) // end of [if]
+//
 end // end of [loop]
+
+in // in of [local]
+
+implement
+char_list_vt_make_file
+  (fil) = let
 //
 var res: res
-val () = loop (fil, res)
+val () = loop (fil, res, i2ssz(~1))
 //
 in
   res
 end // end of [char_list_vt_make_file]
+
+implement
+char_list_vt_make_file_len
+  (fil, n) = let
+//
+var res: res
+val n = size1_of_size (n)
+val () = loop (fil, res, (sz2ssz)n)
+//
+in
+  res
+end // end of [char_list_vt_make_file_len]
+
+end // end of [local]
 
 (* ****** ****** *)
 
