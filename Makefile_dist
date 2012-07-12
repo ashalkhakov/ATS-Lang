@@ -150,6 +150,7 @@ all:: \
   libfiles libfiles_mt \
   bin/atspack \
   bin/atslex \
+  bin/atsdoc \
   ccomp/runtime/GCATS/gc.o \
   ccomp/runtime/GCATS/gc_mt.o \
   atsopt1_gc \
@@ -240,6 +241,12 @@ bin/atslex:
 
 ###### GC runtime ######
 
+bin/atsdoc:
+	cd utils/atsdoc; $(MAKE) atsdoc; cp atsdoc $(ATSHOMEQ)/bin
+	cd utils/atsdoc; $(MAKE) clean
+
+###### GC runtime ######
+
 ccomp/runtime/GCATS/gc.o:
 	cd ccomp/runtime/GCATS; $(MAKE) gc.o; $(MAKE) clean
 
@@ -257,6 +264,7 @@ clean::
 	$(RMF) bootstrap1/*.o
 	$(MAKE) -C utils/scripts clean
 	$(MAKE) -C utils/atslex clean
+	$(MAKE) -C utils/atsdoc clean
 	$(MAKE) -C ccomp/runtime/GCATS clean
 
 cleanall::
@@ -264,7 +272,8 @@ cleanall::
 	$(RMF) $(BUILT_CONFIG_FILES)
 	$(RMF) .libfiles_local
 	$(RMF) .libfiles_mt_local
-	$(RMF) bin/atsopt bin/atscc bin/atslib bin/atslex bin/atspack
+	$(RMF) bin/atsopt bin/atscc bin/atslib
+	$(RMF) bin/atspack bin/atslex bin/atsdoc
 	$(RMF) ccomp/lib/libats.a
 	$(RMF) ccomp/lib/libats_mt.a
 	$(RMF) ccomp/lib/libats_lex.a

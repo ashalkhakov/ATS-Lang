@@ -76,6 +76,13 @@ fn patsyntax_style (): atext = atext_strcst("\
 
 (* ****** ****** *)
 
+fn patscode_jquery_min_js (): atext = atext_strcst("\
+<script\n\
+type=\"text/javascript\"\n\
+src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js\"\n\
+></script>\n\
+")
+
 fn patscode_tryit_bind_all_js (): atext = atext_strcst("\
 <script\n\
 src=\"http://www.ats-lang.org/scripts/patscode_tryit_bind_all.js\" \

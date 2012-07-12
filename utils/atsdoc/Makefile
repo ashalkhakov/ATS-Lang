@@ -84,11 +84,12 @@ atsdoc: atsdoc_main_dats.o $(OBJECTS)
 #
 # HX: '-o .depend' means appending instead of overwriting
 #
-depend::
-	$(RMF) .depend
-	$(ATSOPT) -o .depend -dep1 -s $(SOURCESsta) -d $(SOURCESdyn)
-	$(ATSOPT) -o .depend -dep1 -d atsdoc_main.dats
-include .depend
+# depend::
+#	$(RMF) .depend
+#	$(ATSOPT) -o .depend -dep1 -s $(SOURCESsta) -d $(SOURCESdyn)
+#	$(ATSOPT) -o .depend -dep1 -d atsdoc_main.dats
+#include .depend
+#
 
 ######
 

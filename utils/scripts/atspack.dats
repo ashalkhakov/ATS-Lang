@@ -162,16 +162,16 @@ val DSTROOT: string = let
 end // end of [DSTROOT]
 
 (* ****** ****** *)
-
+//
 #define BUFSZ 8192
-
+//
 // there are certainly faster ways to copy files, but this code gives
 // an opportunity to test ATS :)
 fn fcopy_exn (src: string, dst: string): void = let
 (*
   val () = begin
-    prerr "fopen_exn: src = "; prerr src; prerr_newline ();
-    prerr "fopen_exn: dst = "; prerr dst; prerr_newline ();
+    print "fopen_exn: src = "; print src; print_newline ();
+    print "fopen_exn: dst = "; print dst; print_newline ();
   end // end of [val]
 *)
   val (pf_src | p_src) = fopen_exn (src, file_mode_r)
@@ -197,6 +197,13 @@ fn fcopy_exn (src: string, dst: string): void = let
 in
   fclose_exn (pf_src | p_src); fclose_exn (pf_dst | p_dst)
 end // end of [fcopy_exn]
+
+(* ****** ****** *)
+
+fn fcp_Makefile
+  (src: string, dst: string): void =
+  fcopy_exn (src++"Makefile", dst++"Makefile")
+// end of [fcp_Makefile]
 
 (* ****** ****** *)
 
@@ -333,8 +340,8 @@ fn Anairiats_bin_dir_copy
     if (packnd_is_precompiled knd) then (cpx "atscc"; cpx "atsopt")
   end // end of [begin]
 in
-  prerr "The [bin] directory is successfully copied.";
-  prerr_newline ()
+  print "The [bin] directory is successfully copied.";
+  print_newline ()
 end // end of [bin_dir_copy]
 
 (* ****** ****** *)
@@ -402,8 +409,8 @@ fn Anairiats_bootstrap_dir_copy () = let
   val () = dir_copy (SRCROOTbootstrap, DSTROOTbootstrap, test)
   val () = cp "ats_grammar_yats.h"
 in
-  prerr "The [bootstrap] directory is successfully copied.";
-  prerr_newline ()
+  print "The [bootstrap] directory is successfully copied.";
+  print_newline ()
 end // end of [Anairiats_bootscrap_dir_copy]
 
 (* ****** ****** *)
@@ -424,6 +431,7 @@ fn Anairiats_ccomp_lib_dir_copy
       val () = cp32 ("libats.a")
       val () = cp32 ("libats_mt.a")
       val () = cp32 ("libats_smlbas.a")
+      val () = cp32 ("libatsdoc.a")
     in
       // nothing
     end // end of [val]
@@ -432,6 +440,7 @@ fn Anairiats_ccomp_lib_dir_copy
       val () = cp64 ("libats.a")
       val () = cp64 ("libats_mt.a")
       val () = cp64 ("libats_smlbas.a")
+      val () = cp64 ("libatsdoc.a")
     in
       // nothing
     end // end of [val]
@@ -461,8 +470,8 @@ fn Anairiats_ccomp_runtime_NGC_dir_copy
     SRCROOTccomp_runtime_NGC ++ ,(name), DSTROOTccomp_runtime_NGC ++ ,(name)
   ) // end of [fcopy_exn]
   val () = cp "gc.h"
-  val () = prerr "The [ccomp/runtime/NGC] directory is successfully copied.";
-  val () = prerr_newline ()
+  val () = print "The [ccomp/runtime/NGC] directory is successfully copied.";
+  val () = print_newline ()
 } // end of [Anairiats_ccomp_runtime_NGC_dir_copy]
 
 *)
@@ -490,8 +499,8 @@ fn Anairiats_ccomp_runtime_GCATS_dir_copy
     if (packnd_is_precompiled knd) then (cp "gc.o"; cp "gc_mt.o")
   end // end of [val]
 in
-  prerr "The [ccomp/runtime/GCATS] directory is successfully copied.";
-  prerr_newline ()
+  print "The [ccomp/runtime/GCATS] directory is successfully copied.";
+  print_newline ()
 end // end of [Anairiats_ccomp_runtime_GCATS_dir_copy]
 
 (* ****** ****** *)
@@ -515,8 +524,8 @@ in
   cp "ats_prelude_gcbdw.c";
   // ccomp_runtime_NGC_dir_copy (knd); // no longer in use
   Anairiats_ccomp_runtime_GCATS_dir_copy (knd);
-  prerr "The [ccomp/runtime] directory is successfully copied.";
-  prerr_newline ()
+  print "The [ccomp/runtime] directory is successfully copied.";
+  print_newline ()
 end // end of [Anairiats_ccomp_runtime_dir_copy]
 
 (* ****** ****** *)
@@ -741,9 +750,7 @@ fn Anairiats_doc_dir_copy () = let
       DSTROOTdoc_EXAMPLE ++ "KernighanRitchie/"
     val () = mkdir_exn (DSTROOTdoc_EXAMPLE_KR, DIRmode)
     #define NCHAPTER 8
-    val () = fcopy_exn (
-      SRCROOTdoc_EXAMPLE_KR ++ "Makefile", DSTROOTdoc_EXAMPLE_KR ++ "Makefile"
-    ) // end of [val]
+    val () = fcp_Makefile (SRCROOTdoc_EXAMPLE_KR, DSTROOTdoc_EXAMPLE_KR)
     var !p_arr with pf_arr = @[string](
       "Chapter01/", "Chapter02/", "Chapter03/", "Chapter04/"
     , "Chapter05/", "Chapter06/", "Chapter07/", "Chapter08/"
@@ -836,7 +843,7 @@ fn Anairiats_doc_dir_copy () = let
   } // end of [val]
 //
 in
-  prerr "The [doc] directory is successfully copied."; prerr_newline ()
+  print "The [doc] directory is successfully copied."; print_newline ()
 end // end of [Anairiats_doc_dir_copy]
 
 (* ****** ****** *)
@@ -905,8 +912,8 @@ fn Anairiats_prelude_dir_copy () = let
   val () = cp "sortdef.sats"
   val () = cp "ats_main_prelude.dats"
 in
-  prerr "The [prelude] directory is successfully copied.";
-  prerr_newline ()
+  print "The [prelude] directory is successfully copied.";
+  print_newline ()
 end // end of [Anairiats_prelude_dir_copy]
 
 fn Anairiats_libc_dir_copy () = let
@@ -936,8 +943,8 @@ fn Anairiats_libc_dir_copy () = let
   val () = libdir_copy (SRCROOTlibc_gdbm, DSTROOTlibc_gdbm)
 //
 in
-  prerr "The [libc] directory is successfully copied.";
-  prerr_newline ()
+  print "The [libc] directory is successfully copied.";
+  print_newline ()
 end // end of [Anairiats_libc_dir_copy]
 
 fn Anairiats_libats_dir_copy () = let
@@ -965,9 +972,28 @@ fn Anairiats_libats_dir_copy () = let
   val () = mkdir_exn (DSTROOTlibatslex, DIRmode)
   val () = dir_copy (SRCROOTlibatslex, DSTROOTlibatslex, name_is_xats)
 in
-  prerr "The [libats] directory is successfully copied.";
-  prerr_newline ()
+  print "The [libats] directory is successfully copied.";
+  print_newline ()
 end // end of [Anairiats_libats_dir_copy]
+
+
+fn Anairiats_libatsdoc_dir_copy () = let
+  // the code for libats
+  val SRCROOTlibatsdoc = SRCROOT ++ "libatsdoc/"
+  val DSTROOTlibatsdoc = DSTROOT ++ "libatsdoc/"
+  macdef cp name =
+    fcopy_exn (SRCROOTlibatsdoc ++ ,(name), DSTROOTlibatsdoc ++ ,(name))
+  val () = mkdir_exn (DSTROOTlibatsdoc, DIRmode)
+  val () = cp "Makefile"
+  val () = cp "Makefile_inp"
+  val () = cp "dynloadall.dats"
+//
+  val () = libdir_copy (SRCROOTlibatsdoc, DSTROOTlibatsdoc)
+//
+in
+  print "The [libatsdoc] directory is successfully copied.";
+  print_newline ()
+end // end of [Anairiats_libatsdoc_dir_copy]
 
 fn Anairiats_contrib_dir_copy
   (knd: packnd) = let
@@ -978,16 +1004,11 @@ fn Anairiats_contrib_dir_copy
   val () = () where { // API for parcomb: [contrib/parcomb]
     val SRCROOTcontrib_parcomb = SRCROOTcontrib ++ "parcomb/"
     val DSTROOTcontrib_parcomb = DSTROOTcontrib ++ "parcomb/"
+    macdef cp name =
+      fcopy_exn (SRCROOTcontrib_parcomb ++ ,(name), DSTROOTcontrib_parcomb ++ ,(name))
     val () = mkdir_exn (DSTROOTcontrib_parcomb, DIRmode)
-//
-    val filename = "Makefile"
-    val () = fcopy_exn (
-      SRCROOTcontrib_parcomb++filename, DSTROOTcontrib_parcomb++filename
-    ) // end of [val]
-    val filename = "dynloadall.dats"
-    val () = fcopy_exn (
-      SRCROOTcontrib_parcomb++filename, DSTROOTcontrib_parcomb++filename
-    ) // end of [val]
+    val () = cp "Makefile"
+    val () = cp "dynloadall.dats"
 //
     val () = libdir_copy (SRCROOTcontrib_parcomb, DSTROOTcontrib_parcomb)
     val SRCROOTcontrib_parcomb_TEST = SRCROOTcontrib_parcomb ++ "TEST/"
@@ -1000,9 +1021,7 @@ fn Anairiats_contrib_dir_copy
     val SRCROOTcontrib_cblas = SRCROOTcontrib ++ "cblas/"
     val DSTROOTcontrib_cblas = DSTROOTcontrib ++ "cblas/"
     val () = mkdir_exn (DSTROOTcontrib_cblas, DIRmode)
-    val () = fcopy_exn (
-      SRCROOTcontrib_cblas++"Makefile", DSTROOTcontrib_cblas++"Makefile"
-    ) // end of [val]
+    val () = fcp_Makefile (SRCROOTcontrib_cblas, DSTROOTcontrib_cblas)
     val () = libdir_copy (SRCROOTcontrib_cblas, DSTROOTcontrib_cblas)
     val SRCROOTcontrib_cblas_TEST = SRCROOTcontrib_cblas ++ "TEST/"
     val DSTROOTcontrib_cblas_TEST = DSTROOTcontrib_cblas ++ "TEST/"
@@ -1014,9 +1033,7 @@ fn Anairiats_contrib_dir_copy
     val SRCROOTcontrib_clapack = SRCROOTcontrib ++ "clapack/"
     val DSTROOTcontrib_clapack = DSTROOTcontrib ++ "clapack/"
     val () = mkdir_exn (DSTROOTcontrib_clapack, DIRmode)
-    val () = fcopy_exn (
-      SRCROOTcontrib_clapack++"Makefile", DSTROOTcontrib_clapack++"Makefile"
-    ) // end of [val]
+    val () = fcp_Makefile (SRCROOTcontrib_clapack, DSTROOTcontrib_clapack)
     val () = libdir_copy (SRCROOTcontrib_clapack, DSTROOTcontrib_clapack)
     val SRCROOTcontrib_clapack_TEST = SRCROOTcontrib_clapack ++ "TEST/"
     val DSTROOTcontrib_clapack_TEST = DSTROOTcontrib_clapack ++ "TEST/"
@@ -1028,9 +1045,7 @@ fn Anairiats_contrib_dir_copy
     val SRCROOTcontrib_glib = SRCROOTcontrib ++ "glib/"
     val DSTROOTcontrib_glib = DSTROOTcontrib ++ "glib/"
     val () = mkdir_exn (DSTROOTcontrib_glib, DIRmode)
-    val () = fcopy_exn (
-      SRCROOTcontrib_glib++"Makefile", DSTROOTcontrib_glib++"Makefile"
-    ) // end of [val]
+    val () = fcp_Makefile (SRCROOTcontrib_glib, DSTROOTcontrib_glib)
     val () = libdir_copy (SRCROOTcontrib_glib, DSTROOTcontrib_glib)
     val DSTROOTcontrib_glib_SATS_glib = DSTROOTcontrib_glib ++ "SATS/glib/"
     val () = mkdir_exn (DSTROOTcontrib_glib_SATS_glib, DIRmode)
@@ -1056,9 +1071,7 @@ fn Anairiats_contrib_dir_copy
     val SRCROOTcontrib_cairo = SRCROOTcontrib ++ "cairo/"
     val DSTROOTcontrib_cairo = DSTROOTcontrib ++ "cairo/"
     val () = mkdir_exn (DSTROOTcontrib_cairo, DIRmode)
-    val () = fcopy_exn (
-      SRCROOTcontrib_cairo++"Makefile", DSTROOTcontrib_cairo++"Makefile"
-    ) // end of [val]
+    val () = fcp_Makefile (SRCROOTcontrib_cairo, DSTROOTcontrib_cairo)
     val () = libdir_copy (SRCROOTcontrib_cairo, DSTROOTcontrib_cairo)
   } // end of [where]
 //
@@ -1066,9 +1079,7 @@ fn Anairiats_contrib_dir_copy
     val SRCROOTcontrib_pango = SRCROOTcontrib ++ "pango/"
     val DSTROOTcontrib_pango = DSTROOTcontrib ++ "pango/"
     val () = mkdir_exn (DSTROOTcontrib_pango, DIRmode)
-    val () = fcopy_exn (
-      SRCROOTcontrib_pango++"Makefile", DSTROOTcontrib_pango++"Makefile"
-    ) // end of [val]
+    val () = fcp_Makefile (SRCROOTcontrib_pango, DSTROOTcontrib_pango)
     val () = libdir_copy (SRCROOTcontrib_pango, DSTROOTcontrib_pango)
     val DSTROOTcontrib_pango_SATS_pango = DSTROOTcontrib_pango ++ "SATS/pango/"
     val () = mkdir_exn (DSTROOTcontrib_pango_SATS_pango, DIRmode)
@@ -1081,9 +1092,7 @@ fn Anairiats_contrib_dir_copy
     val SRCROOTcontrib_X11 = SRCROOTcontrib ++ "X11/"
     val DSTROOTcontrib_X11 = DSTROOTcontrib ++ "X11/"
     val () = mkdir_exn (DSTROOTcontrib_X11, DIRmode)
-    val () = fcopy_exn (
-      SRCROOTcontrib_X11++"Makefile", DSTROOTcontrib_X11++"Makefile"
-    ) // end of [val]
+    val () = fcp_Makefile (SRCROOTcontrib_X11, DSTROOTcontrib_X11)
     val () = libdir_copy (SRCROOTcontrib_X11, DSTROOTcontrib_X11)
   } // end of [where]
 //
@@ -1091,9 +1100,7 @@ fn Anairiats_contrib_dir_copy
     val SRCROOTcontrib_GTK = SRCROOTcontrib ++ "GTK/"
     val DSTROOTcontrib_GTK = DSTROOTcontrib ++ "GTK/"
     val () = mkdir_exn (DSTROOTcontrib_GTK, DIRmode)
-    val () = fcopy_exn (
-      SRCROOTcontrib_GTK++"Makefile", DSTROOTcontrib_GTK++"Makefile"
-    ) // end of [val]
+    val () = fcp_Makefile (SRCROOTcontrib_GTK, DSTROOTcontrib_GTK)
     val () = libdir_copy (SRCROOTcontrib_GTK, DSTROOTcontrib_GTK)
     val DSTROOTcontrib_GTK_SATS_gtk = DSTROOTcontrib_GTK ++ "SATS/gtk/"
     val () = mkdir_exn (DSTROOTcontrib_GTK_SATS_gtk, DIRmode)
@@ -1111,9 +1118,7 @@ fn Anairiats_contrib_dir_copy
     val SRCROOTcontrib_GL = SRCROOTcontrib ++ "GL/"
     val DSTROOTcontrib_GL = DSTROOTcontrib ++ "GL/"
     val () = mkdir_exn (DSTROOTcontrib_GL, DIRmode)
-    val () = fcopy_exn (
-      SRCROOTcontrib_GL++"Makefile", DSTROOTcontrib_GL++"Makefile"
-    ) // end of [val]
+    val () = fcp_Makefile (SRCROOTcontrib_GL, DSTROOTcontrib_GL)
     val () = libdir_copy (SRCROOTcontrib_GL, DSTROOTcontrib_GL)
   } // end of [where]
 //
@@ -1121,9 +1126,7 @@ fn Anairiats_contrib_dir_copy
     val SRCROOTcontrib_SDL = SRCROOTcontrib ++ "SDL/"
     val DSTROOTcontrib_SDL = DSTROOTcontrib ++ "SDL/"
     val () = mkdir_exn (DSTROOTcontrib_SDL, DIRmode)
-    val () = fcopy_exn (
-      SRCROOTcontrib_SDL++"Makefile", DSTROOTcontrib_SDL++"Makefile"
-    ) // end of [val]
+    val () = fcp_Makefile (SRCROOTcontrib_SDL, DSTROOTcontrib_SDL)
     val () = libdir_copy (SRCROOTcontrib_SDL, DSTROOTcontrib_SDL)
   } // end of [where]
 //
@@ -1132,16 +1135,14 @@ fn Anairiats_contrib_dir_copy
     val DSTROOTcontrib_testing = DSTROOTcontrib ++ "testing/"
     val () = mkdir_exn (DSTROOTcontrib_testing, DIRmode)
 (*
-    val () = fcopy_exn (
-      SRCROOTcontrib_testing++"Makefile", DSTROOTcontrib_testing++"Makefile"
-    ) // end of [val]
+    val () = fcp_Makefile (SRCROOTcontrib_testing, DSTROOTcontrib_testing)
 *)
     val () = libdir_copy (SRCROOTcontrib_testing, DSTROOTcontrib_testing)
   } // end of [where]
 //
 in
-  prerr "The [contrib] directory is successfully copied.";
-  prerr_newline ()
+  print "The [contrib] directory is successfully copied.";
+  print_newline ()
 end // end of [Anairiats_contrib_dir_copy]
 
 (* ****** ****** *)
@@ -1162,8 +1163,8 @@ fn Anairiats_src_dir_copy (): void = let
   val () = cp "ats_grammar_yats.c"
   val () = cp "ats_grammar_yats.h"
 in
-  prerr "The [src] directory is successfully copied.";
-  prerr_newline ()
+  print "The [src] directory is successfully copied.";
+  print_newline ()
 end // end of [Anairiats_src_dir_copy]
 *)
 
@@ -1176,37 +1177,44 @@ fn Anairiats_utils_dir_copy () = let
 //
   val SRCROOTutils_atslex = SRCROOTutils ++ "atslex/"
   val DSTROOTutils_atslex = DSTROOTutils ++ "atslex/"
+  macdef cp name =
+    fcopy_exn (SRCROOTutils_atslex ++ ,(name), DSTROOTutils_atslex ++ ,(name))
   val () = mkdir_exn (DSTROOTutils_atslex, DIRmode)
   val () = dir_copy
     (SRCROOTutils_atslex, DSTROOTutils_atslex, name_is_xats)
-  val () = fcopy_exn (
-    SRCROOTutils_atslex ++ "Makefile", DSTROOTutils_atslex ++ "Makefile"
-  ) // end of [fcopy_exn]
-  val () = fcopy_exn (
-    SRCROOTutils_atslex ++ "README", DSTROOTutils_atslex ++ "README"
-  ) // end of [fcopy_exn]
+  val () = cp "README"
+  val () = cp "Makefile"
 //
   val SRCROOTutils_atslex_EXAMPLE = SRCROOTutils_atslex ++ "EXAMPLE/"
   val DSTROOTutils_atslex_EXAMPLE = DSTROOTutils_atslex ++ "EXAMPLE/"
   val () = mkdir_exn (DSTROOTutils_atslex_EXAMPLE, DIRmode)
   val () = dir_copy
     (SRCROOTutils_atslex_EXAMPLE, DSTROOTutils_atslex_EXAMPLE, name_is_xats)
-  val () = fcopy_exn (
-    SRCROOTutils_atslex_EXAMPLE ++ "Makefile"
-  , DSTROOTutils_atslex_EXAMPLE ++ "Makefile"
-  ) // end of [fcopy_exn]
+  val () = fcp_Makefile (SRCROOTutils_atslex_EXAMPLE, DSTROOTutils_atslex_EXAMPLE)
 //
   val SRCROOTutils_scripts = SRCROOTutils ++ "scripts/"
   val DSTROOTutils_scripts = DSTROOTutils ++ "scripts/"
+  macdef cp name =
+    fcopy_exn (SRCROOTutils_scripts ++ ,(name), DSTROOTutils_scripts ++ ,(name))
   val () = mkdir_exn (DSTROOTutils_scripts, DIRmode)
   val () = dir_copy
     (SRCROOTutils_scripts, DSTROOTutils_scripts, name_is_xats)
-  val () = fcopy_exn (
-    SRCROOTutils_scripts ++ "Makefile", DSTROOTutils_scripts ++ "Makefile"
-  ) // end of [fcopy_exn]
+  val () = cp "Makefile"
+//
+  val SRCROOTutils_atsdoc = SRCROOTutils ++ "atsdoc/"
+  val DSTROOTutils_atsdoc = DSTROOTutils ++ "atsdoc/"
+  macdef cp name =
+    fcopy_exn (SRCROOTutils_atsdoc ++ ,(name), DSTROOTutils_atsdoc ++ ,(name))
+  val () = mkdir_exn (DSTROOTutils_atsdoc, DIRmode)
+  val () = dir_copy
+    (SRCROOTutils_atsdoc, DSTROOTutils_atsdoc, name_is_xats)
+  val () = cp "README"
+  val () = cp "Makefile"
+  val () = libdir_copy (SRCROOTutils_atsdoc, DSTROOTutils_atsdoc)
+//
 in
-  prerr "The [utils] directory is successfully copied.";
-  prerr_newline ()
+  print "The [utils] directory is successfully copied.";
+  print_newline ()
 end // end of [Anairiats_utils_dir_copy]
 
 (* ****** ****** *)
@@ -1216,8 +1224,8 @@ extern fun atspack_source_code (): void
 implement atspack_source_code () = let
   val () = // run-time checking
     if test_file_exists (DSTROOT) then begin
-      prerr "The directory ["; prerr DSTROOT; prerr "] already exists.";
-      prerr_newline ();
+      print "The directory ["; print DSTROOT; print "] already exists.";
+      print_newline ();
       exit (1)
     end // end of [if]
   val () = mkdir_exn (DSTROOT, DIRmode)
@@ -1263,6 +1271,7 @@ implement atspack_source_code () = let
   val () = Anairiats_prelude_dir_copy ()
   val () = Anairiats_libc_dir_copy ()
   val () = Anairiats_libats_dir_copy ()
+  val () = Anairiats_libatsdoc_dir_copy ()
   val () = Anairiats_contrib_dir_copy (PACKNDsource)
 (*
   val () = Anairiats_src_dir_copy () // HX: The source code is no longer distributed
@@ -1270,12 +1279,12 @@ implement atspack_source_code () = let
   val () = Anairiats_utils_dir_copy ()
 //
 in
-  prerr "The package [";
-  prerr ATSPACKAGE_NAME;
-  prerr "-";
-  prerr ATSPACKAGE_VERSION;
-  prerr "] is successfully built.";
-  prerr_newline ()  
+  print "The package [";
+  print ATSPACKAGE_NAME;
+  print "-";
+  print ATSPACKAGE_VERSION;
+  print "] is successfully built.";
+  print_newline ()  
 end // end of [atspack_source_code]
 
 (* ****** ****** *)
