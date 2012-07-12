@@ -36,7 +36,6 @@
 
 ATSCC=$(ATSHOME)/bin/atscc
 ATSOPT=$(ATSHOME)/bin/atsopt
-ATSLIB64=$(ATSHOME)/ccomp/lib64
 
 ######
 
@@ -69,7 +68,7 @@ all:: atsdoc clean
 ######
 
 atsdoc: atsdoc_main_dats.o $(OBJECTS)
-	$(ATSCC) $(ATSGCFLAG) $(ATSCCFLAGS) -L$(ATSLIB64) -o atsdoc atsdoc_main_dats.o $(OBJECTS) -latsdoc
+	$(ATSCC) $(ATSGCFLAG) $(ATSCCFLAGS) -o atsdoc atsdoc_main_dats.o $(OBJECTS) -latsdoc
 
 ######
 
