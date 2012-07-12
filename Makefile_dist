@@ -282,11 +282,13 @@ cleanall::
 	$(RMF) ccomp/lib/libats_mt.a
 	$(RMF) ccomp/lib/libats_lex.a
 	$(RMF) ccomp/lib/libats_smlbas.a
+	$(RMF) ccomp/lib/libatsdoc.a
 	$(RMF) ccomp/lib/output/*
 	$(RMF) ccomp/lib64/libats.a
 	$(RMF) ccomp/lib64/libats_mt.a
 	$(RMF) ccomp/lib64/libats_lex.a
 	$(RMF) ccomp/lib64/libats_smlbas.a
+	$(RMF) ccomp/lib64/libatsdoc.a
 	$(RMF) ccomp/lib64/output/*
 	$(RMF) contrib/glib/atsctrb_glib.o
 	$(RMF) contrib/cairo/atsctrb_cairo.o
