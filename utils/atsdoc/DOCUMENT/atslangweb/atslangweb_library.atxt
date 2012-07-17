@@ -161,6 +161,8 @@ above libraries.
 #litxt(#myliblink("prelude", "arrayptr"))
 #litxt(#myliblink("prelude", "arrayref"))
 #litxt(#myliblink("prelude", "matrix"))
+#litxt(#myliblink("prelude", "matrixptr"))
+#litxt(#myliblink("prelude", "matrixref"))
 
 #litxt(#myliblink("prelude", "iterator"))
 #litxt(#myliblink("prelude", "fcontainer"))

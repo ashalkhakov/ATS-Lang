@@ -236,7 +236,7 @@ val name = (
   | Some path => let
       val x = sprintf ("%s.dats", @(path)) in string_of_strptr (x)
     end // end of [Some]
-  | None () => "patscode_tryit_nameless.dats"
+  | None () => "TRYIT/patscode_tryit_nameless.dats"
 ) : string // end of [val]
 //
 val _beg = let

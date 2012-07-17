@@ -92,9 +92,10 @@ viewtypedef v2alueopt_vt = Option_vt v2alue
 val v2alue_bool_true = V2ALbool (true)
 val v2alue_bool_false = V2ALbool (false)
 
-fun fprint_v2alue {m:file_mode}
-  (pf: file_mode_lte (m, w) | out: &FILE m, v2al: v2alue)
-  : void = let
+fun fprint_v2alue
+  {m:file_mode} (
+  pf: file_mode_lte (m, w) | out: &FILE m, v2al: v2alue
+) : void = let
   macdef prstr (s) = fprint1_string (pf | out, ,(s))
 in
   case+ v2al of
@@ -252,7 +253,12 @@ extern fun eval1_labp2atlst
   (loc0: loc_t, env: &alphaenv, lp2ts: labp2atlst): labp2atlst
 
 implement
-eval1_p2at (loc0, env, p2t0) = begin
+eval1_p2at 
+  (loc0, env, p2t0) = let
+(*
+  val () = println! ("eval1_p2at")
+*)
+in
   case+ p2t0.p2at_node of
   | P2Tann (p2t, s2e) => let
       val p2t = eval1_p2at (loc0, env, p2t)
