@@ -743,7 +743,7 @@ s2exp_tyleq_solve_err (loc0, s2e10, s2e20, err) = let
         end else begin
           err := err + 1
         end
-      end // end of [S2Edatcon]
+      end // end of [S2Edatconptr]
     | _ => (err := err + 1)
     end // end of [S2Edatconptr, _]
   | (S2Efun (fc1, lin1, s2fe1, npf1, s2es1_arg, s2e1_res), s2en20) => begin

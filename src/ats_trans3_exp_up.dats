@@ -125,8 +125,11 @@ fun d2lablst_tr_up
   | list_nil () => list_nil ()
 // end of [d2lablst_tr_up]
 
-fun s2lab0lst_of_d3lab0lst {n:nat} .<n>.
-  (d3ls: list (d3lab0, n)): list (s2lab, n) =
+fun s2lab0lst_of_d3lab0lst
+  {n:nat} .<n>. (
+  d3ls: list (d3lab0, n)
+) : list (s2lab, n) = let
+in
   case+ d3ls of
   | list_cons (d3l, d3ls) => let
       val s2l = (case+ d3l.d3lab0_node of
@@ -137,14 +140,17 @@ fun s2lab0lst_of_d3lab0lst {n:nat} .<n>.
       list_cons (s2l, s2lab0lst_of_d3lab0lst d3ls)
     end // end of [cons]
   | list_nil () => list_nil ()
-// end of [s2lab0lst_of_d3lab0lst]
+end // end of [s2lab0lst_of_d3lab0lst]
 
 (*
 //
 // HX-2010-11-01: why is this commented out?
 //
-fun s2lab1lst_of_d3lab1lst {n:nat} .<n>.
-  (d3ls: list (d3lab1, n)): list (s2lab, n) =
+fun s2lab1lst_of_d3lab1lst
+  {n:nat} .<n>. (
+  d3ls: list (d3lab1, n)
+) : list (s2lab, n) = let
+in
   case+ d3ls of
   | list_cons (d3l, d3ls) => let
       val s2l = (case+ d3l.d3lab1_node of
@@ -156,7 +162,7 @@ fun s2lab1lst_of_d3lab1lst {n:nat} .<n>.
       list_cons (s2l, s2lab1lst_of_d3lab1lst d3ls)
     end // end of [cons]
   | list_nil () => list_nil ()
-// end of [s2lab2lst_of_d3lab1lst]
+end // end of [s2lab2lst_of_d3lab1lst]
 *)
 
 fun d3lab1lst_of_d3lab0lst_s2lablst (
@@ -1078,6 +1084,8 @@ fn d3exp_s2exp_lazy_force_tr_up
       end // end of [None_vt]
     end // end of [None_vt]
 // end of [d3exp_s2exp_lazy_force_tr_up]
+
+(* ****** ****** *)
 
 fn d2exp_deref_tr_up
   (loc0: loc_t, d2e0: d2exp, d2ls: d2lablst): d3exp = let

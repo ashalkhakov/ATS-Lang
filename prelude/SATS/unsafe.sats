@@ -50,6 +50,7 @@
 //
 castfn cast {to:t@ype} {from:t@ype} (x: from):<> to
 castfn castvwtp1 {to:t@ype} {from:viewt@ype} (x: !from):<> to
+castfn castvwtp_trans {to:viewt@ype}{from:viewt@ype} (x: from):<> to
 
 (* ****** ****** *)
 //
@@ -64,6 +65,12 @@ castfn cast2ulint {a:t@ype} (x: a):<> ulint
 castfn cast2size {a:t@ype} (x: a):<> size_t
 castfn cast2ssize {a:t@ype} (x: a):<> ssize_t
 //
+(* ****** ****** *)
+
+castfn linlst2lst
+  {a:t0p}{n:int} (xs: !list_vt (a, n)):<> list (a, n)
+// end of [linlst2lst]
+
 (* ****** ****** *)
 //
 // HX: only if you know what you are doing ...

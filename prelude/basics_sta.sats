@@ -854,9 +854,13 @@ list_t0ype_int_type (a:t@ype+, int) =
 stadef list = list_t0ype_int_type
 typedef List (a:t0p) = [n:int | n >= 0] list (a, n)
 typedef listLt
-  (a:t0p, n:int) = [n1:int | 0 <= n1; n1 < n] list (a, n1)
+  (a:t0p, n:int) = [k:int | 0 <= k; k < n] list (a, k)
 typedef listLte
-  (a:t0p, n:int) = [n1:int | 0 <= n1; n1 <= n] list (a, n1)
+  (a:t0p, n:int) = [k:int | 0 <= k; k <= n] list (a, k)
+typedef listBtw
+  (a:t0p, m:int, n:int) = [k:int | m <= k; k < n] list (a, k)
+typedef listBtwe
+  (a:t0p, m:int, n:int) = [k:int | m <= k; k <= n] list (a, k)
 //
 // HX: [option0_t0ype_type] is co-variant
 //
@@ -887,9 +891,13 @@ stadef list_vt = list_viewt0ype_int_viewtype
 viewtypedef
 List_vt (a:vt0p) = [n:int | n >=0] list_vt (a, n)
 viewtypedef listLt_vt
-  (a:vt0p, n:int) = [n1:int | 0 <= n1; n1 < n] list_vt (a, n1)
+  (a:vt0p, n:int) = [k:int | 0 <= k; k < n] list_vt (a, k)
 viewtypedef listLte_vt
-  (a:vt0p, n:int) = [n1:int | 0 <= n1; n1 <= n] list_vt (a, n1)
+  (a:vt0p, n:int) = [k:int | 0 <= k; k <= n] list_vt (a, k)
+viewtypedef listBtw_vt
+  (a:vt0p, m:int, n:int) = [k:int | m <= k; k < n] list_vt (a, k)
+viewtypedef listBtwe_vt
+  (a:vt0p, m:int, n:int) = [k:int | m <= k; k <= n] list_vt (a, k)
 //
 dataviewtype // viewt@ype+: covariant
 option_viewt0ype_bool_viewtype (a:viewt@ype+, bool) =
