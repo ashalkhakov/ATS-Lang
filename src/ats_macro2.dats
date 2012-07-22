@@ -1761,6 +1761,8 @@ fun eval0ctx_extend_arglst {narg:nat} (
   | list_nil () => res
 end // end of [eval0ctx_extend_arglst]
 
+(* ****** ****** *)
+
 implement // expanding macros in long form
 eval0_exp_app_mac_long
   {narg} (loc0, d2m, ctx, env, d2as) = let

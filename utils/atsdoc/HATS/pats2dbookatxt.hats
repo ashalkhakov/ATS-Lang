@@ -44,6 +44,35 @@ fn dyncode (x: string): atext = atext_strcst (x)
 
 (* ****** ****** *)
 
+local
+
+val theCount = ref<int> (0)
+
+in // in of [local]
+
+fn patscode_count_getinc (): int = let
+  val n = !theCount in !theCount := n+1; n
+end // end of [getinc]
+
+fn patscode_count_reset (): void = !theCount := 0
+
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+
+val thePrefix = ref<string> ("")
+
+in // in of [local]
+
+fn patscode_prefix_get (): string = !thePrefix
+fn patscode_prefix_set (x: string): void = !thePrefix := x
+
+end // end of [local]
+
+(* ****** ****** *)
+
 fn pats2xhtmls
   (code: string): atext = let
   val _beg =
