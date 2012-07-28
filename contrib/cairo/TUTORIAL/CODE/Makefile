@@ -20,6 +20,7 @@ all:: tutprog_linejoin.png
 
 all:: tutprog_triangle.dats
 all:: tutprog_triangle.dats.extract
+all:: tutprog_triangle
 
 all:: tutprog_sqrcirc.png
 all:: illucircmot.png
@@ -36,7 +37,7 @@ tutprog_hw0: tutprog_hw_atxt.dats
 tutprog_hw1: tutprog_hw_atxt.dats
 	$(ATSCC) -DATS ISEXTRACT -o $@ $< -latsdoc
 tutprog_hw_atxt.dats: tutprog_hw.atxt
-	$(ATSDOC) -do $@ -i $< > tutprog_hw_atxt.txt
+	$(ATSDOC) --outcode $@ -i $< > tutprog_hw_atxt.txt
 
 tutprog_hw.dats: tutprog_hw0; ./$< > $@
 tutprog_hw.dats.extract: tutprog_hw1; ./$< > $@
@@ -74,7 +75,7 @@ tutprog_triangle0: tutprog_triangle_atxt.dats
 tutprog_triangle1: tutprog_triangle_atxt.dats
 	$(ATSCC) -DATS ISEXTRACT -o $@ $< -latsdoc
 tutprog_triangle_atxt.dats: tutprog_triangle.atxt
-	$(ATSDOC) -do $@ -i $< > tutprog_triangle_atxt.txt
+	$(ATSDOC) --outcode $@ -i $< > tutprog_triangle_atxt.txt
 
 tutprog_triangle.dats: tutprog_triangle0; ./$< > $@
 tutprog_triangle.dats.extract: tutprog_triangle1; ./$< > $@

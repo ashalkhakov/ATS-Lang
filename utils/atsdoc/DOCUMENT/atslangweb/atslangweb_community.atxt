@@ -65,6 +65,7 @@ padding-right: 10px ;
 #menu('\
 #litxt(#ulink("\#ATS_mailinglist", "Mailing-list for ATS users"))
 #litxt(#ulink("\#ATS_irc_channel", "IRC channel for ATS users: \#\#ats"))
+#litxt(#ulink("\#ATS_reddit_news", "ATS news at reddit"))
 ')
 
 #HR(2)
@@ -88,9 +89,19 @@ The archive of messages sent to the ATS users mailing-list can be found
 <h2>#uid("ATS_irc_channel", "IRC channel for ATS users: \#\#ats")</h2>
 
 #menu("\
-#lisub('
+#lisub('\
 This IRC channel
 #ulink("http://webchat.freenode.net", "\#\#ats") is for chatting about ATS.
+')
+")#comment("menu")
+
+#HR(1)
+
+<h2>#uid("ATS_reddit_news", "ATS news at reddit")</h2>
+
+#menu("\
+#lisub('\
+Some news on ATS can be found #ulink("http://www.reddit.com/r/ATS", "here").
 ')
 ")#comment("menu")
 

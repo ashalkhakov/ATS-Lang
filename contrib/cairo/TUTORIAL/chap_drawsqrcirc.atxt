@@ -1,5 +1,8 @@
 %{
 //
+dynload "libatsdoc/dynloadall.dats"
+#include "utils/atsdoc/DOCUMENT/TUTORIALATS/tutorialatxt.dats"
+//
 #include "tutorialatxt.dats"
 //
 %}\

@@ -1049,7 +1049,8 @@ fun s2exp_tyleq_solve_ubs_err (
 (* ****** ****** *)
 
 implement
-s2exp_equal_solve_Var_err (loc0, s2V1, s2e1, s2e2, err) = let
+s2exp_equal_solve_Var_err
+  (loc0, s2V1, s2e1, s2e2, err) = let
 (*
   val () = begin
     print "s2exp_equal_solve_Var_err: s2V1 = "; print s2V1; print_newline ();

@@ -1,12 +1,15 @@
 %{
 //
+dynload "libatsdoc/dynloadall.dats"
+#include "utils/atsdoc/DOCUMENT/TUTORIALATS/tutorialatxt.dats"
+//
 #include "../tutorialatxt.dats"
 //
 #ifndef ISEXTRACT #then
-fun textextract (x: string) = TEXTstrcst (x)
+fun textextract (x: string) = atext_strcst (x)
 #else
 fun textextract (x: string) = let
-  val () = fprint_string (stdout_ref, x) in TEXTnil ()
+  val () = fprint_string (stdout_ref, x) in atext_nil ()
 end // end of [textextract]
 #endif // end of [#if]
 %}\

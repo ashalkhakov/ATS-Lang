@@ -187,6 +187,8 @@ above libraries.
 <h2>#uid("ATSLIB_libats", "ATSLIB/libats")</h2>
 
 #menu('\
+#litxt(#myliblink("libats", "funralist_nested"))
+#litxt(#myliblink("libats", "fundeque_fingertree"))
 ')#comment("menu")
 
 #HR(1)

@@ -1,5 +1,8 @@
 %{
 //
+dynload "libatsdoc/dynloadall.dats"
+#include "utils/atsdoc/DOCUMENT/TUTORIALATS/tutorialatxt.dats"
+//
 #include "tutorialatxt.dats"
 //
 %}\
@@ -36,7 +39,7 @@ fun cairo_destroy (cr: cairo_ref1): void
 What this funtion really does is to decrease by 1 the reference count of
 the object referred to by its argument. The object is freed, that is, truly
 destroyed only if the new count becomes 0. Because #code("cairo_ref1") is a
-linear type (or viewtype in ATS), if #code("cairo_destroy(cr)")> is called,
+linear type (or viewtype in ATS), if #code("cairo_destroy(cr)") is called,
 then #code("cr") can no longer be used as it is consumed: a linear value,
 that is, a value of a linear type, must be used once and only once. This
 point is made much clearer in the following example, where the function

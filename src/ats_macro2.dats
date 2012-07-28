@@ -1315,7 +1315,7 @@ in
     in
       d2exp_effmask (loc0, eff, d2e)
     end // end of [D2Eeffmask]
-  | D2Eextval (s2e, str) => d2exp_extval (loc0, s2e, str)
+  | D2Eextval (s2e, rep) => d2exp_extval (loc0, s2e, rep)
   | D2Eexist (s2as, d2e) => let
       val d2e = eval1_d2exp (loc0, ctx, env, d2e)
     in
@@ -1579,6 +1579,9 @@ end // end of [eval1_labd2explst]
 
 (* ****** ****** *)
 
+(*
+** HX: this is for recursive valdec but ...
+*)
 fun eval1_v2aldeclst
   (loc0: loc_t, ctx: !eval0ctx, env: &alphaenv, d2cs: v2aldeclst)
   : v2aldeclst = let

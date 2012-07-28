@@ -5,42 +5,11 @@
 **
 *)
 (* ****** ****** *)
-//
-// For write the ATS/Cairo tutorial
-//
-staload _(*anon*) = "prelude/DATS/list.dats"
-staload _(*anon*) = "prelude/DATS/list_vt.dats"
-staload _(*anon*) = "prelude/DATS/reference.dats"
-//
-(* ****** ****** *)
 
-#include "utils/atsdoc/HATS/docbookatxt.hats"
-
-(* ****** ****** *)
-//
-#define s2s string_of_strptr
-//
-macdef strcst (x) = TEXTstrcst ,(x)
-macdef strsub (x) = TEXTstrsub ,(x)
-//
-fun strcst_of_strptr (x: strptr1): text = TEXTstrcst ((s2s)x)
-fun strsub_of_strptr (x: strptr1): text = TEXTstrsub ((s2s)x)
-//
-(* ****** ****** *)
-//
-macdef LI (x) = xmltagging ("listitem", ,(x))
-//
-fun itemizedlist
-  (xs: textlst): text = let
-  val opn = TEXTstrcst "<itemizedlist>\n"
-  val cls = TEXTstrcst "\n</itemizedlist>"
-in
-  TEXTapptxt3 (opn, TEXTcontxtsep (xs, TEXTnewline), cls)
-end
-//
-(* ****** ****** *)
-
-fun filename (x: string) = TEXTstrcst (x)
+fun ulink1
+  (link: string, name: string): atext =
+  atext_strsubptr (sprintf ("<ulink url=\"%s\">%s</ulink>", @(link, name)))
+// end of [ulink1]
 
 (* ****** ****** *)
 
@@ -54,84 +23,74 @@ fun filename (x: string) = TEXTstrcst (x)
 #define MYIMAGEROOT "IMAGE" // for generation pdf version
 *)
 
-fun MYDOCROOTget () = TEXTstrcst (MYDOCROOT)
-fun MYCODEROOTget () = TEXTstrcst (MYCODEROOT)
-fun MYIMAGEROOTget () = TEXTstrcst (MYIMAGEROOT)
+fun MYDOCROOTget () = atext_strcst (MYDOCROOT)
+fun MYCODEROOTget () = atext_strcst (MYCODEROOT)
+fun MYIMAGEROOTget () = atext_strcst (MYIMAGEROOT)
 
 (* ****** ****** *)
 
 #define ATSLANGSVNROOT
 "https://ats-lang.svn.sourceforge.net/svnroot/ats-lang/trunk"
 
-fun ATSLANGSVNROOTget () = TEXTstrcst (ATSLANGSVNROOT)
-
-(* ****** ****** *)
-
-fun ulink (link: string, name: string): text =
-  strcst_of_strptr (sprintf ("<ulink url=\"%s\">%s</ulink>", @(link, name)))
-// end of [ulink]
-
-fun ulink1 (link: string, name: string): text =
-  strsub_of_strptr (sprintf ("<ulink url=\"%s\">%s</ulink>", @(link, name)))
-// end of [ulink1]
+fun ATSLANGSVNROOTget () = atext_strcst (ATSLANGSVNROOT)
 
 (* ****** ****** *)
 
 fun mydoclink (
   path: string, linkname: string
-) : text = let
+) : atext = let
   val res = sprintf (
     "<ulink url=\"%s/%s\">%s</ulink>", @(MYDOCROOT, path, linkname)
   ) // end of [val]
   val res = string_of_strptr (res)
 in
-  TEXTstrcst (res)
+  atext_strcst (res)
 end // end of [mydoclink]
 
 fun mycodelink (
   path: string, linkname: string
-) : text = let
+) : atext = let
   val res = sprintf (
     "<ulink url=\"%s/%s\">%s</ulink>", @(MYCODEROOT, path, linkname)
   ) // end of [val]
   val res = string_of_strptr (res)
 in
-  TEXTstrcst (res)
+  atext_strcst (res)
 end // end of [mycodelink]
 
 fun myimagelink (
   path: string, linkname: string
-) : text = let
+) : atext = let
   val res = sprintf (
     "<ulink url=\"%s/%s\">%s</ulink>", @(MYIMAGEROOT, path, linkname)
   ) // end of [val]
   val res = string_of_strptr (res)
 in
-  TEXTstrcst (res)
+  atext_strcst (res)
 end // end of [myimagelink]
 
 (* ****** ****** *)
 
 local
 
-val theCodeLst = ref<textlst> (list_nil)
+val theCodeLst = ref<atextlst> (list_nil)
 
 in // in of [local]
 
-fun theCodeLst_add (x: text) =
+fun theCodeLst_add (x: atext) =
   !theCodeLst := list_cons (x, !theCodeLst)
 
-fun theCodeLst_get (): textlst = let
+fun theCodeLst_get (): atextlst = let
   val xs = list_reverse (!theCodeLst) in list_of_list_vt (xs)
 end // end of [theCodeLst_get]
 
 fun fprint_theCodeLst
   (out: FILEref): void = let
-  fun loop (xs: textlst, i: int):<cloref1> void =
+  fun loop (xs: atextlst, i: int):<cloref1> void =
     case+ xs of
     | list_cons (x, xs) => let
         val () = if i > 0 then fprint_newline (out)
-        val () = fprint_text (out, x)
+        val () = fprint_atext (out, x)
       in
         loop (xs, i+1)
       end // end of [list_cons]
@@ -145,8 +104,8 @@ end // end of [local]
 (* ****** ****** *)
 
 fn atscode_extract
-  (x: string): text = let
-  val () = theCodeLst_add (TEXTstrcst (x)) in atscode (x)
+  (x: string): atext = let
+  val () = theCodeLst_add (atext_strcst (x)) in atscode (x)
 end // end of [atscode_extract]
 
 (* ****** ****** *)
