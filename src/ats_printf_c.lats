@@ -323,18 +323,19 @@ SPECHR (f, w, p, l) =
 
 // postamble
 
-implement printf_c_string_parse (fmt) = let
-  val (pf_infil |infil) = infile_make_string (fmt)
+implement
+printf_c_string_parse (fmt) = let
+  val (pf_infil | infil) = infile_make_string (fmt)
   val (pf_lexbuf | lexbuf) = lexbuf_make_infile (pf_infil | infil)
   val () = lexing_lexbuf_set (pf_lexbuf | lexbuf)
   var err: int = 0
   val ans = MAIN (list_vt_nil (), err)
   val () = lexing_lexbuf_free ()
 in
-  if err > 0 then begin
-    printf_c_argtypes_free ans; None_vt ()
-  end else begin
-    Some_vt ($Lst.list_vt_reverse ans)
+  if err = 0 then
+    Some_vt ($Lst.list_vt_reverse (ans))
+  else let
+    val () = printf_c_argtypes_free (ans) in None_vt ()
   end // end of [if]
 end // end of [printf_c_string_parser]
 
