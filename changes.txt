@@ -29,7 +29,7 @@ ats-lang-anairiats-0.2.7:
 13: Adding libats/funmset_listord (functional multiset implementation)
 14: Fixing a bug involving tailcall optimization (argument movement)
 15: Fixing a minor bug involving p2at_arg_tr.
-16: The interface for pthread creating in ATS is slightly modified.
+16: The interface for pthread creation in ATS is slightly modified.
 
 ########################################################################
 
