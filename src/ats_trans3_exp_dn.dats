@@ -802,9 +802,10 @@ val d3e0 = case+ d2e0.d2exp_node of
 *)
       val d3e = d2exp_tr_dn (d2e, s2e0)
       val s2e_pat = s2exp_exception_viewtype ()
+      val d3e_dummy = d3exp_top (d3e.d3exp_loc, s2e_pat)
       var cmplt: int = 0
       val c3ls = c2laulst_tr_dn (
-        loc0, cmplt, ~1(*knd*), r2es, c2ls, '[d3e], 1, '[s2e_pat], s2e0
+        loc0, cmplt, ~1(*knd*), r2es, c2ls, '[d3e_dummy], 1, '[s2e_pat], s2e0
       ) // end of [c2laulst_tr_dn]
       val () = the_d2varset_env_pop_try (pf_d2varset | (*none*))
     in
