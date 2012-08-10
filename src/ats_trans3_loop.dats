@@ -224,29 +224,40 @@ end // end of [d2exp_loop_tr_up]
 (* ****** ****** *)
 
 // 0/1: break/continue
-implement d2exp_loopexn_tr_up (loc0, i) = let
-  val lmlp = the_lamloop_env_top (); val () = case+ lmlp of
-    | LMLPloop0 () => () // skip it
-    | LMLPloop1 (sbis, sac_init, sac_exit, od2e_post) => let
-        val () = case+ od2e_post of
-          | Some d2e => begin
-              let val _ = d2exp_tr_dn (d2e, s2exp_void_t0ype ()) in () end
-            end // end of [Some]
-          | None () => ()
-        // end of [val]
-      in
-        if i > 0 then begin // continue
-          staftscstr_stbefitemlst_merge (loc0, sac_init, sbis)
-        end else begin // break
-          staftscstr_stbefitemlst_merge (loc0, sac_exit, sbis)
-        end // end of [if]
-      end // end of [LMLPloop1]
-    | _ => begin
-        $Loc.prerr_location loc0;
-        prerr ": INTERNAL ERROR (ats_trans3_loop)";
-        prerr ": d2exp_loopexn_tr_up"; prerr_newline ();
-        $Err.abort {void} ()
-      end // end of [_]
+implement
+d2exp_loopexn_tr_up
+  (loc0, i) = let
+//
+val lmlp =
+  the_lamloop_env_top ()
+val () = (case+ lmlp of
+  | LMLPloop0 () => () // skip it
+  | LMLPloop1 (
+      sbis, sac_init, sac_exit, od2e_post
+    ) => let
+      val () =
+        if i > 0 then (
+        case+ od2e_post of
+        | Some d2e => begin
+            let val _ = d2exp_tr_dn (d2e, s2exp_void_t0ype ()) in () end
+          end // end of [Some]
+        | None () => ()
+      ) // end of [if] // end of [val]
+    in
+      if i > 0 then begin // continue
+        staftscstr_stbefitemlst_merge (loc0, sac_init, sbis)
+      end else begin // break
+        staftscstr_stbefitemlst_merge (loc0, sac_exit, sbis)
+      end // end of [if]
+    end // end of [LMLPloop1]
+  | _ => begin
+      $Loc.prerr_location loc0;
+      prerr ": INTERNAL ERROR (ats_trans3_loop)";
+      prerr ": d2exp_loopexn_tr_up"; prerr_newline ();
+      $Err.abort {void} ()
+    end // end of [_]
+) : void // end of [val]
+//
 in
   d3exp_loopexn (loc0, i)
 end // end of [d2exp_loopexn_tr_up]
