@@ -323,8 +323,11 @@ val the_prepathlst = ref_make_elt<pathlst> (list_nil ())
 
 in // in of [local]
 
-fn the_pathlst_get (): pathlst = !the_pathlst
-fn the_pathlst_reset () = !the_pathlst := list_nil ()
+implement
+the_pathlst_get (): pathlst = !the_pathlst
+
+implement
+the_pathlst_reset () = !the_pathlst := list_nil ()
 
 implement
 the_pathlst_pop () = begin

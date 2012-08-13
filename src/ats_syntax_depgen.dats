@@ -316,6 +316,30 @@ depgen_d0exp (d0e0) =
 
 (* ****** ****** *)
 
+fun try_path_basename
+  (name: string) = let
+//
+fun loop (
+  ps: List (string), name: string
+) : Option_vt(string) =
+  case+ ps of
+  | list_cons (p, ps) => let
+      val pname =
+        sprintf ("%s/%s", @(p, name))
+      val pname = string_of_strptr (pname)
+      val test = test_file_exists (pname)
+    in
+      if test then Some_vt (pname) else loop (ps, name)
+    end // end of [list_cons]
+  | list_nil () => None_vt ()
+// end of [loop]
+//
+in
+  loop ($Fil.the_pathlst_get (), name)
+end // end of [try_path_basename]
+
+(* ****** ****** *)
+
 implement
 depgen_d0ec (d) = case+ d.d0ec_node of
 (*
@@ -324,9 +348,11 @@ depgen_d0ec (d) = case+ d.d0ec_node of
 *)
   | D0Cinclude
       (stadyn, basename) => let
-      val test = test_file_exists (basename)
+      val opt = try_path_basename (basename)
     in
-      if test then the_deplst_push (basename)
+      case+ opt of
+      | ~Some_vt (pname) => the_deplst_push (pname)
+      | ~None_vt () => ()
     end // end of [DOCinclude]
 (*
   | D0Csymintr _ => ()
@@ -380,9 +406,11 @@ depgen_d0ec (d) = case+ d.d0ec_node of
   | D0Cdynload _ => ()
 *)
   | D0Cstaload (_, basename) => let
-      val test = test_file_exists (basename)
+      val opt = try_path_basename (basename)
     in
-      if test then the_deplst_push (basename)
+      case+ opt of
+      | ~Some_vt (pname) => the_deplst_push (pname)
+      | ~None_vt () => ()
     end // end of [DOCstaload]
   | D0Clocal (ds1, ds2) => () where {
       val () = depgen_d0eclst (ds1); val () = depgen_d0eclst (ds2)
