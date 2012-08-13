@@ -319,7 +319,9 @@ depgen_d0exp (d0e0) =
 
 fun try_path_basename
   (name: string): Option_vt (string) = let
-//
+(*
+val () = printf ("try_path_basename: name = %s\n", @(name))
+*)
 fun loop (
   ps: List (string), name: string
 ) : Option_vt(string) =
