@@ -199,8 +199,8 @@ dynload "ats_ccomp_main.dats"
 (* ****** ****** *)
 
 staload Deb = "ats_debug.sats"
-staload Fil = "ats_filename.sats"
 staload Glo = "ats_global.sats"
+staload Fil = "ats_filename.sats"
 staload Par = "ats_parser.sats"
 staload PM = "ats_posmark.sats"
 
@@ -801,8 +801,12 @@ end // end of [process_DATS_def]
 (* ****** ****** *)
 
 fun process_IATS_dir
-  (dir: string): void = $Fil.the_pathlst_push (dir)
-// end of [process_IATS_dir]
+  (dir: string): void = let
+  val () = $Fil.the_pathlst_push (dir)
+  val () = $Glo.the_IATSdirlst_push (dir)
+in
+  // nothing
+end // end of [process_IATS_dir]
 
 (* ****** ****** *)
 

@@ -168,46 +168,40 @@ cleanall:: ; $(RMF) styles/atslangweb_paper.css
 #
 ######
 
-uploadall:: upload_home
+uploadall:: ; scp \
+  atslangweb_*.html \
+  */atslangweb_*.html \
+  ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/
+
 upload_home:: ; scp atslangweb_home.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/
 
-uploadall:: upload_download
 upload_download:: ; scp DOWNLOAD/atslangweb_download.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/DOWNLOAD
 
-uploadall:: upload_document
 upload_document:: ; scp DOCUMENT/atslangweb_document.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/DOCUMENT
 
-uploadall:: upload_library
 upload_library:: ; scp LIBRARY/atslangweb_library.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/LIBRARY
 
-uploadall:: upload_resource
 upload_resource:: ; scp RESOURCE/atslangweb_resource.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/RESOURCE
 
-uploadall:: upload_community
 upload_community:: ; scp COMMUNITY/atslangweb_community.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/COMMUNITY
 
-uploadall:: upload_example
 upload_example:: ; scp EXAMPLE/atslangweb_example.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/EXAMPLE
 
-uploadall:: upload_implement
 upload_implement:: ; scp IMPLEMENT/atslangweb_implement.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/IMPLEMENT
 
-uploadall:: upload_paper
 upload_paper:: ; scp PAPER/atslangweb_paper.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/PAPER
 
-uploadall:: upload_styles
 upload_styles: ; scp -r styles/*.css \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/styles
-uploadall:: upload_images
 upload_images: ; scp -r images/*.png \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/images
 

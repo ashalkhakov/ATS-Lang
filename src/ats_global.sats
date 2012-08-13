@@ -62,4 +62,9 @@ fun atsopt_dynloadfun_name_set
 
 (* ****** ****** *)
 
+fun the_IATSdirlst_get (): List(string)
+fun the_IATSdirlst_push (dir: string): void
+
+(* ****** ****** *)
+
 (* end of [ats_global.sats] *)

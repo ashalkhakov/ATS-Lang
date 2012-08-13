@@ -131,8 +131,6 @@ fun prerr_filename_base (f: filename_t): void
 
 fun the_pathlst_pop (): void
 fun the_pathlst_push (p: string): void
-fun the_pathlst_get (): List (string)
-fun the_pathlst_reset (): void
 
 (* ****** ****** *)
 

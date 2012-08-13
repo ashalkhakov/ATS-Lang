@@ -40,6 +40,7 @@ staload _(*anon*) = "ats_reference.dats"
 
 (* ****** ****** *)
 
+staload Glo = "ats_global.sats"
 staload Fil = "ats_filename.sats"
 staload Par = "ats_parser.sats"
 
@@ -317,7 +318,7 @@ depgen_d0exp (d0e0) =
 (* ****** ****** *)
 
 fun try_path_basename
-  (name: string) = let
+  (name: string): Option_vt (string) = let
 //
 fun loop (
   ps: List (string), name: string
@@ -335,13 +336,16 @@ fun loop (
 // end of [loop]
 //
 in
-  loop ($Fil.the_pathlst_get (), name)
+  loop ($Glo.the_IATSdirlst_get (), name)
 end // end of [try_path_basename]
 
 (* ****** ****** *)
 
 implement
-depgen_d0ec (d) = case+ d.d0ec_node of
+depgen_d0ec (d) = let
+in
+//
+case+ d.d0ec_node of
 (*
   | D0Cfixity _ => ()
   | D0Cnonfix _ => ()
@@ -417,7 +421,7 @@ depgen_d0ec (d) = case+ d.d0ec_node of
     } // end of [D0Clocal]
   | D0Cguadec (_, gd0c) => depgen_guad0ec_node (gd0c.guad0ec_node)
   | _ => ()
-// end of [depgen_d0ec]
+end // end of [depgen_d0ec]
 
 (* ****** ****** *)
 

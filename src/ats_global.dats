@@ -38,6 +38,39 @@
 
 (* ****** ****** *)
 
+staload "ats_list.sats"
+staload _(*anon*) = "ats_list.dats"
+staload "ats_reference.sats"
+staload _(*anon*) = "ats_reference.dats"
+
+(* ****** ****** *)
+
+staload "ats_global.sats"
+
+(* ****** ****** *)
+
+local
+
+typedef dirlst = List (string)
+
+val the_IATSdirlst = ref_make_elt<dirlst> (list_nil ())
+
+in // in of [local]
+
+implement
+the_IATSdirlst_get () = let
+  val xs = !the_IATSdirlst in list_reverse (xs)
+end // end of [the_IATSdirlst_get]
+
+implement
+the_IATSdirlst_push (dir) =
+  !the_IATSdirlst := list_cons (dir, !the_IATSdirlst)
+// end of [the_IATSdirlst_push]
+
+end // end of [local]
+
+(* ****** ****** *)
+
 val () = initialize () where {
   extern fun initialize (): void = "atsopt_global_initialize"
 } // end of [val]
