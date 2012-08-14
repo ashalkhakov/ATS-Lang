@@ -806,7 +806,7 @@ fn emit_valprim_select_varptr
   ) : void = begin case+ off of
     | OFFSETind (vpss, hit_elt) => let
         val () = fprint1_string
-          (pf | out, "ats_caselind_mac(")
+          (pf | out, "ats_caselptrind_mac(")
         val () = emit_hityp (pf | out, hit_elt)
         val () = fprint1_string (pf | out, ", ")
 //
@@ -828,7 +828,7 @@ fn emit_valprim_select_varptr
           val isext = false
           val istyarr = label_is_tyarr (hit_rec, lab)
           val () = fprint1_string
-            (pf | out, "ats_caselptr_mac(")
+            (pf | out, "ats_caselptrlab_mac(")
           val () = emit_hityp_ptr (pf | out, hit_rec)
           val () = fprint1_string (pf | out, ", ")
           val () = emit_valprim (pf | out, vp_root)
@@ -2037,7 +2037,7 @@ in
     ) => let
       val () = emit_tmpvar (pf | out, tmp)
       val () = fprint1_string (pf | out, " = ")
-      val () = fprint1_string (pf | out, "ats_caselptr_mac(")
+      val () = fprint1_string (pf | out, "ats_caselptrlab_mac(")
       val () = emit_hityp_ptr (pf | out, hit_sum)
       val () = fprint1_string (pf | out, ", ")
       val () = emit_valprim (pf | out, vp_sum)
@@ -2052,7 +2052,7 @@ in
     ) => let
       val () = emit_tmpvar (pf | out, tmp)
       val () = fprint1_string (pf | out, " = ")
-      val () = fprint1_string (pf | out, "&ats_caselptr_mac(")
+      val () = fprint1_string (pf | out, "&ats_caselptrlab_mac(")
       val () = emit_hityp_ptr (pf | out, hit_sum)
       val () = fprint1_string (pf | out, ", ")
       val () = emit_valprim (pf | out, vp_sum)
