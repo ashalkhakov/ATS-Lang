@@ -1564,7 +1564,9 @@ fn i0nclude_tr (
   end // end of [val]
 *)
   val d1cs = d0eclst_tr d0cs
+//
   val () = $Fil.the_filenamelst_pop () // a loop is to be reported if it occurs
+//
 in
   d1ec_include (loc0, d1cs)
 end // end of [i0nclude_tr]

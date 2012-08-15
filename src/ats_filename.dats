@@ -100,8 +100,9 @@ end // end of [local]
 #define THISFILENAME "ats_filename.dats"
 
 implement
-filename_is_relative (name) = let
-  val name = string1_of_string name
+filename_is_relative
+  (name) = let
+  val name = string1_of_string (name)
   fn aux {n,i:nat | i <= n}
     (name: string n, i: size_t i, dirsep: char): bool =
     if string_is_atend (name, i) then true else name[i] <> dirsep
@@ -126,6 +127,31 @@ atsopt_filename_isexi
 (* ****** ****** *)
 
 %{$
+
+ats_ptr_type
+atsopt_filename_merge (
+  ats_ptr_type ful, ats_ptr_type bas
+) {
+  char c, dirsep ;
+  char *p0, *p1, *p ;
+  int n, n1, n2, found = 0 ;
+  char *fulbas ;
+  p0 = p = (char*)ful ;
+  dirsep = atsopt_filename_theDirsep_get () ;
+  while (1) {
+    c = *p++ ;
+    if (c == 0) break ;
+    if (c == dirsep) { found = 1 ; p1 = p ; }
+  }
+  if (!found) return bas ;
+  n1 = (p1 - p0); n2 = strlen ((char*)bas) ;
+  n = n1 + n2 ;
+  fulbas = ATS_MALLOC (n+1) ;
+  memcpy (fulbas, ful, n1) ;
+  memcpy (fulbas + n1, bas, n2) ;
+  fulbas[n] = '\000' ;
+  return fulbas ;
+} // end of [atsopt_filename_merge]
 
 ats_ptr_type
 atsopt_filename_append (
@@ -318,6 +344,7 @@ typedef pathlst = List path
 
 local
 
+val the_mypath = ref_make_elt<path> ("")
 val the_pathlst = ref_make_elt<pathlst> (list_nil ())
 val the_prepathlst = ref_make_elt<pathlst> (list_nil ())
 
@@ -406,6 +433,11 @@ the_filenamelst_pop () = begin
 end // end of [the_filenamelst_pop]
 
 implement the_filenamelst_push (f0) = let
+(*
+  val () = begin
+    print "the_filenamelst_push: f0 = "; print f0; print_newline ()
+  end // end of [val]
+*)
   val fs = list_cons (!the_filename, !the_filenamelst)
 in
   !the_filenamelst := fs; !the_filename := f0;
@@ -471,37 +503,58 @@ in '{
 } end // end of [filename_make_absolute]
 
 implement
-filenameopt_make_relative (basename) = let
-  val basename = string1_of_string basename
-  fun aux_try (paths: pathlst, basename: String): Stropt =
-    case+ paths of
-    | list_cons (path, paths) => let
-        val fullname = filename_append (path, basename)
-        val fullname = string1_of_string fullname
-(*
-        val () = begin
-          print "filenameopt_make: fullname = "; print fullname; print_newline ()
-        end // end of [val]
-*)
-      in
-        case+ 0 of
-        | _ when filename_isexi (fullname) => stropt_some fullname
-        | _ => aux_try (paths, basename)
-      end
+filenameopt_make_relative
+  (basename) = let
+//
+  val basename = string1_of_string (basename)
+//
+  fun aux_try (
+    ps: pathlst, basename: String
+  ) : Stropt =
+    case+ ps of
+    | list_cons
+        (p, ps) => aux2_try (p, ps, basename)
     | list_nil () => stropt_none
-  fun aux_relative (basename: String): Stropt = let
-    val fullnameopt = aux_try (the_prepathlst_get (), basename)
+  // end of [aux_try]
+  and aux2_try (
+    p: path, ps: pathlst, basename: String
+  ) : Stropt = let
+    val fullname = filename_append (p, basename)
+(*
+    val () = begin
+      println! ("filenameopt_make: aux2_try: fullname = ", fullname)
+    end // end of [val]
+*)
   in
     case+ 0 of
-    | _ when stropt_is_some fullnameopt => fullnameopt
-    | _ when filename_isexi basename => let
-        val cwd = getcwd0 ()
-        val fullname = filename_append (cwd, basename)
-        val fullname = string1_of_string fullname
+    | _ when filename_isexi (fullname) => let
+        val fullname = string1_of_string (fullname) in stropt_some (fullname)
+      end // end of [_]
+    | _ => aux_try (ps, basename)
+  end // end of [aux2_try]
+//
+  fun aux_relative
+    (basename: String): Stropt = let
+    val filename = the_filename_get ()
+    val fullname = filename_full (filename)
+    val fullname2 = filename_merge (fullname, basename)
+(*
+    val () = printf ("aux_relative: fullname = %s\n", @(fullname))
+    val () = printf ("aux_relative: fullname2 = %s\n", @(fullname2))
+*)
+  in
+    case+ 0 of
+    | _ when filename_isexi (fullname2) =>
+        stropt_some (string1_of_string (fullname2))
+    | _ => let
+        val opt =
+          aux_try (the_pathlst_get (), basename)
+        // end of [val]
       in
-        stropt_some fullname
-      end
-    | _ => aux_try (the_pathlst_get (), basename)
+        case+ 0 of
+        | _ when stropt_is_some (opt) => opt
+        | _ => aux_try (the_prepathlst_get (), basename)
+      end // end of [_]
   end // end of [aux_relative]
   val fullnameopt = (case+ 0 of
     | _ when filename_is_relative basename => aux_relative basename

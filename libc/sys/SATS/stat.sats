@@ -40,6 +40,7 @@
 (* ****** ****** *)
 
 staload T = "libc/sys/SATS/types.sats"
+//
 typedef dev_t = $T.dev_t
 typedef ino_t = $T.ino_t
 typedef mode_t = $T.mode_t

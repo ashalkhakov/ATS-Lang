@@ -65,9 +65,10 @@ val filename_stdin : filename_t
 fun filename_isexi
   (name: string): bool = "atsopt_filename_isexi"
 fun filename_is_relative (name: string): bool
+fun filename_merge (fil: string, bas: string): string
+  = "atsopt_filename_merge"
 fun filename_append (dir: string, bas: string): string
   = "atsopt_filename_append"
-
 //
 
 fun filename_make_absolute (fullname: string): filename_t

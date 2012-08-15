@@ -288,10 +288,12 @@ fn e1xpenv_load () = () where {
 //
 // HX: load in built-in fixity declarations
 //
-fn fixity_load (ATSHOME: string): void = let
+fn fixity_load
+   (ATSHOME: string): void = let
   val basename = "prelude/fixity.ats"
-  val fullname = $Fil.filename_append (ATSHOME, basename)
-  val filename = $Fil.filename_make_absolute fullname
+  val fullname =
+    $Fil.filename_append (ATSHOME, basename)
+  val filename = $Fil.filename_make_absolute (fullname)
   val () = $Fil.the_filenamelst_push filename
   val d0cs = parse_from_filename_d0eclst_sta (filename)
   val () = $Fil.the_filenamelst_pop ()
@@ -568,7 +570,9 @@ fn do_parse_filename (
   var d0cs: $Syn.d0eclst = list_nil ()
   val () = $Fil.the_filenamelst_push filename
   val () = d0cs := $Par.parse_from_filename_d0eclst (flag, filename)
-  val () = $Fil.the_filenamelst_pop ()
+(*
+  val () = $Fil.the_filenamelst_pop () // HX-2012-08: no pop for a permanent push
+*)
 //
   val () = if debug_flag > 0 then begin
     printf ("The file [%s] is successfully parsed!\n", @(basename))
@@ -601,7 +605,9 @@ fn do_parse_stdin
   (* no support for position marking *)
   val () = $Fil.the_filenamelst_push $Fil.filename_stdin
   val d0cs = $Par.parse_from_stdin_d0eclst (flag)
-  val () = $Fil.the_filenamelst_pop ()
+(*
+  val () = $Fil.the_filenamelst_pop () // HX-2012-08: no pop for a permanent push
+*)
 in
   d0cs
 end // end of [do_parse_stdin]
@@ -616,7 +622,7 @@ fn do_trans12 (
   val debug_flag = $Deb.debug_flag_get ()
 //
   val () = $Trans1.initialize ()
-  val d1cs = $Trans1.d0eclst_tr d0cs
+  val d1cs = $Trans1.d0eclst_tr (d0cs)
   val () = $Trans1.finalize ()
   val () = if debug_flag > 0 then begin
     print "The 1st translation (fixity) of [";
