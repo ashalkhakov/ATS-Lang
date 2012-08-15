@@ -44,6 +44,10 @@
 
 (* ****** ****** *)
 
+macdef list_sing (x) = list_cons (,(x), list_nil)
+
+(* ****** ****** *)
+
 fun list_is_cons
   {a:type} {n:nat} (xs: list (a, n)): bool (n > 0)
 // end of [list_is_cons]
