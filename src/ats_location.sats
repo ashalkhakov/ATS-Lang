@@ -50,7 +50,7 @@ abstype location_t // boxed type
 
 (* ****** ****** *)
 
-val location_none : location_t (* nonexistent location *)
+val location_dummy : location_t (* nonexistent location *)
 
 (* ****** ****** *)
 

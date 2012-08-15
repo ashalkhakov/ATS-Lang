@@ -53,13 +53,8 @@ local
 
 typedef dirlst = List (string)
 
-(*
 val the_IATSdirlst =
   ref_make_elt<dirlst> (list_nil ())
-// end of [the_IATSdirlst]
-*)
-val the_IATSdirlst =
-  ref_make_elt<dirlst> (list_sing ("."))
 // end of [the_IATSdirlst]
 
 in // in of [local]

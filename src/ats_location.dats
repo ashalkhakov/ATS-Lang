@@ -64,8 +64,9 @@ assume location_t = location
 
 (* ****** ****** *)
 
-implement location_none = '{
-  filename= $Fil.filename_none
+implement
+location_dummy = '{
+  filename= $Fil.filename_dummy
 , begpos_line= ~1
 , begpos_loff= ~1
 , begpos_toff= ~1L

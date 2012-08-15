@@ -725,7 +725,7 @@ fun m1acdeflst_tr (knd: int, d1cs: m1acdeflst): void = let
         | cons (arg, args) => cons (auxarg arg, auxarglst args) | nil () => nil ()
       end // end of [auxarglst]
     } // end of [where]
-    val def = d2exp_empty ($Loc.location_none)
+    val def = d2exp_empty ($Loc.location_dummy)
     val d2m = d2mac_make (
       d1c.m1acdef_loc, d1c.m1acdef_sym, knd, args, def
     ) // end of [d2mac_make]

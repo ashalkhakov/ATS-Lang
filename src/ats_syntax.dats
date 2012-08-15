@@ -466,7 +466,7 @@ implement prerr_s0rtq (q) = prerr_mac (fprint_s0rtq, q)
 (* ****** ****** *)
 
 implement s0rtq_none () = '{
-  s0rtq_loc= $Loc.location_none, s0rtq_node= S0RTQnone ()
+  s0rtq_loc= $Loc.location_dummy, s0rtq_node= S0RTQnone ()
 }
 
 implement s0rtq_str (s) = '{
@@ -780,7 +780,7 @@ implement prerr_s0taq (q) = prerr_mac (fprint_s0taq, q)
 (* ****** ****** *)
 
 implement s0taq_none () = '{
-  s0taq_loc= $Loc.location_none, s0taq_node= S0TAQnone ()
+  s0taq_loc= $Loc.location_dummy, s0taq_node= S0TAQnone ()
 } // end of [s0taq_node]
 
 implement s0taq_fildot (fname) = '{
@@ -838,7 +838,7 @@ implement prerr_d0ynq (q) = prerr_mac (fprint_d0ynq, q)
 (* ****** ****** *)
 
 implement d0ynq_none () = '{
-  d0ynq_loc= $Loc.location_none, d0ynq_node= D0YNQnone ()
+  d0ynq_loc= $Loc.location_dummy, d0ynq_node= D0YNQnone ()
 }
 
 implement d0ynq_fildot (fname) = '{

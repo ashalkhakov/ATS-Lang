@@ -657,24 +657,24 @@ instr_function
 
 implement
 instr_funlab (fl) = '{
-  instr_loc= $Loc.location_none, instr_node= INSTRfunlab (fl)
+  instr_loc= $Loc.location_dummy, instr_node= INSTRfunlab (fl)
 } // end of [instr_funlab]
 
 (* ****** ****** *)
 
 implement
 instr_prfck_beg (d2c) = '{
-  instr_loc= $Loc.location_none
+  instr_loc= $Loc.location_dummy
 , instr_node= INSTRprfck_beg (d2c)
 }
 implement
 instr_prfck_tst (d2c) = '{
-  instr_loc= $Loc.location_none
+  instr_loc= $Loc.location_dummy
 , instr_node= INSTRprfck_tst (d2c)
 }
 implement
 instr_prfck_end (d2c) = '{
-  instr_loc= $Loc.location_none
+  instr_loc= $Loc.location_dummy
 , instr_node= INSTRprfck_end (d2c)
 }
 

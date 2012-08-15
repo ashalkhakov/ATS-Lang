@@ -68,48 +68,66 @@ fn s0rtq_is_none (q: $Syn.s0rtq): bool =
 
 (* ****** ****** *)
 
-implement e1xp_app (loc, e_fun, loc_arg, es_arg) =
-  '{ e1xp_loc= loc, e1xp_node= E1XPapp (e_fun, loc_arg, es_arg) } 
+implement
+e1xp_app (
+  loc, e_fun, loc_arg, es_arg
+) = '{
+  e1xp_loc= loc
+, e1xp_node= E1XPapp (e_fun, loc_arg, es_arg)
+} // end of [e1xp_app]
 
-implement e1xp_char (loc, c) =
-  '{ e1xp_loc= loc, e1xp_node= E1XPchar c }
+implement
+e1xp_char
+  (loc, c) = '{
+  e1xp_loc= loc, e1xp_node= E1XPchar (c)
+} // end of [e1xp_char]
 
-implement e1xp_float (loc, f) = '{
+implement
+e1xp_float (loc, f) = '{
   e1xp_loc= loc, e1xp_node= E1XPfloat (f: string)
-}
+} // end of [e1xp_float]
 
-implement e1xp_ide (loc, id) = '{
+implement
+e1xp_ide (loc, id) = '{
   e1xp_loc= loc, e1xp_node= E1XPide (id: sym_t)
 }
 
-implement e1xp_int (loc, int) = '{
+implement
+e1xp_int (loc, int) = '{
   e1xp_loc= loc, e1xp_node= E1XPint (int: string)
 }
 
-implement e1xp_list (loc, es) = '{
+implement
+e1xp_list (loc, es) = '{
   e1xp_loc= loc, e1xp_node= E1XPlist (es: e1xplst)
 }
 
-implement e1xp_none (loc) = '{
-  e1xp_loc= loc, e1xp_node= E1XPnone ()
-} // end of [e1xp_none]
-
-implement e1xp_string (loc, str, len) = '{
+implement
+e1xp_string (loc, str, len) = '{
   e1xp_loc= loc, e1xp_node= E1XPstring (str, len)
 }
 
-implement e1xp_undef (loc) = '{
+implement
+e1xp_undef (loc) = '{
   e1xp_loc= loc, e1xp_node= E1XPundef ()
 } // end of [e1xp_undef]
 
-implement e1xp_cstsp (loc, cst) = '{
+implement
+e1xp_cstsp (loc, cst) = '{
   e1xp_loc= loc, e1xp_node= E1XPcstsp (cst)
-}
+} // end of [e1xp_cstsp]
+
+implement
+e1xp_none (loc) = '{
+  e1xp_loc= loc, e1xp_node= E1XPnone ()
+} // end of [e1xp_none]
 
 (* ****** ****** *)
 
-implement e1xp_true  (): e1xp = e1xp_int ($Loc.location_none, "1")
-implement e1xp_false (): e1xp = e1xp_int ($Loc.location_none, "0")
+implement e1xp_true
+  (): e1xp = e1xp_int ($Loc.location_dummy, "1")
+implement e1xp_false
+  (): e1xp = e1xp_int ($Loc.location_dummy, "0")
 
 (* ****** ****** *)
 

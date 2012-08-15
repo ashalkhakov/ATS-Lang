@@ -293,7 +293,7 @@ fn fixity_load
   val basename = "prelude/fixity.ats"
   val fullname =
     $Fil.filename_append (ATSHOME, basename)
-  val filename = $Fil.filename_make_absolute (fullname)
+  val filename = $Fil.filename_make_full (fullname)
   val () = $Fil.the_filenamelst_push filename
   val d0cs = parse_from_filename_d0eclst_sta (filename)
   val () = $Fil.the_filenamelst_pop ()
@@ -319,7 +319,7 @@ in // in of [local]
 fn pervasive_load
   (ATSHOME: string, basename: string): void = let
   val fullname = $Fil.filename_append (ATSHOME, basename)
-  val filename = $Fil.filename_make_absolute fullname
+  val filename = $Fil.filename_make_full (fullname)
   val () = $Fil.the_filenamelst_push (filename)
 (*
   val () = begin
@@ -515,7 +515,7 @@ in // in of [local]
 fn input_filename_get
   (): fil_t = let
   val inp = !the_input_filename in
-  !the_input_filename := $Fil.filename_none; inp
+  !the_input_filename := $Fil.filename_dummy; inp
 end // end of [input_filename_get]
 
 fn input_filename_set (fil: fil_t) = (!the_input_filename := fil)
@@ -543,13 +543,16 @@ end // end of [local]
 (* ****** ****** *)
 
 fn do_parse_filename (
-    flag: int, param: param_t, basename: string
-  ) : $Syn.d0eclst = let
-  val debug_flag = $Deb.debug_flag_get ()
-  val () = if debug_flag > 0 then let
-    val cwd = getcwd0 () where { // [atslib_getcwd]
-      // is defined in the file "libc/SATS/unistd.sats"
-      extern fun getcwd0 (): String = "atslib_getcwd0"
+  flag: int
+, param: param_t
+, basename: string
+) : $Syn.d0eclst = let
+  val debflag =
+    $Deb.debug_flag_get ()
+  val () = if
+    debflag > 0 then let
+    val cwd = getcwd0 () where {
+      extern fun getcwd0 (): String = "atslib_getcwd0" // libc/SATS/unistd.sats
     } // end of [val]
   in
     print "cwd = "; print cwd; print_newline ()
@@ -568,13 +571,13 @@ fn do_parse_filename (
   val () = if param.posmark > POSMARK_NONE then $PM.posmark_enable ()
 //
   var d0cs: $Syn.d0eclst = list_nil ()
-  val () = $Fil.the_filenamelst_push filename
+  val () = $Fil.the_filenamelst_push (filename)
   val () = d0cs := $Par.parse_from_filename_d0eclst (flag, filename)
 (*
   val () = $Fil.the_filenamelst_pop () // HX-2012-08: no pop for a permanent push
 *)
 //
-  val () = if debug_flag > 0 then begin
+  val () = if debflag > 0 then begin
     printf ("The file [%s] is successfully parsed!\n", @(basename))
   end // end of [if]
 //
@@ -795,12 +798,12 @@ in
     val part2 = string1_of_strbuf (part2)
     val sym = $Sym.symbol_make_string (part1)
     val e1xp = $SEXP1.e1xp_string
-      ($Loc.location_none, part2, (int_of_size)ni)
+      ($Loc.location_dummy, part2, (int_of_size)ni)
   in
     $TransEnv1.the_e1xpenv_add (sym, e1xp)
   end else let // EQ is not in [def]
     val sym = $Sym.symbol_make_string (def)
-    val e1xp = $SEXP1.e1xp_none ($Loc.location_none)
+    val e1xp = $SEXP1.e1xp_none ($Loc.location_dummy)
   in
     $TransEnv1.the_e1xpenv_add (sym, e1xp)
   end // end of [if]

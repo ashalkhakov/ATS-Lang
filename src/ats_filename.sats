@@ -57,7 +57,7 @@ fun thePredir_get
 
 //
 
-val filename_none : filename_t
+val filename_dummy : filename_t
 val filename_stdin : filename_t
 
 //
@@ -71,11 +71,17 @@ fun filename_append (dir: string, bas: string): string
   = "atsopt_filename_append"
 //
 
-fun filename_make_absolute (fullname: string): filename_t
+fun filename_make_full (full: string): filename_t
+fun filename_make_partfull (part: string, full: string): filename_t
+
+//
+
 fun filenameopt_make_relative (name: string): Option_vt (filename_t)
 
 //
 
+fun filename_part
+  (f: filename_t): string
 fun filename_full
   (f: filename_t): string = "atsopt_filename_full"
 fun filename_full_sym (f: filename_t): $Sym.symbol_t

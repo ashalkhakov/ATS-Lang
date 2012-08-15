@@ -345,17 +345,17 @@ fun loop (
 // end of [loop]
 //
 val filename = $Fil.the_filename_get ()
-val fullname = $Fil.filename_full (filename)
-val fullname2 = $Fil.filename_merge (fullname, name)
-val isexi = test_file_exists (fullname2)
+val partname = $Fil.filename_part (filename)
+val partname2 = $Fil.filename_merge (partname, name)
+val isexi = test_file_exists (partname2)
 //
 in
   if isexi then let
-    val fullname2 =
-      $Fil.path_normalize (fullname2)
+    val partname2 =
+      $Fil.path_normalize (partname2)
     // end of [val]
   in
-    Some_vt (fullname2)
+    Some_vt (partname2)
   end else
     loop ($Glo.the_IATSdirlst_get (), name)
   // end of [if]

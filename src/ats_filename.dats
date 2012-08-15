@@ -180,20 +180,26 @@ atsopt_filename_append (
 (* ****** ****** *)
 
 typedef filename = '{
-  filename_full= string, filename_full_sym= $Sym.symbol_t
+  filename_part= string
+, filename_full= string
+, filename_full_sym= $Sym.symbol_t
 } // end of [filename]
 
 assume filename_t = filename
 
 (* ****** ****** *)
 
-implement filename_none = '{
-  filename_full= "(none)"
+implement
+filename_dummy = '{
+  filename_part= ""
+, filename_full= ""
 , filename_full_sym= $Sym.symbol_empty
 } // end of [filename_none]
 
-implement filename_stdin = '{
-  filename_full= "stdin"
+implement
+filename_stdin = '{
+  filename_part= "stdin"
+, filename_full= "stdin"
 , filename_full_sym= $Sym.symbol_STDIN
 } // end of [filename_stdin]
 
@@ -237,7 +243,9 @@ implement prerr_filename (x) = prerr_mac (fprint_filename, x)
 
 (* ****** ****** *)
 
-// implement fprint_filename_base (pf | out, x) = (*implemented in C*)
+(*
+implement fprint_filename_base (pf | out, x) = // implemented in C
+*)
 
 implement print_filename_base (x) = print_mac (fprint_filename_base, x)
 implement prerr_filename_base (x) = prerr_mac (fprint_filename_base, x)
@@ -364,16 +372,18 @@ the_pathlst_pop () = begin
 end // end of [the_pathlst_pop]
 
 implement
-the_pathlst_push (dirname) = let
+the_pathlst_push
+  (dirname) = let
 (*
-  val dirname = (case+ 0 of
-    | _ when filename_is_relative dirname => let
-        val cwd = getcwd0 ()
-        val dirname = filename_append (cwd, dirname)
-      in
-        path_normalize (dirname)
-      end // end of [_ when ...]
-    | _ => dirname // end of [_]
+  val isrel =
+    filename_is_relative (dirname)
+  val dirname = (
+    if isrel then let
+      val cwd = getcwd0 ()
+      val dirname = filename_append (cwd, dirname)
+    in
+      path_normalize (dirname)
+    end else dirname // end of [if]
   ) : string // end of [val]
 *)
 (*
@@ -409,12 +419,12 @@ local
 
 typedef filenamelst = List filename
 
-val the_filename = ref_make_elt<filename> filename_none
+val the_filename = ref_make_elt<filename> filename_dummy
 val the_filenamelst = ref_make_elt<filenamelst> (list_nil ())
 
 in // in of [local]
 
-fn the_filename_reset (): void = !the_filename := filename_none
+fn the_filename_reset (): void = !the_filename := filename_dummy
 fn the_filenamelst_reset (): void = !the_filenamelst := list_nil ()
 
 implement the_filename_get (): filename = !the_filename
@@ -489,20 +499,40 @@ end // end of [local]
 
 (* ****** ****** *)
 
-implement filename_full f = f.filename_full
-implement filename_full_sym f = f.filename_full_sym
+implement filename_part (f) = f.filename_part
+implement filename_full (f) = f.filename_full
+implement filename_full_sym (f) = f.filename_full_sym
 
 (* ****** ****** *)
 
 implement
-filename_make_absolute
-  (fullname) = let
-  val fullname_id = fullname
-  val fullname_sym = $Sym.symbol_make_string fullname
+filename_make_full
+  (full) = filename_make_partfull (full, full)
+// end of [filename_make_full]
+
+implement
+filename_make_partfull
+  (part, full) = let
+  val fullname_sym = $Sym.symbol_make_string (full)
 in '{
-  filename_full= fullname
+  filename_part= part
+, filename_full= full
 , filename_full_sym= fullname_sym
-} end // end of [filename_make_absolute]
+} end // end of [filename_make_partfull]
+
+(* ****** ****** *)
+
+fun partname_fullize
+  (partname: string): string = let
+  val isrel = filename_is_relative (partname)
+in
+  if isrel then let
+    val cwd = getcwd0 ()
+    val fullname = filename_append (cwd, partname)
+  in
+    path_normalize (fullname)
+  end else partname
+end // end of [partname_fullize]
 
 implement
 filenameopt_make_relative
@@ -521,16 +551,16 @@ filenameopt_make_relative
   and aux2_try (
     p: path, ps: pathlst, basename: String
   ) : Stropt = let
-    val fullname = filename_append (p, basename)
+    val partname = filename_append (p, basename)
 (*
     val () = begin
-      println! ("filenameopt_make: aux2_try: fullname = ", fullname)
+      println! ("filenameopt_make: aux2_try: partname = ", partname)
     end // end of [val]
 *)
   in
     case+ 0 of
-    | _ when filename_isexi (fullname) => let
-        val fullname = string1_of_string (fullname) in stropt_some (fullname)
+    | _ when filename_isexi (partname) => let
+        val partname = string1_of_string (partname) in stropt_some (partname)
       end // end of [_]
     | _ => aux_try (ps, basename)
   end // end of [aux2_try]
@@ -538,41 +568,40 @@ filenameopt_make_relative
   fun aux_relative
     (basename: String): Stropt = let
     val filename = the_filename_get ()
-    val fullname = filename_full (filename)
-    val fullname2 = filename_merge (fullname, basename)
+    val partname = filename_part (filename)
+    val partname2 = filename_merge (partname, basename)
 (*
-    val () = printf ("aux_relative: fullname = %s\n", @(fullname))
-    val () = printf ("aux_relative: fullname2 = %s\n", @(fullname2))
+    val () = printf ("aux_relative: partname = %s\n", @(partname))
+    val () = printf ("aux_relative: partname2 = %s\n", @(partname2))
 *)
   in
     case+ 0 of
-    | _ when filename_isexi (fullname2) =>
-        stropt_some (string1_of_string (fullname2))
+    | _ when filename_isexi (partname2) =>
+        stropt_some (string1_of_string (partname2))
     | _ => let
-        val opt =
-          aux_try (the_pathlst_get (), basename)
-        // end of [val]
+        val opt = aux_try (the_pathlst_get (), basename)
       in
         case+ 0 of
         | _ when stropt_is_some (opt) => opt
         | _ => aux_try (the_prepathlst_get (), basename)
       end // end of [_]
   end // end of [aux_relative]
-  val fullnameopt = (case+ 0 of
-    | _ when filename_is_relative basename => aux_relative basename
+  val opt = (case+ 0 of
+    | _ when
+        filename_is_relative basename => aux_relative (basename)
     | _ => begin // [basename] is absolute
         if filename_isexi basename then stropt_some basename else stropt_none
       end // end of [_]
   ) : Stropt // end of [val]
 in
-  if stropt_is_some fullnameopt then let
-    val fullname = stropt_unsome fullnameopt
-    val fullname = path_normalize fullname
+  if stropt_is_some (opt) then let
+    val partname = stropt_unsome (opt)
+    val fullname = partname_fullize (partname)
   in
-    Some_vt (filename_make_absolute fullname)
-  end else begin
+    Some_vt (filename_make_partfull (partname, fullname))
+  end else
     None_vt ()
-  end // end of [if]
+  // end of [if]
 end // end of [filenameopt_make_relative]
 
 (* ****** ****** *)
