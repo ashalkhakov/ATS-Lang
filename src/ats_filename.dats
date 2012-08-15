@@ -244,8 +244,6 @@ implement prerr_filename_base (x) = prerr_mac (fprint_filename_base, x)
 
 (* ****** ****** *)
 
-typedef path = string
-
 local
 
 staload "ats_list.sats"
@@ -253,7 +251,8 @@ staload _(*anon*) = "ats_list.dats"
 
 in // in of [local]
 
-fun path_normalize (s0: path): path = let
+implement
+path_normalize (s0) = let
   fun loop1 {n0,i0:nat | i0 <= n0} (
     dirsep: char
   , s0: string n0, n0: size_t n0, i0: size_t i0, dirs: &List_vt string
@@ -366,21 +365,24 @@ end // end of [the_pathlst_pop]
 
 implement
 the_pathlst_push (dirname) = let
-  val dirname_full = (case+ 0 of
+(*
+  val dirname = (case+ 0 of
     | _ when filename_is_relative dirname => let
-        val cwd = getcwd0 () in filename_append (cwd, dirname)
+        val cwd = getcwd0 ()
+        val dirname = filename_append (cwd, dirname)
+      in
+        path_normalize (dirname)
       end // end of [_ when ...]
-    | _ => dirname
+    | _ => dirname // end of [_]
   ) : string // end of [val]
-  val dirname_full = path_normalize (dirname_full)
+*)
 (*
   val () = begin
     print "the_pathlst_push: dirname = "; print dirname; print_newline ();
-    print "the_pathlst_push: dirname_full = "; print dirname_full; print_newline ();
   end // end of [val]
 *)
 in
-  !the_pathlst := list_cons (dirname_full, !the_pathlst)
+  !the_pathlst := list_cons (dirname, !the_pathlst)
 end // end of [the_pathlst_push]
 
 (* ****** ****** *)

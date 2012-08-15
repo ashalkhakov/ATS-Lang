@@ -322,6 +322,7 @@ fun try_path_basename
 (*
 val () = printf ("try_path_basename: name = %s\n", @(name))
 *)
+//
 fun loop (
   ps: List (string), name: string
 ) : Option_vt(string) =
@@ -332,13 +333,32 @@ fun loop (
       val pname = string_of_strptr (pname)
       val test = test_file_exists (pname)
     in
-      if test then Some_vt (pname) else loop (ps, name)
+      if test then let
+        val pname = $Fil.path_normalize (pname)
+      in
+        Some_vt (pname)
+      end else
+        loop (ps, name)
+      // end of [if]
     end // end of [list_cons]
   | list_nil () => None_vt ()
 // end of [loop]
 //
+val filename = $Fil.the_filename_get ()
+val fullname = $Fil.filename_full (filename)
+val fullname2 = $Fil.filename_merge (fullname, name)
+val isexi = test_file_exists (fullname2)
+//
 in
-  loop ($Glo.the_IATSdirlst_get (), name)
+  if isexi then let
+    val fullname2 =
+      $Fil.path_normalize (fullname2)
+    // end of [val]
+  in
+    Some_vt (fullname2)
+  end else
+    loop ($Glo.the_IATSdirlst_get (), name)
+  // end of [if]
 end // end of [try_path_basename]
 
 (* ****** ****** *)

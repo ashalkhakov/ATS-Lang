@@ -320,7 +320,7 @@ fn pervasive_load
   (ATSHOME: string, basename: string): void = let
   val fullname = $Fil.filename_append (ATSHOME, basename)
   val filename = $Fil.filename_make_absolute fullname
-  val () = $Fil.the_filenamelst_push filename
+  val () = $Fil.the_filenamelst_push (filename)
 (*
   val () = begin
     print "pervasive_load: parse: fullname = "; print fullname; print_newline ()
@@ -602,11 +602,13 @@ end // end of [do_parse_filename]
 
 fn do_parse_stdin
   (flag: int): $Syn.d0eclst = let
-  (* no support for position marking *)
-  val () = $Fil.the_filenamelst_push $Fil.filename_stdin
-  val d0cs = $Par.parse_from_stdin_d0eclst (flag)
+//
+// no support for position marking
+//
+val () = $Fil.the_filenamelst_push ($Fil.filename_stdin)
+val d0cs = $Par.parse_from_stdin_d0eclst (flag)
 (*
-  val () = $Fil.the_filenamelst_pop () // HX-2012-08: no pop for a permanent push
+val () = $Fil.the_filenamelst_pop () // HX-2012-08: no pop for a permanent push
 *)
 in
   d0cs
@@ -832,7 +834,9 @@ val ATSHOME = getenv () where {
   extern fun getenv (): string = "atsopt_ATSHOME_getenv_exn"
 } // end of [val]
 //
-val () = $Fil.the_prepathlst_push ATSHOME // for the run-time and atslib
+// HX: for runtime and atslib
+val () = $Fil.the_prepathlst_push (ATSHOME)
+//
 val () = $TransEnv2.trans2_env_initialize ()
 //
 fn warning (str: string) = begin

@@ -130,12 +130,18 @@ fun prerr_filename_base (f: filename_t): void
 
 (* ****** ****** *)
 
-fun the_pathlst_pop (): void
-fun the_pathlst_push (p: string): void
+typedef path = string
+
+fun path_normalize (s0: path): path
 
 (* ****** ****** *)
 
-fun the_prepathlst_push (p: string): void
+fun the_pathlst_pop (): void
+fun the_pathlst_push (p: path): void
+
+(* ****** ****** *)
+
+fun the_prepathlst_push (p: path): void
 
 (* ****** ****** *)
 
