@@ -202,8 +202,8 @@ The syntax for texting function calls (TFC's) is given as follows:
 
 #textpre('\
 funarg    ::= DSTRING | SSTRING | INTEGER | ID | funcall
-funarglst ::= /*empty*/ | fuarg | funarg "," funarglst
-funcall   ::= "\\\#"ID{funres}(funarglst) | "\\\#"ID[funres]{funarglst}
+funarglst ::= /*empty*/ | funarg | funarg "," funarglst
+funcall   ::= "\\\#" ID {funres} "(" funarglst ")" | "\\\#" ID {funres} "{" funarglst "}"
 funres    ::= "[" ID "]"
 ')#comment("textpre")
 
@@ -237,16 +237,17 @@ Time of the last modification: \\\#timestamp[NOW]()
 
 #para("\
 If we execute the following command-line:
+
 #textpre("\
-#command("atsdoc") -do foo_atxt.dats -to foo_atxt.txt -i foo.atxt
+#command("atsdoc") --outcode foo_atxt.dats --outdata foo_atxt.txt -i foo.atxt
 ")#comment("textpre")
 
 then two files named #filename("foo_atxt.dats") and #filename("foo_atxt.txt")
-are generated. It also possible to do the same thing by executing the
+are generated. It is also possible to do the same thing by executing the
 following command-line:
 
 #textpre("\
-#command("atsdoc") -do foo_atxt.dats -i foo.atxt > foo_atxt.txt
+#command("atsdoc") --outcode foo_atxt.dats -i foo.atxt > foo_atxt.txt
 ")#comment("textpre")
 
 ")#comment("para")
@@ -256,19 +257,19 @@ The content of #filename("foo_atxt.dats") is listed as follows:
 
 #ats2xhtmld('\
 (*
-foo.atxt: 2(line=1, offs=2) -- 12(line=1, offs=12)
+foo.atxt: 10(line=1, offs=10) -- 18(line=1, offs=18)
 *)
-val _tok1 = author()
-val () = theAtextMap_insert_str ("_tok1", _tok1)
+val __tok1 = author()
+val () = theAtextMap_insert_str ("__tok1", __tok1)
 
 (*
-foo.atxt: 45(line=2, offs=33) -- 61(line=2, offs=49)
+foo.atxt: 51(line=2, offs=33) -- 67(line=2, offs=49)
 *)
 val NOW = timestamp()
 val () = theAtextMap_insert_str ("NOW", NOW)
 ')#comment("ats2xhtmld")
 
-Note that the name of the identifier #code("_tok1") is generated
+Note that the name of the identifier #code("__tok1") is generated
 automatically while the name of the identifer #code("NOW") is taken from
 the input. The embedded location information in #filename("foo_atxt.dats")
 is present primarily for the purpose of debugging.
@@ -279,7 +280,7 @@ is present primarily for the purpose of debugging.
 The content of #filename("foo_atxt.txt") is listed as follows:
 
 #textpre("
-Author: \\\#_tok1$
+Author: \\\#__tok1$
 Time of the last modification: \\\#NOW$
 ")#comment("textpre")
 
@@ -380,31 +381,31 @@ which is declared in #myatsimplink("libatsdoc/SATS/libatsdoc_atext.sats", "libat
 follows:
 
 #ats2xhtmls("\
-datatype text =
+datatype atext =
 //
   | ATEXTnil of () // empty text
 //
   | ATEXTstrcst of string // string constants
   | ATEXTstrsub of string // strings containing marked tokens
 //
-  | ATEXTapptxt2 of (text, text) // text concatenation
+  | ATEXTapptxt2 of (atext, atext) // text concatenation
   | ATEXTappstr2 of (string, string) // string concatenation
 //
-  | ATEXTapptxt3 of (text, text, text) // text concatenation
+  | ATEXTapptxt3 of (atext, atext, atext) // text concatenation
   | ATEXTappstr3 of (string, string, string) // string concatenation
 //
-  | ATEXTconcatxt of textlst // text concatenation
-  | ATEXTconcatxtsep of (textlst, text(*sep*)) // text concatenation with separator
-// end of [text]
+  | ATEXTconcatxt of atextlst // text concatenation
+  | ATEXTconcatxtsep of (atextlst, atext(*sep*)) // text concatenation with separator
+// end of [atext]
 
 where
-textlst = List (text)
+atextlst = List (atext)
 and
 stringlst = List (string)
 ")#comment("ats2xhtmls")
 
 The meaning of all the data constructors associated with the datatype
-#code("text") should be easily understood except #code("ATEXTstrsub"), which
+#code("atext") should be easily understood except #code("ATEXTstrsub"), which
 indicates that its (string) argument may contain marked tokens, that is,
 symbols formed by placing identifiers between the two characters '\\\#' and
 '$'. When stringizing a value of the form #code("ATEXTstrsub")(str) for some
