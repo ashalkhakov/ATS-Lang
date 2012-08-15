@@ -58,8 +58,8 @@ fun substrcmp
 
 (* ****** ****** *)
 
-fun strncmp {n:nat} (
-  str1: string, str2: string, n: size_t n
+fun strncmp (
+  str1: string, str2: string, n: size_t
 ) :<> int = "mac#atslib_strncmp" // end of [strncmp]
 
 fun substrncmp
