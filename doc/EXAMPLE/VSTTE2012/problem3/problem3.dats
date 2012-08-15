@@ -514,15 +514,17 @@ arrseg_get
   {l}{x}{xs}{f,n}{i}
   (pf1, pf2 | p, f, i) = let
   val fi = f+i
+  val pi = p + (size1_of_int1)fi*sizeof<a>
 in
-  $UN.ptrget (p + (size1_of_int1)fi*sizeof<a>)
+  $UN.ptrget ($UN.cast2Ptr1(pi))
 end // end of [arrseg_get]
 
 implement{a}
 arrseg0_set
   {l}{x}{xs}{f}
   (pf | p, f, x) = let
-  val () = $UN.ptrset (p + (size1_of_int1)f*sizeof<a>, x)
+  val pi = p + (size1_of_int1)f*sizeof<a>
+  val () = $UN.ptrset ($UN.cast2Ptr1(pi), x)
   prval () = __assert (pf) where {
     extern prfun __assert (
       pf: !arrseg0_v (a, l, f, 1) >> arrseg_v (a, l, ilist_sing(x), f, 1)
