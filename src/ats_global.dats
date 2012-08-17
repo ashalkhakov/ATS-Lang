@@ -38,8 +38,6 @@
 
 (* ****** ****** *)
 
-staload "ats_list.sats"
-staload _(*anon*) = "ats_list.dats"
 staload "ats_reference.sats"
 staload _(*anon*) = "ats_reference.dats"
 
@@ -60,9 +58,7 @@ val the_IATSdirlst =
 in // in of [local]
 
 implement
-the_IATSdirlst_get () = let
-  val xs = !the_IATSdirlst in list_reverse (xs)
-end // end of [the_IATSdirlst_get]
+the_IATSdirlst_get () = !the_IATSdirlst
 
 implement
 the_IATSdirlst_push (dir) =

@@ -168,10 +168,8 @@ getcwd_v (m:int, l:addr, addr) =
 // end of [getcwd_v]
 
 fun getcwd {m:nat} {l:addr} (
-  pf: !b0ytes (m) @ l >> getcwd_v (m, l, l1)
-| p: ptr l, m: size_t m
-) : #[l1:addr] ptr l1
-  = "mac#atslib_getcwd"
+  pf: !b0ytes (m) @ l >> getcwd_v (m, l, l1) | p: ptr l, m: size_t m
+) : #[l1:addr] ptr (l1) = "mac#atslib_getcwd"
 // end of [getcwd]
 
 (* ****** ****** *)

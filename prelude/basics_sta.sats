@@ -761,6 +761,9 @@ stadef cloref = cloref_t0ype_type
 viewtypedef // HX: for commenting only
 SHARED_viewt0ype_viewt0ype (a: vt0p) = a
 stadef SHARED = SHARED_viewt0ype_viewt0ype
+viewtypedef // HX: for commenting only
+NSHARED_viewt0ype_viewt0ype (a: vt0p) = a
+stadef NSHARED = NSHARED_viewt0ype_viewt0ype
 
 (* ****** ****** *)
 //

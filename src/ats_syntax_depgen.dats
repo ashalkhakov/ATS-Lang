@@ -329,8 +329,7 @@ fun loop (
   case+ ps of
   | list_cons (p, ps) => let
       val pname =
-        sprintf ("%s/%s", @(p, name))
-      val pname = string_of_strptr (pname)
+        $Fil.filename_append (p, name)
       val test = test_file_exists (pname)
     in
       if test then let
@@ -437,7 +436,7 @@ case+ d.d0ec_node of
       case+ opt of
       | ~Some_vt (pname) => the_deplst_push (pname)
       | ~None_vt () => ()
-    end // end of [DOCstaload]
+    end // end of [D0Cstaload]
   | D0Clocal (ds1, ds2) => () where {
       val () = depgen_d0eclst (ds1); val () = depgen_d0eclst (ds2)
     } // end of [D0Clocal]
