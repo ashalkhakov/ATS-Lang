@@ -252,8 +252,8 @@ fn atsopt_usage (cmd: string): void = begin
   print "  --gline (for generating line pragma information on source code)\n";
   print "  --debug=0 (for disabling the generation of debugging information)\n";
   print "  --debug=1 (for enabling the generation of debugging information)\n";
-  print "  -h (for printing out the usage)\n";
-  print "  --help (for printing out the usage)\n";
+  print "  -h (for printing out this help usage)\n";
+  print "  --help (for printing out this help usage)\n";
   print "  -v (for printing out the version)\n";
   print "  --version (for printing out the version)\n";
   print_newline ()
