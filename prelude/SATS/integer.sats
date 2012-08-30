@@ -1201,13 +1201,12 @@ overload fprint with fprint_ullint
 
 (* ****** ****** *)
 
-fun print_ullint (llu: ullint):<!ref> void
-  = "atspre_print_ullint"
-
-and prerr_ullint (llu: ullint):<!ref> void
-  = "atspre_prerr_ullint"
-
+fun print_ullint
+  (llu: ullint):<!ref> void = "atspre_print_ullint"
 overload print with print_ullint
+
+fun prerr_ullint
+  (llu: ullint):<!ref> void = "atspre_prerr_ullint"
 overload prerr with prerr_ullint
 
 (* ****** ****** *)
