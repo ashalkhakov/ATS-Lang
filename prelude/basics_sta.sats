@@ -413,6 +413,14 @@ stadef without = without_viewt0ype_t0ype
 //
 (* ****** ****** *)
 
+viewdef vtakeout
+  (v1: view, v2: view) = (v2, v2 -<lin,prf> v1)
+viewtypedef vttakeout
+  (vt1: viewt@ype, vt2: viewt@ype) = (vt2 -<lin,prf> vt1 | vt2)
+// end of [vttakeout]
+
+(* ****** ****** *)
+
 (*
 //
 // HX: support for union type may be removed
@@ -655,8 +663,9 @@ typedef Sgn = [i:int | ~1 <= i; i <= 1] int i
 typedef Ptr = [l:addr] ptr (l)
 typedef Ptr1 = [l:addr | l > null] ptr (l)
 
-typedef String = [n:int | n >= 0] string n
-typedef Stropt = [n:int] stropt n
+typedef String = [n:int | n >= 0] string (n)
+typedef Stropt = [n:int] stropt (n)
+typedef stropt = Stropt
 
 typedef uInt = [n:int | n >=0] uint n
 

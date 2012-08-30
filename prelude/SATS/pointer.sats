@@ -108,9 +108,9 @@ castfn ptr1_of_ptr (p: ptr):<> [l:addr] ptr l
 
 (* ****** ****** *)
 
-val null
+val the_null_ptr
   : ptr null = "atspre_null_ptr"
-// end of [val]
+macdef null = the_null_ptr // endmac
 
 fun ptr1_is_null {l:addr}
   (p: ptr l):<> bool (l==null) = "atspre_ptr_is_null"

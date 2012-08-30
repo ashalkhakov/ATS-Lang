@@ -72,6 +72,11 @@ ats_void_type atspre_donothing () { return ; }
 
 /* ****** ****** */
 
+ATSinline()
+ats_void_type atspre_free_null () { return ; }
+
+/* ****** ****** */
+
 /*
 ** HX: cutting the corners? yes. worth it? probably.
 */
