@@ -24,28 +24,28 @@ macdef _2PI = 2 * M_PI
 
 (* ****** ****** *)
 
-staload "contrib/GL/SATS/gl.sats"
-staload "contrib/GL/SATS/glu.sats"
-staload "contrib/cairo/SATS/cairo.sats"
+staload "GL/SATS/gl.sats"
+staload "GL/SATS/glu.sats"
+staload "cairo/SATS/cairo.sats"
 
 (* ****** ****** *)
 
-staload "contrib/glib/SATS/glib.sats"
-staload "contrib/glib/SATS/glib-object.sats"
-staload "contrib/GTK/SATS/gdk.sats"
-staload "contrib/GTK/SATS/gtk.sats"
-staload "contrib/GTK/SATS/gtkclassdec.sats"
+staload "glib/SATS/glib.sats"
+staload "glib/SATS/glib-object.sats"
+staload "GTK/SATS/gdk.sats"
+staload "GTK/SATS/gtk.sats"
+staload "GTK/SATS/gtkclassdec.sats"
 
 (* ****** ****** *)
 
-staload "contrib/gtkglext/SATS/gdk.sats"
-staload "contrib/gtkglext/SATS/gtk.sats"
+staload "gtkglext/SATS/gdk.sats"
+staload "gtkglext/SATS/gtk.sats"
 
 (* ****** ****** *)
 
 staload
-"contrib/atspslide/SATS/atspslide.sats"
-dynload "contrib/atspslide/dynloadall.dats"
+"atspslide/SATS/atspslide.sats"
+dynload "atspslide/dynloadall.dats" // initializing
 
 (* ****** ****** *)
 

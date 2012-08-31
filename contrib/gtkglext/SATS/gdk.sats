@@ -39,20 +39,20 @@
 (* ****** ****** *)
 
 %{#
-#include "contrib/gtkglext/CATS/gdk.cats"
+#include "gtkglext/CATS/gdk.cats"
 %} // end of [%{#]
 
 (* ****** ****** *)
 
 staload
-GLIB = "contrib/glib/SATS/glib.sats"
+GLIB = "glib/SATS/glib.sats"
 stadef gint = $GLIB.gint
 stadef gboolean = $GLIB.gboolean
 
 (* ****** ****** *)
 
 staload
-GOBJ = "contrib/glib/SATS/glib-object.sats"
+GOBJ = "glib/SATS/glib-object.sats"
 stadef GObject = $GOBJ.GObject // class constant
 stadef gobjref = $GOBJ.gobjref // boxed viewtype
 

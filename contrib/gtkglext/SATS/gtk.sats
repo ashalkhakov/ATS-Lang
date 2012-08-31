@@ -39,17 +39,17 @@
 (* ****** ****** *)
 
 %{#
-#include "contrib/gtkglext/CATS/gtk.cats"
+#include "gtkglext/CATS/gtk.cats"
 %} // end of [%{#]
 
 (* ****** ****** *)
 
-staload GLIB = "contrib/glib/SATS/glib.sats"
+staload GLIB = "glib/SATS/glib.sats"
 stadef gboolean = $GLIB.gboolean
 
 (* ****** ****** *)
 
-staload GOBJ = "contrib/glib/SATS/glib-object.sats"
+staload GOBJ = "glib/SATS/glib-object.sats"
 stadef GObject = $GOBJ.GObject // class constant
 stadef gobjref = $GOBJ.gobjref // boxed viewtype
 
@@ -66,11 +66,11 @@ gtk_gl_parse_args (int *argc, char ***argv);
 
 (* ****** ****** *)
 
-staload "contrib/GTK/SATS/gtkclassdec.sats"
+staload "GTK/SATS/gtkclassdec.sats"
 
 (* ****** ****** *)
 
-staload "contrib/gtkglext/SATS/gdk.sats" // for some classdecs
+staload "gtkglext/SATS/gdk.sats" // for some classdecs
 
 (* ****** ****** *)
 

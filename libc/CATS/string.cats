@@ -72,9 +72,9 @@ atslib_substrncmp (
 
 /* ****** ****** */
 
-#define atslib_strchr strchr // HX: no interface in ATS
-#define atslib_strrchr strrchr // HX: no interface in ATS
-#define atslib_strstr strstr // HX: no interface in ATS
+#define atslib_strchr strchr
+#define atslib_strrchr strrchr
+#define atslib_strstr strstr
 
 /* ****** ****** */
 

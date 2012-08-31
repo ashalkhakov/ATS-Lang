@@ -84,15 +84,25 @@ fun strlen {n:nat}
 (* ****** ****** *)
 
 (*
-char *strchr(const char*, int):
-please use [string_index_of_char_from_left] in [prelude/SATS/string.sats]
-
-char *strrchr(const char*, int):
-please use [string_index_of_char_from_right] in [prelude/SATS/string.sats]
-
-char *strstr(const char*, const char* ): 
-please use [string_index_of_string] in [prelude/SATS/string.sats]
+char *strchr(const char*, int);
 *)
+fun strchr
+  (str: string, c: int):<> ptr = "mac#atslib_strchr"
+// end of [strchr]
+
+(*
+char *strrchr(const char*, int);
+*)
+fun strrchr
+  (str: string, c: int):<> ptr = "mac#atslib_strrchr"
+// end of [strrchr]
+
+(*
+char *strstr(const char*, const char* ): 
+*)
+fun strstr
+  (haystack: string, needle: string):<> ptr = "mac#atslib_strstr"
+// end of [strstr]
 
 (* ****** ****** *)
 

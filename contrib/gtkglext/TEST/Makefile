@@ -9,17 +9,15 @@
 ######
 
 ATSUSRQ="$(ATSHOME)"
-ifeq ($(ATSUSRQ),"")
-ATSUSRQ="/usr"
-endif # end of [ifeq]
 
 ######
 
 ATSCC=$(ATSUSRQ)/bin/atscc
-ATSCTRBGL=$(ATSUSRQ)/contrib/GL/atsctrb_GL.o
-ATSCTRBXR=$(ATSUSRQ)/contrib/cairo/atsctrb_cairo.o
-ATSCTRBGTK=$(ATSUSRQ)/contrib/GTK/atsctrb_GTK.o
-ATSCTRBPSLIDE=$(ATSUSRQ)/contrib/atspslide/atsctrb_atspslide.o
+ATSCTRB=$(ATSUSRQ)/contrib
+GLOBJ=$(ATSUSRQ)/contrib/GL/atsctrb_GL.o
+XROBJ=$(ATSUSRQ)/contrib/cairo/atsctrb_cairo.o
+GTKOBJ=$(ATSUSRQ)/contrib/GTK/atsctrb_GTK.o
+PSLIDEOBJ=$(ATSUSRQ)/contrib/atspslide/atsctrb_atspslide.o
 
 ######
 
@@ -41,14 +39,14 @@ GTKGLEXT=`pkg-config --cflags --libs gtk+-2.0 gtkglext-1.0 gtkglext-x11-1.0`
 checkall:: gtkglHello
 cleanall:: ; $(RMF) gtkglHello
 gtkglHello: gtkglHello.dats
-	$(ATSCC) -o gtkglHello gtkglHello.dats $(ATSCTRBGL) $(ATSCTRBGTK) $(GTKGLEXT)
+	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(GTKOBJ) $(GTKGLEXT)
 
 ######
 
 checkall:: gtkglFaces
 cleanall:: ; $(RMF) gtkglFaces
 gtkglFaces: gtkglFaces.dats
-	$(ATSCC) -o gtkglFaces gtkglFaces.dats $(ATSCTRBGL) $(ATSCTRBGTK) $(GTKGLEXT)
+	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(GTKOBJ) $(GTKGLEXT)
 
 ######
 
