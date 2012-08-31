@@ -52,31 +52,29 @@ gtkglFaces: gtkglFaces.dats
 
 checkall:: gtkglClock
 cleanall:: ; $(RMF) gtkglClock
-gtkglClock: gtkglClock.dats ; \
-  $(ATSCC) -o gtkglClock gtkglClock.dats $(ATSCTRBGL) $(ATSCTRBXR) $(ATSCTRBGTK) $(ATSCTRBPSLIDE) $(GTKGLEXT)
+gtkglClock: gtkglClock.dats
+	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(XROBJ) $(GTKOBJ) $(PSLIDEOBJ) $(GTKGLEXT)
 
 ######
 
 checkall:: gtkglCubeRot
 cleanall:: ; $(RMF) gtkglCubeRot
-gtkglCubeRot: gtkglCubeRot.dats ; \
-  $(ATSCC) -o gtkglCubeRot gtkglCubeRot.dats $(ATSCTRBGL) $(ATSCTRBXR) $(ATSCTRBGTK) $(ATSCTRBPSLIDE) $(GTKGLEXT)
+gtkglCubeRot: gtkglCubeRot.dats
+	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(XROBJ) $(GTKOBJ) $(PSLIDEOBJ) $(GTKGLEXT)
 
 ######
 
 checkall:: gtkglPascalTheorem
 cleanall:: ; $(RMF) gtkglPascalTheorem
-gtkglPascalTheorem: gtkglPascalTheorem.dats ; \
-  $(ATSCC) -o gtkglPascalTheorem \
-    gtkglPascalTheorem.dats $(ATSCTRBGL) $(ATSCTRBXR) $(ATSCTRBGTK) $(ATSCTRBPSLIDE) $(GTKGLEXT)
+gtkglPascalTheorem: gtkglPascalTheorem.dats
+	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(XROBJ) $(GTKOBJ) $(PSLIDEOBJ) $(GTKGLEXT)
 
 ######
 
 checkall:: gtkglSlidePresent
 cleanall:: ; $(RMF) gtkglSlidePresent
-gtkglSlidePresent: gtkglSlidePresent.dats ; \
-  $(ATSCC) -O3 -o gtkglSlidePresent \
-    gtkglSlidePresent.dats $(ATSCTRBGL) $(ATSCTRBXR) $(ATSCTRBGTK) $(ATSCTRBPSLIDE) $(GTKGLEXT)
+gtkglSlidePresent: gtkglSlidePresent.dats
+	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(XROBJ) $(GTKOBJ) $(PSLIDEOBJ) $(GTKGLEXT)
 
 ######
 

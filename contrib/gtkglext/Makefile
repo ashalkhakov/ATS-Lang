@@ -14,7 +14,8 @@ endif
 
 ######
 
-ATSCC=$(ATSUSRQ)/bin/atscc -Wall
+ATSCC=$(ATSUSRQ)/bin/atscc
+ATSCTRB=$(ATSUSRQ)/contrib
 GTKGLEXTCFLAGS=`pkg-config --cflags --libs gtk+-2.0 gtkglext-1.0 gtkglext-x11-1.0`
 
 ######
@@ -28,8 +29,10 @@ atsctrb_gtkglext.o: gdk_dats.o gtk_dats.o ; ld -r -o $@ $^
 
 ######
 
-gdk_dats.o: DATS/gdk.dats; $(ATSCC) $(GTKGLEXTCFLAGS) -c $<
-gtk_dats.o: DATS/gtk.dats; $(ATSCC) $(GTKGLEXTCFLAGS) -c $<
+gdk_dats.o: DATS/gdk.dats
+	$(ATSCC) -Wall -I$(ATSCTRB) -IATS$(ATSCTRB) $(GTKGLEXTCFLAGS) -c $<
+gtk_dats.o: DATS/gtk.dats
+	$(ATSCC) -Wall -I$(ATSCTRB) -IATS$(ATSCTRB) $(GTKGLEXTCFLAGS) -c $<
 
 ######
 

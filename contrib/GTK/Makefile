@@ -14,7 +14,8 @@ endif # end of [ifeq]
 
 ######
 
-ATSCC=$(ATSUSRQ)/bin/atscc -Wall
+ATSCC=$(ATSUSRQ)/bin/atscc
+ATSCTRB=$(ATSUSRQ)/contrib
 GTKCFLAGS = `pkg-config gtk+-2.0 --cflags`
 
 ######
@@ -30,7 +31,7 @@ atsctrb_GTK.o: GTK_dats.o
 ######
 
 GTK_dats.o: DATS/gtk.dats
-	$(ATSCC) $(GTKCFLAGS) -o $@ -c DATS/gtk.dats
+	$(ATSCC) -Wall $(GTKCFLAGS) -o $@ -c $<
 
 ######
 

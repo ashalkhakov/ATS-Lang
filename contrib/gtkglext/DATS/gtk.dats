@@ -38,6 +38,10 @@
 
 (* ****** ****** *)
 
+staload "gtkglext/SATS/gtk.sats"
+
+(* ****** ****** *)
+
 // HX: it is yet empty
 
 (* ****** ****** *)
