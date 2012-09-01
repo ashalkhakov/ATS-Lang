@@ -30,7 +30,7 @@
 /*
 ** Source:
 ** $PATSHOME/prelude/CATS/CODEGEN/mysql.atxt
-** Time of generation: Thu Aug 30 11:16:17 2012
+** Time of generation: Fri Aug 31 21:47:04 2012
 */
 
 /* ****** ****** */
@@ -65,6 +65,7 @@ typedef MYSQL_FIELD MYSQLFIELD_struct ;
 
 #define atsctrb_mysql_close mysql_close
 #define atsctrb_mysql_real_connect mysql_real_connect
+#define atsctrb_mysql_change_user mysql_change_user
 
 /* ****** ****** */
 
@@ -81,6 +82,7 @@ typedef MYSQL_FIELD MYSQLFIELD_struct ;
 
 #define atsctrb_mysql_query mysql_query
 #define atsctrb_mysql_list_dbs mysql_list_dbs
+#define atsctrb_mysql_list_fields mysql_list_fields
 
 /* ****** ****** */
 
@@ -90,6 +92,11 @@ typedef MYSQL_FIELD MYSQLFIELD_struct ;
 
 #define atsctrb_mysql_num_rows mysql_num_rows
 #define atsctrb_mysql_num_fields mysql_num_fields
+
+/* ****** ****** */
+
+#define atsctrb_mysql_field_tell mysql_field_tell
+#define atsctrb_mysql_field_seek mysql_field_seek
 
 /* ****** ****** */
 
@@ -106,12 +113,18 @@ typedef MYSQL_FIELD MYSQLFIELD_struct ;
 
 /* ****** ****** */
 
+#define atsctrb_mysql_data_seek mysql_data_seek
+
+/* ****** ****** */
+
 #define atsctrb_mysql_fetch_row mysql_fetch_row
+#define atsctrb_mysql_fetch_lengths mysql_fetch_lengths
 
 /* ****** ****** */
 
 #define atsctrb_mysql_fetch_field mysql_fetch_field
 #define atsctrb_mysql_fetch_field_direct mysql_fetch_field_direct
+#define atsctrb_mysql_fetch_fields mysql_fetch_fields
 
 /* ****** ****** */
 
@@ -120,6 +133,12 @@ ats_ptr_type
 atsctrb_mysqlrow_get_at
   (ats_ptr_type row, ats_int_type i) { return ((ats_ptr_type*)row)[i] ; }
 // end of [atsctrb_mysqlrow_get_at]
+
+ATSinline()
+ats_ulint_type
+atsctrb_mysqlrowlen_get_at
+  (ats_ptr_type rowlen, ats_int_type i) { return ((ats_ulint_type*)rowlen)[i] ; }
+// end of [atsctrb_mysqlrowlen_get_at]
 
 /* ****** ****** */
 
@@ -141,6 +160,16 @@ atsctrb_mysqlfield_get_name
 #define atsctrb_mysql_get_client_version mysql_get_client_version
 #define atsctrb_mysql_get_server_info(conn) ((char*)(mysql_get_server_info(conn)))
 #define atsctrb_mysql_get_server_version mysql_get_server_version
+
+/* ****** ****** */
+
+#define atsctrb_mysql_hex_string mysql_hex_string
+#define atsctrb_mysql_escape_string mysql_escape_string
+#define atsctrb_mysql_real_escape_string mysql_real_escape_string
+
+/* ****** ****** */
+
+#define atsctrb_mysql_warning_count mysql_warning_count
 
 /* ****** ****** */
 
