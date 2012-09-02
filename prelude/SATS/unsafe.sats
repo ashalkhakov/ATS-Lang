@@ -67,6 +67,8 @@ castfn cast2ssize {a:t@ype} (x: a):<> ssize_t
 //
 (* ****** ****** *)
 
+castfn linstr2str {l:agz} (str: !strptr l):<> string
+
 castfn linlst2lst
   {a:t0p}{n:int} (xs: !list_vt (a, n)):<> list (a, n)
 // end of [linlst2lst]

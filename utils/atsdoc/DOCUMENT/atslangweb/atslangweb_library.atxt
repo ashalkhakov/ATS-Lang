@@ -207,6 +207,9 @@ above libraries.
 <h2>#uid("ATSLIB_contrib", "ATSLIB/contrib")</h2>
 
 #menu('\
+#litxt(#myliblink("contrib/cairo", "cairo"))
+#litxt(#myliblink("contrib/mysql", "mysql"))
+#litxt(#myliblink("contrib/jansson", "jansson"))
 ')#comment("menu")
 
 <!-- ****** ****** -->

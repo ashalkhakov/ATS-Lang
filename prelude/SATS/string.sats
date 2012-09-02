@@ -813,8 +813,11 @@ castfn strbuf_takeout_ptr {m,n:int} {l:addr}
 castfn string_of_strbuf
   {m,n:int} {l:addr} (x: strbufptr_gc (m, n, l)):<> string n
 //
-castfn strptr_free_null (x: strptr null):<> ptr null
-fun strptr_free {l:addr} (x: strptr l):<> void = "atspre_strptr_free"
+praxi
+strptr_free_null
+  {l:addr | l <= null} (x: strptr l):<> void
+fun strptr_free
+  {l:addr} (x: strptr l):<> void = "atspre_strptr_free"
 //
 symintr fprint_strptr
 fun fprint0_strptr {l:addr}
