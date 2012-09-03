@@ -102,7 +102,24 @@ typedef const json_t *JSONconstptr ;
 
 #define atsctrb_json_array_size json_array_size
 
+/* ****** ****** */
+
 #define atsctrb_json_array_get json_array_get
+
+ATSinline()
+ats_ptr_type
+atsctrb_json_array_get_exnmsg (
+ ats_ptr_type json, ats_size_type ind, ats_ptr_type msg
+) {
+  JSONptr itm ;
+  itm = atsctrb_json_array_get (json, ind) ;
+  if (!itm) {
+    fprintf (stderr, "exit(ATS): json_array_get: %s\n", (char*)msg) ; exit (1);
+  } // end of [if]
+  return itm ;
+} // end of [atsctrb_json_array_get_exnmsg]
+
+/* ****** ****** */
 
 ATSinline()
 ats_ptr_type
@@ -114,6 +131,21 @@ atsctrb_json_array_get1 (
   if (itm) json_incref(itm) ;
   return (itm) ;
 } // end of [atsctrb_json_array_get1]
+
+ATSinline()
+ats_ptr_type
+atsctrb_json_array_get1_exnmsg (
+  ats_ptr_type json, ats_size_type ind, ats_ptr_type msg
+) {
+  JSONptr itm ;
+  itm = atsctrb_json_array_get1 (json, ind) ;
+  if (!itm) {
+    fprintf (stderr, "exit(ATS): json_array_get1: %s\n", (char*)msg) ; exit (1);
+  } // end of [if]
+  return (itm) ;
+} // end of [atsctrb_json_array_get1_exnmsg]
+
+/* ****** ****** */
 
 #define atsctrb_json_array_set json_array_set
 #define atsctrb_json_array_set_new json_array_set_new
