@@ -136,7 +136,24 @@ atsctrb_json_array_get1 (
 
 #define atsctrb_json_object_size json_object_size
 
+/* ****** ****** */
+
 #define atsctrb_json_object_get json_object_get
+
+ATSinline()
+ats_ptr_type
+atsctrb_json_object_get_exnmsg (
+ ats_ptr_type json, ats_ptr_type key, ats_ptr_type msg
+) {
+  JSONptr itm ;
+  itm = atsctrb_json_object_get (json, key) ;
+  if (!itm) {
+    fprintf (stderr, "exit(ATS): json_object_get: %s\n", (char*)msg) ; exit (1);
+  } // end of [if]
+  return itm ;
+} // end of [atsctrb_json_object_get_exnmsg]
+
+/* ****** ****** */
 
 ATSinline()
 ats_ptr_type
@@ -144,10 +161,23 @@ atsctrb_json_object_get1 (
   ats_ptr_type json, ats_ptr_type key
 ) {
   JSONptr itm ;
-  itm = json_object_get((JSONptr)json, (char*)key);
+  itm = atsctrb_json_object_get (json, key) ;
   if (itm) json_incref(itm) ;
   return (itm) ;
 } // end of [atsctrb_json_object_get1]
+
+ATSinline()
+ats_ptr_type
+atsctrb_json_object_get1_exnmsg (
+  ats_ptr_type json, ats_ptr_type key, ats_ptr_type msg
+) {
+  JSONptr itm ;
+  itm = atsctrb_json_object_get1 (json, key) ;
+  if (!itm) {
+    fprintf (stderr, "exit(ATS): json_object_get1: %s\n", (char*)msg) ; exit (1);
+  } // end of [if]
+  return (itm) ;
+} // end of [atsctrb_json_object_get1_exnmsg]
 
 #define atsctrb_json_object_set json_object_set
 #define atsctrb_json_object_set_nocheck json_object_set_nocheck

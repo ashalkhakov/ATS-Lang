@@ -12,13 +12,14 @@ CCFLAGS=-O2
 
 ######
 
-ATSCTRB=$(PATSHOME)/contrib
+ATSCTRB=$(ATSHOME)/contrib
 
 ######
 
 all::
 all:: test01
 all:: test02
+all:: github_commits
 
 ######
 

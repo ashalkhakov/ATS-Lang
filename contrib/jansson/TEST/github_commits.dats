@@ -143,6 +143,11 @@ in
   process_root_array {l} (root)
 end // end of [process_root]
 
+macdef
+JPNZ (x) =
+  assertloc (JSONptr_isnot_null ,(x))
+// end of [JPNS]
+
 implement
 process_root_array
   {l} (root) = let
@@ -157,21 +162,19 @@ in
 if i < n then let
 //
   val data = json_array_get1 (root, i)
-  val () = assertloc (JSONptr_isnot_null (data))
+  val () = JPNZ (data)
   val () = assertloc (json_is_object (data))
 //
   val sha = json_object_get1 (data, "sha")
-  val () = assertloc (JSONptr_isnot_null (sha))
+  val () = JPNZ (sha)
   val () = assertloc (json_is_string (sha))
 //
-  val commit = json_object_get1 (data, "commit")
-  val () = assertloc (JSONptr_isnot_null (commit))
+  val commit =
+    json_object_get1_exnloc (data, "commit")
   val () = assertloc (json_is_object (commit))
 //
-  val () = json_decref (data)
-//
   val message = json_object_get1 (commit, "message")
-  val () = assertloc (JSONptr_isnot_null (message))
+  val () = JPNZ (message)
   val () = assertloc (json_is_string (message))
 //
   val (fpf1 | sha_value) = json_string_value (sha)
@@ -184,9 +187,10 @@ if i < n then let
 //
   prval () = minus_addback (fpf1, sha_value | sha)
   prval () = minus_addback (fpf2, message_value | message)
-  val () = json_decref (sha)
   val () = json_decref (commit)
+  val () = json_decref (sha)
   val () = json_decref (message)
+  val () = json_decref (data)
 //
 in
   loop (root, n, i+1)
