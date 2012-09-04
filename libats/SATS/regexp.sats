@@ -48,7 +48,7 @@ overload ptr_of with ptr_of_REGEXPptr
 (* ****** ****** *)
 
 praxi
-regexp_free_null (p: REGEXPptr null):<> ptr(*null*)
+regexp_free_null (p: REGEXPptr null):<> void
 
 (* ****** ****** *)
 
