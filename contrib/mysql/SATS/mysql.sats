@@ -40,33 +40,18 @@
 
 (* ****** ****** *)
 
-typedef SHR(x:type) = x // for commenting purpose
-typedef NSH(x:type) = x // for commenting purpose
+#define ATS_STALOADFLAG 0 // no static loading at run-time
 
 (* ****** ****** *)
 
-#define ATS_STALOADFLAG 0 // no static loading at run-time
+typedef SHR(x:type) = x // for commenting purpose
+typedef NSH(x:type) = x // for commenting purpose
 
 (* ****** ****** *)
 
 absviewt@ype MYSQL = $extype "MYSQL_struct"
 absviewt@ype MYSQLRES = $extype "MYSQLRES_struct"
 absviewt@ype MYSQLFIELD = $extype "MYSQLFIELD_struct"
-
-(* ****** ****** *)
-
-/*
-typedef char **MYSQLROW;
-*/
-absviewtype MYSQLROW (l1:addr, l2:addr)
-viewtypedef MYSQLROW0 (l1:addr) = [l2:addr] MYSQLROW (l1, l2)
-viewtypedef MYSQLROW1 (l1:addr) = [l2:addr| l2 > null] MYSQLROW (l1, l2)
-
-(* ****** ****** *)
-
-absviewtype MYSQLROWLEN (l1:addr, l2:addr)
-viewtypedef MYSQLROWLEN0 (l1:addr) = [l2:addr] MYSQLROWLEN (l1, l2)
-viewtypedef MYSQLROWLEN1 (l1:addr) = [l2:addr| l2 > null] MYSQLROWLEN (l1, l2)
 
 (* ****** ****** *)
 
@@ -85,6 +70,21 @@ viewtypedef MYSQLRESptr1 = [l:addr| l > null] MYSQLRESptr (l)
 absviewtype MYSQLFIELDptr (l1:addr, l2:addr)
 viewtypedef MYSQLFIELDptr0 (l1:addr) = [l2:addr] MYSQLFIELDptr (l1, l2)
 viewtypedef MYSQLFIELDptr1 (l1:addr) = [l2:addr| l2 > null] MYSQLFIELDptr (l1, l2)
+
+(* ****** ****** *)
+
+/*
+typedef char **MYSQLROW;
+*/
+absviewtype MYSQLROW (l1:addr, l2:addr)
+viewtypedef MYSQLROW0 (l1:addr) = [l2:addr] MYSQLROW (l1, l2)
+viewtypedef MYSQLROW1 (l1:addr) = [l2:addr| l2 > null] MYSQLROW (l1, l2)
+
+(* ****** ****** *)
+
+absviewtype MYSQLROWLEN (l1:addr, l2:addr)
+viewtypedef MYSQLROWLEN0 (l1:addr) = [l2:addr] MYSQLROWLEN (l1, l2)
+viewtypedef MYSQLROWLEN1 (l1:addr) = [l2:addr| l2 > null] MYSQLROWLEN (l1, l2)
 
 (* ****** ****** *)
 
@@ -122,9 +122,17 @@ overload free_null with mysqlfield_free_null
 
 (* ****** ****** *)
 
-fun mysql_init0
-  ((*null*)): MYSQLptr0 = "mac#atsctrb_mysql_init0"
-fun mysql_init0_exn ((*null*)): MYSQLptr1
+symintr mysql_init
+
+fun mysql_init_0
+  ((*null*)): MYSQLptr0 = "mac#atsctrb_mysql_init_0"
+overload mysql_init with mysql_init_0
+
+fun mysql_init_1
+  {l:agz} (x: !MYSQLptr l): ptr = "mac#atsctrb_mysql_init_1"
+overload mysql_init with mysql_init_1
+
+fun mysql_init_exn ((*null*)): MYSQLptr1
 
 (* ****** ****** *)
 
@@ -141,7 +149,8 @@ MYSQL *		STDCALL mysql_real_connect(MYSQL *mysql, const char *host,
 					   const char *unix_socket,
 					   unsigned long clientflag);
 */
-fun mysql_real_connect
+fun
+mysql_real_connect
   {l:agz} (
   mysql: !MYSQLptr (l)
 , host: NSH(stropt)
@@ -161,7 +170,8 @@ fun mysql_real_connect
 my_bool mysql_change_user
   (MYSQL *mysql, const char *user, const char *passwd, const char *db);
 */
-fun mysql_change_user
+fun
+mysql_change_user
   {l:agz} (
   mysql: !MYSQLptr l
 , user: NSH(string)
@@ -172,39 +182,11 @@ fun mysql_change_user
 (* ****** ****** *)
 
 /*
-my_bool mysql_eof(MYSQL_RES *result);
-*/
-(*
-// HX-2012-08: this one is deprecated
-*)
-
-/*
-unsigned int
-mysql_errno(MYSQL *mysql);
-*/
-fun mysql_errno
-  {l:addr} (
-  mysql: !MYSQLptr l
-) : uint = "mac#atsctrb_mysql_errno"
-
-/*
-const char*
-mysql_error(MYSQL *mysql);
-*/
-fun mysql_error
-  {l:addr} (
-  mysql: !MYSQLptr l
-) : string = "mac#atsctrb_mysql_error"
-
-(* ****** ****** *)
-
-/*
 int mysql_ping(MYSQL *mysql);
 */
 fun mysql_ping
-  {l:agz} (
-  mysql: !MYSQLptr l
-) : int = "mac#atsctrb_mysql_ping"
+  {l:agz} (mysql: !MYSQLptr l): int = "mac#atsctrb_mysql_ping"
+// end of [mysql_ping]
 
 (* ****** ****** *)
 
@@ -212,19 +194,17 @@ fun mysql_ping
 my_bool mysql_commit (MYSQL *mysql);
 */
 fun mysql_commit
-  {l:agz} (
-  mysql: !MYSQLptr l
-) : int = "mac#atsctrb_mysql_commit"
+  {l:agz} (mysql: !MYSQLptr l): int = "mac#atsctrb_mysql_commit"
+// end of [mysql_commit]
 
 (* ****** ****** *)
 
 /*
 int mysql_query(MYSQL *mysql, const char *q);
 */
-fun mysql_query
-  {l:agz} (
-  mysql: !MYSQLptr l, q: query
-) : int(*err*) = "mac#atsctrb_mysql_query"
+fun mysql_query {l:agz}
+  (mysql: !MYSQLptr l, q: query): int(*err*) = "mac#atsctrb_mysql_query"
+// end of [mysql_query]
 
 (* ****** ****** *)
 
@@ -504,10 +484,26 @@ fun mysqlfield_get_max_length
 const char *mysql_info (MYSQL *mysql);
 */
 fun mysql_info
-  {l:agz} (
-  mysql: !MYSQLptr l
-) : string = "mac#atsctrb_mysql_info"
+  {l:agz} (mysql: !MYSQLptr l): string = "mac#atsctrb_mysql_info"
 // end of [mysql_info]  
+
+(* ****** ****** *)
+
+/*
+const char *mysql_stat (MYSQL *mysql);
+*/
+fun mysql_stat
+  {l:agz} (mysql: !MYSQLptr l): string = "mac#atsctrb_mysql_stat"
+// end of [mysql_stat]  
+
+(* ****** ****** *)
+
+/*
+const char *mysql_sqlstate (MYSQL *mysql);
+*/
+fun mysql_sqlstate
+  {l:agz} (mysql: !MYSQLptr l): string = "mac#atsctrb_mysql_sqlstate"
+// end of [mysql_sqlstate]  
 
 (* ****** ****** *)
 
@@ -564,6 +560,31 @@ fun mysql_get_server_version
   mysql: !MYSQLptr l
 ) : ulint = "mac#atsctrb_mysql_get_server_version"
 // end of [mysql_get_server_version]
+
+(* ****** ****** *)
+
+/*
+my_bool mysql_eof(MYSQL_RES *result);
+*/
+(*
+// HX-2012-08: this one is deprecated
+*)
+
+/*
+unsigned int
+mysql_errno(MYSQL *mysql);
+*/
+fun mysql_errno
+  {l:addr} (mysql: !MYSQLptr l): uint = "mac#atsctrb_mysql_errno"
+// end of [mysql_errno]
+
+/*
+const char*
+mysql_error(MYSQL *mysql);
+*/
+fun mysql_error
+  {l:addr} (mysql: !MYSQLptr l): string = "mac#atsctrb_mysql_error"
+// end of [mysql_errno]
 
 (* ****** ****** *)
 

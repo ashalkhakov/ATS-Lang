@@ -30,7 +30,7 @@
 /*
 ** Source:
 ** $PATSHOME/prelude/CATS/CODEGEN/mysql.atxt
-** Time of generation: Fri Aug 31 21:47:04 2012
+** Time of generation: Sat Sep  1 15:33:21 2012
 */
 
 /* ****** ****** */
@@ -59,19 +59,14 @@ typedef MYSQL_FIELD MYSQLFIELD_struct ;
 
 /* ****** ****** */
 
-#define atsctrb_mysql_init0() mysql_init(NULL)
+#define atsctrb_mysql_init_0() mysql_init(NULL)
+#define atsctrb_mysql_init_1(conn) mysql_init(conn)
 
 /* ****** ****** */
 
 #define atsctrb_mysql_close mysql_close
 #define atsctrb_mysql_real_connect mysql_real_connect
 #define atsctrb_mysql_change_user mysql_change_user
-
-/* ****** ****** */
-
-#define atsctrb_mysql_errno mysql_errno
-
-#define atsctrb_mysql_error(x) ((char*)(mysql_error(x)))
 
 /* ****** ****** */
 
@@ -151,6 +146,8 @@ atsctrb_mysqlfield_get_name
 /* ****** ****** */
 
 #define atsctrb_mysql_info(conn) ((char*)(mysql_info(conn)))
+#define atsctrb_mysql_stat(conn) ((char*)(mysql_stat(conn)))
+#define atsctrb_mysql_sqlstate(conn) ((char*)(mysql_sqlstate(conn)))
 
 /* ****** ****** */
 
@@ -160,6 +157,11 @@ atsctrb_mysqlfield_get_name
 #define atsctrb_mysql_get_client_version mysql_get_client_version
 #define atsctrb_mysql_get_server_info(conn) ((char*)(mysql_get_server_info(conn)))
 #define atsctrb_mysql_get_server_version mysql_get_server_version
+
+/* ****** ****** */
+
+#define atsctrb_mysql_errno mysql_errno
+#define atsctrb_mysql_error(x) ((char*)(mysql_error(x)))
 
 /* ****** ****** */
 
