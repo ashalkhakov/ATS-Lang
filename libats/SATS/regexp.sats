@@ -47,14 +47,17 @@ overload ptr_of with ptr_of_REGEXPptr
 
 (* ****** ****** *)
 
+praxi
+regexp_free_null (p: REGEXPptr null):<> ptr(*null*)
+
+(* ****** ****** *)
+
 fun regexp_compile // implemented in C
   (pattern: string): REGEXPptr0 = "atslib_regexp_compile"
 // end of [regexp_compile]
 fun regexp_compile_exn (pattern: string): REGEXPptr1
 
 (* ****** ****** *)
-
-castfn regexp_free_null (p: REGEXPptr null): ptr(*null*)
 
 fun regexp_free
   {l:agz} (p: REGEXPptr l): void = "atslib_regexp_free" // !fun

@@ -200,7 +200,7 @@ in
   in
     exit (EXIT_SUCCESS)
   end else let
-    val _null = strptr_free_null (path) in exit (EXIT_FAILURE)
+    prval () = strptr_free_null (path) in exit (EXIT_FAILURE)
   end // end of [if] 
 end (* end of [main] *)
 

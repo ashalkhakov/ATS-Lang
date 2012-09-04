@@ -81,10 +81,10 @@ regexp_compile_exn (pattern) = let
 in
   if (p_re0 <> null) then re0
   else let
-    val _ = regexp_free_null (re0)
     val () = prerrf (
       "exit(ATS): [pcre_comiple] failed: pattern = %s\n", @(pattern)
     ) // end of [val]
+    prval () = regexp_free_null (re0)
   in
     exit(1)
   end // end of [if]

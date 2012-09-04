@@ -61,7 +61,7 @@ castfn ptr_of_lock
   {l:addr} (x: !lock (v, l)):<> ptr (l)
 // end of [ptr_of_lock]
 
-castfn lock_free_null
+praxi lock_free_null
   {v:view} (x: lock (v, null)):<> ptr (null)
 // end of [lock_free_null]
 

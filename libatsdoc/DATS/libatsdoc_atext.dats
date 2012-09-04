@@ -266,7 +266,7 @@ in
   if isnotnull then
     atext_strptr (str)
   else let
-    val _(*null*) = strptr_free_null (str) in atext_nil ()
+    prval () = strptr_free_null (str) in atext_nil ()
   end // end of [if]
 end // end of [atext_filepath]
 
