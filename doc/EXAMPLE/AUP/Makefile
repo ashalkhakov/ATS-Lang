@@ -54,7 +54,7 @@ compall:: longls
 longls: AUP_3_5.dats; $(ATSCC) -o $@ $^ && ./$@
 
 compall:: getcwdx
-getcwdx: AUP_3_6_4.dats; $(ATSCC) -o $@ $^ && ./getcwdx
+getcwdx: AUP_3_6_4.dats; $(ATSCC) -o $@ $^ && ./$@
 
 #######
 
