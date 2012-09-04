@@ -555,6 +555,7 @@ fn Anairiats_doc_dir_copy () = let
     val SRCROOTdoc_BOOK = SRCROOTdoc ++ "BOOK/"
     val DSTROOTdoc_BOOK = DSTROOTdoc ++ "BOOK/"
     val () = mkdir_exn (DSTROOTdoc_BOOK, DIRmode)
+(*
     val SRCROOTdoc_BOOK_manual = SRCROOTdoc_BOOK ++ "manual/"
     val DSTROOTdoc_BOOK_manual = DSTROOTdoc_BOOK ++ "manual/"
     val () = mkdir_exn (DSTROOTdoc_BOOK_manual, DIRmode)
@@ -562,6 +563,7 @@ fn Anairiats_doc_dir_copy () = let
       SRCROOTdoc_BOOK_manual ++ "manual_main.pdf"
   ,   DSTROOTdoc_BOOK_manual ++ "manual_main.pdf"
     ) // end of [fcopy_exn]
+*)
   } // end of [val]
 //
   val SRCROOTdoc_EXAMPLE = SRCROOTdoc ++ "EXAMPLE/"
@@ -1130,6 +1132,30 @@ fn Anairiats_contrib_dir_copy
     val () = libdir_copy (SRCROOTcontrib_SDL, DSTROOTcontrib_SDL)
   } // end of [where]
 //
+  val () = () where { // API for mysql: [contrib/mysql]
+    val SRCROOTcontrib_mysql = SRCROOTcontrib ++ "mysql/"
+    val DSTROOTcontrib_mysql = DSTROOTcontrib ++ "mysql/"
+    val () = mkdir_exn (DSTROOTcontrib_mysql, DIRmode)
+    val () = fcp_Makefile (SRCROOTcontrib_mysql, DSTROOTcontrib_mysql)
+    val () = libdir_copy (SRCROOTcontrib_mysql, DSTROOTcontrib_mysql)
+    val SRCROOTcontrib_mysql_TEST = SRCROOTcontrib_mysql ++ "TEST/"
+    val DSTROOTcontrib_mysql_TEST = DSTROOTcontrib_mysql ++ "TEST/"
+    val () = mkdir_exn (DSTROOTcontrib_mysql_TEST, DIRmode)
+    val () = dir_copy_all (SRCROOTcontrib_mysql_TEST, DSTROOTcontrib_mysql_TEST)
+  } // end of [where]
+//
+  val () = () where { // API for jansson: [contrib/jansson]
+    val SRCROOTcontrib_jansson = SRCROOTcontrib ++ "jansson/"
+    val DSTROOTcontrib_jansson = DSTROOTcontrib ++ "jansson/"
+    val () = mkdir_exn (DSTROOTcontrib_jansson, DIRmode)
+    val () = fcp_Makefile (SRCROOTcontrib_jansson, DSTROOTcontrib_jansson)
+    val () = libdir_copy (SRCROOTcontrib_jansson, DSTROOTcontrib_jansson)
+    val SRCROOTcontrib_jansson_TEST = SRCROOTcontrib_jansson ++ "TEST/"
+    val DSTROOTcontrib_jansson_TEST = DSTROOTcontrib_jansson ++ "TEST/"
+    val () = mkdir_exn (DSTROOTcontrib_jansson_TEST, DIRmode)
+    val () = dir_copy_all (SRCROOTcontrib_jansson_TEST, DSTROOTcontrib_jansson_TEST)
+  } // end of [where]
+//
   val () = () where { // [contrib/testing]
     val SRCROOTcontrib_testing = SRCROOTcontrib ++ "testing/"
     val DSTROOTcontrib_testing = DSTROOTcontrib ++ "testing/"
@@ -1208,7 +1234,9 @@ fn Anairiats_utils_dir_copy () = let
   val () = mkdir_exn (DSTROOTutils_atsdoc, DIRmode)
   val () = dir_copy
     (SRCROOTutils_atsdoc, DSTROOTutils_atsdoc, name_is_xats)
+(*
   val () = cp "README"
+*)
   val () = cp "Makefile"
   val () = libdir_copy (SRCROOTutils_atsdoc, DSTROOTutils_atsdoc)
 //
