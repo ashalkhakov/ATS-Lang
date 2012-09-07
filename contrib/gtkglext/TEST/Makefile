@@ -46,35 +46,35 @@ gtkglHello: gtkglHello.dats
 checkall:: gtkglFaces
 cleanall:: ; $(RMF) gtkglFaces
 gtkglFaces: gtkglFaces.dats
-	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(GTKOBJ) $(GTKGLEXT)
+	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(GTKOBJ) $(GTKGLEXT) -lm
 
 ######
 
 checkall:: gtkglClock
 cleanall:: ; $(RMF) gtkglClock
 gtkglClock: gtkglClock.dats
-	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(XROBJ) $(GTKOBJ) $(PSLIDEOBJ) $(GTKGLEXT)
+	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(XROBJ) $(GTKOBJ) $(PSLIDEOBJ) $(GTKGLEXT) -lm
 
 ######
 
 checkall:: gtkglCubeRot
 cleanall:: ; $(RMF) gtkglCubeRot
 gtkglCubeRot: gtkglCubeRot.dats
-	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(XROBJ) $(GTKOBJ) $(PSLIDEOBJ) $(GTKGLEXT)
+	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(XROBJ) $(GTKOBJ) $(PSLIDEOBJ) $(GTKGLEXT) -lm
 
 ######
 
 checkall:: gtkglPascalTheorem
 cleanall:: ; $(RMF) gtkglPascalTheorem
 gtkglPascalTheorem: gtkglPascalTheorem.dats
-	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(XROBJ) $(GTKOBJ) $(PSLIDEOBJ) $(GTKGLEXT)
+	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(XROBJ) $(GTKOBJ) $(PSLIDEOBJ) $(GTKGLEXT) -lm
 
 ######
 
 checkall:: gtkglSlidePresent
 cleanall:: ; $(RMF) gtkglSlidePresent
 gtkglSlidePresent: gtkglSlidePresent.dats
-	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(XROBJ) $(GTKOBJ) $(PSLIDEOBJ) $(GTKGLEXT)
+	$(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< $(GLOBJ) $(XROBJ) $(GTKOBJ) $(PSLIDEOBJ) $(GTKGLEXT) -lm
 
 ######
 

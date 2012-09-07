@@ -485,7 +485,7 @@ fun ats2xhtmls
   prval () = addr_is_gtez {l} ()
 in
   if strptr_is_null (str) then let
-    val _ = strptr_free_null (str) in atext_nil ()
+    prval () = strptr_free_null (str) in atext_nil ()
   end else atext_strptr (str) // end of [if]
 end // end of [atx2xhtmls]
 
@@ -496,7 +496,7 @@ fun ats2xhtmld
   prval () = addr_is_gtez {l} ()
 in
   if strptr_is_null (str) then let
-    val _ = strptr_free_null (str) in atext_nil ()
+    prval () = strptr_free_null (str) in atext_nil ()
   end else atext_strptr (str) // end of [if]
 end // end of [atx2xhtmld]
 //

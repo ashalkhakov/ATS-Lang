@@ -115,7 +115,7 @@ if strptr_isnot_null (path) then let
 in
   res
 end else let
-  val _null = strptr_free_null (path) in strptr_null ()
+  prval () = strptr_free_null (path) in strptr_null ()
 end // end of [if]
 //
 end // end of [ats2xhtml_strcode]

@@ -105,7 +105,7 @@ typedef tmpvar = '{
 , tmpvar_ret= int (* return status *)
 , tmpvar_top= int (* 0/1 : local/top(static) *)
 , tmpvar_root= tmpvaropt
-, tmpvar_stamp= stamp_t (* uniquity *)
+, tmpvar_stamp= stamp_t (* unicity *)
 } // end of [tmpvar]
 
 assume tmpvar_t = tmpvar

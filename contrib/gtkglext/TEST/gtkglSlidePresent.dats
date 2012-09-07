@@ -488,7 +488,7 @@ val theRotateknd_ref = ref_make_elt<int> (0)
 *)
 #define CLOCKND 1
 //
-macdef cairodraw_clock (cr) = cairodraw_clock02 (,(cr), CLOCKND)
+macdef cairodraw_clock (cr) = cairodraw_clock01 (,(cr), CLOCKND)
 //
 (* ****** ****** *)
 
