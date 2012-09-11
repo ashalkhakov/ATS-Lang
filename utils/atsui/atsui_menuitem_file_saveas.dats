@@ -76,7 +76,7 @@ fun dialog_saveas_errmsg
   val () = gtk_window_set_transient_for (dialog, parent)
 //
   val response = gtk_dialog_run (dialog)
-  val () = gtk_widget_destroy (dialog)
+  val () = gtk_widget_destroy0 (dialog)
 //
   val () = case+ 0 of
     | _ when response = (gint)GTK_RESPONSE_OK => () | _ => () // good as well
@@ -240,6 +240,7 @@ cb_file_saveas_activate () = GTRUE where {
     | _ => () // HX: should the user be asked again?
   // end of [val]
   val () = gtk_widget_destroy (dialog)
+  val () = g_object_unref (dialog)
 } // end of [cb_file_saveas_activate]
 
 (* ****** ****** *)

@@ -105,7 +105,7 @@ fun fontsel_get_font_name_by_selector
       gtk_font_selection_dialog_get_font_name (dialog)
     else gstring_make_null (null)
   ) : gstring0
-  val () = gtk_widget_destroy(dialog)
+  val () = gtk_widget_destroy0 (dialog)
 in
   fontname1
 end // end of [fontsel_get_font_name_by_selector]

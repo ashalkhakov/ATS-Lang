@@ -79,7 +79,7 @@ cb_file_quit_activate () = GTRUE where {
   prval () = fpf_topwin (topwin)
 //
   val response = gtk_dialog_run (dialog)
-  val () = gtk_widget_destroy (dialog)
+  val () = gtk_widget_destroy0 (dialog)
 //
   val () = case+ 0 of
     | _ when response = (gint)GTK_RESPONSE_YES => topenv_fini () // many things to do here!

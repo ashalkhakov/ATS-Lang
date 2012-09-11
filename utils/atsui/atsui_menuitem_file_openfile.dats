@@ -202,7 +202,8 @@ cb_file_openfile_activate () = GTRUE where {
     | _ => ()
   // end of [val]
 //
-  val () = gtk_widget_destroy (dialog)
+  val () = gtk_widget_destroy0 (dialog)
+//
 } // end of [cb_file_openfile_activate]
 
 (* ****** ****** *)

@@ -278,8 +278,12 @@ fun the_drawarea_welcome_get
 extern
 fun the_drawarea_welcome_set
   (x: GtkDrawingArea_ref1): void = "the_drawarea_welcome_set"
-implement the_drawarea_welcome_fini () = () where {
-  val darea = the_drawarea_welcome_get (); val () = gtk_widget_destroy (darea)
+implement
+the_drawarea_welcome_fini
+  () = () where {
+  val darea = the_drawarea_welcome_get ()
+  val () = gtk_widget_destroy (darea)
+  val () = g_object_unref (darea)
 } // end of [the_drawarea_welcome_fini]
 
 (* ****** ****** *)
