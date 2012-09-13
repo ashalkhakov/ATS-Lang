@@ -117,10 +117,11 @@ fun test_file_isdir (path: string): int = "atspre_test_file_isdir"
 fun test_file_isfifo (path: string): int = "atspre_test_file_isfifo"
 fun test_file_isreg (path: string): int = "atspre_test_file_isreg"
 //
-// HX: [lstat] is called // ~1/0/1: error/false/true
+// HX: [lstat] is called
 //
-fun test_file_islnk (path: string): int = "atspre_test_file_islnk"
-
+fun test_file_isemp (path: string): int // ~1/0/1: error/false/true
+fun test_file_islnk (path: string): int // ~1/0/1: error/false/true
+//
 (* ****** ****** *)
 
 (*

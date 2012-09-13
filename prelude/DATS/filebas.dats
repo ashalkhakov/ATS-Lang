@@ -252,6 +252,19 @@ implement test_file_isreg
 (* ****** ****** *)
 
 implement
+test_file_isemp (path) = let
+  var st: stat? ; val ret = lstat_err (path, st)
+in
+  if ret = 0 then let
+    prval () = opt_unsome {stat} (st)
+  in
+    if $T.lint_of_off (st.st_size) = 0L then 1 else 0
+  end else let
+    prval () = opt_unnone {stat} (st) in ~1 (*error*)
+  end (* end of [if] *)
+end // end of [test_file_isemp]
+
+implement
 test_file_islnk (path) = let
   var st: stat? ; val ret = lstat_err (path, st)
 in
