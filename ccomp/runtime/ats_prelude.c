@@ -78,7 +78,7 @@ int ats_stderr_view_lock = 1 ;
 #ifdef _ATS_MULTITHREAD
 ATSthreadlocalstorage() // thread-local storage
 #endif // end of [_ATS_MULTITHREAD]
-ats_ptr_type *the_ats_exception_stack = NULL ;
+void *the_ats_exception_stack = NULL ;
 
 /* ****** ****** */
 //

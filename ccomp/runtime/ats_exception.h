@@ -85,33 +85,35 @@ struct ats_exception_frame_struct {
 
 #ifdef _ATS_MULTITHREAD
 extern ATSthreadlocalstorage()
-ats_exception_frame_type *the_ats_exception_stack ;
+void *the_ats_exception_stack ;
 #else /* single thread */
 extern
-ats_exception_frame_type *the_ats_exception_stack ;
+void *the_ats_exception_stack ;
 #endif // end of [_ATS_MULTITHREAD]
 
 /* ****** ****** */
 
-#define ATS_CURRENT_FRAME (the_ats_exception_stack)
+#define ATS_CURRENT_FRAME \
+  ((ats_exception_frame_type*)the_ats_exception_stack)
+#define ATS_CURRENT_FRAME_LVAL the_ats_exception_stack
 
 #define ATS_ENTER_EXCEPTION_FRAME() \
   do { \
     ats_exception_frame_type *frame = \
-      (ats_exception_frame_type*) alloca(sizeof(ats_exception_frame_type)); \
+      (ats_exception_frame_type*)alloca(sizeof(ats_exception_frame_type)); \
     frame->prev = ATS_CURRENT_FRAME ; \
-    ATS_CURRENT_FRAME = frame ; \
-  } while(0)
+    ATS_CURRENT_FRAME_LVAL = frame ; \
+  } while (0) // end of [do]
 
 #define ATS_LEAVE_EXCEPTION_FRAME() \
-  do { ATS_CURRENT_FRAME = ATS_CURRENT_FRAME->prev; } while(0)
+  do { ATS_CURRENT_FRAME_LVAL = ATS_CURRENT_FRAME->prev; } while (0)
 
 #define ATS_RAISE(exn) \
   do { \
-    if (ATS_CURRENT_FRAME == 0 /*null*/) ats_uncaught_exception_handle(exn) ; \
+    if (ATS_CURRENT_FRAME == 0/*null*/) ats_uncaught_exception_handle(exn); \
     ATS_CURRENT_FRAME->exn = exn ; \
     siglongjmp(ATS_CURRENT_FRAME->env, 0) ; \
-  } while(0)
+  } while (0) // end of [do]
 
 /* ****** ****** */
 
