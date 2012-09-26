@@ -12,7 +12,7 @@ ats-lang-anairiats-0.2.7:
 3. Packaging libatsdoc into ATS-0.2.8
 4. Packaging utils/atsdoc into ATS-0.2.8
 5. Adding contrib/mysql
-6. Adding contrib/jansson (based on the previous work by Chris Double)
+6. Adding contrib/jansson (based on previous work by Chris Double)
 </pre>
 
 ######

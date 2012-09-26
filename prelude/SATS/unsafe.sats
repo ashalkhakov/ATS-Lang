@@ -49,8 +49,9 @@
 // for instance, casting [strptr] to [string]
 //
 castfn cast {to:t@ype} {from:t@ype} (x: from):<> to
-castfn castvwtp1 {to:t@ype}{from:viewt@ype} (x: !from):<> to
+castfn castvwtp0 {to:viewt@ype}{from:viewt@ype} (x: from):<> to
 castfn castvwtp_trans {to:viewt@ype}{from:viewt@ype} (x: from):<> to
+castfn castvwtp1 {to:viewt@ype}{from:viewt@ype} (x: !from):<> to
 
 (* ****** ****** *)
 //

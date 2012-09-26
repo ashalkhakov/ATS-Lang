@@ -933,7 +933,7 @@ implement glTetrix_finalize () = let
       = "glTetrix_glutBitmapCharacter"
     fun loop {i:nat | i <= n} .<n-i>.
       (ft: FONTref, str: string n, i: size_t i): void =
-      if string_isnot_at_end (str, i) then let
+      if string_isnot_atend (str, i) then let
         val () = glutBitmapCharacter (ft, str[i]) in loop (ft, str, i+1)
       end // end of [if]
   } // end of [show_string]
