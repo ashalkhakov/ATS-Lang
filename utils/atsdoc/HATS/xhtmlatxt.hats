@@ -135,7 +135,7 @@ fun timestamp
   (): atext = let
   var time = $TIME.time_get ()
   val (fpf | x) = $TIME.ctime (time)
-  val x1 = sprintf ("%s", @($UN.castvwtp1(x)))
+  val x1 = sprintf ("%s", @($UN.castvwtp1{string}(x)))
   prval () = fpf (x)
   val x1 = string_of_strptr (x1)
 in

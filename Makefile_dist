@@ -150,12 +150,12 @@ all:: \
   libfiles \
   libfiles_mt \
   bin/atspack \
-  bin/atslex \
   libatsdoca \
-  bin/atsdoc \
   ccomp/runtime/GCATS/gc.o \
   ccomp/runtime/GCATS/gc_mt.o \
   atsopt1_gc \
+  bin/atslex \
+  bin/atsdoc \
   contrib
 	@echo "ATS/Anairiats has been built up successfully!"
 	@echo "The value of ATSHOME for this build is \"$(ATSHOME)\"."
