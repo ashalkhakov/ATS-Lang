@@ -120,13 +120,12 @@ AC_CHECK_SIZEOF(void*)
 dnl = check for some functions
 AC_CHECK_FUNCS(posix_memalign memalign)
 
-AH_TEMPLATE([HAVE_GCBDW],
-	    [Informs us the availability of Boehm-Demers-Weiser
-	     garbage collection installed on the system.])
-PKG_CHECK_MODULES([GCBDW], [Boehm-Demers-Weiser GC >= 7.1], [AC_DEFINE(HAVE_GCBDW)], [true])
-
-CFLAGS="$CFLAGS $GCBDW_CFLAGS"
-LDFLAGS="$LDFLAGS $GCBDW_LDFLAGS"
+dnl = AH_TEMPLATE([HAVE_GCBDW],
+dnl = 	    [Informs us the availability of Boehm-Demers-Weiser
+dnl = 	     garbage collection installed on the system.])
+dnl = PKG_CHECK_MODULES([GCBDW], [Boehm-Demers-Weiser GC >= 7.1], [AC_DEFINE(HAVE_GCBDW)], [true])
+dnl = CFLAGS="$CFLAGS $GCBDW_CFLAGS"
+dnl = LDFLAGS="$LDFLAGS $GCBDW_LDFLAGS"
 
 AC_OUTPUT
 
