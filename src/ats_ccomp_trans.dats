@@ -1966,6 +1966,7 @@ end // end of [ccomp_exp_seq_tmpvar]
 implement
 ccomp_exp_tmpvar
   (res, hie0, tmp_res) = let
+  val loc0 = hie0.hiexp_loc
 (*
   val () = begin
     print "ccomp_exp_tmpvar: hie0 = "; print hie0; print_newline ();
@@ -1973,7 +1974,6 @@ ccomp_exp_tmpvar
     print "ccomp_exp_tmpvar: tmp_res = "; print tmp_res; print_newline ();
   end // end of [val]
 *)
-  val loc0 = hie0.hiexp_loc
 in
   case+ hie0.hiexp_node of
   | HIEapp (hit_fun, hie_fun, hies_arg) => let

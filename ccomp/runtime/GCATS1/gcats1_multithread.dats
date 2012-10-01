@@ -218,9 +218,11 @@ ats_void_type gc_threadinfo_init () {
 
 ats_void_type gc_threadinfo_fini () {
   threadinfolst _prev, _next ;
-  _prev = the_threadinfolst_self->prev ; _next = the_threadinfolst_self->next ;
 
   the_threadinfolst_lock_acquire () ;
+
+  _prev = the_threadinfolst_self->prev ;
+  _next = the_threadinfolst_self->next ;
 
   if (_next) {
     _next->prev = _prev ;
