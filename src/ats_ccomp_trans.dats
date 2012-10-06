@@ -2056,10 +2056,10 @@ in
   | HIEfreeat hie => ccomp_exp_freeat (res, hie)
   | HIEif (hie_cond, hie_then, hie_else) => let
       val vp_cond = ccomp_exp (res, hie_cond)
-      val tmp_res_then = tmpvar_make_root (tmp_res)
+      val tmp_res_then = tmp_res
       var res_then: instrlst_vt = list_vt_nil ()
       val () = ccomp_exp_tmpvar (res_then, hie_then, tmp_res_then)
-      val tmp_res_else = tmpvar_make_root (tmp_res)
+      val tmp_res_else = tmp_res
       var res_else: instrlst_vt = list_vt_nil ()
       val () = ccomp_exp_tmpvar (res_else, hie_else, tmp_res_else)
       val res_then = $Lst.list_vt_reverse_list res_then

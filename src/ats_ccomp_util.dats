@@ -57,17 +57,6 @@ fn tmpvarmap_add
   | ~Some_vt _ => () | ~None_vt () => $Map.map_insert (m, tmp, 0)
 end // end of [tmpvarmap_add]
 
-fn tmpvarmap_add_root (
-  m: &tmpvarmap, tmp: tmpvar_t
-) : void = let
-  val tmp = (case+ tmpvar_get_root tmp of
-    | TMPVAROPTsome tmp => tmp | TMPVAROPTnone () => tmp
-  ) : tmpvar_t // end of [val]
-in
-  case+ $Map.map_search (m, tmp) of
-  | ~Some_vt _ => () | ~None_vt () => $Map.map_insert (m, tmp, 0)
-end // end of [tmpvarmap]
-
 fun tmpvarmap_addlst
   (m: &tmpvarmap, tmps: tmpvarlst): void = begin
   case+ tmps of
@@ -213,12 +202,12 @@ instr_tmpvarmap_add (m, ins) = let
 in
   case+ ins.instr_node of
 //
-  | INSTRarr_heap (tmp, _, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRarr_stack (tmp, _, _, _) => tmpvarmap_add_root (m, tmp)
+  | INSTRarr_heap (tmp, _, _) => tmpvarmap_add (m, tmp)
+  | INSTRarr_stack (tmp, _, _, _) => tmpvarmap_add (m, tmp)
 //
   | INSTRassgn_clo (_, tmp_clo, _, _) => tmpvarmap_add (m, tmp_clo)
 //
-  | INSTRcall (tmp, _, _, _) => tmpvarmap_add_root (m, tmp)
+  | INSTRcall (tmp, _, _, _) => tmpvarmap_add (m, tmp)
 (*
   | INSTRcall_tail fl => ()
 *)
@@ -231,14 +220,14 @@ in
   | INSTRfunction (
       tmp_ret_all, vps_arg, inss_body, tmp_ret
     ) => () where {
-      val () = tmpvarmap_add_root (m, tmp_ret_all)
+      val () = tmpvarmap_add (m, tmp_ret_all)
       val () = instrlst_tmpvarmap_add (m, inss_body)
-      val () = tmpvarmap_add_root (m, tmp_ret)
+      val () = tmpvarmap_add (m, tmp_ret)
     } // end of [INSTRfunction]
-  | INSTRload_ptr (tmp, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRload_ptr_offs (tmp, _, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRload_var (tmp, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRload_var_offs (tmp, _, _) => tmpvarmap_add_root (m, tmp)
+  | INSTRload_ptr (tmp, _) => tmpvarmap_add (m, tmp)
+  | INSTRload_ptr_offs (tmp, _, _) => tmpvarmap_add (m, tmp)
+  | INSTRload_var (tmp, _) => tmpvarmap_add (m, tmp)
+  | INSTRload_var_offs (tmp, _, _) => tmpvarmap_add (m, tmp)
   | INSTRloop (
       _(*lab*), _(*lab*), _(*lab*)
     , inss_init, _, inss_test, inss_post, inss_body
@@ -248,26 +237,26 @@ in
       instrlst_tmpvarmap_add (m, inss_post);
       instrlst_tmpvarmap_add (m, inss_body);
     end // end of [INSTRloop]
-  | INSTRmove_con (tmp, _, _, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRmove_lazy_delay (tmp, _, _, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRmove_lazy_force (tmp, _, _, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRmove_rec_box (tmp, _, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRmove_rec_flt (tmp, _, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRmove_ref (tmp, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRmove_val (tmp, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRraise (tmp(*uninitialized*), _) => tmpvarmap_add_root (m, tmp)
-  | INSTRselect (tmp, _, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRselcon (tmp, _, _, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRselcon_ptr (tmp, _, _, _) => tmpvarmap_add_root (m, tmp)
+  | INSTRmove_con (tmp, _, _, _) => tmpvarmap_add (m, tmp)
+  | INSTRmove_lazy_delay (tmp, _, _, _) => tmpvarmap_add (m, tmp)
+  | INSTRmove_lazy_force (tmp, _, _, _) => tmpvarmap_add (m, tmp)
+  | INSTRmove_rec_box (tmp, _, _) => tmpvarmap_add (m, tmp)
+  | INSTRmove_rec_flt (tmp, _, _) => tmpvarmap_add (m, tmp)
+  | INSTRmove_ref (tmp, _) => tmpvarmap_add (m, tmp)
+  | INSTRmove_val (tmp, _) => tmpvarmap_add (m, tmp)
+  | INSTRraise (tmp(*uninitialized*), _) => tmpvarmap_add (m, tmp)
+  | INSTRselect (tmp, _, _) => tmpvarmap_add (m, tmp)
+  | INSTRselcon (tmp, _, _, _) => tmpvarmap_add (m, tmp)
+  | INSTRselcon_ptr (tmp, _, _, _) => tmpvarmap_add (m, tmp)
 (*
-  | INSTRpar_spawn (tmp, _) => tmpvarmap_add_root (m, tmp)
-  | INSTRpar_synch (tmp) => tmpvarmap_add_root (m, tmp)
+  | INSTRpar_spawn (tmp, _) => tmpvarmap_add (m, tmp)
+  | INSTRpar_synch (tmp) => tmpvarmap_add (m, tmp)
 *)
   | INSTRswitch (brs) => aux_branchlst (m, brs)
   | INSTRtrywith (inss_try, tmp_exn, brs) => let
       val () = instrlst_tmpvarmap_add (m, inss_try)
     in
-      tmpvarmap_add_root (m, tmp_exn); aux_branchlst (m, brs)
+      tmpvarmap_add (m, tmp_exn); aux_branchlst (m, brs)
     end // end of [INSTRtrywith]
   | INSTRvardec (tmp) => tmpvarmap_add (m, tmp)
   | _ => ()
@@ -306,7 +295,7 @@ implement
 funentry_tmpvarmap_add
   (tmps, entry) = () where {
   val () = instrlst_tmpvarmap_add (tmps, funentry_get_body entry)
-  val () = tmpvarmap_add_root (tmps, funentry_get_ret entry)
+  val () = tmpvarmap_add (tmps, funentry_get_ret entry)
 } // end of [funentry_tmpvarmap_add]
 
 (* ****** ****** *)

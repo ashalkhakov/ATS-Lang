@@ -177,7 +177,6 @@ overload compare with compare_tmpvar_tmpvar
 
 fun tmpvar_make (hit: hityp_t): tmpvar_t
 fun tmpvar_make_ret (hit: hityp_t): tmpvar_t
-fun tmpvar_make_root (tmp: tmpvar_t): tmpvar_t
 
 fun tmpvarlst_make (hit: hityplst_t): tmpvarlst
 
@@ -185,7 +184,6 @@ fun tmpvarlst_make (hit: hityplst_t): tmpvarlst
 
 fun tmpvar_get_ret (tmp: tmpvar_t): int
 fun tmpvar_get_top (tmp: tmpvar_t): int // 0/1: local/top(static)
-fun tmpvar_get_root (tmp: tmpvar_t): tmpvaropt
 fun tmpvar_get_stamp (tmp: tmpvar_t): stamp_t
 fun tmpvar_get_typ (tmp: tmpvar_t): hityp_t
 

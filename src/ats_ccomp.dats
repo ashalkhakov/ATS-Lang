@@ -104,7 +104,9 @@ typedef tmpvar = '{
   tmpvar_typ= hityp_t
 , tmpvar_ret= int (* return status *)
 , tmpvar_top= int (* 0/1 : local/top(static) *)
-, tmpvar_root= tmpvaropt
+(*
+, tmpvar_root= tmpvaropt // HX: tmpvar is alias or not
+*)
 , tmpvar_stamp= stamp_t (* unicity *)
 } // end of [tmpvar]
 
@@ -142,7 +144,9 @@ tmpvar_make (hit) = let
   tmpvar_typ= hit
 , tmpvar_ret= 0
 , tmpvar_top= 0 (*local*)
-, tmpvar_root= TMPVAROPTnone ()
+(*
+, tmpvar_root= TMPVAROPTnone () // HX: tmpvar is not an alias
+*)
 , tmpvar_stamp= stamp
 } end // end of [tmpvar_make]
 
@@ -166,28 +170,6 @@ end // end of [local]
 
 (* ****** ****** *)
 
-local
-
-extern fun tmpvar_set_root
-  (tmp: tmpvar, otmp: tmpvaropt): void = "atsopt_tmpvar_set_root"
-// end of [tmpvar_set_root]
-
-in
-
-implement
-tmpvar_make_root (tmp) = let
-  val otmp = (case+ tmp.tmpvar_root of
-    | TMPVAROPTnone () => TMPVAROPTsome tmp | otmp => otmp
-  ) : tmpvaropt
-  val () = tmpvar_set_root (tmp, otmp)
-in
-  tmp
-end // end of [tmpvar_make_root]
-
-end // end of [local]
-
-(* ****** ****** *)
-
 implement
 tmpvarlst_make (hits) = let
   val hits = hityplst_decode (hits)
@@ -200,7 +182,6 @@ end // end of [tmpvarlst_make]
 
 implement tmpvar_get_ret (tmp) = tmp.tmpvar_ret
 implement tmpvar_get_top (tmp) = tmp.tmpvar_top
-implement tmpvar_get_root (tmp) = tmp.tmpvar_root
 implement tmpvar_get_stamp (tmp) = tmp.tmpvar_stamp
 implement tmpvar_get_typ (tmp) = tmp.tmpvar_typ
 
@@ -290,12 +271,14 @@ fn global_cst_name_make
   | $Syn.DCSTEXTDEFnone () => $Sym.symbol_name (d2cst_get_sym d2c)
   | $Syn.DCSTEXTDEFsome_ext name => name
   | $Syn.DCSTEXTDEFsome_sta name => name
+//
   | $Syn.DCSTEXTDEFsome_mac name => begin
       prerr_interror ();
       prerr ": global_cst_name_make: DCSTEXTDEFcall: d2c = "; prerr_d2cst d2c;
       prerr_newline ();
       $Err.abort {string} ()
     end // end of [DSTEXTDEFsome_mac]
+//
 end // end of [global_cst_name_make]
 
 (* ****** ****** *)
@@ -1306,12 +1289,6 @@ atsopt_tmpvar_set_top
   (ats_ptr_type tmp, ats_int_type top) {
   ((tmpvar_t)tmp)->atslab_tmpvar_top = top ; return ;
 } // end of [atsopt_tmpvar_set_top]
-
-ats_void_type
-atsopt_tmpvar_set_root
-  (ats_ptr_type tmp, ats_ptr_type root) {
-  ((tmpvar_t)tmp)->atslab_tmpvar_root = root ; return ;
-} // end of [atsopt_tmpvar_set_root]
 
 %} // end of [%{$]
 

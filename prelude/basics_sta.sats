@@ -625,7 +625,9 @@ stadef string = string_type
 stadef stropt = stropt_int_type
 stadef strptr = strptr_addr_viewtype // for linear strings
 stadef strptr0 = [l:addr] strptr (l)
+stadef Strptr0 = strptr0
 stadef strptr1 = [l:addr | l > null] strptr (l)
+stadef Strptr1 = strptr1
 stadef strptrlen = strptr_addr_int_viewtype // for linear strings with length
 
 (* ****** ****** *)

@@ -963,13 +963,8 @@ fun emit_valprim_string {m:file_mode}
 
 implement
 emit_valprim_tmpvar
-  (pf | out, tmp) =
-  emit_tmpvar (pf | out, tmp) where {
-  val tmp_root = tmpvar_get_root (tmp)
-  val tmp = (case+ tmp_root of
-    | TMPVAROPTsome tmp => tmp | TMPVAROPTnone () => tmp
-  ) : tmpvar_t
-} // end of [emit_valprim_tmpvar]
+  (pf | out, tmp) = emit_tmpvar (pf | out, tmp)
+// end of [emit_valprim_tmpvar]
 
 (* ****** ****** *)
 

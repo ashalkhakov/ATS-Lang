@@ -6,10 +6,6 @@
 /* Define to 1 if you have the <curses.h> header file. */
 #undef HAVE_CURSES_H
 
-/* Informs us the availability of Boehm-Demers-Weiser garbage collection
-   installed on the system. */
-#undef HAVE_GCBDW
-
 /* Define to 1 if you have the <gmp.h> header file. */
 #undef HAVE_GMP_H
 
@@ -69,6 +65,9 @@
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
