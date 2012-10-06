@@ -105,7 +105,7 @@ typedef tmpvar = '{
 , tmpvar_ret= int (* return status *)
 , tmpvar_top= int (* 0/1 : local/top(static) *)
 (*
-, tmpvar_root= tmpvaropt // HX: tmpvar is alias or not
+, tmpvar_root= tmpvaropt // HX-2012-10-06: removed
 *)
 , tmpvar_stamp= stamp_t (* unicity *)
 } // end of [tmpvar]
@@ -145,7 +145,7 @@ tmpvar_make (hit) = let
 , tmpvar_ret= 0
 , tmpvar_top= 0 (*local*)
 (*
-, tmpvar_root= TMPVAROPTnone () // HX: tmpvar is not an alias
+, tmpvar_root= TMPVAROPTnone () // HX-2012-10-06: removed
 *)
 , tmpvar_stamp= stamp
 } end // end of [tmpvar_make]

@@ -2477,7 +2477,7 @@ fn ccomp_vardec_sta (
   val loc = vardec.hivardec_loc
   val d2v = vardec.hivardec_ptr
   val () = d2var_set_lev (d2v, level)
-  val s2e = d2var_typ_ptr_get d2v
+  val s2e = d2var_typ_ptr_get (d2v)
   val hit = s2exp_tr (loc, 0(*deep*), s2e)
   val tmp = tmpvar_make (hityp_normalize hit)
   val () = instr_add_vardec (res, loc, tmp)
