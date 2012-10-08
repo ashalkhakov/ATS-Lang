@@ -642,27 +642,11 @@ in
 end // end of [d2var_current_level_inc]
 
 implement
-d2var_current_level_incget () = let
-  val n = !the_d2var_current_level; val n1 = n + 1
-  val () = !the_d2var_current_level := n1
-in
-  (unit_v () | n1)
-end // end of [d2var_current_level_inc_and_get]
-
-implement
 d2var_current_level_dec (pf | (*none*)) = let
   prval unit_v () = pf; val n = !the_d2var_current_level
 in
   !the_d2var_current_level := n - 1
 end // end of [d2var_current_level_dec]
-
-implement
-d2var_current_level_decget (pf | (*none*)) = let
-  prval unit_v () = pf; val n = !the_d2var_current_level
-  val n1 = n - 1
-in
-  !the_d2var_current_level := n1; n1
-end // end of [d2var_current_level_dec_and_get]
 
 end // end of [local]
 

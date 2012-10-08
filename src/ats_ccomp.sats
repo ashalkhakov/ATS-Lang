@@ -356,7 +356,7 @@ datatype patck =
   | PATCKfloat of string
   | PATCKint of intinf_t
   | PATCKstring of string
-// end of [patch]
+// end of [patck]
 
 typedef patcklst = List patck
 

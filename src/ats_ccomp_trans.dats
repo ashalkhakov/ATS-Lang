@@ -959,13 +959,19 @@ ccomp_exp_arg_body_funlab
     end // end of [aux]
   } // end of [where]
 //
-  val (pf_level | level) = d2var_current_level_incget ()
+  val level0 = d2var_current_level_get ()
+  val (pfinc | ()) = d2var_current_level_inc ()
+//
   val () = the_funlabset_push ()
   and () = the_vartypset_push ()
 //
   val (pf_dynctx_mark | ()) = the_dynctx_mark ()
 //
-  val () = ccomp_funarg (res, level, loc_fun, hips_arg, fl)
+  val () = let
+    val level1 = d2var_current_level_get ()
+  in
+    ccomp_funarg (res, level1, loc_fun, hips_arg, fl)
+  end // end of [val]
   val hit_body = hityp_normalize (hie_body.hiexp_typ)
   val tmp_ret = tmpvar_make_ret (hit_body)
 //
@@ -977,12 +983,12 @@ ccomp_exp_arg_body_funlab
 //
   val fls = the_funlabset_pop ()
   and vtps = the_vartypset_pop ()
-  val level = d2var_current_level_decget (pf_level | (*none*))
+  val () = d2var_current_level_dec (pfinc | (*none*))
   // function label propogation
   val () = funlabset_foreach_cloptr (fls, aux) where {
     fun aux (fl: funlab_t):<cloptr1> void = begin
-      if funlab_get_lev (fl) < level then the_funlabset_add fl
-    end
+      if funlab_get_lev (fl) < level0 then the_funlabset_add fl
+    end // end of [aux]
   } // end of [where]
   // environment variable propogation
   val () = vartypset_foreach_cloptr (vtps, aux) where {
@@ -991,7 +997,7 @@ ccomp_exp_arg_body_funlab
     ) :<cloptr1> void = let
       val d2v = vartyp_get_var (vtp)
     in
-      if d2var_get_lev d2v < level then the_vartypset_add vtp
+      if d2var_get_lev d2v < level0 then the_vartypset_add vtp
     end // end of [aux]
   } // end of [where]
   val res = $Lst.list_vt_reverse_list (res)
@@ -1002,7 +1008,7 @@ ccomp_exp_arg_body_funlab
   end // end of [val]
 *)
   val entry = begin
-    funentry_make (loc_fun, fl, level, fls, vtps, tmp_ret, res)
+    funentry_make (loc_fun, fl, level0, fls, vtps, tmp_ret, res)
   end // end of [val]
 in
   funentry_add_lablst (fl); funentry_associate (entry); entry
@@ -1092,8 +1098,9 @@ fn ccomp_exp_ptrof_var (
 ) : valprim = let
   var vp_mut: valprim = the_dynctx_find (d2v_mut)
 in
-case+
-vp_mut.valprim_node of
+//
+case+ 
+  vp_mut.valprim_node of
 //
 | VPfix _ => vp_mut // HX: this is solely for handling @fix
 //

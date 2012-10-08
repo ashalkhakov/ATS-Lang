@@ -117,9 +117,7 @@ absview d2var_current_level_v
 fun d2var_current_level_get (): int
 fun d2var_current_level_set (n: int): void
 fun d2var_current_level_inc (): (d2var_current_level_v | void)
-fun d2var_current_level_incget (): (d2var_current_level_v | int)
 fun d2var_current_level_dec (pf: d2var_current_level_v | (*none*)): void
-fun d2var_current_level_decget (pf: d2var_current_level_v | (*none*)): int
 
 (* ****** ****** *)
 
