@@ -190,6 +190,26 @@ linmap_search_ref
 
 (* ****** ****** *)
 
+implement
+{key,itm}
+linmap_search_opt
+  (t, k0, cmp) = let
+  var res: itm?
+  val ans = linmap_search (t, k0, cmp, res)
+in
+  if ans then let
+    prval () = opt_unsome {itm} (res)
+  in
+    Some_vt (res)
+  end else let
+    prval () = opt_unnone {itm} (res)
+  in
+    None_vt (*void*)
+  end // end of [if]
+end // end of [linmap_search_opt]
+
+(* ****** ****** *)
+
 (*
 ** left rotation for restoring height invariant
 *)

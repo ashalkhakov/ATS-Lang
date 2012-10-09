@@ -2473,7 +2473,7 @@ fn ccomp_valdeclst_rec (
         end // end of [list_cons]
       | list_nil () => ()
     // end of [aux]
-  } // end of [va;]
+  } // end of [val]
 } // end of [ccomp_valdeclst_rec]
 
 (* ****** ****** *)

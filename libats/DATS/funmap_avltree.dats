@@ -130,7 +130,8 @@ funmap_height (t) = avltree_height (t)
 
 (* ****** ****** *)
 
-implement{key,itm}
+implement
+{key,itm}
 funmap_search
   (t, k0, cmp, res) = search (t, res) where {
   fun search {h:nat} .<h>. (
@@ -152,6 +153,24 @@ funmap_search
       end // end of [E]
   end // end of [search]
 } // end of [funmap_search]
+
+implement
+{key,itm}
+funmap_search_opt
+  (t, k0, cmp) = let
+  var res: itm?
+  val ans = funmap_search (t, k0, cmp, res)
+in
+  if ans then let
+    prval () = opt_unsome {itm} (res)
+  in
+    Some_vt (res)
+  end else let
+    prval () = opt_unnone {itm} (res)
+  in
+    None_vt (*void*)
+  end // end of [if]
+end // end of [funmap_search_opt]
 
 (* ****** ****** *)
 

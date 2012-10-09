@@ -99,6 +99,12 @@ key:t0p;itm:vt0p
   m: !map (key, itm), k0: key, cmp: cmp key // unsafe but ...
 ) :<> Ptr // end of [linmap_search_ref]
 
+fun{
+key:t0p;itm:t0p
+} linmap_search_opt
+  (m: !map (key, itm), k0: key, cmp: cmp key):<> Option_vt (itm)
+// end of [linmap_search_opt]
+
 (* ****** ****** *)
 //
 // HX-2010-03-25:

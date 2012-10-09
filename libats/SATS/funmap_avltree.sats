@@ -82,14 +82,21 @@ fun{key,itm:t@ype} funmap_height (m: map (key, itm)):<> Nat
 
 (* ****** ****** *)
 
-fun{key,itm:t@ype}
-funmap_search (
+fun{
+key,itm:t@ype
+} funmap_search (
   m: map (key, itm)
 , k0: key
 , cmp: cmp key
 , res: &itm? >> opt (itm, b)
 ) :<> #[b:bool] bool b
 // end of [funmap_search]
+
+fun{
+key,itm:t@ype
+} funmap_search_opt
+  (m: map (key, itm), k0: key, cmp: cmp key) :<> Option_vt (itm)
+// end of [funmap_search_opt]
 
 (* ****** ****** *)
 
