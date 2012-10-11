@@ -370,45 +370,46 @@ end // end of [sp1at_argcheck]
 
 implement
 sp1at_tr_dn (sp1t, s2t_pat) = let
-  val loc0 = sp1t.sp1at_loc
 //
-  fn err1
-    (q: s0taq, id: sym_t):<cloref1> sp2at = begin
-    prerr_loc_error2 loc0;
-    $Deb.debug_prerrf (": %s: sp1at_tr_dn", @(THISFILENAME));
-    prerr ": the static identifier [";
-    $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
-    prerr "] does not refer to a constructor associated with the sort [";
-    prerr s2t_pat; prerr_newline ();
-    $Err.abort {sp2at} ()
-  end // end of [err1]
+val loc0 = sp1t.sp1at_loc
 //
-  fn err2 
-    (q: s0taq, id: sym_t):<cloref1> sp2at = begin
-    prerr_loc_error2 loc0;
-    $Deb.debug_prerrf (": %s: sp1at_tr_dn", @(THISFILENAME));
-    prerr ": the static identifier [";
-    $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
-    prerr "] does not refer to a static constructor.";
-    prerr_newline ();
-    $Err.abort {sp2at} ()
-  end // end of [err2]
+fn err1
+  (q: s0taq, id: sym_t):<cloref1> sp2at = begin
+  prerr_loc_error2 loc0;
+  $Deb.debug_prerrf (": %s: sp1at_tr_dn", @(THISFILENAME));
+  prerr ": the static identifier [";
+  $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
+  prerr "] does not refer to a constructor associated with the sort [";
+  prerr s2t_pat; prerr_newline ();
+  $Err.abort {sp2at} ()
+end // end of [err1]
 //
-  fn err3
-    (q: s0taq, id: sym_t):<cloref1> sp2at = begin
-    prerr_loc_error2 loc0;
-    $Deb.debug_prerrf (": %s: sp1at_tr_dn", @(THISFILENAME));
-    prerr ": the static identifier [";
-    $Syn.prerr_s0taq q; $Sym.prerr_symbol id; prerr "] is unrecognized.";
-    prerr_newline ();
-    $Err.abort {sp2at} ()
-  end // end of [err3]
+fn err2 
+  (q: s0taq, id: sym_t):<cloref1> sp2at = begin
+  prerr_loc_error2 loc0;
+  $Deb.debug_prerrf (": %s: sp1at_tr_dn", @(THISFILENAME));
+  prerr ": the static identifier [";
+  $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
+  prerr "] does not refer to a static constructor.";
+  prerr_newline ();
+  $Err.abort {sp2at} ()
+end // end of [err2]
 //
-  fn argcheck_err (s2v: s2var_t):<cloref1> void = begin
-    $Loc.prerr_location loc0; prerr ": warning(2)";    
-    prerr ": the static variable ["; prerr s2v; prerr "] occurs repeatedly.";
-    prerr_newline ()
-  end // end of [argcheck_err]
+fn err3
+  (q: s0taq, id: sym_t):<cloref1> sp2at = begin
+  prerr_loc_error2 loc0;
+  $Deb.debug_prerrf (": %s: sp1at_tr_dn", @(THISFILENAME));
+  prerr ": the static identifier [";
+  $Syn.prerr_s0taq q; $Sym.prerr_symbol id; prerr "] is unrecognized.";
+  prerr_newline ();
+  $Err.abort {sp2at} ()
+end // end of [err3]
+//
+fn argcheck_err (s2v: s2var_t):<cloref1> void = begin
+  $Loc.prerr_location loc0; prerr ": warning(2)";    
+  prerr ": the static variable ["; prerr s2v; prerr "] occurs repeatedly.";
+  prerr_newline ()
+end // end of [argcheck_err]
 //
 in
   case+ sp1t.sp1at_node of
@@ -2111,62 +2112,79 @@ end // end of [s1expdeflst_tr]
 
 implement
 s1aspdec_tr (d1c) = let
-  fn err1
-    (loc: loc_t, q: $Syn.s0taq, id: sym_t,
-     s2t_s2c: s2rt, s2t_s2e: s2rt): s2aspdec = begin
-    prerr_loc_error2 loc;
-    $Deb.debug_prerrf (": %s: s1aspdec_tr: err1", @(THISFILENAME));
-    prerr ": sort mismatch";
-    prerr ": the sort of the static constant [";
-    $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
-    prerr "] is [";
-    prerr s2t_s2c;
-    prerr "] while the sort of its definition is [";
-    prerr s2t_s2e;
-    prerr "].";
-    prerr_newline ();
-    $Err.abort {s2aspdec} ()
-  end // end of [err1]
-
-  fn err2 (loc: loc_t, q: $Syn.s0taq, id: sym_t): s2aspdec = begin
-    prerr_loc_error2 loc;
-    $Deb.debug_prerrf (": %s: s1aspdec_tr: err2", @(THISFILENAME));
-    prerr ": the static constant [";
-    $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
-    prerr "] is not abstract.";
-    prerr_newline ();
-    $Err.abort {s2aspdec} ()
-  end // end of [err2]
-
-  fn err3 (loc: loc_t, q: $Syn.s0taq, id: sym_t): s2aspdec = begin
-    prerr_loc_error2 loc;
-    $Deb.debug_prerrf (": %s: s1aspdec_tr: err2", @(THISFILENAME));
-    prerr ": the static constant referred to by [";
-    $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
-    prerr "] cannot be uniquely resolved.";
-    prerr_newline ();
-    $Err.abort {s2aspdec} ()
-  end // end of [err3]
-
-  fn err4 (loc: loc_t, q: $Syn.s0taq, id: sym_t): s2aspdec = begin
-    prerr_loc_error2 loc;
-    $Deb.debug_prerrf (": %s: s1aspdec_tr: err4", @(THISFILENAME));
-    prerr ": the identifier [";
-    $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
-    prerr "] does not refer to a static constant.";
-    prerr_newline ();
-    $Err.abort {s2aspdec} ()
-  end // end of [err4]
-
-  fn err5 (loc: loc_t, q: $Syn.s0taq, id: sym_t): s2aspdec = begin
-    prerr_loc_error2 loc;
-    $Deb.debug_prerrf (": %s: s1aspdec_tr: err5", @(THISFILENAME));
-    prerr ": the identifier [";
-    $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
-    prerr "] is unrecognized.";
-    prerr_newline ();
-    $Err.abort {s2aspdec} ()
-  end // end of [err5]
+//
+fn err1 (
+  loc: loc_t
+, q: $Syn.s0taq, id: sym_t,
+  s2t_s2c: s2rt, s2t_s2e: s2rt
+) : s2aspdec = begin
+  prerr_loc_error2 loc;
+  $Deb.debug_prerrf (": %s: s1aspdec_tr: err1", @(THISFILENAME));
+  prerr ": sort mismatch";
+  prerr ": the sort of the static constant [";
+  $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
+  prerr "] is [";
+  prerr s2t_s2c;
+  prerr "] while the sort of its definition is [";
+  prerr s2t_s2e;
+  prerr "].";
+  prerr_newline ();
+  $Err.abort {s2aspdec} ()
+end // end of [err1]
+//
+(*
+fn err2 (
+  loc: loc_t
+, q: $Syn.s0taq, id: sym_t
+) : s2aspdec = begin
+  prerr_loc_error2 loc;
+  $Deb.debug_prerrf (": %s: s1aspdec_tr: err2", @(THISFILENAME));
+  prerr ": the static constant referred to by [";
+  $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
+  prerr "] cannot be uniquely resolved.";
+  prerr_newline ();
+  $Err.abort {s2aspdec} ()
+end // end of [err2]
+*)
+//
+fn err3 (
+  loc: loc_t
+, q: $Syn.s0taq, id: sym_t
+) : s2aspdec = begin
+  prerr_loc_error2 loc;
+  $Deb.debug_prerrf (": %s: s1aspdec_tr: err3", @(THISFILENAME));
+  prerr ": the static constant [";
+  $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
+  prerr "] is not abstract.";
+  prerr_newline ();
+  $Err.abort {s2aspdec} ()
+end // end of [err3]
+//
+fn err4 (
+  loc: loc_t
+, q: $Syn.s0taq, id: sym_t
+) : s2aspdec = begin
+  prerr_loc_error2 loc;
+  $Deb.debug_prerrf (": %s: s1aspdec_tr: err4", @(THISFILENAME));
+  prerr ": the identifier [";
+  $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
+  prerr "] does not refer to a static constant.";
+  prerr_newline ();
+  $Err.abort {s2aspdec} ()
+end // end of [err4]
+//
+fn err5 (
+  loc: loc_t
+, q: $Syn.s0taq, id: sym_t
+) : s2aspdec = begin
+  prerr_loc_error2 loc;
+  $Deb.debug_prerrf (": %s: s1aspdec_tr: err5", @(THISFILENAME));
+  prerr ": the identifier [";
+  $Syn.prerr_s0taq q; $Sym.prerr_symbol id;
+  prerr "] is unrecognized.";
+  prerr_newline ();
+  $Err.abort {s2aspdec} ()
+end // end of [err5]
 //
   val fil = d1c.s1aspdec_fil
   val loc = d1c.s1aspdec_loc
@@ -2190,7 +2208,7 @@ in
         } // end of [val]
       in
         case+ s2cs of
-        | S2CSTLSTcons (s2c, S2CSTLSTnil ()) => let
+        | S2CSTLSTcons (s2c, _) => let
             val res = s1rtopt_tr d1c.s1aspdec_res
             val s2e = s1expdef_s1aspdec_tr_main
               (loc, d1c.s1aspdec_arg, res, d1c.s1aspdec_def)
@@ -2198,18 +2216,17 @@ in
             // definition binding is to be done in [ats_trans3_dec.dats]
 *)
             val s2t_s2e = s2e.s2exp_srt
-            val s2t_s2c = s2cst_get_srt s2c
+            val s2t_s2c = s2cst_get_srt (s2c)
           in
             if s2t_s2e <= s2t_s2c then begin
               s2aspdec_make (fil, loc, s2c, s2e)
             end else begin
               err1 (loc, q, id, s2t_s2c, s2t_s2e)
             end // end of [if]
-          end
+          end // end of [S2CSTLSTcons]
         | S2CSTLSTnil () => begin
-            err2 (loc, q, id) // [s2c] is not abstract!
+            err3 (loc, q, id) // [s2c] is not abstract!
           end // end of [if]
-        | _ => err3 (loc, q, id)
       end // end of [S2ITEMcst]
     | _ => err4 (loc, q, id)
     end // end of [Some_vt]
