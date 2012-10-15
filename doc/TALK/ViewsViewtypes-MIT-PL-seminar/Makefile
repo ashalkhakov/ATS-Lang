@@ -9,10 +9,11 @@ ATSUSRQ="$(ATSHOME)"
 ######
 
 ATSCC=$(ATSUSRQ)/bin/atscc
-ATSCTRBGL=$(ATSUSRQ)/contrib/GL/atsctrb_GL.o
-ATSCTRBXR=$(ATSUSRQ)/contrib/cairo/atsctrb_cairo.o
-ATSCTRBGTK=$(ATSUSRQ)/contrib/GTK/atsctrb_GTK.o
-ATSCTRBPSLIDE=$(ATSUSRQ)/contrib/atspslide/atsctrb_atspslide.o
+ATSCTRB=$(ATSUSRQ)/contrib
+ATSCTRBGL=$(ATSCTRB)/GL/atsctrb_GL.o
+ATSCTRBXR=$(ATSCTRB)/cairo/atsctrb_cairo.o
+ATSCTRBGTK=$(ATSCTRB)/GTK/atsctrb_GTK.o
+ATSCTRBPSLIDE=$(ATSCTRB)/atspslide/atsctrb_atspslide.o
 
 ######
 
@@ -23,7 +24,7 @@ all:: bin/ViewsViewtypesPresent
 
 GTKGLEXT=`pkg-config --cflags --libs gtk+-2.0 gtkglext-1.0 gtkglext-x11-1.0`
 bin/ViewsViewtypesPresent: ViewsViewtypesPresent.dats ; \
-  $(ATSCC) -O3 -o $@ $< $(ATSCTRBGL) $(ATSCTRBXR) $(ATSCTRBGTK) $(ATSCTRBPSLIDE) $(GTKGLEXT)
+  $(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -O3 -o $@ $< $(ATSCTRBGL) $(ATSCTRBXR) $(ATSCTRBGTK) $(ATSCTRBPSLIDE) $(GTKGLEXT)
 
 ######
 
