@@ -493,7 +493,7 @@ val theRotateknd_ref = ref_make_elt<int> (0)
 #define CLOCKND 0 // show no second hand
 #define CLOCKND 1 // show the second hand
 *)
-#define CLOCKND 1
+#define CLOCKND 0
 //
 macdef cairodraw_clock (cr) = cairodraw_clock01 (,(cr), CLOCKND)
 //

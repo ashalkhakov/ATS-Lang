@@ -4,7 +4,7 @@
 //
 (* ****** ****** *)
 
-datatype FIB (int, int) =
+dataprop FIB (int, int) =
   | FIB0 (0, 0) of () // fib(0) = 0
   | FIB1 (1, 1) of () // fib(1) = 1
   | {n:nat}{r0,r1:nat} // fib(n+2) = fib(n)+fib(n+1)
@@ -30,6 +30,7 @@ fib {n} (n) = let
     if ni > 1 then
       loop {i+1} (pf1, FIB2 (pf0, pf1) | ni-1, r1, r0+r1)
     else (pf1 | r1)
+  // end of [loop]
 in
   case+ n of
   | 0 => (FIB0 () |  0)
@@ -39,4 +40,30 @@ end // end of [fib]
 
 (* ****** ****** *)
 
-(* end of [fib-tailrec.dats] *)
+implement
+main () = let
+//
+#define N 10
+#define LN 40
+//
+fun loop (
+  i: natLte (N)
+) : void =
+  if i < N then let
+    val (pf | ans) = fib (i)
+    val () = printf ("fib(%i) = %i\n", @(i, ans))
+  in
+    loop (i+1)
+  end else () // end of [if]
+//
+val () = loop (0)
+//
+val (pf | ans) = fib (LN)
+val () = printf ("fib(%i) = %i\n", @(LN, ans))
+//
+in
+end // end of [main]
+
+(* ****** ****** *)
+
+(* end of [fib_tailrec.dats] *)

@@ -18,12 +18,12 @@ ATSCTRBPSLIDE=$(ATSCTRB)/atspslide/atsctrb_atspslide.o
 ######
 
 all:: myslide
-all:: bin/ATSforCPresent
+all:: bin/ATSforC_present
 
 ######
 
 GTKGLEXT=`pkg-config --cflags --libs gtk+-2.0 gtkglext-1.0 gtkglext-x11-1.0`
-bin/ATSforCPresent: ATSforCPresent.dats ; \
+bin/ATSforC_present: ATSforC_present.dats ; \
   $(ATSCC) -I$(ATSCTRB) -IATS$(ATSCTRB) -O3 -o $@ $< $(ATSCTRBGL) $(ATSCTRBXR) $(ATSCTRBGTK) $(ATSCTRBPSLIDE) $(GTKGLEXT)
 
 ######
@@ -44,6 +44,10 @@ myslide: ATSforC.ps
 
 ######
 
+fib: fib_tailrec.dats ; $(ATSCC) -O2 -o $@ $<
+
+######
+
 clean:
 	rm -f *~
 	rm -f *_?ats.o
@@ -54,7 +58,7 @@ clean:
 	rm -f *.dvi
 
 cleanall: clean
-	rm -f bin/ATSforCPresent
+	rm -f bin/ATSforC_present
 	rm -f data/myslide_*.png
 
 ###### end of [Makefile] ######

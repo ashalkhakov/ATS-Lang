@@ -18,7 +18,9 @@
 \def\stype{{\it type}}
 
 \def\tint{\mbox{\bf int}}
+\def\tptr{\mbox{\bf ptr}}
 \def\tbool{\mbox{\bf bool}}
+\def\tvoid{\mbox{\bf void}}
 \def\tlist{\mbox{\bf list}}
 \def\tllist{\mbox{\bf list\_vt}}
 \def\tarray{\mbox{\bf array}}
@@ -122,7 +124,7 @@ The efficiency of programs written in ATS can rival their counterparts in
 C both time-wise and memory-wise. See the following benchmarking site
 run by a third-party:
 \begin{center}
-\texttt{http://shootout.alioth.debian.org/}
+\texttt{\bf http://shootout.alioth.debian.org/}
 \end{center}
 \end{itemize}
 \end{slide}
@@ -136,7 +138,8 @@ run by a third-party:
 
 \item
 Types are essentially a specification language for writing specifications
-against which implementations can be checked {\em statically}.
+against which implementations can be checked {\em mechanically} at
+compile-time.
 
 \item
 The tool for supporting this kind of static checking is called
@@ -159,7 +162,7 @@ Common Misconceptions of Types:
 \begin{slide}{\em Types in ATS}
 \begin{itemize}
 \item Types in ATS are rich and expressive.
-\item In particuarly, there are dependent types and linear types in ATS.
+\item In particularly, there are dependent types and linear types in ATS.
 \begin{itemize}
 \item Dependent types, which are rooted in the first-order
 predicate logic, bring precision into specification.
@@ -174,6 +177,34 @@ logic, allow direct modeling of resource allocation/deallocation and manipulatio
 %%
 %%%%%%
 \begin{slide}{\em Examples of Types in ATS (1)}
+
+\begin{itemize}
+\item Primitive singleton types for enhancing precision:
+\begin{itemize}
+\item Given a integer n, $\tint(n)$ is the type for the only integer whose
+  value equals n.
+\item Given a boolean b, $\tbool(b)$ is the type for the only boolean whose
+  value equals b.
+\item Given a memory location l, $\tptr(l)$ is the type for the only pointer to the
+  location l.
+\end{itemize}
+
+\item Precise dependent types for primitive operations:
+$$\begin{array}{rcl}
+{+} & : & \forall i:int.\forall j:int.(\tint(i), \tint(j))\timp \tint(i+j) \\
+{-} & : & \forall i:int.\forall j:int.(\tint(i), \tint(j))\timp \tint(i-j) \\
+{*} & : & \forall i:int.\forall j:int.(\tint(i), \tint(j))\timp \tint(i*j) \\
+\ldots & : & \ldots \\
+\end{array}$$
+
+\end{itemize}
+\end{slide}
+%%%%%%
+%%
+%% Slide 2.4
+%%
+%%%%%%
+\begin{slide}{\em Examples of Types in ATS (2)}
 \begin{itemize}
 \item
 
@@ -188,7 +219,7 @@ The following is a representation of the above type in the concrete syntax
 of ATS:
 
 $$\begin{array}{l}
-\texttt{\{i:int\} int(i) -> [j:int | j >= 0] tint(j)} \\
+\texttt{\{i:int\} int(i) -> [j:int | j >= 0] int(j)} \\
 \end{array}$$
 
 For instance, this type can be assigned to the absolute-value function
@@ -198,10 +229,10 @@ or the square function on integers.
 \end{slide}
 %%%%%%
 %%
-%% Slide 2.4
+%% Slide 2.5
 %%
 %%%%%%
-\begin{slide}{\em Examples of Types in ATS (2)}
+\begin{slide}{\em Examples of Types in ATS (3)}
 \begin{itemize}
 \item
 
@@ -218,17 +249,17 @@ $$\begin{array}{l}
 \texttt{\{a:type\}\{n:int\}}\\
 \kern12pt\texttt{\{i:nat | i < n\}(array(a, n), int(i)) -> a}\\
 \end{array}$$
-Clearly, this type can be assgined to the array-subscripting
+Clearly, this type can be assigned to the array-subscripting
 function.
 
 \end{itemize}
 \end{slide}
 %%%%%%
 %%
-%% Slide 2.5
+%% Slide 2.6
 %%
 %%%%%%
-\begin{slide}{\em Examples of Types in ATS (3)}
+\begin{slide}{\em Examples of Types in ATS (4)}
 \begin{itemize}
 \item
 
@@ -247,10 +278,10 @@ two given lists in functional style.
 \end{slide}
 %%%%%%
 %%
-%% Slide 2.6
+%% Slide 2.7
 %%
 %%%%%%
-\begin{slide}{\em Examples of Types in ATS (4)}
+\begin{slide}{\em Examples of Types in ATS (5)}
 \begin{itemize}
 \item
 
@@ -269,15 +300,15 @@ after a call to it returns.
 \end{slide}
 %%%%%%
 %%
-%% Slide 2.7
+%% Slide 2.8
 %%
 %%%%%%
-\begin{slide}{\em Examples of Types in ATS (5)}
+\begin{slide}{\em Examples of Types in ATS (6)}
 \begin{itemize}
 \item
 
 There is a famous saying in English: {\em one cannot have the cake and
-eat it!} This can be readily formalized:
+eat it!} This can be formalized as follows:
 $$\begin{array}{rcl}
 \texttt{eat} & : & \texttt{(cake) -> void} \\
 \texttt{have\_and\_eat} & : & \texttt{(!cake) -> void} \\
@@ -293,7 +324,7 @@ The symbol $!$ indicates that the argument of the function
 %% Slide 3.1
 %%
 %%%%%%
-\begin{slide}{\em ATS(1)}
+\begin{slide}{\em ATS (1)}
 \begin{itemize}
 
 \item
@@ -321,7 +352,7 @@ be ready for release in the near feature.
 %% Slide 3.2
 %%
 %%%%%%
-\begin{slide}{\em ATS(2)}
+\begin{slide}{\em ATS (2)}
 \begin{itemize}
 \item
 The core of ATS is a call-by-value functional programming language,
@@ -340,7 +371,7 @@ can be thought of as a front end for C.
 \item
 For more details, please visit:
 \begin{center}
-\texttt{http://www.ats-lang.org}
+\texttt{\bf http://www.ats-lang.org}
 \end{center}
 \end{itemize}
 \end{slide}
@@ -379,12 +410,35 @@ proofs. Consequently, we can and do construct classical proofs.
 \end{slide}
 %%%%%%
 %%
-%% Slide 5.2
+%% Slide 5.2.1
+%%
+%%%%%%
+\begin{slide}{\em Ind. Def. of Fibonacci Numbers}
+$$\begin{array}{rcl}
+fib(0) & = & 0 \\
+fib(1) & = & 1 \\
+fib(n) & = & fib(n-2)+fib(n-1)~~\mbox{if $n \geq 2$} \\
+\end{array}$$
+\end{slide}
+%%%%%%
+\begin{slide}{\em Implementation of $fib$ in C}
+{\blue\begin{verbatim}
+int fib (int n) {
+  int tmp;
+  int r0 = 0, r1 = 1;
+  while (n > 0) { tmp = r1; r1 = r0+r1; r0 = tmp; }
+  return r0 ;
+} // end of [fib]
+\end{verbatim}}
+\end{slide}
+%%%%%%
+%%
+%% Slide 5.2.3
 %%
 %%%%%%
 \begin{slide}{\em A Dataprop Declaration in ATS}
 {\blue\begin{verbatim}
-datatype FIB (int, int) =
+dataprop FIB (int, int) =
   | FIB0 (0, 0) of () // fib(0) = 0
   | FIB1 (1, 1) of () // fib(1) = 1
   | {n:nat}{r0,r1:nat} // fib(n+2) = fib(n)+fib(n+1)
@@ -440,6 +494,7 @@ fib {n} (n) = let
     if ni > 1 then
       loop {i+1} (pf1, FIB2 (pf0, pf1) | ni-1, r1, r0+r1)
     else (pf1 | r1)
+  // end of [loop]
 in
   case+ n of
   | 0 => (FIB0 () |  0)
@@ -466,6 +521,93 @@ view that joins $V_1$ and $V_2$ together.
 \item
 We also provide a means for forming recursive views. 
 \end{itemize}
+\end{slide}
+%%%%%%
+%%
+%% Slide ??
+%%
+%%%%%%
+%%%%%%
+%%
+%% Slide 18
+%%
+%%%%%%
+\def\tptr{\mbox{\bf ptr}}
+\def\fptrget{{\it ptrget}}
+\def\fptrset{{\it ptrset}}
+\begin{slide}{\em Some Built-in Functions}
+{\blue\begin{verbatim}
+fun{a:type}
+ptrget {l:addr}
+  (pf: a@l | p: ptr l): (a@l | a)
+// end of [ptrget]
+
+fun{a:type}
+ptrset {l:addr}
+  (pf: (a?)@l | p: ptr l, x: a): (a@l | void)
+// end of [ptrset]
+\end{verbatim}
+}
+\[\begin{array}{rcl}
+\fptrget &~:~& \forall a:\stype.\forall l:\saddr.~~(a@l \mid \tptr(l)) \timp (a@l \mid a) \\
+\fptrset &~:~& \forall a:\stype.\forall l:\saddr.~~(a?@l \mid \tptr(l), a)\timp (a@l \mid \tvoid) \\
+\end{array}\]
+\end{slide}
+%%%%%%
+%%
+%% Slide ??
+%%
+%%%%%%
+\begin{slide}{\em Example: {\it Swap}}
+{\blue\begin{verbatim}
+fun{a:type}
+swap {l1,l2:addr} (
+  pf1: a@l1, pf2: a@l2
+| p1: ptr l1, p2: ptr l2
+) : (a@l1, a@l2 | void) = let
+  val (pf1 | x1) = ptrget<a> (pf1 | p1)
+  val (pf2 | x2) = ptrget<a> (pf2 | p2)
+  val (pf1 | ()) = ptrset<a> (pf1 | p1, x2)
+  val (pf2 | ()) = ptrset<a> (pf2 | p2, x1)
+in
+  (pf1, pf2 | ())
+end // end of [swap]
+\end{verbatim}
+}
+\end{slide}
+%%%%%%
+%%
+%% Slide ??
+%%
+%%%%%%
+\begin{slide}{\em Syntactical Convenience}
+{\blue\begin{verbatim}
+fun{a:type}
+ptrget {l:addr} (pf: !a@l | p: ptr l): a
+
+fun{a:type}
+ptrset {l:addr}
+  (pf: !(a?)@l >> a@l | p: ptr l, x: a): void
+// end of [ptrset]
+\end{verbatim}
+}
+\end{slide}
+%%%%%%
+%%
+%% Slide ??
+%%
+%%%%%%
+\begin{slide}{\em Another Implementation of {\it Swap}}
+{\blue\begin{verbatim}
+fun{a:type}
+swap {l1,l2:addr} (
+  pf1: !a@l1, pf2: !a@l2
+| p1: ptr l1, p2: ptr l2
+) : void = let
+  val tmp = !p1 in !p1 := !p2; !p2 := tmp
+end // end of [swap]
+\end{verbatim}
+}
 \end{slide}
 %%%%%%
 %%
@@ -552,7 +694,7 @@ manipulation. We want to investigate more effective approaches to proof
 management in order to better support PwTP.
 \item
 Identifying the potential of PwTP in areas other than systems programming
-(e.g., security).
+(e.g., security, privacy).
 \end{itemize}
 \end{slide}
 %%%%%%
