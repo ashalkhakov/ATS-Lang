@@ -44,12 +44,12 @@
 
 (* ****** ****** *)
 
-staload GLIB = "glib/SATS/glib.sats"
+staload GLIB = "contrib/glib/SATS/glib.sats"
 stadef gboolean = $GLIB.gboolean
 
 (* ****** ****** *)
 
-staload GOBJ = "glib/SATS/glib-object.sats"
+staload GOBJ = "contrib/glib/SATS/glib-object.sats"
 stadef GObject = $GOBJ.GObject // class constant
 stadef gobjref = $GOBJ.gobjref // boxed viewtype
 
@@ -66,7 +66,7 @@ gtk_gl_parse_args (int *argc, char ***argv);
 
 (* ****** ****** *)
 
-staload "GTK/SATS/gtkclassdec.sats"
+staload "contrib/GTK/SATS/gtkclassdec.sats"
 
 (* ****** ****** *)
 

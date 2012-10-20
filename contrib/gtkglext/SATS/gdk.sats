@@ -45,14 +45,14 @@
 (* ****** ****** *)
 
 staload
-GLIB = "glib/SATS/glib.sats"
+GLIB = "contrib/glib/SATS/glib.sats"
 stadef gint = $GLIB.gint
 stadef gboolean = $GLIB.gboolean
 
 (* ****** ****** *)
 
 staload
-GOBJ = "glib/SATS/glib-object.sats"
+GOBJ = "contrib/glib/SATS/glib-object.sats"
 stadef GObject = $GOBJ.GObject // class constant
 stadef gobjref = $GOBJ.gobjref // boxed viewtype
 

@@ -389,7 +389,7 @@ fun fib {n:nat}
 %% Slide 16
 %%
 %%%%%%
-\begin{slide}{\em A Direct Implementaation of {\it fib}}
+\begin{slide}{\em A Direct Implementation of {\it fib}}
 {\blue\begin{verbatim}
 implement fib (n) =
   case+ n of
@@ -400,7 +400,7 @@ implement fib (n) =
       val (pf1 | r1) = fib (n-1)
     in
       (FIB2 (pf0, pf1) | r0 + r1)
-    end
+    end // end of [_]
 // end of [fib]
 \end{verbatim}
 }
@@ -835,20 +835,3 @@ Identifying the potential of PwTP in areas other than systems programming
 \end{slide}
 \end{document}
 %%%%%% end of [ViewsViewtypes.tex] %%%%%%
-implement
-fib {n} (n) = let
-  fun loop
-    {i:nat | i < n} {r0,r1:nat} (
-    pf0: FIB (i, r0), pf1: FIB (i+1, r1)
-  | ni: int (n-i), r0: int r0, r1: int r1
-  ) : [r:nat] (FIB (n, r) | int r) =
-    if ni > 1 then
-      loop {i+1} (pf1, FIB2 (pf0, pf1) | ni-1, r1, r0+r1)
-    else (pf1 | r1)
-in
-  case+ n of
-  | 0 => (FIB0 () |  0)
-  | 1 => (FIB1 () |  1)
-  | _ =>> loop {0} (FIB0, FIB1 | n, 0, 1)
-end // end of [fib]
-
