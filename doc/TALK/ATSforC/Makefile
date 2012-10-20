@@ -19,6 +19,7 @@ ATSCTRBPSLIDE=$(ATSCTRB)/atspslide/atsctrb_atspslide.o
 
 all:: myslide
 all:: bin/ATSforC_present
+all:: bin/fib_demo
 
 ######
 
@@ -44,7 +45,7 @@ myslide: ATSforC.ps
 
 ######
 
-fib: fib_tailrec.dats ; $(ATSCC) -O2 -o $@ $<
+bin/fib_demo: fib_demo.dats ; $(ATSCC) -O2 -o $@ $<
 
 ######
 
@@ -58,6 +59,7 @@ clean:
 	rm -f *.dvi
 
 cleanall: clean
+	rm -f bin/fib_demo
 	rm -f bin/ATSforC_present
 	rm -f data/myslide_*.png
 
