@@ -33,8 +33,8 @@ fib {n} (n) = let
   // end of [loop]
 in
   case+ n of
-  | 0 => (FIB0 () |  0)
-  | 1 => (FIB1 () |  1)
+  | 0 => (FIB0 () | 0)
+  | 1 => (FIB1 () | 1)
   | _ =>> loop {0} (FIB0, FIB1 | n, 0, 1)
 end // end of [fib]
 
