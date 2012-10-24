@@ -33,21 +33,21 @@
 ##
 ## ###### ###### ##
 
-AWK := awk
-BASH := bash
-PDFLATEX := pdflatex
+# Generates keywords.txt for lstatslang.sty.sh.
 
-.PHONY: all clean
-all:: lstatslang.sty
-clean::
-	rm -f lstatslang.sty keywords.txt
-lstatslang.sty: lstatslang.sty.sh keywords.txt
+for candidate in \
+    ../../src/ats_keyword.dats \
+    ../../bootstrap1/ats_keyword_dats.c
+do
+  if [[ -f "$candidate" ]]; then
+    readonly FILE="$candidate"
+    break
+  fi
+done
 
-%: %.sh
-	$(BASH) $< > $@ || rm $@
+if [[ -z $FILE ]]; then
+  echo "No keyword sources are found." >&2
+  exit 1
+fi
 
-all:: sample.pdf
-clean::
-	rm -f sample.aux sample.log sample.pdf
-sample.pdf: sample.tex lstatslang.sty
-	$(PDFLATEX) $<
+exec awk -F'"' '$1 ~ /^keyval_insert/ && $2 ~ /[A-Za-z]/ { print $2 }' < $FILE
