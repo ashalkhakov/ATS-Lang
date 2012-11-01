@@ -89,10 +89,41 @@ fun processlst_select_period
   {n:nat} (ps: processlst (n)): process
 // end of [processlst_select_period]
 
-extern
 fun processlst_find_pvttimer_val
-  {n:nat} (ps: processlst (n), p_next: process): tick
-// end of [processlst_select_replenish]
+  {n:nat} (
+  ps: processlst (n), p_next: process, t_now: tick
+) : tick = let
+//
+fun loop {n:nat} (
+  ps: processlst (n), T0: span, res: tick
+) : tick = let
+in
+  if processlst_is_cons (ps) then let
+    var p: process
+    val ps = processlst_uncons (ps, p)
+    val T = process_get_period (p)
+  in
+    if T < T0 then let
+      val R = process_get_replenish (p)
+      val res = (if R < res then R else res): tick
+    in
+      loop (ps, T0, res)
+    end else
+      loop (ps, T0, res)
+    // end of [if]
+  end else let
+    prval () = processlst_free_nil (ps)
+  in
+    res
+  end // end of [if]
+end // end of [loop]
+//
+val T0 = process_get_period (p_next)
+val res = t_now + process_get_budget (p_next)
+//
+in
+  loop (ps, T0, res)
+end // end of [processlst_find_pvttimer_val]
 
 in // in of [local]
 
@@ -111,7 +142,7 @@ schedule () = let
   val ps = the_processlst_get ()
   val p_next = processlst_select_period (ps)
   val ps = the_processlst_get ()
-  val t_val = processlst_find_pvttimer_val (ps, p_next)
+  val t_val = processlst_find_pvttimer_val (ps, p_next, t_now)
   val () = pvttimer_set (t_val)
 //
   val () = do_process_switch (p_next)
