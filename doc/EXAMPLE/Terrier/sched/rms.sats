@@ -4,84 +4,106 @@
 
 (* ****** ****** *)
 //
-// HX: no need for staloading
-#define ATS_STALOADFLAG 0 // at run-time
+#define ATS_STALOADFLAG 0 // no run-time staloading
 //
 (* ****** ****** *)
 
-abst@ype span (i:int) = uint
-typedef span = [n:nat] span (n)
-typedef span1 = [n:int | n > 0] span (n)
+abst@ype span = uint
 
-val MAX_SPAN : span1 = "mac#MAX_SPAN"
-val ZERO_SPAN : span (0) = "mac#ZERO_SPAN"
-val MIN_BUDGET : span1 = "mac#MIN_BUDGET"
+(* ****** ****** *)
 
-fun sub_span_span
-  {m,n:int | m >= n} (s1: span m, s2: span n): span (m-n)
+fun{} ZERO (): span
+
+(* ****** ****** *)
+
+fun sub_span_span (s1: span, s2: span): span
 overload - with sub_span_span
 
-fun lt_span_span
-  {m,n:int} (s1: span m, s2: span n): bool (m < n)
+fun lt_span_span (s1: span, s2: span): bool
 overload < with lt_span_span
-fun lte_span_span
-  {m,n:int} (s1: span m, s2: span n): bool (m <= n)
+fun lte_span_span (s1: span, s2: span): bool
 overload <= with lte_span_span
 
-fun gt_span_span
-  {m,n:int} (s1: span m, s2: span n): bool (m > n)
+fun gt_span_span (s1: span, s2: span): bool
 overload > with gt_span_span
-fun gte_span_span
-  {m,n:int} (s1: span m, s2: span n): bool (m >= n)
+fun gte_span_span (s1: span, s2: span): bool
 overload >= with gte_span_span
 
 (* ****** ****** *)
 
-abst@ype tick (i:int) = uint
-typedef tick = [n:nat] tick (n)
-typedef tickGt (n:int) = [n2:int | n2 > n] tick (n2)
+abst@ype tick = uint
 
-fun timer_32k_value (): tick = "mac#timer_32k_value"
-fun timer_32k_delay (s: span1): void = "mac#timer_32k_delay"
-
-fun add_tick_span
-  {m,n:int} (t1: tick m, s2: span n): span (m+n)
+fun add_tick_span (t1: tick, s2: span): tick
 overload + with add_tick_span
 
-fun sub_tick_tick
-  {m,n:int | m >= n} (t1: tick m, t2: tick n): span (m-n)
+fun sub_tick_tick (t1: tick, t2: tick): span
 overload - with sub_tick_tick
 
-fun lt_tick_tick
-  {m,n:int} (t1: tick m, t2: tick n): bool (m < n)
+fun lt_tick_tick (t1: tick, t2: tick): bool
 overload < with lt_tick_tick
-macdef is_earlier_than (t1, t2) = lt_tick_tick (,(t1), ,(t2))
+fun lte_tick_tick (t1: tick, t2: tick): bool
+overload <= with lte_tick_tick
 
 (* ****** ****** *)
 
-abst@ype procid (i:int) = int // process id
+abst@ype pid = int // process id
+
+(* ****** ****** *)
+
+abstype process = ptr // boxed record
+
+fun process_get_pid (p: process): pid // fixed
+
+fun process_get_period (p: process): span // fixed
+fun process_get_capacity (p: process): span // fixed
+
+fun process_get_budget (p: process): span
+fun process_set_budget (p: process, s: span): void
+
+fun process_get_replenish (p: process): tick
+fun process_set_replenish (p: process, t: tick): void
+fun process_reset_replenish (p: process): void
+
+(* ****** ****** *)
 
 absviewtype
-process (int) = ptr // boxed linear type
-viewtypedef process = [i:nat] process (i)
-viewtypedef process1 = [i:int | i > 0] process (i)
+processopt_vtype (bool)
+stadef processopt = processopt_vtype
+viewtypedef processopt = [b:bool] processopt b
 
-fun process_get_id {i:int} (p: !process i): procid (i)
+(* ****** ****** *)
 
-fun process_get_period {i:int} (p: !process i): span1
-fun process_get_capacity {i:int} (p: !process i): span1
+absviewtype
+processlst_vtype (n:int)
+stadef processlst = processlst_vtype
+viewtypedef processlst = [n:nat] processlst (n)
 
-fun process_get_replenish_time {i:int} (p: !process i): tick
-fun process_set_replenish_time {i:int} (p: !process i, t: tick): void
+prfun
+processlst_free_nil (xs: processlst (0)): void
 
-fun process_get_budget {i:int} (p: !process i): span
-fun process_set_budget {i:int} (p: !process i, x: span): void
+fun
+processlst_is_cons
+  {n:int} (xs: !processlst (n)): bool (n > 0)
+// end of [processlst_is_cons]
 
-fun process_reset_budget {i:int} (p: !process i): void
-fun process_reset_replenish_time {i:int} (p: !process i): void
+fun
+processlst_uncons
+  {n:int | n > 0}
+  (xs: processlst n, x: &process? >> process): processlst (n-1)
+// end of [processlst_uncons]
 
-fun process_is_active {i:int} (p: !process i): bool
-fun process_recharge_if {i:int} (p: !process i, t0: tick): void
+(* ****** ****** *)
+//
+// various specific functions
+//
+(* ****** ****** *)
+
+fun timer_32k_value (): tick
+fun timer_32k_delay (s: span): void
+
+(* ****** ****** *)
+
+fun schedule (): void
 
 (* ****** ****** *)
 
