@@ -1054,7 +1054,7 @@ fun cairodraw_random_squares
 , m: int m, n: int n
 , A: &(@[int][asz]), s0: int s0, k: int k
 ) : void =
-  if k > 0 then let
+  if k >= 0 then let
     val pos = A.[s0]
     val pos = int1_of_int (pos)
   in

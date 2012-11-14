@@ -268,7 +268,9 @@ fn global_cst_name_make
   (d2c: d2cst_t): string = let
   val extdef = d2cst_get_extdef (d2c) in
   case+ extdef of
+//
   | $Syn.DCSTEXTDEFnone () => $Sym.symbol_name (d2cst_get_sym d2c)
+//
   | $Syn.DCSTEXTDEFsome_ext name => name
   | $Syn.DCSTEXTDEFsome_sta name => name
 //

@@ -531,7 +531,9 @@ in
     val fullname = filename_append (cwd, partname)
   in
     path_normalize (fullname)
-  end else partname
+  end else
+    path_normalize (partname)
+  // end of [if]
 end // end of [partname_fullize]
 
 implement
@@ -552,11 +554,11 @@ filenameopt_make_relative
     p: path, ps: pathlst, basename: String
   ) : Stropt = let
     val partname = filename_append (p, basename)
-(*
+// (*
     val () = begin
       println! ("filenameopt_make: aux2_try: partname = ", partname)
     end // end of [val]
-*)
+// *)
   in
     case+ 0 of
     | _ when filename_isexi (partname) => let
@@ -570,10 +572,10 @@ filenameopt_make_relative
     val filename = the_filename_get ()
     val partname = filename_part (filename)
     val partname2 = filename_merge (partname, basename)
-(*
+// (*
     val () = printf ("aux_relative: partname = %s\n", @(partname))
     val () = printf ("aux_relative: partname2 = %s\n", @(partname2))
-*)
+// *)
   in
     case+ 0 of
     | _ when filename_isexi (partname2) =>

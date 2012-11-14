@@ -249,7 +249,7 @@ and offsetlst = List offset
 
 datatype labvalprimlst =
   | LABVALPRIMLSTcons of (lab_t, valprim, labvalprimlst)
-  | LABVALPRIMLSTnil
+  | LABVALPRIMLSTnil of ()
 // end of [labvalprimlst]
 
 (* ****** ****** *)

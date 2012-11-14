@@ -1592,7 +1592,7 @@ case+ vp_fun.valprim_node of
     pf | out, tmp, hit_fun, !vpr, vps_arg
   ) // end of [VPfix]
 //
-| _ (*variadic function*) => let
+| _ (*function variable*) => let
     val hit_fun = hityp_decode (hit_fun)
   in
     case+ hit_fun.hityp_node of
@@ -1633,7 +1633,7 @@ case+ vp_fun.valprim_node of
         $Err.abort {void} ()
       end // end of [_]
     // end of [case]
-  end (* end of [_(*variadic function*)] *)
+  end (* end of [_(*function variable*)] *)
 // end of [case]
 end // end of [emit_instr_call]
 
@@ -2692,7 +2692,7 @@ emit_funentry
     $Loc.fprint_line_pragma (pf | out, loc_entry) // #line pragma
   ) // end of [val]
 //
-// function head
+// function header
 //
   val () = let
     val qua = funlab_get_qua (fl)
