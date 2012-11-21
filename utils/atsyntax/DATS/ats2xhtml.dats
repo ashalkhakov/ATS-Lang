@@ -38,7 +38,7 @@ atsopt_get () = let
 in
 //
 if strptr_isnot_null (x) then let
-  val res = sprintf ("%s/bin/atsopt", @($UN.castvwtp1(x)))
+  val res = sprintf ("%s/bin/atsopt", @($UN.castvwtp1{string}(x)))
   prval () = fpf (x)
 in
   string_of_strptr (res)
@@ -144,7 +144,9 @@ if fd >= 0 then let
   prval $F.open_v_succ (pffil) = pfopt
   val () = $F.close_exn (pffil | fd)
 //
-  val _tmp = $UN.castvwtp1(tmp)
+  val _tmp =
+    $UN.castvwtp1{string}(tmp)
+  // end of [val]
   val cmd = lam (): void =<cloptr1>
     atscc_posmark_html_body_exec (stadyn, _tmp, path)
   // end of [val]

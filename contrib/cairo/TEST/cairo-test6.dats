@@ -31,7 +31,8 @@ stadef cr = cairo_ref
 
 (* ****** ****** *)
 
-implement main () = () where {
+implement
+main () = () where {
 //
   val wd = 256 and ht = 256
   val surface =

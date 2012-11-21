@@ -53,9 +53,10 @@
 // $ATSHOME/ccomp/runtime/GCATS/gc_top.dats
 
 (* ****** ****** *)
-
-#define ATS_PKGCONFIG 1 // this one is used in the following files:
-// $ATSHOME/utils/scripts/atscc_main.dats
+//
+// HX: this one is used in the
+#define ATS_PKGCONFIG 1 // following file:
+// ${ATSHOME}/utils/scripts/atscc_main.dats
 
 (* ****** ****** *)
 

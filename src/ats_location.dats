@@ -222,7 +222,7 @@ fprint_line_pragma
 //
 in
   // nothing
-end // end of [print_line_pragma]
+end // end of [fprint_line_pragma]
 
 (* ****** ****** *)
 

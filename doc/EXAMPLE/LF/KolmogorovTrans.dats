@@ -110,7 +110,7 @@ end // end of [fmeq]
 prfun KOLMfun {A:form} .<A>. (): [A':form] KOLM0 (A, dneg A') =
   scase A of
   | ltrue () => KOLMtrue ()
-//  | lfalse () => KOLMfalse ()
+  | lfalse () => KOLMfalse ()
   | lnot (A1) => KOLMnot (KOLMfun {A1} ())
   | land (A1, A2) => KOLMand (KOLMfun {A1} (), KOLMfun {A2} ())
   | lor (A1, A2) => KOLMor (KOLMfun {A1} (), KOLMfun {A2} ())

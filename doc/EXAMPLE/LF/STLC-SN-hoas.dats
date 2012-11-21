@@ -32,17 +32,16 @@ datasort ctx = CTXnil | CTXcons of (tm, tp, ctx)
 (* Reduction *)
 // small-step reduction
 // RED(t, t', n) represents n length derivations of t --> t'
-dataprop RED (tm, tm, int) =
+dataprop
+RED (tm, tm, int) =
   | {f,f':tm->tm} {s:nat}
-      REDlam (TMlam f, TMlam f', s+1) of {x:tm} RED (f x, f' x, s)
-
+    REDlam (TMlam f, TMlam f', s+1) of {x:tm} RED (f x, f' x, s)
   | {t1,t2,t1':tm} {s:nat}
-      REDapp1 (TMapp (t1, t2), TMapp (t1', t2), s+1) of RED (t1, t1', s)
-
+    REDapp1 (TMapp (t1, t2), TMapp (t1', t2), s+1) of RED (t1, t1', s)
   | {t1,t2,t2':tm} {s:nat}
-      REDapp2 (TMapp (t1, t2), TMapp (t1, t2'), s+1) of RED (t2, t2', s)
-
+    REDapp2 (TMapp (t1, t2), TMapp (t1, t2'), s+1) of RED (t2, t2', s)
   | {f:tm->tm;t:tm} REDapp3 (TMapp (TMlam f, t), f t, 0)
+// end of [RED]
 
 propdef RED0 (t:tm, t':tm) = [s:nat] RED (t, t', s)
 
@@ -52,33 +51,38 @@ propdef RED0 (t:tm, t':tm) = [s:nat] RED (t, t', s)
 dataprop TP (tp) =
   | TPbas (TPbas)
   | {T1,T2:tp} TPfun (TPfun (T1,T2)) of (TP T1, TP T2)
+// end of [TP]
 
 // Context lookup, INCTX(t, T, G) represents (t: T) \in G
-dataprop INCTX (tm,tp,ctx) = 
+dataprop
+INCTX (tm,tp,ctx) = 
   | {G:ctx} {t:tm} {T:tp} INCTXone(t,T,CTXcons(t,T,G))
   | {G:ctx} {t,t':tm} {T,T':tp}
       INCTXshi(t,T,CTXcons(t',T',G)) of INCTX(t,T,G)
+// end of [INCTX]
 
 // typing derivations in first-order representation
 // DER(G, t, T, n) represents n length derivations of G |- t: T
-dataprop DER (ctx,tm,tp,int) =
+dataprop
+DER (ctx,tm,tp,int) =
   | {G:ctx} {t:tm} {T:tp}
-      DERvar(G,t,T,0) of (INCTX (t,T,G), TP T)
-
+    DERvar(G,t,T,0) of (INCTX (t,T,G), TP T)
   | {G:ctx} {f:tm->tm} {T1,T2:tp} {n:nat}
-      DERlam (G,TMlam f, TPfun(T1,T2), n+1) of
-        (TP T1, {x:tm} DER (CTXcons (x,T1,G), f x, T2, n))
-
+    DERlam (G,TMlam f, TPfun(T1,T2), n+1) of
+      (TP T1, {x:tm} DER (CTXcons (x,T1,G), f x, T2, n))
   | {G:ctx} {t1,t2:tm} {T1,T2:tp} {n1,n2:nat} 
-      DERapp (G, TMapp(t1,t2), T2, n1+n2+1) of
-        (DER (G, t1, TPfun(T1,T2), n1), DER (G, t2, T1, n2))
+    DERapp (G, TMapp(t1,t2), T2, n1+n2+1) of
+      (DER (G, t1, TPfun(T1,T2), n1), DER (G, t2, T1, n2))
+// end of [DER]
 
 propdef DER0 (G:ctx,t:tm,T:tp) = [n:nat] DER (G, t, T, n)
 
 (* Strong Normalization *)
-dataprop SN (tm, int) =
+dataprop
+SN (tm, int) =
   | {t:tm} {n:nat} SN (t,n) of 
       {t':tm} (RED0(t, t') -<fun> [n':nat | n' < n] SN(t',n'))
+// end of [SN]
 
 propdef SN0(t:tm) = [n:nat] SN(t, n)
 
@@ -96,21 +100,25 @@ prfn forwardSN {t,t':tm} {n:nat}
 
 (* Reducibility *)
 // reducibility
-dataprop R(tm, tp) = 
+dataprop R (tm, tp) = 
   | {t:tm} Rbas(t, TPbas) of SN0(t)
   | {t:tm} {T1,T2:tp}
       Rfun (t, TPfun(T1, T2)) of {t1:tm} R(t1, T1) -<fun> R(TMapp(t, t1), T2)
+// end of [R]
 
 // sequence of redubility predicates for a substitution
 dataprop RS (ctx) =
   | {G:ctx} {t:tm} {T:tp} RScons(CTXcons(t, T, G)) of (R(t, T), RS G)
   | RSnil (CTXnil)
+// end of [RS]
 
 // definition of neutral terms
 dataprop NEU (tm) =
   | NEUcst(TMcst) | {t1,t2:tm} NEUapp(TMapp(t1, t2))
+// end of [NEU]
 
-prfun lamSN {f:tm->tm;t:tm} {n:nat} .<n>.
+prfun
+lamSN {f:tm->tm;t:tm} {n:nat} .<n>.
   (sn: SN (f t, n)): SN (TMlam f, n) = let
   prval SN fsn = sn
   prfn fsn' {t':tm}
@@ -125,7 +133,8 @@ end // end of [lamSN]
 
 //
 
-prfun appSN1 {t1,t2:tm} {n:nat} .<n>.
+prfun
+appSN1 {t1,t2:tm} {n:nat} .<n>.
   (sn: SN(TMapp (t1, t2), n)): SN0 t1 = let
   prval SN fsn = sn
   prfn fsn1 {t1':tm} (red: RED0 (t1, t1')): SN0 (t1') =
@@ -282,7 +291,8 @@ prfun der2tp {G:ctx} {t:tm} {T:tp} {n:nat} .<n>.
 end // end of [der2tp]
 
 // main lemma
-prfun reduceLemma {G:ctx} {t:tm} {T:tp} {n:nat} .<n>.
+prfun reduceLemma
+  {G:ctx} {t:tm} {T:tp} {n:nat} .<n>.
   (der: DER(G,t,T,n), rs: RS G): R (t, T) = begin case+ der of
   | DERvar (i,_) => rGet (i, rs)
   | DERlam {..} {f} {T1,T2} {..} (_, derf) => let 
