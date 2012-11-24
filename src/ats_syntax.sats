@@ -1738,6 +1738,8 @@ datatype d0exp_node =
       d0explst
   | D0Esexparg of (* static expression sequence *)
       s0exparg
+  | D0Eshowtype of (* $showtype: debugging *)
+      d0exp
   | D0Esif of (* static conditionals *)
       (ifhead, s0exp, d0exp, d0exp)
   | D0Estring of (* dynamic strings *)
@@ -2212,6 +2214,10 @@ fun d0exp_seq (t_beg: t0kn, d0es: d0explst, t_end: t0kn): d0exp
 
 fun d0exp_sexparg (t_beg: t0kn, s0a: s0exparg, t_end:t0kn): d0exp
   = "d0exp_sexparg"
+
+//
+
+fun d0exp_showtype (t_showtype: t0kn, d0e: d0exp): d0exp = "d0exp_showtype"
 
 //
 

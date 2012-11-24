@@ -610,6 +610,9 @@ in
   | D2Eseq d2es => begin
       prstr "D2Eseq("; fprint_d2explst (pf | out, d2es); prstr ")"
     end // end of [D2Eseq]
+  | D2Eshowtype (d2e) => begin
+      prstr "D2Eshowtype("; fprint_d2exp (pf | out, d2e); prstr ")"
+    end // end of [D2Eshowtype]
   | D2Esif (_(*inv*), s2e_cond, d2e_then, d2e_else) => begin
       prstr "D2Esif(";
       fprint1_string (pf | out, "...");

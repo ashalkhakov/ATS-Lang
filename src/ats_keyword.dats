@@ -269,7 +269,7 @@ keyval_insert("$rec_t", DLRREC_T) ;
 keyval_insert("$rec_vt", DLRREC_VT) ;
 keyval_insert("$tup_t", DLRTUP_T) ;
 keyval_insert("$tup_vt", DLRTUP_VT) ;
-keyval_insert("$typeof", DLRTYPEOF) ;
+keyval_insert("$showtype", DLRSHOWTYPE) ;
 /*
 keyval_insert("$unfold", DLRUNFOLD) ;
 */

@@ -906,8 +906,8 @@ d2exp_ptrof (loc, d2e) = '{
 } // end of [d2exp_ptrof]
 
 implement
-d2exp_raise (loc, d2e_exn) = '{
-  d2exp_loc= loc, d2exp_node= D2Eraise (d2e_exn), d2exp_typ= None ()
+d2exp_raise (loc, d2e) = '{
+  d2exp_loc= loc, d2exp_node= D2Eraise (d2e), d2exp_typ= None ()
 } // end of [d2exp_raise]
 
 implement
@@ -951,6 +951,11 @@ implement
 d2exp_seq (loc, d2es) = '{
   d2exp_loc= loc, d2exp_node= D2Eseq (d2es), d2exp_typ= None ()
 } // end of [d2exp_seq]
+
+implement
+d2exp_showtype (loc, d2e) = '{
+  d2exp_loc= loc, d2exp_node= D2Eshowtype (d2e), d2exp_typ= None ()
+} // end of [d2exp_showtype]
 
 implement
 d2exp_sif

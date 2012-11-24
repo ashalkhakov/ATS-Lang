@@ -473,8 +473,9 @@ implement d1exp_qid (loc, q, id) = '{
   d1exp_loc= loc, d1exp_node= D1Eqid (q, id)
 } // end of [d1exp_qid]
 
-implement d1exp_raise (loc, d1e_exn) = '{
-  d1exp_loc= loc, d1exp_node= D1Eraise (d1e_exn)
+implement
+d1exp_raise (loc, d1e) = '{
+  d1exp_loc= loc, d1exp_node= D1Eraise (d1e)
 } // end of [d1exp_raise]
 
 implement d1exp_rec (loc, recknd, ld1es) = '{
@@ -496,6 +497,11 @@ implement d1exp_seq (loc, d1es) = '{
 implement d1exp_sexparg (loc, s1a) = '{
   d1exp_loc= loc, d1exp_node= D1Esexparg s1a
 }
+
+implement
+d1exp_showtype (loc, d1e) = '{
+  d1exp_loc= loc, d1exp_node= D1Eshowtype (d1e)
+} // end of [d1exp_showtype]
 
 implement d1exp_sif
   (loc, inv, s1e_cond, d1e_then, d1e_else) = let

@@ -727,6 +727,7 @@ extern d0exp_t d0exp_sel_lab (t0kn_t, l0ab_t) ;
 extern d0exp_t d0exp_sel_ind (t0kn_t, d0arrind_t) ;
 extern d0exp_t d0exp_seq (t0kn_t, d0explst_t, t0kn_t) ;
 extern d0exp_t d0exp_sexparg (t0kn_t, s0exparg_t, t0kn_t) ;
+extern d0exp_t d0exp_showtype (t0kn_t, d0exp_t) ;
 extern d0exp_t d0exp_sif (ifhead_t, s0exp_t, d0exp_t, d0exp_t) ;
 extern d0exp_t d0exp_string (s0tring_t) ;
 extern d0exp_t d0exp_tmpid (tmpqi0de_t, s0explst_t, t1mps0explstlst_t, t0kn_t) ;
@@ -1248,7 +1249,7 @@ d0eclst_t d0eclst ;
 %token <t0kn> DLRFOLD
 %token <t0kn> DLRUNFOLD
 %token <t0kn> DLRRAISE
-%token <t0kn> DLRTYPEOF
+%token <t0kn> DLRSHOWTYPE
 %token <t0kn> SRPFILENAME
 %token <t0kn> SRPLOCATION
 %token <t0kn> SRPCHARCOUNT
@@ -1305,6 +1306,8 @@ d0eclst_t d0eclst ;
 %nonassoc DEXPIF
 
 %nonassoc DEXPRAISE
+%nonassoc DEXPSHOWTYPE
+
 %nonassoc DEXPTRY
 
 %nonassoc DEXPFOR
@@ -2372,6 +2375,7 @@ d0exp
   | forhead initestpost d0exp  { $$ = d0exp_for_itp ($1, $2, $3) ; }  %prec DEXPFOR
   | whilehead atmd0exp d0exp  { $$ = d0exp_while ($1, $2, $3) ; }  %prec DEXPWHILE
   | DLRRAISE d0exp  { $$ = d0exp_raise($1, $2) ; }  %prec DEXPRAISE
+  | DLRSHOWTYPE d0exp  { $$ = d0exp_showtype($1, $2) ; }  %prec DEXPSHOWTYPE
   | tryhead d0expsemiseq0 WITH c0lauseq  { $$ = d0exp_trywith_seq($1, $2, $3, $4) ; }  %prec DEXPTRY
   | d0exp WHERE LBRACE d0ecseq_dyn RBRACE  { $$ = d0exp_where ($1, $4, $5) ; }
 ; /* d0exp */

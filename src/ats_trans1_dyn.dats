@@ -1232,6 +1232,9 @@ in
     in
       $Fix.ITEMatm (d1exp_sexparg (loc0, s1a))
     end // end of [D0Esexparg]
+  | D0Eshowtype (d0e) => begin
+      $Fix.ITEMatm (d1exp_showtype (loc0, d0exp_tr d0e))
+    end // end of [D0Eshowtype]
   | D0Esif (hd, s0e_cond, d0e_then, d0e_else) => let
       val inv = i0nvresstate_tr hd.ifhead_inv
       val s1e_cond = s0exp_tr s0e_cond

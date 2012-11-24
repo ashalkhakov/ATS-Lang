@@ -1,4 +1,4 @@
-##################################################################################
+#########################################################################
 #
 # ATS_DEPGEN (OUTPUT SRC)
 #
@@ -7,7 +7,8 @@
 #
 # The output is a STRING, not a LIST.
 #
-##################################################################################
+#########################################################################
+
 MACRO (ATS_DEPGEN OUTPUT SRC)
 
 	IF (${ARGC} GREATER 2)
@@ -67,14 +68,14 @@ MACRO (ATS_DEPGEN OUTPUT SRC)
 	UNSET (_TEXT_INCLUDE)
 ENDMACRO ()
 
-##################################################################################
+#########################################################################
 #
 # ATS_DEPGEN_C (DEP)
 #
 # Expend dependencies for generated C files.
 # For example: 
-# 	If we have 		1.sats <- 2.sats
-#	Then we add 	1_sats.c <- 2_sats.c
+#
+# If we have 1.sats <- 2.sats, then we add 1_sats.c <- 2_sats.c
 #
 # This is useful when 1.sats inludes a HATS file. When the HATS file updates, 
 # 1.sats is not changed, but 1_sats.c is changed. And since 2.sats depends on
@@ -83,7 +84,8 @@ ENDMACRO ()
 #
 # The output is a STRING, not a LIST.
 #
-##################################################################################
+#########################################################################
+
 MACRO (ATS_DEPGEN_C DEP)
 	FOREACH (_E ${${DEP}})
 		IF (_E MATCHES "\\.sats$|\\.dats$")
@@ -108,8 +110,7 @@ MACRO (ATS_TYPE_CHECK SRC)
 	UNSET (_ATS_TC_ERROR)
 ENDMACRO ()
 
-
-##################################################################################
+#########################################################################
 #
 # ATS_AUX_UNIFY_PATH (IN OUT)
 #
@@ -117,7 +118,8 @@ ENDMACRO ()
 # IN is expected to be a relative path starting from ${CMAKE_CURRENT_LIST_DIR}
 # IN should be a single file.
 #
-##################################################################################
+#########################################################################
+
 MACRO (ATS_AUX_UNIFY_PATH IN OUT)
 	# resolve soft/hard link?
 	GET_FILENAME_COMPONENT (${OUT} "${IN}" REALPATH)
@@ -132,8 +134,7 @@ MACRO (ATS_AUX_UNIFY_PATH IN OUT)
 	STRING (STRIP "${${OUT}}" ${OUT})
 ENDMACRO ()
 
-
-##################################################################################
+#########################################################################
 #
 # ATS_COMPILE (OUTPUT ...)
 #
@@ -142,7 +143,8 @@ ENDMACRO ()
 #
 # Note, OUTPUT is a LIST, not a STRING.
 #
-##################################################################################
+#########################################################################
+
 MACRO (ATS_COMPILE OUTPUT)
 
 	IF (NOT "${OUTPUT}" MATCHES "^${OUTPUT}$")
@@ -202,8 +204,7 @@ MACRO (ATS_INCLUDE_RESET)
 	SET (ATS_INCLUDE)
 ENDMACRO ()
 
-
-##################################################################################
+#########################################################################
 #
 # ATS_INCLUDE (...)
 #
@@ -212,7 +213,8 @@ ENDMACRO ()
 # Append all paths as INCLUDE paths, for ATSCC/ATSOPT to find SATS/HATS files.
 # It operates ATS_INCLUDE, which is a LIST.
 #
-##################################################################################
+#########################################################################
+
 MACRO (ATS_INCLUDE)
 	FOREACH (_PATH ${ARGN})
 		ATS_AUX_UNIFY_PATH ("${_PATH}" _PATH)
@@ -225,7 +227,6 @@ MACRO (ATS_INCLUDE)
 	UNSET (_INCLUDE)
 	UNSET (_PATH)
 ENDMACRO ()
-
 
 MACRO (ATS_AUX_LIST_TO_STRING IN OUT)
 	IF (${ARGC} GREATER 2)
@@ -242,8 +243,7 @@ MACRO (ATS_AUX_LIST_TO_STRING IN OUT)
 	UNSET (_E)
 ENDMACRO ()
 
-
-##################################################################################
+#########################################################################
 #
 # ATS_AUX_STRING_TO_LIST (IN OUT)
 #
@@ -253,7 +253,8 @@ ENDMACRO ()
 #
 # TODO: UNIX_COMMAND? WINDOWS_COMMAND?
 #
-##################################################################################
+#########################################################################
+
 MACRO (ATS_AUX_STRING_TO_LIST IN OUT)
 
 	IF (${ARGC} EQUAL 2)
@@ -266,13 +267,14 @@ MACRO (ATS_AUX_STRING_TO_LIST IN OUT)
 	
 ENDMACRO ()
 
-##################################################################################
+#########################################################################
 #
 # ATS_AUX_GET_C_FILE_NAME (IN OUT)
 #
 # Compute a corresponing C file name for a SATS/DATS file
 #
-##################################################################################
+#########################################################################
+
 MACRO (ATS_AUX_GET_C_FILE_NAME IN OUT)
 
 	STRING(REGEX REPLACE "\\.sats$" "_sats.c" ${OUT} "${IN}")	
@@ -280,14 +282,14 @@ MACRO (ATS_AUX_GET_C_FILE_NAME IN OUT)
 
 ENDMACRO ()
 
-
-##################################################################################
+#########################################################################
 #
 # ATS_AUX_TO_ABSOLUTE_PATH (OUTOUT ...)
 #
 # Compute absolute paths for a list of files.
 #
-##################################################################################
+#########################################################################
+
 MACRO (ATS_AUX_TO_ABSOLUTE_PATH OUTPUT)
 	UNSET (${OUTPUT})
 	FOREACH (_E ${ARGN})
@@ -342,8 +344,7 @@ MACRO (ATS_IMPORT PACKAGE)
 
 ENDMACRO ()
 
-
-##################################################################################
+#########################################################################
 #
 # ATS_EXPORT (
 #	PACKAGE
@@ -353,7 +354,8 @@ ENDMACRO ()
 #
 # This will create an ${PACKAGE_IMPORT.cmake under ${CMAKE_CURRENT_LIST_DIR}
 #
-##################################################################################
+#########################################################################
+
 MACRO (ATS_EXPORT PACKAGE)
 	SET (_FILE "${CMAKE_CURRENT_LIST_DIR}/${PACKAGE}_IMPORT.cmake")
 	FILE (WRITE ${_FILE} "#AUTOGENERATED\n")
@@ -384,3 +386,5 @@ MACRO (ATS_EXPORT PACKAGE)
 		ENDIF ()
 	ENDFOREACH ()
 ENDMACRO ()
+
+###### end of [ATSCC.cmake] ######

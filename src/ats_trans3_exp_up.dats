@@ -2370,6 +2370,13 @@ val d3e0 = (case+ d2e0.d2exp_node of
     end // end of [D2Escaseof]
   | D2Esel (d2e, d2ls) => d2exp_sel_tr_up (loc0, d2e, d2ls)
   | D2Eseq d2es => d2exp_seq_tr_up (loc0, d2es)
+//
+  | D2Eshowtype
+      (d2e) => d3e where {
+      val d3e = d2exp_tr_up (d2e)
+      val () = fshowtype_d3exp (d3e)
+    } // end of [D2Eshowtype]
+//
   | D2Esif (r2es, s2p_cond, d2e_then, d2e_else) => let
       val s2e_sif = s2exp_Var_make_srt (loc0, s2rt_prop)
     in

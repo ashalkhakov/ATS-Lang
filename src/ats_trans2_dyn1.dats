@@ -1786,6 +1786,9 @@ in
       end // end of [if]
     end (* end of [D1Esel] *)
   | D1Eseq d1es => d2exp_seq (d1e0.d1exp_loc, d1explst_tr d1es)
+  | D1Eshowtype (d1e) => begin
+      d2exp_showtype (loc0, d1exp_tr d1e)
+    end // end of [D1Eshowtype]
   | D1Esif (r1es, s1e_cond, d1e_then, d1e_else) => let
       val r2es = i1nvresstate_tr r1es
       val s2e_cond = s1exp_tr_dn_bool s1e_cond

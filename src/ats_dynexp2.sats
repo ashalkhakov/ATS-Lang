@@ -660,6 +660,8 @@ and d2exp_node =
       (d2exp, d2lablst)
   | D2Eseq of (* dynamic expression sequence *)
       d2explst
+  | D2Eshowtype of (* $showtype: debugging *)
+      d2exp
   | D2Esif of (* static conditional *)
       (i2nvresstate, s2exp, d2exp, d2exp)
   | D2Estruct of (* dynamic structure *)
@@ -1132,6 +1134,8 @@ fun d2exp_sel (_: loc_t, root: d2exp, path: d2lablst): d2exp
 fun d2exp_sel_ptr (_: loc_t, root: d2exp, lab: d2lab): d2exp
 
 fun d2exp_seq (_: loc_t, _: d2explst): d2exp
+
+fun d2exp_showtype (_: loc_t, _: d2exp): d2exp
 
 fun d2exp_sif (
     _: loc_t

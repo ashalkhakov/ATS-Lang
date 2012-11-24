@@ -46,6 +46,7 @@ staload Syn = "ats_syntax.sats"
 (* ****** ****** *)
 
 staload "ats_staexp2.sats"
+staload "ats_staexp2_pprint.sats"
 staload "ats_dynexp2.sats"
 
 (* ****** ****** *)
@@ -143,6 +144,26 @@ fn prerr_loc_error3
   (loc: loc_t): void = (
   $Loc.prerr_location loc; prerr ": error(3)"
 ) // end of [prerr_loc_error3]
+
+(* ****** ****** *)
+
+implement
+fshowtype_d3exp
+  (d3e) = let
+//
+val loc = d3e.d3exp_loc
+val s2e = d3e.d3exp_typ
+//
+val out = stdout_ref
+val () = print "**SHOWTYPE**("
+val () = $Loc.print_location (loc)
+val () = print "): "
+val () = fpprint_s2exp (out, s2e)
+val () = print_newline ()
+//
+in
+  // nothing
+end // end of [fshowtype_d3exp]
 
 (* ****** ****** *)
 //

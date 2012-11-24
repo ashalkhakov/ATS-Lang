@@ -355,6 +355,8 @@ and d1exp_node =
       d1explst
   | D1Esexparg of (* for temporary use *)
       s1exparg
+  | D1Eshowtype of (* $showtype: debugging *)
+      d1exp
   | D1Esif of (* conditional proof expression *)
       (i1nvresstate, s1exp, d1exp, d1exp)
   | D1Estring of (* dynamic string *)
@@ -832,6 +834,8 @@ fun d1exp_sel (_: loc_t, kind: int, root: d1exp, lab: d1lab): d1exp
 fun d1exp_seq (_: loc_t, seq: d1explst): d1exp
 
 fun d1exp_sexparg (_: loc_t, _: s1exparg): d1exp
+
+fun d1exp_showtype (_: loc_t, _: d1exp): d1exp
 
 fun d1exp_sif
   (_: loc_t, res: i1nvresstate, _cond: s1exp, _then: d1exp, _else: d1exp)

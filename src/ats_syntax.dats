@@ -2225,7 +2225,8 @@ in '{
   d0exp_loc= loc, d0exp_node= D0Eqid(d0q, id.i0de_sym)
 } end // end of [d0exp_qid]
 
-implement d0exp_raise (t_raise, d0e) = let
+implement
+d0exp_raise (t_raise, d0e) = let
   val loc = combine (t_raise.t0kn_loc, d0e.d0exp_loc)
 in '{
   d0exp_loc= loc, d0exp_node= D0Eraise (d0e)
@@ -2279,6 +2280,13 @@ d0exp_sexparg
 in '{
   d0exp_loc= loc, d0exp_node= D0Esexparg s0a
 } end // end of [d0exp_sexparg]
+
+implement
+d0exp_showtype (t_showtype, d0e) = let
+  val loc = combine (t_showtype.t0kn_loc, d0e.d0exp_loc)
+in '{
+  d0exp_loc= loc, d0exp_node= D0Eshowtype (d0e)
+} end // end of [d0exp_showtype]
 
 implement
 d0exp_sif (

@@ -90,6 +90,10 @@ fun d2exp_cstsp_typ_syn (cst: $Syn.cstsp): s2exp
 
 (* ****** ****** *)
 
+fun fshowtype_d3exp (d3e: d3exp): void
+
+(* ****** ****** *)
+
 fun d3exp_open_and_add (d3e: d3exp): void
 fun d3explst_open_and_add (d3es: d3explst): void
 
