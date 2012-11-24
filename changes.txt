@@ -4,6 +4,9 @@ ats-lang-anairiats-0.2.9:
 
 1. Fixing some macros in ccomp/runtime/ats_exception.h
 2. Removing the field tmpvar_root in tmpvar and related functions.
+3. Adding support for using CMake to build projects written in ATS.
+   Kudos to Hanwen!
+4. $showtype support for debugging is added (2012-11-24)
 
 ########################################################################
 
