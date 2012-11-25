@@ -49,7 +49,7 @@ typedef list (a:t@ype) = [xs:ilist] list (a, xs)
 (*
 //
 // HX-2010-10-08:
-// if you want to show that the output of quicksort is always a ordered list,
+// if you want to show that the output of quicksort is always an ordered list,
 // please be my guest :)
 //
 dataprop LB (x0:int, ilist) =

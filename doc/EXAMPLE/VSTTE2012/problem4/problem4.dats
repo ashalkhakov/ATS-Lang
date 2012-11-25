@@ -1,6 +1,7 @@
 (*
 **
 ** VSTTE 2012 Verification Competition
+**
 ** Problem 4
 **
 ** HX: All VTs are done.

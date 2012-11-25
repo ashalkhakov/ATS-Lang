@@ -1,6 +1,8 @@
 (*
 ** VSTTE 2012 Verification Competition
+**
 ** Problem 1
+**
 //
 // All done (VT1, VT2, VT3)
 //
@@ -18,7 +20,8 @@ viewdef tba_v (l:addr, n:int) = ba_v (l, 0, n) // array of n t's
 //
 (* ****** ****** *)
 
-abst@ype bbool (i:int) = byte // bool values represented by a byte
+abst@ype
+bbool (i:int) = byte // bool values represented by a byte
 typedef bbool = [i:two] bbool (i)
 
 (* ****** ****** *)
@@ -29,7 +32,6 @@ extern
 fun bbool_isfalse {i:two} (x: bbool i):<> bool (i==0)
 
 (* ****** ****** *)
-
 
 fn bbool_ptrget
   {l:addr} {i:two} (

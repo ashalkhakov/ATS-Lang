@@ -1,5 +1,6 @@
 (*
 ** VSTTE 2012 Verification Competition
+**
 ** Problem 2
 **
 ** HX: All is done.
@@ -687,7 +688,7 @@ extern
 fun reduction_cmplt {t,v:tm} (pf: REDUCTION (t, v) | t: TM (t)):<> TM (v)
 
 (*
-** I will be implement [reduction_cmplt] just in case you want it:
+** I implement [reduction_cmplt] as follows just in case you want it:
 *)
 
 (* ****** ****** *)
@@ -830,7 +831,7 @@ fun print_term
 (* ****** ****** *)
 
 implement
-main () =() where {
+main () = () where {
   val I = App (App (S, K), K)
   val (pf | ans) = reduction (App (App (I, I), K))
   val () = (print "((I)I)K --> "; print_term ans; print_newline ())
