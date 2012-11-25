@@ -47,15 +47,22 @@ end // end of [remove_dup]
 
 val S = $delay (remove_dup S)
 
-implement main (argc, argv) = let
-
-fun loop{n:nat} (S: stream Nat, n: int n): void = begin
-  if n > 0 then begin case+ !S of
+implement
+main (
+  argc, argv
+) = let
+//
+fun loop{n:nat} (
+  S: stream Nat, n: int n
+) : void = let
+in
+  if n > 0 then (
+    case+ !S of
     | x :: S => (print (x: Nat); print_newline (); loop (S, n-1))
     | nil () => ()
-  end
+  ) // end of [if]
 end // end of [loop]
-
+//
 in
   loop (S, 100)
 end // end of [main]

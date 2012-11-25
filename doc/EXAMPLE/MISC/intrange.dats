@@ -21,7 +21,7 @@ fun loop (
     val () =
       res := list_cons{int}{0}(m, ?)
     // end of [val]
-    val list_cons (_, !p_res1) = $showtype(res)
+    val list_cons (_, !p_res1) = res
     val () = loop (m+1, n, !p_res1)
     prval () = fold@ (res)
   in
