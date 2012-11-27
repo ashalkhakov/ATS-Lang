@@ -1,17 +1,19 @@
 (*
-
-// Implementing Erathosthene's sieve
-
-// author: Hongwei Xi (November, 2006)
-
-*)
-
-// lazy list:
-datatype llist = lcons of (intGte 2, () -<cloref1> llist)
-
-#define :: lcons
-
 //
+// Implementing Erathosthene's sieve
+//
+// author: Hongwei Xi (November, 2006)
+//
+*)
+(* ****** ****** *)
+//
+// lazy list:
+//
+datatype llist = lcons of (intGte 2, () -<cloref1> llist)
+//
+#define :: lcons
+//
+(* ****** ****** *)
 
 fun filter
   (p: intGte 2 -<cloref> bool, xs: llist): llist = let
@@ -45,10 +47,10 @@ in
   print x; print_newline (); print_ints (fxs ())
 end // end of [print_ints]
 
+(* ****** ****** *)
 //
-
-implement main (argc, argv) = print_ints primes
-
+implement main (argc, argv) = print_ints (primes)
+//
 (* ****** ****** *)
 
 (* end of [sieve.dats] *)

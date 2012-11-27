@@ -63,7 +63,9 @@ castfn eltdecode : {a:t@ype} elt (a) -> a
 (* ****** ****** *)
 
 datatype
-gflist (a:t@ype, ilist) =
+gflist (
+  a:t@ype, ilist(*ind*)
+) =
   | {x:int} {xs:ilist}
     gflist_cons (a, ilist_cons (x, xs)) of (elt (a, x), gflist (a, xs))
   | gflist_nil (a, ilist_nil) of ()

@@ -4,12 +4,19 @@
 //
 //
 
-// Time: June 15, 2008
+(* ****** ****** *)
+//
 // Author: Hongwei Xi
+// Time: June 15, 2008 (when I was visiting Xia Chunhe at BeiHang)
+//
+(* ****** ****** *)
 
 dataprop SUMUP (int, int) =
   | SUMUPbas (0, 0)
   | {n:nat; r:int} SUMUPind (n+1, r+n+1) of SUMUP (n, r)
+// end of [SUMUP]
+
+(* ****** ****** *)
 
 fn sumup {n:nat}
   (n: int n):<> [r:int] (SUMUP (n, r) | int r) = let
@@ -32,7 +39,10 @@ in
   (pf | aux (pf | n, 0))
 end // end of [sumup]
 
-implement main (argc, argv) = let
+(* ****** ****** *)
+
+implement
+main (argc, argv) = let
   val (_ | res) = sumup (10)
 in
   printf ("sumup (10) = %i", @(res)); print_newline ()

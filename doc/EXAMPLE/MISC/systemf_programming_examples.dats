@@ -129,7 +129,7 @@ end // end of [val]
 
 typedef list_f (A: type) =
   {X:type} (X, (A, X) -<cloref1> X) -<cloref1> X
-// endof [[list_f]
+// end of [[list_f]
 
 val Nil = lam {A:type}: list_f (A) => lam (n, c) => n
 val Cons =

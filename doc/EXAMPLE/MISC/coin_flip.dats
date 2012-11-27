@@ -129,4 +129,3 @@ implement main () = () where {
 (* ****** ****** *)
 
 (* end of [coin_flip.dats] *)
-
