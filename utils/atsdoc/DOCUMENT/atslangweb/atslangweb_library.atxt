@@ -189,6 +189,7 @@ above libraries.
 #menu('\
 #litxt(#myliblink("libats", "gflist"))
 #litxt(#myliblink("libats", "gflist_vt"))
+#litxt(#myliblink("libats", "gfarray"))
 #litxt(#myliblink("libats", "ilist_prf"))
 #litxt(#myliblink("libats", "funralist_nested"))
 #litxt(#myliblink("libats", "fundeque_fingertree"))

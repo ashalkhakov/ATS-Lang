@@ -51,8 +51,8 @@
 (* ****** ****** *)
 
 absviewtype
-map_t0ype_viewt0ype_type (key:t@ype, itm:viewt@ype+)
-stadef map = map_t0ype_viewt0ype_type
+map_viewtype (key:t@ype, itm:viewt@ype+)
+stadef map = map_viewtype
 
 (* ****** ****** *)
 

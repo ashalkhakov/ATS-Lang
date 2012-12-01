@@ -101,9 +101,9 @@ rbtree_get_color
 (* ****** ****** *)
 
 assume
-map_t0ype_viewt0ype_type
+map_viewtype
   (key:t0p, itm:vt0p) = [c:clr;bh:nat] rbtree0 (key, itm, c, bh)
-// end of [map_t0ype_viewt0ype_type]
+// end of [map_viewtype]
 
 (* ****** ****** *)
 

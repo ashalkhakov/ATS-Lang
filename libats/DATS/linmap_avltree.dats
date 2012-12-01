@@ -94,9 +94,9 @@ avltree_dec (key:t@ype, itm:viewt@ype, h:int) =
 (* ****** ****** *)
 
 assume
-map_t0ype_viewt0ype_type
+map_viewtype
   (key:t@ype, itm:viewt@ype) = [h:nat] avltree (key, itm, h)
-// end of [map_t0ype_viewt0ype_type]
+// end of [map_viewtype]
 
 (* ****** ****** *)
 

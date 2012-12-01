@@ -51,8 +51,8 @@
 (* ****** ****** *)
 
 absviewtype
-map_t0ype_viewt0ype_type (key:t@ype, itm:viewt@ype+)
-stadef map = map_t0ype_viewt0ype_type
+map_viewtype (key:t@ype, itm:viewt@ype+)
+stadef map = map_viewtype
 
 (* ****** ****** *)
 
@@ -78,11 +78,15 @@ fun{} linmap_isnot_nil {key:t0p;itm:vt0p} (m: !map (key, itm)):<> bool
 //
 // HX: this function is O(n)-time and non-tail-recursive
 //
-fun{key,itm:t@ype}
-linmap_size (m: !map (key, itm)):<> size_t
-
-// this function is O(1) // for gathering stats
-fun{key,itm:t@ype} linmap_height (m: !map (key, itm)):<> Nat
+fun{
+key:t0p;itm:vt0p
+} linmap_size (m: !map (key, itm)):<> size_t
+//
+// HX: this function is O(1) // for gathering stats
+//
+fun{
+key:t0p;itm:vt0p
+} linmap_height (m: !map (key, itm)):<> Nat
 
 (* ****** ****** *)
 
