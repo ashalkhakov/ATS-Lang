@@ -193,6 +193,8 @@ above libraries.
 #litxt(#myliblink("libats", "ilist_prf"))
 #litxt(#myliblink("libats", "funralist_nested"))
 #litxt(#myliblink("libats", "fundeque_fingertree"))
+#litxt(#myliblink("libats", "linmap_randbst"))
+#litxt(#myliblink("libats", "linmap_skiplist"))
 ')#comment("menu")
 
 #HR(1)
