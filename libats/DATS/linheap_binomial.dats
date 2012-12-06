@@ -480,6 +480,7 @@ if p_min > null then let
 end else let
   prval () = opt_none {a} (res) in false
 end // end of [if]
+//
 end // end of [linheap_getmin]
 
 implement{a}

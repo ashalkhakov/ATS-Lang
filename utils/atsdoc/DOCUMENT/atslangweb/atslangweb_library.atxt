@@ -195,6 +195,7 @@ above libraries.
 #litxt(#myliblink("libats", "fundeque_fingertree"))
 #litxt(#myliblink("libats", "linmap_randbst"))
 #litxt(#myliblink("libats", "linmap_skiplist"))
+#litxt(#myliblink("libats", "linheap_binomial"))
 ')#comment("menu")
 
 #HR(1)

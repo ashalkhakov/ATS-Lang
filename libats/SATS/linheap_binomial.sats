@@ -86,7 +86,7 @@ linheap_getmin (
 ) :<> #[b:bool] bool b // end of [linheap_getmin]
 
 fun{a:vt0p}
-linheap_getminptr (hp: !heap (a), cmp: cmp a):<> ptr
+linheap_getmin_ref (hp: !heap (a), cmp: cmp a):<> ptr
 
 (* ****** ****** *)
 
@@ -97,15 +97,15 @@ linheap_delmin (
 
 (* ****** ****** *)
 
-fun{a:t@ype}
+fun{a:vt0p}
 linheap_merge (
   hp1: heap (a), hp2: heap (a), cmp: cmp a
 ) :<> heap (a) // end of [linheap_merge]
 
 (* ****** ****** *)
 
-fun{a:t@ype}
-linheap_free (hp: heap (a)):<> void
+fun{a:t0p}
+linheap_free (hp: heap (a)): void
 
 fun{a:vt0p}
 linheap_free_vt (
