@@ -62,8 +62,8 @@ sortdef t0p = t@ype
 (* ****** ****** *)
 
 absviewtype
-set_t0ype_type (elt: t@ype+)
-stadef set = set_t0ype_type
+set_viewtype (a: t@ype+)
+stadef set = set_viewtype
 
 (* ****** ****** *)
 

@@ -109,7 +109,7 @@ bstree (a:t@ype+, int(*size*)) =
 
 (* ****** ****** *)
 
-assume set_t0ype_type (a:t@ype) = [n:nat] bstree (a, n)
+assume set_viewtype (a:t@ype) = [n:nat] bstree (a, n)
 
 (* ****** ****** *)
 

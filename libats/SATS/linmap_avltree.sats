@@ -204,11 +204,11 @@ key:t0p;itm:vt0p
 ) :<> #[b:bool] bool b(*~freed*) // end of [linmap_free_vt]
 
 (* ****** ****** *)
-
+(*
 //
 // HX: listization is done in the in-order fashion
 //
-
+*)
 //
 // HX-2010-07-01:
 // this one can be readily implemented based on [foreach]

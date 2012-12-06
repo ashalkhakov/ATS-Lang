@@ -217,6 +217,7 @@ above libraries.
 #litxt(#myliblink("contrib/mysql", "mysql"))
 #litxt(#myliblink("contrib/jansson", "jansson"))
 #litxt(#myliblink("contrib/libevent", "event"))
+#litxt(#myliblink("contrib/zeromq", "zmq"))
 ')#comment("menu")
 
 <!-- ****** ****** -->

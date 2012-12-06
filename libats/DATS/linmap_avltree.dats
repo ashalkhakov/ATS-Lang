@@ -458,10 +458,10 @@ extern
 fun{key:t0p;itm:vt0p}
 linmap_takeout_ptr {l_res:addr} (
   m: &map (key, itm), k0: key, cmp: cmp key, res: ptr l_res
-) :<> bool
-// end of [linmap_takeout]
+) :<> bool // end of [linmap_takeout_ptr]
 
-implement{key,itm}
+implement
+{key,itm}
 linmap_takeout_ptr {l_res}
   (m, k0, cmp, p_res) = takeout (m, p_res) where {
   fun takeout {h:nat} .<h>. (
@@ -560,7 +560,8 @@ linmap_takeout_ptr {l_res}
 
 (* ****** ****** *)
 
-implement{key,itm}
+implement
+{key,itm}
 linmap_takeout
   (m, k0, cmp, res) = ans where {
   val ans = linmap_takeout_ptr<key,itm> (m, k0, cmp, &res)

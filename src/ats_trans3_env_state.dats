@@ -64,7 +64,9 @@ assume stbefitem_t = stbefitem
 
 (* ****** ****** *)
 
-fn prerr_interror () = prerr "INTERNAL ERROR (ats_trans3_env_state)"
+fn prerr_interror
+  () = prerr "INTERNAL ERROR (ats_trans3_env_state)"
+// end of [prerr_interror]
 
 (* ****** ****** *)
 
