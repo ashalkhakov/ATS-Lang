@@ -243,12 +243,12 @@ staload _(*anon*) = "prelude/DATS/unsafe.dats"
 in // in of [local]
 
 fun{a:vt0p}
-bheap_findmin_ref
+bheap_search_ref
   {n:nat}{sz:pos} .<>. (
   hp0: !bheap (a, n, sz), cmp: cmp a
 ) :<> ptr = let
 //
-  fun findmin
+  fun search
     {n:nat}{sz:nat}{l:addr} .<sz>. (
     hp0: !bheap (a, n, sz), p_x0: ptr l, cmp: cmp a
   ) :<> ptr =
@@ -263,7 +263,7 @@ bheap_findmin_ref
         prval () = fpf (pfat)
         prval () = fold@ (!p_bt)
         val res = (
-          if sgn > 0 then findmin (!p_hp, p_x, cmp) else findmin (!p_hp, p_x0, cmp)
+          if sgn > 0 then search (!p_hp, p_x, cmp) else search (!p_hp, p_x0, cmp)
         ) : ptr // end of [val]
         prval () = fold@ (hp0)
       in
@@ -272,22 +272,22 @@ bheap_findmin_ref
     | bheap_nil () => let
         prval () = fold@ (hp0) in p_x0
       end // end of [bheap_nil]
-  (* end of [findmin] *)
+  (* end of [search] *)
 //
   val+ bheap_cons
     (pf0 | !p_bt0, !p_hp1) = hp0
   val+ btnode (_, !p_x0, _) = !p_bt0
   prval () = fold@ (!p_bt0)
-  val res = findmin (!p_hp1, p_x0, cmp)
+  val res = search (!p_hp1, p_x0, cmp)
   prval () = fold@ (hp0)
 in
   res
-end // end of [bheap_findmin_ref]
+end // end of [bheap_search_ref]
 
 (* ****** ****** *)
 
 fun{a:vt0p}
-bheap_remove_min
+bheap_remove
   {n:nat}{sz:pos} .<>. (
   hp0: &bheap (a, n, sz) >> bheap (a, n1, sz-p)
 , cmp: cmp a
@@ -299,7 +299,7 @@ bheap_remove_min
 //
 // HX: [find] and [remove] can be merged into one
 //
-  fun find
+  fun search
     {n:nat}{sz:nat} .<sz>. (
     hp0: !bheap (a, n, sz), x0: &a, pos: &Nat, cmp: cmp a
   ) :<> void = let
@@ -315,13 +315,13 @@ bheap_remove_min
         val sgn = compare_elt_elt<a> (x0, !p_x, cmp)
         val () = if sgn > 0 then ($UN.ptrset<a> (&x0, $UN.ptrget<a>(p_x)); pos := pos+1)
         prval () = fold@ (!p_bt)
-        val () = find (!p_hp, x0, pos, cmp)
+        val () = search (!p_hp, x0, pos, cmp)
         prval () = fold@ (hp0)
       in
         // nothing
       end // [bheap_cons]
     | bheap_nil () => fold@ (hp0)
-  end // end of [find]
+  end // end of [search]
 //
   val+ bheap_cons
     (pf0 | !p_bt0, !p_hp1) = hp0
@@ -331,7 +331,7 @@ bheap_remove_min
   } // end of [prval]
   prval () = fold@ {a} (!p_bt0)
   var x0: a = $UN.ptrget<a> (p_x) and pos: Nat = 0
-  val () = find (!p_hp1, x0, pos, cmp)
+  val () = search (!p_hp1, x0, pos, cmp)
   prval () = __clear (x0) where {
     extern praxi __clear (x: &a >> a?): void
   } // end of [prval]
@@ -376,7 +376,7 @@ bheap_remove_min
 //
 in
   (pf | btmin)
-end // end of [bheap_remove_min]
+end // end of [bheap_remove]
 
 end // end of [local]
 
@@ -497,7 +497,7 @@ case+ hp0 of
     (pf | _, _) => let
     prval () = exp2_ispos (pf); prval () = fold@ (hp0)
   in
-    bheap_findmin_ref (hp0, cmp)
+    bheap_search_ref (hp0, cmp)
   end // end of [bheap_cons]
 | bheap_nil {a}{n} () => (fold@ {a}{n} (hp0); null)
 //
@@ -522,10 +522,11 @@ val () = (
 in
 //
 case+ hp of
-| bheap_cons (pf0 | _, _) => let
+| bheap_cons
+    (pf0 | _, _) => let
     prval () = exp2_ispos (pf0)
     prval () = fold@ (hp)
-    val (_(*pf*) | btmin) = bheap_remove_min (hp, cmp)
+    val (_(*pf*) | btmin) = bheap_remove (hp, cmp)
     val ~btnode (_, x, bts) = btmin
     val () = res := x
     prval () = opt_some {a} (res)
