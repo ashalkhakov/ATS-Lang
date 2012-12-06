@@ -243,12 +243,12 @@ staload _(*anon*) = "prelude/DATS/unsafe.dats"
 in // in of [local]
 
 fun{a:vt0p}
-bheap_find_minptr
+bheap_findmin_ref
   {n:nat}{sz:pos} .<>. (
   hp0: !bheap (a, n, sz), cmp: cmp a
 ) :<> ptr = let
 //
-  fun find
+  fun findmin
     {n:nat}{sz:nat}{l:addr} .<sz>. (
     hp0: !bheap (a, n, sz), p_x0: ptr l, cmp: cmp a
   ) :<> ptr =
@@ -263,7 +263,7 @@ bheap_find_minptr
         prval () = fpf (pfat)
         prval () = fold@ (!p_bt)
         val res = (
-          if sgn > 0 then find (!p_hp, p_x, cmp) else find (!p_hp, p_x0, cmp)
+          if sgn > 0 then findmin (!p_hp, p_x, cmp) else findmin (!p_hp, p_x0, cmp)
         ) : ptr // end of [val]
         prval () = fold@ (hp0)
       in
@@ -272,17 +272,17 @@ bheap_find_minptr
     | bheap_nil () => let
         prval () = fold@ (hp0) in p_x0
       end // end of [bheap_nil]
-  (* end of [find] *)
+  (* end of [findmin] *)
 //
   val+ bheap_cons
     (pf0 | !p_bt0, !p_hp1) = hp0
   val+ btnode (_, !p_x0, _) = !p_bt0
   prval () = fold@ (!p_bt0)
-  val res = find (!p_hp1, p_x0, cmp)
+  val res = findmin (!p_hp1, p_x0, cmp)
   prval () = fold@ (hp0)
 in
   res
-end // end of [bheap_find_minptr]
+end // end of [bheap_findmin_ref]
 
 (* ****** ****** *)
 
@@ -464,7 +464,9 @@ end // end of [linheap_insert]
 implement{a}
 linheap_getmin
   (hp0, cmp, res) = let
-  val p_min = linheap_getminptr (hp0, cmp)
+  val p_min =
+    linheap_getmin_ref (hp0, cmp)
+  // end of [val]
   val [l:addr] p_min = ptr1_of_ptr (p_min)
 in
 //
@@ -481,10 +483,10 @@ end // end of [if]
 end // end of [linheap_getmin]
 
 implement{a}
-linheap_getminptr (hp0, cmp) = let
+linheap_getmin_ref (hp0, cmp) = let
 (*
 val () = (
-  print ("linheap_getminptr: enter"); print_newline ()
+  print ("linheap_getmin_ref: enter"); print_newline ()
 ) // end of [val]
 *)
 in
@@ -494,11 +496,11 @@ case+ hp0 of
     (pf | _, _) => let
     prval () = exp2_ispos (pf); prval () = fold@ (hp0)
   in
-    bheap_find_minptr (hp0, cmp)
+    bheap_findmin_ref (hp0, cmp)
   end // end of [bheap_cons]
 | bheap_nil {a}{n} () => (fold@ {a}{n} (hp0); null)
 //
-end // end of [linheap_getminptr]
+end // end of [linheap_getmin_ref]
 
 (* ****** ****** *)
 
