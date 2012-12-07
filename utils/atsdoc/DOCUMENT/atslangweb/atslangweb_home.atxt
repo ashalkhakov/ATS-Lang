@@ -104,7 +104,7 @@ rooted in the paradigm of <em>programming with theorem-proving</em>. The
 type system of ATS allows many features considered dangerous in other
 languages (e.g., explicit pointer arithmetic and explicit memory
 allocation/deallocation) to be safely supported in ATS, making ATS a viable
-programming langauge for low-level systems programming.
+programming language for low-level systems programming.
 "))
 
 #litxt(
@@ -113,7 +113,7 @@ programming langauge for low-level systems programming.
 ATS, equipped with a multicore-safe implementation of garbage collection,
 can support multithreaded programming through the use of pthreads. The
 availability of linear types for tracking and safely manipulating resources
-provides a effective means to constructing reliable programs that can take
+provides an effective means to constructing reliable programs that can take
 advantage of multicore architectures.
 "))
 

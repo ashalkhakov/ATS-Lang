@@ -154,6 +154,7 @@ above libraries.
 #comment("Secondary")
 #litxt(#myliblink("prelude", "list"))
 #litxt(#myliblink("prelude", "list_vt"))
+#litxt(#myliblink("prelude", "dlist_vt"))
 #litxt(#myliblink("prelude", "option"))
 #litxt(#myliblink("prelude", "option_vt"))
 #litxt(#myliblink("prelude", "array"))
