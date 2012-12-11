@@ -27,9 +27,17 @@
 
 (* ****** ****** *)
 
+(* Author: Adam Udi *)
+(* Authoremail: adamudi AT bu DOT edu *)
+
 (* Author: Hongwei Xi *)
 (* Authoremail: hwxi AT cs DOT bu DOT edu *)
+
 (* Start time: December, 2012 *)
+
+(* ****** ****** *)
+
+#define ATS_STALOADFLAG 0 // no static loading at run-time
 
 (* ****** ****** *)
 

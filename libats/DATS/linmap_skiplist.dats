@@ -37,6 +37,10 @@
 
 (* ****** ****** *)
 
+#define ATS_DYNLOADFLAG 0 // no static loading at run-time
+
+(* ****** ****** *)
+
 staload UN = "prelude/SATS/unsafe.sats"
 
 (* ****** ****** *)
