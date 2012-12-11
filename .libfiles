@@ -341,6 +341,10 @@ libats/DATS/linmap_avltree.dats
 libats/SATS/linmap_rbtree.sats
 libats/DATS/linmap_rbtree.dats
 
+/* linear map implementation based on skip-lists */
+libats/SATS/linmap_skiplist.sats
+libats/DATS/linmap_skiplist.dats
+
 /* linear set implementation based on AVL trees */
 libats/SATS/linset_avltree.sats
 libats/DATS/linset_avltree.dats
