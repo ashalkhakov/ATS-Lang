@@ -297,7 +297,7 @@ bheap_remove
   EXP2 (n2, p) | btree (a, n2)
 ) = let
 //
-// HX: [find] and [remove] can be merged into one
+// HX: [search] and [remove] can be merged into one
 //
   fun search
     {n:nat}{sz:nat} .<sz>. (

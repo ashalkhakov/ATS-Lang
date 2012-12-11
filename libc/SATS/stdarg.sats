@@ -40,8 +40,11 @@
 (* ****** ****** *)
 
 (*
-// this is declared in $ATSHOME/prelude/basics_sta.sats
-absviewt@ype va_list (ts: types) = $extype"ats_va_list_viewtype"
+//
+// HX: this is declared in $ATSHOME/prelude/basics_sta.sats
+//
+absviewt@ype
+va_list (ts: types) = $extype"ats_va_list_viewtype"
 *)
 
 absviewt@ype va_list1 (t: t@ype, ts: types) = va_list (ts)
@@ -73,11 +76,13 @@ fun va_end (ap: &va_list >> va_list?):<> void = "atslib_va_end"
 
 (* ****** ****** *)
 
-praxi va_clear {ts:types}
+praxi
+va_clear {ts:types}
   (arg: &va_list (ts) >> va_list):<> void
 // end of [va_clear]
 
-fun va_copy {ts:types}
+fun
+va_copy {ts:types}
   (dst: &va_list? >> va_list ts, src: va_list ts):<> void
   = "atslib_va_copy"
 // end of [va_copy]
