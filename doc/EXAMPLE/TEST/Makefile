@@ -309,6 +309,11 @@ libats_linmap_rbtree: libats_linmap_rbtree.dats
 	$(ATSCC) -D_ATS_GCATS -O2 -o $@ $< && ./$@ 100000
 cleanall:: ; $(RMF) libats_linmap_rbtree
 
+checkall:: libats_linmap_skiplist
+libats_linmap_skiplist: libats_linmap_skiplist.dats
+	$(ATSCC) -D_ATS_GCATS -O2 -o $@ $< && ./$@ 100000
+cleanall:: ; $(RMF) libats_linmap_skiplist
+
 ######
 
 checkall:: libats_linset_listord
