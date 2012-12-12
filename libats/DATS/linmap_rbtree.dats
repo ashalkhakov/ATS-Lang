@@ -817,6 +817,8 @@ linmap_foreach_funenv {v} {vt}
   // end of [foreach]
 } // end of [linmap_foreach_funenv]
 
+(* ****** ****** *)
+
 implement{key,itm}
 linmap_foreach_fun
   (m, f) = let
@@ -849,6 +851,8 @@ linmap_foreach_vclo {v}
     | E () => fold@ (t)
   // end of [foreach]
 } // end of [linmap_foreach_vclo]
+
+(* ****** ****** *)
 
 implement{key,itm}
 linmap_foreach_cloref (m, f) = let

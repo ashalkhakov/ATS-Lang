@@ -51,11 +51,7 @@ sortdef t0p = t@ype and vt0p = viewt@ype
 
 (* ****** ****** *)
 
-fun linmap_initize (): void
-
-fun linmap_random_lgN
-  {n:int | n >= 1} (lgMAX: int (n)): intBtwe (1, n)
-// end of [linmap_random_lgN]
+fun linmap_random_initize (): void
 
 (* ****** ****** *)
 
@@ -162,7 +158,7 @@ key:t0p;itm:t0p
 fun{key:t0p;itm:vt0p}
 linmap_foreach_funenv
   {v:view} {vt:viewtype} (
-  pf: !v
+  pfv: !v
 | m: !map (key, itm)
 , f: (!v | key, &itm, !vt) -<fun> void
 , env: !vt
@@ -175,7 +171,7 @@ linmap_foreach_fun (
 
 fun{key:t0p;itm:vt0p}
 linmap_foreach_vclo {v:view} (
-  pf: !v
+  pfv: !v
 | m: !map (key, itm), f: &(!v | key, &itm) -<clo> void
 ) :<> void // end of [linmap_foreach_vclo]
 

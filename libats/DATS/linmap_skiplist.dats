@@ -58,11 +58,11 @@ staload "libats/SATS/linmap_skiplist.sats"
 
 (* ****** ****** *)
 
-(*
+extern
 fun linmap_random_lgN
-  {n:int | n >= 1} (n: int (n)): intBtwe (1, n)
+  {n:int | n >= 1} (lgMAX: int (n)): intBtwe (1, n)
 // end of [linmap_random_lgN]
-*)
+
 local
 
 staload "libc/SATS/random.sats"
@@ -70,7 +70,7 @@ staload "libc/SATS/random.sats"
 in // in of [local]
 
 implement
-linmap_initize () = srand48_with_time ()
+linmap_random_initize () = srand48_with_time ()
 
 implement
 linmap_random_lgN
@@ -879,13 +879,14 @@ end // end of [linmap_remove]
 
 (* ****** ****** *)
 
-(*
 fun{
 key:t0p;itm:vt0p
-}{
-env:vt0p
-} node_foreach_env (
-  nx: nodeGt0 (key, itm, 0), env: &env
+} node_foreach_funenv
+  {v:view}{vt:viewtype} (
+  pfv: !v
+| nx: nodeGt0 (key, itm, 0)
+, f: (!v | key, &itm, !vt) -<fun> void
+, env: !vt
 ) : void = let
   val p_nx = node2ptr (nx)
 in
@@ -897,31 +898,92 @@ if p_nx > null then let
   prval (pf, fpf) = __assert () where {
     extern praxi __assert : () -<prf> (itm @ l, itm @ l -<lin,prf> void)
   } // end of [prval]
-  val () = linmap_foreach$fwork<key,itm><env> (k, !p_i, env)
+  val () = f (pfv | k, !p_i, env)
   prval () = fpf (pf)
   val nx1 = node_get_next<key,itm> (nx, 0)
 in
-  node_foreach_env (nx1, env)
+  node_foreach_funenv (pfv | nx1, f, env)
 end else () // end of [if]
 //
 end // end of [node_foreach_env]
 
 implement
-{key,itm}{env}
-linmap_foreach_env
-  (map, env) = let
+{key,itm}
+linmap_foreach_funenv
+  (pfv | map, f, env) = let
 in
 //
 case+ map of
 | SKIPLIST
     (N, lgN, nxa) => let
     val nx = nodearr_get_at (nxa, 0)
+    val () = $effmask_all (node_foreach_funenv<key,itm> (pfv | nx, f, env))
+    prval () = fold@ (map)
   in
-    node_foreach_env (nx, env)
+    // nothing
   end // end of [SKIPLIST]
 //
 end // end of [linmap_foreach_env]
-*)
+
+(* ****** ****** *)
+
+implement{key,itm}
+linmap_foreach_fun
+  (map, f) = let
+//
+  val f = coerce (f) where {
+    extern castfn coerce
+      (f: (key, &itm) -<fun> void):<> (!unit_v | key, &itm, !ptr) -<fun> void
+  } // end of [val]
+//
+  prval pfu = unit_v ()
+  val () = linmap_foreach_funenv<key,itm> {unit_v} {ptr} (pfu | map, f, null)
+  prval unit_v () = pfu
+//  
+in
+  // nothing
+end // end of [linmap_foreach_fun]
+
+(* ****** ****** *)
+
+implement{key,itm}
+linmap_foreach_vclo
+  {v} (pfv | map, f) = let
+  viewtypedef clo_t = (!v | key, &itm) -<clo> void
+  stavar l_f: addr
+  val p_f: ptr l_f = &f
+  viewdef v2 = @(v, clo_t @ l_f)
+//
+  fn app (
+    pf: !v2 | k: key, x: &itm, p_f: !ptr l_f
+  ) :<> void = let
+    prval (pf1, pf2) = pf; val () = !p_f (pf1 | k, x) in pf := (pf1, pf2)
+  end // end of [app]
+//
+  prval pf = (pfv, view@ f)
+  val () = linmap_foreach_funenv<key,itm> {v2} {ptr(l_f)} (pf | map, app, p_f)
+  prval (pf1, pf2) = pf
+  prval () = (pfv := pf1; view@ f := pf2)
+in
+  // nothing
+end // end of [linmap_foreach_vclo]
+
+(* ****** ****** *)
+
+implement{key,itm}
+linmap_foreach_cloref (m, f) = let
+  val f = __cast (f) where { extern castfn __cast
+    (f: (key, &itm) -<cloref> void):<> (!unit_v | key, &itm) -<cloref> void
+  } // end of [val]
+  typedef clo_type = (!unit_v | key, &itm) -<clo> void
+  val (vbox pf_f | p_f) = cloref_get_view_ptr {clo_type} (f)
+  prval pf0 = unit_v ()
+  val () = $effmask_ref
+    (linmap_foreach_vclo<key,itm> {unit_v} (pf0 | m, !p_f))
+  prval unit_v () = pf0
+in
+  // empty
+end // end of [linmap_foreach_cloref]
 
 (* ****** ****** *)
 
