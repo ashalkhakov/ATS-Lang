@@ -192,11 +192,13 @@ above libraries.
 #litxt(#myliblink("libats", "gflist_vt"))
 #litxt(#myliblink("libats", "gfarray"))
 #litxt(#myliblink("libats", "ilist_prf"))
+#litxt(#myliblink("libats", "funset_listord"))
 #litxt(#myliblink("libats", "funralist_nested"))
 #litxt(#myliblink("libats", "fundeque_fingertree"))
 #litxt(#myliblink("libats", "linmap_randbst"))
 #litxt(#myliblink("libats", "linmap_skiplist"))
 #litxt(#myliblink("libats", "linheap_binomial"))
+#litxt(#myliblink("libats", "linheap_fibonacci"))
 ')#comment("menu")
 
 #HR(1)
@@ -208,6 +210,8 @@ above libraries.
 #litxt(#myliblink("libats/ML", "option0"))
 #litxt(#myliblink("libats/ML", "array0"))
 #litxt(#myliblink("libats/ML", "string"))
+#litxt(#myliblink("libats/ML", "funmap"))
+#litxt(#myliblink("libats/ML", "funset"))
 ')#comment("menu")
 
 #HR(1)

@@ -307,7 +307,7 @@ command line:
 
 Then you set ATSHOME to #filename("DESTDIR/share/ats-anairiats-x.x.x"),
 which is the directory where ATS is to be installed. The environment
-variable ATSHOMERELOC is still set to ATS-x.x.x.
+variable ATSHOMERELOC should still be set to ATS-x.x.x.
 
 ")#comment("para")
 ")#comment("lisub")
