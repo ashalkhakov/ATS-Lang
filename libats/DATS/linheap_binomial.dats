@@ -303,7 +303,6 @@ bheap_remove
     {n:nat}{sz:nat} .<sz>. (
     hp0: !bheap (a, n, sz), x0: &a, pos: &Nat, cmp: cmp a
   ) :<> void = let
-    extern praxi __clear (x0: &a >> a?): void
   in
     case+ hp0 of
     | bheap_cons (pf | !p_bt, !p_hp) => let

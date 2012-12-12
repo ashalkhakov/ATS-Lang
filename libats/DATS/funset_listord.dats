@@ -87,7 +87,8 @@ fn fcmp
   (x: a, y: a, cmp: !env):<> int = cmp (x, y)
 val xs = list_mergesort<a> {env} (xs, fcmp, cmp) // [xs] is ascending!
 //
-fun loop1 {m:pos} .<m,0>. (
+fun loop1
+  {m:pos} .<m,0>. (
   xs: list_vt (a, m), ys: List_vt (a), cmp: cmp a
 ) :<> List_vt (a) = let
   val- list_vt_cons (x, !p_xs) = xs
@@ -117,7 +118,7 @@ in
 //
 case+ xs of
 | list_vt_cons _ => let
-    val () = fold@ {a} (xs)
+    prval () = fold@ {a} (xs)
     val ys = loop1 (xs, list_vt_nil, cmp)
   in
     list_of_list_vt (ys)

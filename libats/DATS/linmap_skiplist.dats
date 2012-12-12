@@ -50,6 +50,10 @@ staload "libats/SATS/linmap_skiplist.sats"
 
 (* ****** ****** *)
 
+#define i2sz size1_of_int1
+
+(* ****** ****** *)
+
 abstype
 node_type (
   key:t@ype, itm:viewt@ype+, l:addr, n:int
@@ -165,6 +169,17 @@ fun nodearr_make // HX: initized with nulls
 // end of [nodearr_make]
 
 (* ****** ****** *)
+//
+// HX: internal representation of a node
+//
+viewtypedef
+_node (
+  key: t0p, itm: vt0p
+) = @{
+  key= key, item=itm, nodearr=ptr, nodeasz= int
+} // end of [_node]
+
+(* ****** ****** *)
 
 implement
 {key,itm}
@@ -172,12 +187,12 @@ node_make
   {lgN} (
   k0, x0, lgN
 ) = let
-  viewtypedef VT = (key, itm, ptr, int)
+  viewtypedef VT = _node (key, itm)
   val (pfat, pfgc | p) = ptr_alloc<VT> ()
-  val () = p->0 := k0
-  val () = p->1 := $UN.castvwtp0{itm?}{itm}(x0)
-  val () = p->2 := $UN.cast{ptr}(nodearr_make(lgN))
-  val () = p->3 := lgN
+  val () = p->key := k0
+  val () = p->item := $UN.castvwtp0{itm?}{itm}(x0)
+  val () = p->nodearr := $UN.cast{ptr}(nodearr_make(lgN))
+  val () = p->nodeasz := lgN
 in
   $UN.castvwtp0 {node1(key,itm,lgN)} @(pfat, pfgc | p)
 end // end of [node_make]
@@ -187,7 +202,7 @@ implement
 node_free
   (nx, res) = let
 //
-  viewtypedef VT = (key, itm, ptr, int)
+  viewtypedef VT = _node (key, itm)
 //
   prval (
     pfat, pfgc | p
@@ -198,11 +213,11 @@ node_free
     ) :<> [l:addr] (VT @ l, free_gc_v (VT?, l) | ptr l)
   } // end of [prval]
 //
-  val () = res := p->1
+  val () = res := p->item
 //
   val () =
-    __free (p->2) where {
-    extern fun __free : ptr -> void = "atsruntime_free"
+    __free (p->nodearr) where {
+    extern fun __free : ptr -> void = "ats_free_gc"
   } // end of [val]
 //
   val () = ptr_free {VT?} (pfgc, pfat | p)
@@ -213,7 +228,35 @@ end // end of [node_free]
 
 (* ****** ****** *)
 
-#define i2sz size1_of_int1
+extern
+fun __cast_node
+  {key:t0p;itm:vt0p} (
+  nx: node1 (key, itm)
+) :<> [l:addr] (
+  _node (key, itm) @ l
+, _node (key, itm) @ l -<lin,prf> void
+| ptr l
+) // end of [node_cast]
+
+implement
+{key,itm}
+node_get_key (nx) = let
+  val (pf, fpf | p) = __cast_node (nx)
+  val key = p->key
+  prval () = fpf (pf)
+in
+  key
+end // end of [node_get_key]
+
+implement
+{key,itm}
+node_getref_item (nx) = let
+  val (pf, fpf | p) = __cast_node (nx)
+  val p_item = &(p->item)
+  prval () = fpf (pf)
+in
+  $UN.cast2Ptr1 (p_item)
+end // end of [node_getref_item]
 
 (* ****** ****** *)
 
