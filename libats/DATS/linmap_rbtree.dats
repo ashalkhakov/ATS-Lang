@@ -918,7 +918,8 @@ linmap_free (m) = _free (m) where {
   // end of [_free]
 } // end of [linmap_free]
 
-implement{key,itm}
+implement
+{key,itm}
 linmap_free_vt (m) = let
   viewtypedef VT = map (key, itm) in
   case+ m of
