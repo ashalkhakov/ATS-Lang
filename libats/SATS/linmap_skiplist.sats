@@ -51,6 +51,14 @@ sortdef t0p = t@ype and vt0p = viewt@ype
 
 (* ****** ****** *)
 
+fun linmap_initize (): void
+
+fun linmap_random_lgN
+  {n:int | n >= 1} (lgMAX: int (n)): intBtwe (1, n)
+// end of [linmap_random_lgN]
+
+(* ****** ****** *)
+
 typedef
 cmp (key:t@ype) = (key, key) -<cloref> int
 
@@ -85,7 +93,7 @@ fun{
 key:t0p;itm:t0p
 } linmap_search (
   map: !map (key, itm)
-, k0: key, res: &itm? >> opt (itm, b), cmp: cmp key
+, k0: key, cmp: cmp key, res: &itm? >> opt (itm, b)
 ) : #[b:bool] bool (b) // endfun
 
 fun{
@@ -99,12 +107,6 @@ key:t0p;itm:t0p
 } linmap_search_opt
   (map: !map (key, itm), k0: key, cmp: cmp key): Option_vt (itm)
 // end of [linmap_search_opt]
-
-(* ****** ****** *)
-
-fun linmap_random_lgN
-  {n:int | n >= 1} (lgMAX: int (n)): intBtwe (1, n)
-// end of [linmap_random_lgN]
 
 (* ****** ****** *)
 //
