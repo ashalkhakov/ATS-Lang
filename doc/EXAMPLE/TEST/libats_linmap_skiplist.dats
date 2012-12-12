@@ -49,7 +49,7 @@ implement main (argc, argv) = let
 //
   var res: itm? // uninitialized
 //
-  val () = $LM.linmap_initize ()
+  val () = $LM.linmap_random_initize ()
 //
   var map: map_vt (key, itm) = $LM.linmap_make_nil ()
   var i: int; val () = for (i := 0; i < n; i := i+1) let
@@ -68,7 +68,6 @@ implement main (argc, argv) = let
     print "size = "; print size; print_newline ()
   end // end of [size]
 //
-(*
   val () = if n < 100 then let
     prval pf = unit_v (); val () =
       $LM.linmap_foreach_vclo<int,string> {unit_v} (pf | map, !p_clo) where {
@@ -79,7 +78,6 @@ implement main (argc, argv) = let
   in
     // empty
   end // end of [val]
-*)
 //
   fn find (
       map: &map_vt (key, itm), k: int, res: &itm?
