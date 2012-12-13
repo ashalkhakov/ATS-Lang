@@ -105,6 +105,19 @@ zmq_msg_init_size_exn
 (* ****** ****** *)
 
 (*
+fun zmq_msg_close_exn (msg: &zmqmsg >> zmqmsg?): void
+*)
+implement
+zmq_msg_close_exn
+  (msg) = () where {
+  val err = zmq_msg_close (msg)
+  val () = assertloc (err >= 0)
+  prval () = opt_unnone {zmqmsg} (msg)
+} // end of [zmq_msg_close_exn]
+
+(* ****** ****** *)
+
+(*
 fun zmq_msg_recv_exn
   (msg: &zmqmsg, sock: !zmqsock1, flags: int): intGte(0)
 // end of [zmq_msg_recv_exn]

@@ -120,7 +120,10 @@ fun zmq_ctx_set
 (*
 void *zmq_socket (void *context, int type);
 *)
-fun zmq_socket (ctx: !zmqctx1, type: int): zmqsock0
+fun zmq_socket
+  (ctx: !zmqctx1, type: int): zmqsock0 = "mac#atsctrb_zmq_socket"
+// end of [zmq_socket]
+
 fun zmq_socket_exn (ctx: !zmqctx1, type: int): zmqsock1
 
 (* ****** ****** *)

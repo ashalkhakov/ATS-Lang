@@ -62,9 +62,15 @@
 
 /* ****** ****** */
 
+#define atsctrb_zmq_socket zmq_socket
+
+/* ****** ****** */
+
 #define atsctrb_zmq_getsockopt zmq_getsockopt
 #define atsctrb_zmq_getsockopt2 zmq_getsockopt
 #define atsctrb_zmq_setsockopt zmq_setsockopt
+
+/* ****** ****** */
 
 #define atsctrb_zmq_bind zmq_bind
 #define atsctrb_zmq_unbind zmq_unbind
@@ -103,6 +109,9 @@
 /* ****** ****** */
 
 #define atsctrb_zmq_msg_close zmq_msg_close
+
+/* ****** ****** */
+
 #define atsctrb_zmq_msg_copy zmq_msg_copy
 #define atsctrb_zmq_msg_move zmq_msg_move
 
