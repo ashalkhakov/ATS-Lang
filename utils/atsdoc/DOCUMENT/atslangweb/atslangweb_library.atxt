@@ -192,6 +192,7 @@ above libraries.
 #litxt(#myliblink("libats", "gflist_vt"))
 #litxt(#myliblink("libats", "gfarray"))
 #litxt(#myliblink("libats", "ilist_prf"))
+#litxt(#myliblink("libats", "funset_avltree"))
 #litxt(#myliblink("libats", "funset_listord"))
 #litxt(#myliblink("libats", "funralist_nested"))
 #litxt(#myliblink("libats", "fundeque_fingertree"))
