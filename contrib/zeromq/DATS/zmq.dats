@@ -67,6 +67,34 @@ end // end of [zmq_socket_exn]
 (* ****** ****** *)
 
 (*
+fun zmq_bind_exn
+  (sock: !zmqsock1, endpt: NSH(string)): void
+// end of [zmq_bind_exn]
+*)
+implement
+zmq_bind_exn
+  (sock, endpt) = () where {
+  val err = zmq_bind (sock, endpt)
+  val () = assertloc (err >= 0)
+} // end of [zmq_bind_exn]
+
+(* ****** ****** *)
+
+(*
+fun zmq_connect_exn
+  (sock: !zmqsock1, endpt: NSH(string)): void
+// end of [zmq_connect_exn]
+*)
+implement
+zmq_connect_exn
+  (sock, endpt) = () where {
+  val err = zmq_connect (sock, endpt)
+  val () = assertloc (err >= 0)
+} // end of [zmq_connect_exn]
+
+(* ****** ****** *)
+
+(*
 fun zmq_close_exn (sock: zmqsock1) : void
 *)
 implement
