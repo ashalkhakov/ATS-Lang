@@ -44,6 +44,11 @@ return 0;
 
 (* ****** ****** *)
 
+staload _ = "libc/SATS/unistd.sats" // for [sleep]
+staload _ = "libc/SATS/string.sats" // for [memcpy]
+
+(* ****** ****** *)
+
 staload "zeromq/SATS/zmq.sats"
 
 (* ****** ****** *)
@@ -79,8 +84,8 @@ val () =
 //
 // Do some 'work'
 //
-   val () = sleep (1) where {
-     extern fun sleep: int -> void = "atslib_sleep"
+   val _ = sleep (1) where {
+     extern fun sleep: int -> uint = "mac#atslib_sleep"
    } // end of [val]
 //
 // Send reply back to client
@@ -91,7 +96,7 @@ val () =
     zmq_msg_data (reply), "World", 5
   ) where {
     extern fun memcpy
-      : (ptr, string, int) -> void = "atslib_memcpy"
+      : (ptr, string, int) -> void = "mac#atslib_memcpy"
     // end of [extern]
   } // end of [val]
   val _(*nbyte*) = zmq_msg_send (reply, responder, 0)

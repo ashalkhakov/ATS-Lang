@@ -42,6 +42,11 @@ int main (void)
 
 (* ****** ****** *)
 
+staload _ = "libc/SATS/unistd.sats" // for [sleep]
+staload _ = "libc/SATS/string.sats" // for [memcpy]
+
+(* ****** ****** *)
+
 staload "zeromq/SATS/zmq.sats"
 
 (* ****** ****** *)
@@ -82,11 +87,18 @@ if nbr < N then let
   val () = zmq_msg_init_size_exn (request, 5SZ)
   val () =
     memcpy (zmq_msg_data (request), "Hello", 5) where {
-    extern fun memcpy : (ptr, string, int) -> void = "atslib_memcpy"
+    extern fun memcpy : (ptr, string, int) -> void = "mac#atslib_memcpy"
   } // end of [val]
+//
   val () = println! ("Sending Hello ", nbr, "...")
   val _(*nbyte*) = zmq_msg_send_exn (request, requester, 0)
   val () = zmq_msg_close_exn (request)
+//
+  val () = zmq_msg_init_exn (reply);
+  val _(*nbyte*) = zmq_msg_recv (reply, requester, 0);
+  val () = println! ("Received World ", nbr)
+  val () = zmq_msg_close_exn (reply)
+//
 in
   loop (nbr+1, requester, request, reply)
 end // end of [if]
@@ -97,9 +109,9 @@ in
   loop (0, requester, request, reply)
 end // end of [val]
 //
-val () =
+val _ =
   sleep (2) where {
-  extern fun sleep: int -> void = "atslib_sleep"
+  extern fun sleep: int -> uint = "mac#atslib_sleep"
 } // end of [val]
 //
 val () = zmq_close_exn (requester)
