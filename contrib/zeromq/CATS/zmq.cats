@@ -117,7 +117,7 @@
 
 /* ****** ****** */
 
-#define atsctrb_zmq_term zmq_term"
+#define atsctrb_zmq_term zmq_term
 
 /* ****** ****** */
 
