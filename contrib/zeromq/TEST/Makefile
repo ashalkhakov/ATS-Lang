@@ -29,13 +29,13 @@ cleanall::
 ######
 
 hwserver: hwserver_dats.c
-	$(ATSCC) $(CCFLAGS) -I$(ATSCTRB) -o hwserver $< -lzmq
+	$(ATSCC) $(CCFLAGS) -I$(ATSCTRB) -o hwserver $<  $(ATSCTRB)/zeromq/atsctrb_zeromq.o -lzmq
 cleanall:: ; $(RMF) hwserver
 
 ######
 
 hwclient: hwclient_dats.c
-	$(ATSCC) $(CCFLAGS) -I$(ATSCTRB) -o hwclient $< -lzmq
+	$(ATSCC) $(CCFLAGS) -I$(ATSCTRB) -o hwclient $<  $(ATSCTRB)/zeromq/atsctrb_zeromq.o -lzmq
 cleanall:: ; $(RMF) hwclient
 
 ######
