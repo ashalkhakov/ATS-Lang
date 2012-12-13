@@ -146,6 +146,21 @@ zmq_msg_close_exn
 (* ****** ****** *)
 
 (*
+fun zmq_msg_send_exn
+  (msg: &zmqmsg, sock: !zmqsock1, flags: int): intGte(0)
+// end of [zmq_msg_send_exn]
+*)
+implement
+zmq_msg_send_exn (
+  msg, sock, flags
+) = valerr where {
+  val valerr = zmq_msg_send (msg, sock, flags)
+  val () = assertloc (valerr >= 0)
+} // end of [zmq_msg_send_exn]
+
+(* ****** ****** *)
+
+(*
 fun zmq_msg_recv_exn
   (msg: &zmqmsg, sock: !zmqsock1, flags: int): intGte(0)
 // end of [zmq_msg_recv_exn]
