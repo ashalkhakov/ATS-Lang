@@ -188,6 +188,7 @@ above libraries.
 <h2>#uid("ATSLIB_libats", "ATSLIB/libats")</h2>
 
 #menu('\
+#litxt(#myliblink("libats", "gnode"))
 #litxt(#myliblink("libats", "gflist"))
 #litxt(#myliblink("libats", "gflist_vt"))
 #litxt(#myliblink("libats", "gfarray"))
