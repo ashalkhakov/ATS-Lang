@@ -1,5 +1,5 @@
 #
-# API for cairo in ATS
+# API for mysql in ATS
 #
 # Start Time: August, 2012
 # Author: Hongwei Xi (hwxi AT cs DOT bu DOT edu)

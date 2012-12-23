@@ -47,7 +47,7 @@ staload "mysql/SATS/mysql.sats"
 
 (* ****** ****** *)
 
-macdef null = the_null_ptr
+macdef nullp = the_null_ptr
 
 (* ****** ****** *)
 
@@ -58,7 +58,7 @@ mysql_init_exn
   val p = MYSQLptr2ptr (conn)
 in
 //
-  if p > null then conn
+  if p > nullp then conn
   else let
 //
     val () =
@@ -102,7 +102,7 @@ fun loop1 (
   val p = MYSQLFIELDptr2ptr (fld)
 in
 //
-if p > null then let
+if p > nullp then let
   val name = mysqlfield_get_name (fld)
   prval () = mysqlres_unfetch_field (res, fld)
   val () = if i > 0 then fprint_string (out, sep2)
@@ -126,7 +126,7 @@ fun loop2 (
   val prow = MYSQLROW2ptr (row)
 in
 //
-if prow > null then let
+if prow > nullp then let
   val () = if i > 0 then fprint_string (out, sep1)
   val () = fprint_mysqlrow_sep (pfrow | out, row, n, sep2)
   prval () = mysqlres_unfetch_row (res, row)
@@ -165,7 +165,7 @@ fun loop
       if i > 0 then fprint_string (out, sep)
     val p = mysqlrow_get_at (pfrow | row, i)
     val () = (
-      if (p > null) then
+      if (p > nullp) then
         fprint_string (out, $UN.cast{string}(p)) else fprint_string (out, "NULL")
       // end of [if]
     ) : void // end of [val]
