@@ -197,7 +197,7 @@ fun the_s2cstlst_env_pop (pf: s2cstlst_env_token | (*none*)): s2cstlst
 fun the_s2cstlst_env_pop_and_unbind (pf: s2cstlst_env_token | (*none*)): void
 fun the_s2cstlst_env_push (): (s2cstlst_env_token | void)
 fun the_s2cstlst_env_add (s2c: s2cst_t): void
-fun the_s2cstlst_env_adds (s2cs: s2cstlst): void
+fun the_s2cstlst_env_addlst (s2cs: s2cstlst): void
 fun the_s2cstlst_env_bind_and_add (loc: loc_t, s2c: s2cst_t, s2e: s2exp): void
 
 (* ****** ****** *)
@@ -383,7 +383,7 @@ fun s2expopt_opnexi_and_add (loc: loc_t, _: s2expopt): s2expopt
 absview d2varset_env_token
 
 fun the_d2varset_env_add (d2v: d2var_t): void
-fun the_d2varset_env_adds (d2vs: d2varlst): void
+fun the_d2varset_env_addlst (d2vs: d2varlst): void
 fun the_d2varset_env_add_p2at (p2t: p2at): void
 fun the_d2varset_env_add_p2atlst (p2ts: p2atlst): void
 

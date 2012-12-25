@@ -792,7 +792,7 @@ in
       val d3cs_body = d2eclst_tr d2cs_body
       val s2cs_body = the_s2cstlst_env_pop (pf2 | (*none*))
       val () = the_s2cstlst_env_pop_and_unbind (pf1 | (*none*))
-      val () = the_s2cstlst_env_adds (s2cs_body)
+      val () = the_s2cstlst_env_addlst (s2cs_body)
     in
       d3ec_local (d2c0.d2ec_loc, d3cs_head, d3cs_body)
     end // end of [D2Clocal]
