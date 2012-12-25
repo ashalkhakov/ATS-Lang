@@ -74,15 +74,15 @@ in
 end // end of [the_s2cstlst_env_add]
 
 implement
-the_s2cstlst_env_adds (s2cs) = let
+the_s2cstlst_env_addlst (s2cs) = let
 (*
   val () = begin
-    print "the_s2cstlst_env_adds: s2cs = "; print s2cs; print_newline ()
+    print "the_s2cstlst_env_addlst: s2cs = "; print s2cs; print_newline ()
   end // end of [val]
 *)
 in
   !the_s2cstlst := s2cstlst_append (s2cs, !the_s2cstlst)
-end // end of [the_s2cstlst_env_adds]
+end // end of [the_s2cstlst_env_addlst]
 
 (* ****** ****** *)
 

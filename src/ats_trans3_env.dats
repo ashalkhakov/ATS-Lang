@@ -487,9 +487,9 @@ the_d2varset_env_add (d2v) = begin
 end // end of [the_d2varset_env_add]
 
 implement
-the_d2varset_env_adds (d2vs) = begin
+the_d2varset_env_addlst (d2vs) = begin
   !the_ld2vs := d2varset_adds (!the_ld2vs, d2vs)
-end // end of [the_d2varset_env_adds]
+end // end of [the_d2varset_env_addlst]
 
 implement
 the_d2varset_env_add_p2at (p2t) = let
