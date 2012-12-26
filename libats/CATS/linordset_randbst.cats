@@ -59,6 +59,8 @@ typedef linordset_rngobj_struct *linordset_rngobj ;
 
 /* ****** ****** */
 
+#ifdef HAVE_DRAND48_R
+
 typedef struct {
   linordset_rngobj_struct rng ;
   struct drand48_data state ; // the state of RNG
@@ -105,6 +107,8 @@ atslib_linordset_rngobj_make_drand48 (
   objrng->setseed = &linordset_rngobj_setseed_drand48 ;
   return (obj) ;
 } // end of [linordset_rngobj_make_drand48]
+
+#endif // end of [HAVE_DRAND48_R]
 
 /* ****** ****** */
 

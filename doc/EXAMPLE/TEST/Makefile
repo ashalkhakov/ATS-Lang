@@ -337,10 +337,10 @@ cleanall:: ; $(RMF) libats_linqueue_lst
 
 ######
 
-# checkall:: libats_linordset_randbst
-# libats_linordset_randbst: libats_linordset_randbst.dats
-# 	$(ATSCC) -D_ATS_GCATS -O2 -o $@ $< && ./$@ 1000000
-# cleanall:: ; $(RMF) libats_linordset_randbst
+checkall:: libats_linordset_randbst
+libats_linordset_randbst: libats_linordset_randbst.dats
+	$(ATSCC) -D_ATS_GCATS -O2 -o $@ $< && ./$@ 1000000
+cleanall:: ; $(RMF) libats_linordset_randbst
 
 ######
 

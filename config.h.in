@@ -6,6 +6,12 @@
 /* Define to 1 if you have the <curses.h> header file. */
 #undef HAVE_CURSES_H
 
+/* Define to 1 if you have the `drand48_r' function. */
+#undef HAVE_DRAND48_R
+
+/* Define to 1 if you have the `erand48_r' function. */
+#undef HAVE_ERAND48_R
+
 /* Define to 1 if you have the <gmp.h> header file. */
 #undef HAVE_GMP_H
 

@@ -118,6 +118,7 @@ dnl = check for SIZEOF_VOIDP
 AC_CHECK_SIZEOF(void*)
 
 dnl = check for some functions
+AC_CHECK_FUNCS(drand48_r erand48_r)
 AC_CHECK_FUNCS(posix_memalign memalign)
 
 dnl = AH_TEMPLATE([HAVE_GCBDW],
