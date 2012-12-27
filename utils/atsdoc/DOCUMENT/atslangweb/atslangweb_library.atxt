@@ -197,10 +197,12 @@ above libraries.
 #litxt(#myliblink("libats", "funset_listord"))
 #litxt(#myliblink("libats", "funralist_nested"))
 #litxt(#myliblink("libats", "fundeque_fingertree"))
+#litxt(#myliblink("libats", "linmap_list"))
 #litxt(#myliblink("libats", "linmap_randbst"))
 #litxt(#myliblink("libats", "linmap_skiplist"))
 #litxt(#myliblink("libats", "linheap_binomial"))
 #litxt(#myliblink("libats", "linheap_fibonacci"))
+#litxt(#myliblink("libats", "linqueue_list"))
 ')#comment("menu")
 
 #HR(1)
