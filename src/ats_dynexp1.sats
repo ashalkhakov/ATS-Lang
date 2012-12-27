@@ -853,8 +853,8 @@ fun d1exp_top (_: loc_t): d1exp
 fun d1exp_trywith (_: loc_t, _: i1nvresstate, _: d1exp, _: c1laulst): d1exp
 
 fun d1exp_tup (_: loc_t, kind: int, _: d1explst): d1exp
-
 fun d1exp_tup2 (_: loc_t, kind: int, _1: d1explst, _2: d1explst): d1exp
+fun d1exp_tup_npf (_: loc_t, kind: int, npf: int, _: d1explst): d1exp
 
 fun d1exp_viewat (_: loc_t, _: d1exp): d1exp
 

@@ -8,6 +8,7 @@ ats-lang-anairiats-0.2.9:
    Kudos to Hanwen!
 4. $showtype support for debugging is added (2012-11-24)
 5. Adding libats/linmap_skiplist for linear maps based on skip-lists.
+6. ((<exp1>, ..., <exp2>)) -> @(<exp1>, ..., <exp2>)
 
 ########################################################################
 

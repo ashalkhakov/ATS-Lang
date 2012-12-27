@@ -437,7 +437,14 @@ implement d1exp_list
       d1exp_loc= loc, d1exp_node= d1e.d1exp_node
     }
 *)
-  | cons (d1e, nil ()) => d1e // singleton elimination
+  | cons (
+      d1e, nil ()
+    ) => (
+    case+ d1e.d1exp_node of
+    | D1Elist (npf, d1es) =>
+        d1exp_tup_npf (loc, 0(*tupknd*), npf, d1es)
+    | _ => d1e // end of [_]
+    )
   | _ => '{
       d1exp_loc= loc, d1exp_node= D1Elist (0, d1es)
     } (* end of [_] *)
@@ -531,19 +538,29 @@ implement d1exp_trywith (loc, res, d1e, c1ls) = '{
   d1exp_loc= loc, d1exp_node= D1Etrywith (res, d1e, c1ls)
 }
 
+(* ****** ****** *)
+
 implement
-d1exp_tup (loc, tupknd, d1es) = '{
-  d1exp_loc= loc, d1exp_node= D1Etup (tupknd, 0, d1es)
-}
+d1exp_tup
+  (loc, tupknd, d1es) =
+  d1exp_tup_npf (loc, tupknd, 0, d1es)
+// end of [d1exp_tup]
 
 implement
 d1exp_tup2
   (loc, tupknd, d1es1, d1es2) = let
   val npf = $Lst.list_length d1es1
   val d1es = $Lst.list_append (d1es1, d1es2)
-in '{
+in
+ d1exp_tup_npf (loc, tupknd, npf, d1es)
+end // end of [d1exp_tup2]
+
+implement
+d1exp_tup_npf (loc, tupknd, npf, d1es) = '{
   d1exp_loc= loc, d1exp_node= D1Etup (tupknd, npf, d1es)
-} end // end of [d1exp_tup2]
+} // end of [d1exp_tup_npf]
+
+(* ****** ****** *)
 
 implement
 d1exp_viewat (loc, d1e) = '{
