@@ -168,6 +168,8 @@ above libraries.
 #litxt(#myliblink("prelude", "lazy"))
 #litxt(#myliblink("prelude", "lazy_vt"))
 
+#litxt(#myliblink("prelude", "tfprint"))
+
 #litxt(#myliblink("prelude", "iterator"))
 #litxt(#myliblink("prelude", "fcontainer"))
 
