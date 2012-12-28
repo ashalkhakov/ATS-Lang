@@ -345,7 +345,7 @@ fun d1exp_print_n1 (loc: loc_t, d1es: d1explst): d1exp
 implement
 search_PRINT (ns) = let
 (*
-  val () = print "print_search: ns = "
+  val () = print "search_PRINT: ns = "
   val () = fprint_intlst (stdout_ref, ns)
   val () = print_newline ()
 *)
@@ -371,6 +371,40 @@ in
   | _ when ns \matii _n1 => Some_vt (d1exp_println_n1)
   | _ => None_vt ()
 end // end of [search_PRINTLN]
+
+extern
+fun search_PRERR (ns: intlst): fsyndefopt
+extern
+fun d1exp_prerr_n1 (loc: loc_t, d1es: d1explst): d1exp
+implement
+search_PRERR (ns) = let
+(*
+  val () = print "search_PRERR: ns = "
+  val () = fprint_intlst (stdout_ref, ns)
+  val () = print_newline ()
+*)
+in
+  case+ 0 of
+  | _ when ns \matii _n1 => Some_vt (d1exp_prerr_n1)
+  | _ => None_vt ()
+end // end of [search_PRERR]
+
+extern
+fun search_PRERRLN  (ns: intlst): fsyndefopt
+extern
+fun d1exp_prerrln_n1 (loc: loc_t, d1es: d1explst): d1exp
+implement
+search_PRERRLN (ns) = let
+(*
+  val () = print "search_PRERRLN: ns = "
+  val () = fprint_intlst (stdout_ref, ns)
+  val () = print_newline ()
+*)
+in
+  case+ 0 of
+  | _ when ns \matii _n1 => Some_vt (d1exp_prerrln_n1)
+  | _ => None_vt ()
+end // end of [search_PRERRLN]
 
 extern
 fun search_FPRINT (ns: intlst): fsyndefopt
@@ -413,6 +447,8 @@ val symbol_DO = $Sym.symbol_DO
 val symbol_WHILE = $Sym.symbol_WHILE
 val symbol_PRINT = $Sym.symbol_make_string ("print")
 val symbol_PRINTLN = $Sym.symbol_make_string ("println")
+val symbol_PRERR = $Sym.symbol_make_string ("prerr")
+val symbol_PRERRLN = $Sym.symbol_make_string ("prerrln")
 val symbol_FPRINT = $Sym.symbol_make_string ("fprint")
 val symbol_FPRINTLN = $Sym.symbol_make_string ("fprintln")
 
@@ -432,10 +468,16 @@ in
   | _ when id = symbol_IF => search_IF (ns)
   | _ when id = symbol_DO => search_DO (ns)
   | _ when id = symbol_WHILE => search_WHILE (ns)
+//
   | _ when id = symbol_PRINT => search_PRINT (ns)
   | _ when id = symbol_PRINTLN => search_PRINTLN (ns)
+//
+  | _ when id = symbol_PRERR => search_PRERR (ns)
+  | _ when id = symbol_PRERRLN => search_PRERRLN (ns)
+//
   | _ when id = symbol_FPRINT => search_FPRINT (ns)
   | _ when id = symbol_FPRINTLN => search_FPRINTLN (ns)
+//
 (*
 // HX-2010-11-15:
 // how should I judge whether a new external symbol should be supported?
@@ -727,6 +769,40 @@ d1exp_println_n1
 in
   d1exp_seq (loc0, d1eseq :: d1eln :: list_nil)
 end // end of [println_n1]
+
+implement
+d1exp_prerr_n1
+  (loc0, d1es) = let
+  val- cons (d1e1, _) = d1es
+  val q = $Syn.d0ynq_none ()
+  val fqid = d1exp_qid (loc0, q, symbol_PRERR)
+  val f = lam
+    (d1e: d1exp)
+    : d1exp =<cloptr1> let
+    val loc = d1e.d1exp_loc
+  in
+    d1exp_app_dyn (loc, fqid, loc, 0(*npf*), list_sing (d1e))
+  end // end of [_]
+  val d1eseq = d1exp_appseq (loc0, d1e1, f)
+  val () = cloptr_free (f)
+in
+  d1eseq
+end // end of [prerr_n1]
+
+implement
+d1exp_prerrln_n1
+  (loc0, d1es) = let
+//
+  val q = $Syn.d0ynq_none ()
+  val prerrln_id = $Sym.symbol_make_string ("prerr_newline")
+  val prerrln_qid = d1exp_qid (loc0, q, prerrln_id)
+//
+  val d1eseq = d1exp_prerr_n1 (loc0, d1es)
+  val d1eln = d1exp_app_dyn (loc0, prerrln_qid, loc0, 0(*npf*), list_nil)
+//
+in
+  d1exp_seq (loc0, d1eseq :: d1eln :: list_nil)
+end // end of [prerrln_n1]
 
 (* ****** ****** *)
 
