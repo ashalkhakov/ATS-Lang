@@ -195,6 +195,8 @@ above libraries.
 #litxt(#myliblink("libats", "gflist_vt"))
 #litxt(#myliblink("libats", "gfarray"))
 #litxt(#myliblink("libats", "ilist_prf"))
+#litxt(#myliblink("libats", "funmap_list"))
+#litxt(#myliblink("libats", "funmap_avltree"))
 #litxt(#myliblink("libats", "funset_avltree"))
 #litxt(#myliblink("libats", "funset_listord"))
 #litxt(#myliblink("libats", "funralist_nested"))
