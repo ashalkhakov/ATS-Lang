@@ -135,17 +135,21 @@ above libraries.
 <h4>Primary</h4>
 #menu('\
 #comment("Primary")
-#litxt(#myliblink("prelude", "arith_prf"))
 #litxt(#myliblink("prelude", "bool"))
 #litxt(#myliblink("prelude", "char"))
-#litxt(#myliblink("prelude", "filebas"))
-#litxt(#myliblink("prelude", "float"))
 #litxt(#myliblink("prelude", "integer"))
-#litxt(#myliblink("prelude", "intrange"))
+#litxt(#myliblink("prelude", "arith_prf"))
+#litxt(#myliblink("prelude", "float"))
+#litxt(#myliblink("prelude", "tuple"))
+#litxt(#myliblink("prelude", "memory"))
 #litxt(#myliblink("prelude", "pointer"))
 #litxt(#myliblink("prelude", "reference"))
 #litxt(#myliblink("prelude", "string"))
 #litxt(#myliblink("prelude", "strptr"))
+#litxt(#myliblink("prelude", "lazy"))
+#litxt(#myliblink("prelude", "lazy_vt"))
+#litxt(#myliblink("prelude", "filebas"))
+#litxt(#myliblink("prelude", "intrange"))
 #litxt(#myliblink("prelude", "unsafe"))
 ')#comment("menu")
 
@@ -165,12 +169,10 @@ above libraries.
 #litxt(#myliblink("prelude", "matrixptr"))
 #litxt(#myliblink("prelude", "matrixref"))
 
-#litxt(#myliblink("prelude", "lazy"))
-#litxt(#myliblink("prelude", "lazy_vt"))
+#litxt(#myliblink("prelude", "gprint"))
 
-#litxt(#myliblink("prelude", "tfprint"))
+#litxt(#myliblink("prelude", "giterator"))
 
-#litxt(#myliblink("prelude", "iterator"))
 #litxt(#myliblink("prelude", "fcontainer"))
 
 ')#comment("menu")
