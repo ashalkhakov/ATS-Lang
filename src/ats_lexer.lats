@@ -1113,8 +1113,15 @@ MAIN () =
 //
   | "view+" { process_token (); VIEWPLUS }
   | "view-" { process_token (); VIEWMINUS }
+//
+  | "vtype+" { process_token (); VIEWTYPEPLUS }
+  | "vtype-" { process_token (); VIEWTYPEMINUS }
   | "viewtype+" { process_token (); VIEWTYPEPLUS }
   | "viewtype-" { process_token (); VIEWTYPEMINUS }
+//
+  | "vt@ype" { process_token (); VIEWT0YPE }
+  | "vt@ype+" { process_token (); VIEWT0YPEPLUS }
+  | "vt@ype-" { process_token (); VIEWT0YPEMINUS }
   | "viewt@ype" { process_token (); VIEWT0YPE }
   | "viewt@ype+" { process_token (); VIEWT0YPEPLUS }
   | "viewt@ype-" { process_token (); VIEWT0YPEMINUS }
@@ -1132,10 +1139,12 @@ MAIN () =
 //
   | "r@ead" { process_token (); R0EAD }
 //
-  | "////" { process_comment_rest_open (); COMMENT_REST (); TOKEN_eof }
-  | "//" { process_comment_line_open (); COMMENT_LINE (); MAIN () }
-  | "/*" { COMMENT0_CLIKE (); MAIN () }
   | "(*" { COMMENT0 (); MAIN () }
+  | "/*" { COMMENT0_CLIKE (); MAIN () }
+//
+  | "//" { process_comment_line_open (); COMMENT_LINE (); MAIN () }
+  | "////" { process_comment_rest_open (); COMMENT_REST (); TOKEN_eof }
+//
   | $identifier_alp { tokenize_identifier_alp () }
 //
   | $identifier_alp "[" { tokenize_identifier_arr () }

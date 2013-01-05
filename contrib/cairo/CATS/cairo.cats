@@ -41,8 +41,8 @@
 
 /* ****** ****** */
 
-#include <cairo-features.h>
 #include <cairo.h>
+#include <cairo-features.h>
 #include <cairo-pdf.h>
 #include <cairo-ps.h>
 #include <cairo-svg.h>

@@ -42,10 +42,9 @@ cleanall:: ; $(RMF) styles/atslangweb_temp.css
 ######
 
 XRFLAGS=`pkg-config cairo --cflags --libs`
-GTKFLAGS=`pkg-config gtk+-2.0 --cflags --libs`
 
 atslangweb_bgimages: \
-  atslangweb_bgimages.dats; $(ATSCC) -o $@ $(XRFLAGS) $< -lm
+  atslangweb_bgimages.dats; $(ATSCC) -o $@ $< $(XRFLAGS) -lm
 clean:: ; $(RMF) atslangweb_bgimages
 
 BGIMAGES: atslangweb_bgimages ; ./$<
@@ -168,10 +167,18 @@ cleanall:: ; $(RMF) styles/atslangweb_paper.css
 #
 ######
 
-uploadall:: ; scp \
-  atslangweb_*.html \
-  */atslangweb_*.html \
-  ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/
+uploadall::
+uploadall:: upload_home
+uploadall:: upload_download
+uploadall:: upload_document
+uploadall:: upload_library
+uploadall:: upload_resource
+uploadall:: upload_community
+uploadall:: upload_example
+uploadall:: upload_paper
+uploadall:: upload_implement
+uploadall:: upload_styles
+uploadall:: upload_images
 
 upload_home:: ; scp atslangweb_home.html \
   ats-hwxi@web.sourceforge.net:/home/groups/a/at/ats-lang/htdocs/
