@@ -85,6 +85,10 @@ operator (of precedence value 0) by putting the backslash symbol
 \\\\opr exp2") stands for #code("opr (exp1, exp2)"), where #code("exp1")
 and #code("exp2") refer to some expressions, either static or dynamic.
 
+")
+
+#para("\
+
 The syntax for declaring (unary) prefix and postfix operators are
 similar. For instance, the following syntax declares that #code("~") and
 #code("?") are prefix and postfix operators of precedence values 61 and 69,

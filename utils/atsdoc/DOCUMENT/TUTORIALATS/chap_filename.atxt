@@ -28,9 +28,9 @@ arbitrarily.
 A static file may contain sort definitions, datasort declarations, static
 definitions, abstract type declarations, exception declarations, datatype
 declarations, macro definition, interfaces for dynamic values and
-functions, etc.  In terms of functionality, a static file in ATS is similar
-to a header file (with the extension #emph(".h")) in C or an interface file (with
-the extension #emph(".mli")) in OCaml.
+functions, etc.  In terms of functionality, a static file in ATS is
+somewhat similar to a header file (with the extension #emph(".h")) in C or
+an interface file (with the extension #emph(".mli")) in OCaml.
 
 ")
 
