@@ -9,6 +9,14 @@ ats-lang-anairiats-0.2.9:
 4. $showtype support for debugging is added (2012-11-24)
 5. Adding libats/linmap_skiplist for linear maps based on skip-lists.
 6. ((<exp1>, ..., <exp2>)) -> @(<exp1>, ..., <exp2>)
+7. If the assigned external name of a function is empty, then its
+   internal name should be used in the place where its external name
+   is needed. For example, the following declarations are equivalent:
+   fun foo (x: int): void = "ext#"
+   fun foo (x: int): void = "ext#foo"
+   The following two are equivalent as well:
+   fun bar (x: int): void = "mac#"
+   fun bar (x: int): void = "mac#bar"
 
 ########################################################################
 
