@@ -209,16 +209,31 @@ in
   case+ extdef of
   | $Syn.DCSTEXTDEFnone () => let
       val fil = d2cst_get_fil (d2c)
-      val name = $Sym.symbol_name (d2cst_get_sym d2c)
+      val name = d2cst_get_name (d2c)
       val () = emit_filename (pf | out, fil)
       val () = fprint1_string (pf | out, "__")
       val () = emit_identifier (pf | out, name)
     in
       // nothing
     end // end of [DCSTEXTDEFnone]
-  | $Syn.DCSTEXTDEFsome_ext name => emit_identifier (pf | out, name)
-  | $Syn.DCSTEXTDEFsome_sta name => emit_identifier (pf | out, name)
-  | $Syn.DCSTEXTDEFsome_mac name => emit_identifier (pf | out, name)
+  | $Syn.DCSTEXTDEFsome_ext (name) => let
+      var name: string = name
+      val () = if string_is_empty (name) then name := d2cst_get_name (d2c)
+    in
+      emit_identifier (pf | out, name)
+    end // end of [DCSTEXTDEFsome_ext]
+  | $Syn.DCSTEXTDEFsome_mac (name) => let
+      var name: string = name
+      val () = if string_is_empty (name) then name := d2cst_get_name (d2c)
+    in
+      emit_identifier (pf | out, name)
+    end // end of [DCSTEXTDEFsome_sta]
+  | $Syn.DCSTEXTDEFsome_sta (name) => let
+      var name: string = name
+      val () = if string_is_empty (name) then name := d2cst_get_name (d2c)
+    in
+      emit_identifier (pf | out, name)
+    end // end of [DCSTEXTDEFsome_sta]
 end // end of [emit_d2cst]
 
 (* ****** ****** *)

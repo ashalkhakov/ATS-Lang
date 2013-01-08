@@ -159,9 +159,10 @@ fun d2cst_make (
 
 (* ****** ****** *)
 
-fun d2cst_get_sym (_: d2cst_t): sym_t
 fun d2cst_get_loc (_: d2cst_t): loc_t
 fun d2cst_get_fil (_: d2cst_t): fil_t
+fun d2cst_get_sym (_: d2cst_t): sym_t
+fun d2cst_get_name (_: d2cst_t): string
 fun d2cst_get_kind (_: d2cst_t): $Syn.dcstkind
 fun d2cst_get_arilst (_: d2cst_t): List int
 fun d2cst_get_decarg (_: d2cst_t): s2qualst

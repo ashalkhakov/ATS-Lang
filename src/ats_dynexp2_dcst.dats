@@ -63,9 +63,9 @@ staload "ats_dynexp2.sats"
 
 typedef
 d2cst_struct = @{
-  d2cst_sym= sym_t
+  d2cst_loc= loc_t
 , d2cst_fil= fil_t
-, d2cst_loc= loc_t
+, d2cst_sym= sym_t
 , d2cst_kind= $Syn.dcstkind
 , d2cst_decarg= s2qualst // template arg
 , d2cst_arilst= List int // arity
@@ -90,9 +90,9 @@ val (pfgc, pfat | p) = ptr_alloc_tsz {d2cst_struct?} (sizeof<d2cst_struct>)
 prval () = free_gc_elim {d2cst_struct?} (pfgc)
 //
 val () = begin
-p->d2cst_sym := id;
-p->d2cst_fil := fil;
 p->d2cst_loc := loc;
+p->d2cst_fil := fil;
+p->d2cst_sym := id;
 p->d2cst_kind := dck;
 p->d2cst_decarg := decarg;
 p->d2cst_arilst := arilst;
@@ -111,14 +111,14 @@ in
 //
 end // end of [d2cst_make]
 
-implement d2cst_get_sym (d2c) =
-  let val (vbox pf | p) = d2c in p->d2cst_sym end
-
 implement d2cst_get_loc (d2c) =
   let val (vbox pf | p) = d2c in p->d2cst_loc end
 
 implement d2cst_get_fil (d2c) =
   let val (vbox pf | p) = d2c in p->d2cst_fil end
+
+implement d2cst_get_sym (d2c) =
+  let val (vbox pf | p) = d2c in p->d2cst_sym end
 
 implement d2cst_get_kind (d2c) =
   let val (vbox pf | p) = d2c in p->d2cst_kind end
@@ -264,6 +264,13 @@ in
 end // end of [d2cst_is_temp]
 
 end // end of [local] (for assuming d2cst_t)
+
+(* ****** ****** *)
+
+implement
+d2cst_get_name (d2c) =
+  $Sym.symbol_name (d2cst_get_sym (d2c))
+// end of [d2cst_get_name]
 
 (* ****** ****** *)
 

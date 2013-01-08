@@ -64,8 +64,9 @@ padding-right: 10px ;
 
 #menu('\
 #litxt(#ulink("\#HWexample", "Hello, world!"))
+#litxt(#ulink("\#NUMBERINGexample", "Numbering Input Lines"))
 #lisub('\
-#ulink("\#FIBexample", "Computing Fibonacci Numbers:") an example of programming with theorem-proving
+#ulink("\#FIBONACCIexample", "Computing Fibonacci Numbers:") an example of programming with theorem-proving
 ')
 #litxt(#ulink("\#FURTHERexamples", "Further Examples"))
 ')#comment("menu")
@@ -104,7 +105,11 @@ code.
 
 #HR(1)
 
-<h2>#uid("FIBexample", "Computing Fibonacci Numbers")</h2>
+<h2>#uid("NUMBERINGexample", "Numbering Input Lines")</h2>
+
+#HR(1)
+
+<h2>#uid("FIBONACCIexample", "Computing Fibonacci Numbers")</h2>
 
 #para("\
 
