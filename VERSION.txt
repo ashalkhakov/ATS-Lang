@@ -1,11 +1,31 @@
-0.2.9-unstable
+0.2.9
+
+<pre>
+ats-lang-anairiats-0.2.9:
+
+1. Fixing some macros in ccomp/runtime/ats_exception.h
+2. Removing the field tmpvar_root in tmpvar and related functions.
+3. Adding support for using CMake to build projects written in ATS.
+   Kudos to Hanwen!
+4. $showtype support for debugging is added (2012-11-24)
+5. Adding libats/linmap_skiplist for linear maps based on skip-lists.
+6. ((<exp1>, ..., <exp2>)) -> @(<exp1>, ..., <exp2>)
+7. If the assigned external name of a function is empty, then its
+   internal name should be used in the place where its external name
+   is needed. For example, the following declarations are equivalent:
+   fun foo (x: int): void = "ext#"
+   fun foo (x: int): void = "ext#foo"
+   The following two are equivalent as well:
+   fun bar (x: int): void = "mac#"
+   fun bar (x: int): void = "mac#bar"
+</pre>
 
 ######
 
 0.2.8
 
 <pre>
-ats-lang-anairiats-0.2.7:
+ats-lang-anairiats-0.2.8:
 
 1. Fixing a bug involving assumed abstract types.
 2. Adding list_mapopt_* functions.
