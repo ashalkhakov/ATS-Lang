@@ -137,7 +137,7 @@ emit_labelext
   ) : void // end of [val]
 in
   $Lab.fprint_label (pf | out, l)
-end // end of [emit_atslabel]
+end // end of [emit_labelext]
 
 (* ****** ****** *)
 
@@ -1353,98 +1353,103 @@ end // end of [emit_cloenv]
 
 (* ****** ****** *)
 
-fn emit_move_con {m:file_mode} (
-    pf: fmlte (m, w)
-  | out: &FILE m
-  , tmp: tmpvar_t
-  , hit_sum: hityp_t
-  , d2c: d2con_t
-  , vps: valprimlst
-  ) : void = begin case+ vps of
-  | list_cons _ => let
-      val () = emit_valprim_tmpvar (pf | out, tmp)
-      val () = fprint1_string (pf | out, " = ATS_MALLOC(sizeof(")
-      val () = emit_hityp_ptr (pf | out, hit_sum)
-      val () = fprint1_string (pf | out, ")) ;")
-      val () = (
-        case+ 0 of
-        | _ when d2con_is_exn (d2c) => begin
-            fprint1_char (pf | out, '\n');
-            fprint1_string (pf | out, "((ats_exn_ptr_type)");
-            emit_valprim_tmpvar (pf | out, tmp);
-            fprint1_string (pf | out, ")->tag = ");
-            emit_d2con (pf | out, d2c);
-            fprint1_string (pf | out, ".tag ;\n");
-            fprint1_string (pf | out, "((ats_exn_ptr_type)");
-            emit_valprim_tmpvar (pf | out, tmp);
-            fprint1_string (pf | out, ")->name = ");
-            emit_d2con (pf | out, d2c);
-            fprint1_string (pf | out, ".name ;")
-          end // end of [_ when ...]
-        | _ => let
-            val s2c = d2con_get_scst (d2c)
-          in
-            case+ 0 of
-            | _ when s2cst_is_singular s2c => ()
-            | _ when s2cst_is_listlike s2c => ()
-            | _ => begin
-                fprint1_char (pf | out, '\n');
-                fprint1_string (pf | out, "((ats_sum_ptr_type)");
-                emit_valprim_tmpvar (pf | out, tmp);
-                fprint1_string (pf | out, ")->tag = ");
-                fprint1_int (pf | out, d2con_get_tag d2c);
-                fprint1_string (pf | out, " ;")
-              end
-          end // end of [_]
-      ) : void // end of [val]
-      val () = aux_arg (out, 0, vps) where {
-        fun aux_arg (
-          out: &FILE m
-        , i: int, vps: valprimlst
-        ) :<cloptr1> void = begin case+ vps of
-          | list_cons (vp, vps) => let
-              val () = (
-                case+ vp.valprim_node of
-                | VPtop () => ()
-                | _ => () where {
+fun emit_move_con
+  {m:file_mode} (
+  pf: fmlte (m, w)
+| out: &FILE m
+, tmp: tmpvar_t
+, hit_sum: hityp_t
+, d2c: d2con_t
+, vps: valprimlst
+) : void = let
+in
 //
-                    val () = fprint1_char (pf | out, '\n')
-//
-                    val () = fprint1_string
-                      (pf | out, "ats_selptrset_mac(")
-                    val () = emit_hityp_ptr (pf | out, hit_sum)
-                    val () = fprint1_string (pf | out, ", ")
-                    val () = emit_valprim_tmpvar (pf | out, tmp)
-                    val () = fprint1_string (pf | out, ", ")
-                    val () = fprintf1_exn (pf | out, "atslab_%i", @(i))
-                    val () = fprint1_string (pf | out, ", ")
-                    val () = emit_valprim (pf | out, vp)
-                    val () = fprint1_string (pf | out, ") ;")
-                  } // end of [_]
-              ) : void // end of [val]
-            in
-              aux_arg (out, i+1, vps)
-            end // end of [list_cons]
-          | list_nil () => ()
-        end // end of [aux_arg]
-      } // end of [where]
-    in
-      // empty
-    end // end of [list_cons]
-  | list_nil () => let
-      val s2c = d2con_get_scst (d2c) in
+case+ vps of
+| list_cons _ => let
+    val () = emit_valprim_tmpvar (pf | out, tmp)
+    val () = fprint1_string (pf | out, " = ATS_MALLOC(sizeof(")
+    val () = emit_hityp_ptr (pf | out, hit_sum)
+    val () = fprint1_string (pf | out, ")) ;")
+    val () = (
       case+ 0 of
-      | _ when s2cst_is_listlike s2c => begin
+      | _ when d2con_is_exn (d2c) => begin
+          fprint1_char (pf | out, '\n');
+          fprint1_string (pf | out, "((ats_exn_ptr_type)");
           emit_valprim_tmpvar (pf | out, tmp);
-          fprint1_string (pf | out, " = (ats_sum_ptr_type)0 ;");
-        end // end of [_ when ...]
-      | _ => begin
-          emit_valprim_tmpvar (pf | out, tmp);
-          fprint1_string (pf | out, " = (ats_sum_ptr_type)(&");
+          fprint1_string (pf | out, ")->tag = ");
           emit_d2con (pf | out, d2c);
-          fprint1_string (pf | out, ") ;")
+          fprint1_string (pf | out, ".tag ;\n");
+          fprint1_string (pf | out, "((ats_exn_ptr_type)");
+          emit_valprim_tmpvar (pf | out, tmp);
+          fprint1_string (pf | out, ")->name = ");
+          emit_d2con (pf | out, d2c);
+          fprint1_string (pf | out, ".name ;")
+        end // end of [_ when ...]
+      | _ => let
+          val s2c = d2con_get_scst (d2c)
+        in
+          case+ 0 of
+          | _ when s2cst_is_singular s2c => ()
+          | _ when s2cst_is_listlike s2c => ()
+          | _ => begin
+              fprint1_char (pf | out, '\n');
+              fprint1_string (pf | out, "((ats_sum_ptr_type)");
+              emit_valprim_tmpvar (pf | out, tmp);
+              fprint1_string (pf | out, ")->tag = ");
+              fprint1_int (pf | out, d2con_get_tag d2c);
+              fprint1_string (pf | out, " ;")
+            end
         end // end of [_]
-    end // end of [list_nil]
+    ) : void // end of [val]
+    val () = aux_arg (out, 0, vps) where {
+      fun aux_arg (
+        out: &FILE m
+      , i: int, vps: valprimlst
+      ) :<cloptr1> void = begin case+ vps of
+        | list_cons (vp, vps) => let
+            val () = (
+              case+ vp.valprim_node of
+              | VPtop () => ()
+              | _ => () where {
+//
+                  val () = fprint1_char (pf | out, '\n')
+//
+                  val () = fprint1_string
+                    (pf | out, "ats_selptrset_mac(")
+                  val () = emit_hityp_ptr (pf | out, hit_sum)
+                  val () = fprint1_string (pf | out, ", ")
+                  val () = emit_valprim_tmpvar (pf | out, tmp)
+                  val () = fprint1_string (pf | out, ", ")
+                  val () = fprintf1_exn (pf | out, "atslab_%i", @(i))
+                  val () = fprint1_string (pf | out, ", ")
+                  val () = emit_valprim (pf | out, vp)
+                  val () = fprint1_string (pf | out, ") ;")
+                } // end of [_]
+            ) : void // end of [val]
+          in
+            aux_arg (out, i+1, vps)
+          end // end of [list_cons]
+        | list_nil () => ()
+      end // end of [aux_arg]
+    } // end of [where]
+  in
+    // empty
+  end // end of [list_cons]
+| list_nil () => let
+    val s2c = d2con_get_scst (d2c) in
+    case+ 0 of
+    | _ when s2cst_is_listlike s2c => begin
+        emit_valprim_tmpvar (pf | out, tmp);
+        fprint1_string (pf | out, " = (ats_sum_ptr_type)0 ;");
+      end // end of [_ when ...]
+    | _ => begin
+        emit_valprim_tmpvar (pf | out, tmp);
+        fprint1_string (pf | out, " = (ats_sum_ptr_type)(&");
+        emit_d2con (pf | out, d2c);
+        fprint1_string (pf | out, ") ;")
+      end // end of [_]
+  end // end of [list_nil]
+//
 end // end of [emit_move_con]
 
 (* ****** ****** *)

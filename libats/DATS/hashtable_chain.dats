@@ -563,7 +563,7 @@ hashtbl_resize_double
   ptbl: !HASHTBLptr (key, itm, l)
 ) :<> void = let
   val sz = hashtbl_size (ptbl)
-  val sz = size1_of_size (sz) // casting: no op
+  val sz = size1_of_size (sz) // casting: no-op
 in
   if sz > 0 then hashtbl_resize<key,itm> (ptbl, sz + sz) else ()
 end // end of [hashtbl_resize_double]
@@ -574,7 +574,7 @@ hashtbl_resize_half
   ptbl: !HASHTBLptr (key, itm, l)
 ) :<> void = let
   val sz = hashtbl_size (ptbl)
-  val sz = size1_of_size (sz) // casting: no op
+  val sz = size1_of_size (sz) // casting: no-op
   val sz2 = sz / 2
 in
   if sz2 >= HASHTBL_MINSZ

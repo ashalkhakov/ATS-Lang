@@ -701,7 +701,6 @@ fun strbuf_toupper
 fun string_toupper {n:nat} (str: string n):<> strbufptr_gc n
 
 (* ****** ****** *)
-
 //
 // HX: h = (h << 5) + h + c
 //

@@ -206,6 +206,7 @@ above libraries.
 #litxt(#myliblink("libats", "linmap_list"))
 #litxt(#myliblink("libats", "linmap_randbst"))
 #litxt(#myliblink("libats", "linmap_skiplist"))
+#litxt(#myliblink("libats", "linhashtbl_chain"))
 #litxt(#myliblink("libats", "linheap_binomial"))
 #litxt(#myliblink("libats", "linheap_fibonacci"))
 #litxt(#myliblink("libats", "linqueue_list"))
