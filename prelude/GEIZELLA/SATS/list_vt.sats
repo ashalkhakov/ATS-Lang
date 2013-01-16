@@ -79,9 +79,9 @@ list_vt_make_array {n:nat}
 (* ****** ****** *)
 
 fun{a:viewt@ype}
-list_vt_of_arraysize
-  {n:nat} (arrsz: arraysize (a, n)):<> list_vt (a, n)
-// end of [list_vt_of_arraysize]
+list_vt_of_arrpsz
+  {n:nat} (psz: arrpsz (a, n)):<> list_vt (a, n)
+// end of [list_vt_of_arrpsz]
 
 (* ****** ****** *)
 

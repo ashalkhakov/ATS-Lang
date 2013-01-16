@@ -104,7 +104,7 @@ val () = loop (view@ A, view@ res | &A, &res, n)
 //
 in
   res
-end // end of [list_vt_make_arrsz]
+end // end of [list_vt_make_array]
 
 (* ****** ****** *)
 

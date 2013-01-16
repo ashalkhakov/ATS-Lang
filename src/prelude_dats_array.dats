@@ -79,17 +79,16 @@ atspre_array_ptr_initialize_elt_tsz (
 
 (* ****** ****** *)
 
-assume array_viewt0ype_int_type
+assume
+array_viewt0ype_int_type
   (a:viewt@ype, n:int) = [l:addr] @{
   data= ptr l, view= vbox (array_v (a, n, l))
 } // end of [array_viewt0ype_int_type]
 
 (*
-
 viewtypedef // this one is declared in [prelude/basic_sta.sats]
 arraysize_viewt0ype_int_viewt0ype (a: viewt@ype, n:int) =
   [l:addr | l <> null] (free_gc_v (a?, n, l), @[a][n] @ l | ptr l, int n)
-
 *)
 
 implement

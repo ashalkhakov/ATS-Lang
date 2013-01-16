@@ -85,7 +85,7 @@ castfn list1_of_list0
 
 fun{a:t@ype}
 list0_of_arrpsz
-  {n:nat} (arrsz: arrpsz (a, n)):<> list0 a
+  {n:nat} (psz: arrpsz (a, n)):<> list0 a
 // end of [list0_of_arrpsz]
 
 (* ****** ****** *)

@@ -153,10 +153,7 @@ fun matrix_make_arrpsz
   m: size_t m, n: size_t n, psz: arrpsz (a, m*n)
 ) :<> matrix (a, m, n) // end of [matrix_make_arrpsz]
 
-macdef matrix (m, n) (asz) =
-  matrix_make_arrpsz (,(m), ,(n), ,(asz))
-// end of [macdef]
-
+(* ****** ****** *)
 //
 // HX: implemented in [prelude/DATS/matrix.dats]
 //
