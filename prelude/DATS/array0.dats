@@ -50,9 +50,8 @@ staload _(*anonymous*) = "prelude/DATS/reference.dats"
 
 (* ****** ****** *)
 
-assume array0_viewt0ype_type
-  (a:viewt@ype) = ref (Arraysize a)
-// end of [array0_viewt0ype_type]
+assume
+array0_viewt0ype_type (a:viewt@ype) = ref (Arrpsz (a))
 
 (* ****** ****** *)
 
@@ -63,7 +62,7 @@ assume array0_viewt0ype_type
 //
 implement array0_get_arrszref (A) = A
 *)
-implement array0_make_arrsz (arrsz) = ref_make_elt (arrsz)
+implement array0_make_arrpsz (psz) = ref_make_elt (psz)
 
 (* ****** ****** *)
 
@@ -75,7 +74,7 @@ array0_make_elt (asz, x0) = let
   var ini: a = x0
   val () = array_ptr_initialize_elt_tsz {a} (!p_arr, asz, ini, tsz)
 in
-  array0_make_arrsz {a} {n} @(pf_gc, pf_arr | p_arr, asz)
+  array0_make_arrpsz {a} {n} @(pf_gc, pf_arr | p_arr, asz)
 end // end of [array0_make_elt]
 
 (* ****** ****** *)
@@ -88,30 +87,30 @@ array0_make_lst (xs) = let
   val (pf_gc, pf_arr | p_arr) = array_ptr_alloc_tsz {a} (asz, sizeof<a>)
   val () = array_ptr_initialize_lst<a> (!p_arr, xs)
 in
-  array0_make_arrsz {a} {n} @(pf_gc, pf_arr | p_arr, asz)
+  array0_make_arrpsz {a} {n} @(pf_gc, pf_arr | p_arr, asz)
 end // end of [array_make_lst]
 
 (* ****** ****** *)
 
 implement
 array0_size (A) = let
-  val (vbox pf_arrsz | p_arrsz) = ref_get_view_ptr (A)
+  val (vbox pf_arrpsz | p_psz) = ref_get_view_ptr (A)
 in
-  p_arrsz->3
+  p_psz->3
 end // end of [array0_size]
 
 (* ****** ****** *)
 
 implement{a}
 array0_get_elt_at (A, i) = let
-  val (vbox pf_arrsz | p_arrsz) = ref_get_view_ptr (A)
+  val (vbox pf_psz | p_psz) = ref_get_view_ptr (A)
   val i = size1_of_size i
-  val p_data = p_arrsz->2; val asz = p_arrsz->3
+  val p_data = p_psz->2; val asz = p_psz->3
 in
   if i < asz then let
-    prval pf_data = p_arrsz->1
+    prval pf_data = p_psz->1
     val x = p_data->[i]
-    prval () = p_arrsz->1 := pf_data
+    prval () = p_psz->1 := pf_data
   in
     x // return value
   end else begin
@@ -120,14 +119,14 @@ in
 end (* end of [array0_get_elt_at] *)
 
 implement{a} array0_set_elt_at (A, i, x) = let
-  val (vbox pf_arrsz | p_arrsz) = ref_get_view_ptr (A)
+  val (vbox pf_psz | p_psz) = ref_get_view_ptr (A)
   val i = size1_of_size i
-  val p_data = p_arrsz->2; val asz = p_arrsz->3
+  val p_data = p_psz->2; val asz = p_psz->3
 in
   if i < asz then let
-    prval pf_data = p_arrsz->1
+    prval pf_data = p_psz->1
     val () = p_data->[i] := x
-    prval () = p_arrsz->1 := pf_data
+    prval () = p_psz->1 := pf_data
   in
     () // return no value
   end else begin
@@ -175,16 +174,16 @@ array0_foreach (A, f) = let
       pf := array_v_cons {a} (pf1, pf2)
     end // end of [if]
   // end of [loop]
-  val (vbox pf_arrsz | p_arrsz) = ref_get_view_ptr (A)
+  val (vbox pf_psz | p_psz) = ref_get_view_ptr (A)
 in
-  loop (p_arrsz->1 | p_arrsz->2, p_arrsz->3, f)
+  loop (p_psz->1 | p_psz->2, p_psz->3, f)
 end // end of [array0_foreach]
 
 implement{a}
 array0_iforeach (A, f) = let
-  val (vbox pf_arrsz | p_arrsz) = ref_get_view_ptr (A)
+  val (vbox pf_psz | p_psz) = ref_get_view_ptr (A)
   stavar n0: int
-  val n0: size_t n0 = p_arrsz->3
+  val n0: size_t n0 = p_psz->3
   fun loop {n,i:nat | n0==n+i} {l:addr} .<n>. (
       pf: !array_v (a, n, l)
     | p: ptr l, n: size_t n, i: size_t i, f: (size_t, &a) -<cloref> void
@@ -198,7 +197,7 @@ array0_iforeach (A, f) = let
     end // end of [if]
   // end of [loop]
 in
-  loop (p_arrsz->1 | p_arrsz->2, n0, 0, f)
+  loop (p_psz->1 | p_psz->2, n0, 0, f)
 end // end of [array0_iforeach]
 
 (* ****** ****** *)
@@ -225,7 +224,7 @@ array0_tabulate (asz, f) = let
   // end of [loop]
   val () = loop (pf_arr | p_arr, asz, 0, f)
 in
-  array0_make_arrsz {a} {n0} @(pf_gc, pf_arr | p_arr, asz)
+  array0_make_arrpsz {a} {n0} @(pf_gc, pf_arr | p_arr, asz)
 end // end of [array0_tabulate]
 
 (* ****** ****** *)

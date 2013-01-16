@@ -60,18 +60,18 @@
 //
 (* ****** ****** *)
 
-fun matrix0_make_arrsz
+fun matrix0_make_arrpsz
   {a:viewt@ype} {m,n:nat} (
-  m: size_t m, n: size_t n, arrsz: arraysize (a, m*n)
+  m: size_t m, n: size_t n, psz: arrpsz (a, m*n)
   ) :<> matrix0 (a)
-// end of [matrix0_make_arrsz]
+// end of [matrix0_make_arrpsz]
 
-fun matrix0_make_arrsz__main
+fun matrix0_make_arrpsz__main
   {a:viewt@ype} {m,n:nat} {mn:int} (
     pf_mul: MUL (m, n, mn)
-  | m: size_t m, n: size_t n, arrsz: arraysize (a, mn)
+  | m: size_t m, n: size_t n, psz: arrpsz (a, mn)
   ) :<> matrix0 (a)
-// end of [matrix0_make_arrsz]
+// end of [matrix0_make_arrpsz]
 
 (* ****** ****** *)
 

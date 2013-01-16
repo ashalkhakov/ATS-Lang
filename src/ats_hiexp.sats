@@ -337,7 +337,7 @@ and hiexp_node =
       (hityp, hiexp, hiexplst)
   | HIEarrinit of (* array construction *)
       (hityp(*eltyp*), hiexpopt(*asz*), hiexplst(*elt*))
-  | HIEarrsize of (* arraysize construction *)
+  | HIEarrpsz of (* arraysize construction *)
       (hityp(*eltyp*), hiexplst(*elt*))
   | HIEassgn_ptr of (* assignment to a pointer with offsets *)
       (hiexp, hilablst, hiexp)
@@ -567,7 +567,7 @@ fun hiexp_arrinit
   (_: loc_t, _: hityp, hit_elt: hityp, ohie_asz: hiexpopt, hies_elt: hiexplst)
   : hiexp
 
-fun hiexp_arrsize
+fun hiexp_arrpsz
   (_: loc_t, _: hityp, hit_elt: hityp, hies: hiexplst): hiexp
 
 fun hiexp_assgn_ptr

@@ -58,20 +58,20 @@ assume matrix0_viewt0ype_type
 (* ****** ****** *)
 
 implement
-matrix0_make_arrsz
-  {a} {m,n} (m, n, arrsz) = let
+matrix0_make_arrpsz
+  {a} {m,n} (m, n, psz) = let
   prval pfmul = mul_istot {m,n} ()
   prval () = mul_elim (pfmul)
 in
-  ref @(pfmul, arrsz.0, arrsz.1 | arrsz.2, m, n)
-end // end of [matrix0_make_arrsz]
+  ref @(pfmul, psz.0, psz.1 | psz.2, m, n)
+end // end of [matrix0_make_arrpsz]
 
 implement
-matrix0_make_arrsz__main
-  {a} {m,n} {mn} (pfmul | m, n, arrsz) = let
+matrix0_make_arrpsz__main
+  {a} {m,n} {mn} (pfmul | m, n, psz) = let
 in
-  ref @(pfmul, arrsz.0, arrsz.1 | arrsz.2, m, n)
-end (* end of [matrix0_make_arrsz] *)
+  ref @(pfmul, psz.0, psz.1 | psz.2, m, n)
+end (* end of [matrix0_make_arrpsz] *)
 
 (* ****** ****** *)
 
@@ -86,7 +86,7 @@ matrix0_make_elt (row, col, x0) = let
   var ini: a = x0
   val () = array_ptr_initialize_elt_tsz {a} (!p_arr, asz, ini, tsz)
 in
-  matrix0_make_arrsz__main {a} (pfmul | row, col, @(pf_gc, pf_arr | p_arr, asz))
+  matrix0_make_arrpsz__main {a} (pfmul | row, col, @(pf_gc, pf_arr | p_arr, asz))
 end // end of [matrix0_make_elt]
 
 (* ****** ****** *)
@@ -279,7 +279,7 @@ matrix0_tabulate (row, col, f) = let
   // end of [loop]
   val () = loop (pf_arr | p_arr, mn, 0, n, 0, f)
 in
-  matrix0_make_arrsz__main {a} (pf_mn | m, n, @(pf_gc, pf_arr | p_arr, mn))
+  matrix0_make_arrpsz__main {a} (pf_mn | m, n, @(pf_gc, pf_arr | p_arr, mn))
 end // end of [array0_tabulate]
 
 (* ****** ****** *)

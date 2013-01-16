@@ -1541,15 +1541,15 @@ in
     in
       d2exp_arrinit (loc0, s2e_elt, od2e_asz, d2es_elt)
     end // end of [D1Earrinit]
-  | D1Earrsize (os1e_elt, d1es_elt) => let
+  | D1Earrpsz (os1e_elt, d1es_elt) => let
       val os2e_elt = (case+ os1e_elt of
         | Some s1e => Some (s1exp_tr_dn (s1e, s2rt_viewt0ype))
         | None () => None ()
       ) : s2expopt // end of [val]
       val d2es_elt = d1explst_tr d1es_elt
     in
-      d2exp_arrsize (loc0, os2e_elt, d2es_elt)
-    end // end of [D1Earrsize]
+      d2exp_arrpsz (loc0, os2e_elt, d2es_elt)
+    end // end of [D1Earrpsz]
   | D1Earrsub (d1e_arr, loc_ind, d1ess_ind) => begin
       d1exp_arrsub_tr (loc0, d1e_arr, loc_ind, d1ess_ind)
     end // end of [D1Earrsub]

@@ -1269,11 +1269,11 @@ in
     in
       d2exp_arrinit (loc0, s2e_elt, od2e_asz, d2es_elt)
     end // end of [D2Earrinit]
-  | D2Earrsize (os2e, d2es) => let
+  | D2Earrpsz (os2e, d2es) => let
       val d2es = eval1_d2explst (loc0, ctx, env, d2es)
     in
-      d2exp_arrsize (loc0, os2e, d2es)
-    end // end of [D2Earrsize]
+      d2exp_arrpsz (loc0, os2e, d2es)
+    end // end of [D2Earrpsz]
   | D2Earrsub (d2s, d2e_arr, _(*loc*), d2ess_ind) => let
       val d2e_arr = eval1_d2exp (loc0, ctx, env, d2e_arr)
       val d2ess_ind = eval1_d2explstlst (loc0, ctx, env, d2ess_ind)

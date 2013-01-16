@@ -981,13 +981,13 @@ in
     in
       hiexp_arrinit (loc0, hit0, hit_elt, ohie_asz, hies_elt)
     end // end of [D3Earrinit]
-  | D3Earrsize (s2e_elt, d3es_elt) => let
+  | D3Earrpsz (s2e_elt, d3es_elt) => let
       val hit0 = s2exp_tr (loc0, 0(*deep*), s2e0)
       val hit_elt = s2exp_tr (loc0, 0(*deep*), s2e_elt)
       val hies_elt = d3explst_tr d3es_elt
     in
-      hiexp_arrsize (loc0, hit0, hit_elt, hies_elt)
-    end // end of [D3Earrsize]
+      hiexp_arrpsz (loc0, hit0, hit_elt, hies_elt)
+    end // end of [D3Earrpsz]
   | D3Eassgn_ptr (d3e_ptr, d3ls, d3e_val) => begin
       if d3exp_is_proof d3e_val then begin
         hiexp_empty (loc0, hityp_void)

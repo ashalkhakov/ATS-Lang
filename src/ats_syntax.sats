@@ -1641,7 +1641,7 @@ datatype d0exp_node =
       (d0exp, d0exp)
   | D0Earrinit of (* array initilization *)
       (s0exp (*elt*), d0expopt (*asz*), d0explst (*elt*))
-  | D0Earrsize of (* arraysize expression *)
+  | D0Earrpsz of (* arraysize expression *)
       (s0expopt (*elt*), d0exp (*elts*))
   | D0Earrsub of (* array subscription *)
       (arrqi0de, loc_t(*ind*), d0explstlst)
@@ -2006,10 +2006,10 @@ fun d0exp_arrinit_some (
 
 (* ****** ****** *)
 
-fun d0exp_arrsize (
+fun d0exp_arrpsz (
   t_beg: t0kn, elt: s0expopt
 , t_lp: t0kn, elts: d0explst, t_rp: t0kn
-) : d0exp = "d0exp_arrsize"
+) : d0exp = "d0exp_arrpsz"
 
 (* ****** ****** *)
 

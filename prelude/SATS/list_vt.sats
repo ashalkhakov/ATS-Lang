@@ -96,9 +96,9 @@ list_vt_make_array {n:int}
 (* ****** ****** *)
 
 fun{a:vt0p}
-list_vt_of_arraysize
-  {n:int} (arrsz: arraysize (a, n)):<> list_vt (a, n)
-// end of [list_vt_of_arraysize]
+list_vt_of_arrpsz
+  {n:int} (arrsz: arrpsz (a, n)):<> list_vt (a, n)
+// end of [list_vt_of_arrpsz]
 
 (* ****** ****** *)
 

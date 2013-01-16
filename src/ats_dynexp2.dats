@@ -611,10 +611,10 @@ d2exp_arrinit
 }
 
 implement
-d2exp_arrsize
+d2exp_arrpsz
   (loc, os2e_elt, d2es_elt) = '{
   d2exp_loc= loc
-, d2exp_node= D2Earrsize (os2e_elt, d2es_elt)
+, d2exp_node= D2Earrpsz (os2e_elt, d2es_elt)
 , d2exp_typ= None ()
 }
 

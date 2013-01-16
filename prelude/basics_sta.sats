@@ -744,16 +744,14 @@ stadef junkptr = junkptr_viewtype // shorthand
 // HX: This definition should not be changed!
 //
 viewtypedef
-arraysize_viewt0ype_int_viewt0ype
+arrayptrsize_viewt0ype_int_viewt0ype
   (a:vt0p, n:int) =
   [l:addr] (free_gc_v (a?, n, l), @[a][n] @ l | ptr l, size_t n)
 // end of [viewtypedef]
 
-stadef arraysize = arraysize_viewt0ype_int_viewt0ype
+stadef arrpsz = arrayptrsize_viewt0ype_int_viewt0ype
 
-viewtypedef Arraysize
-  (a:vt0p) = [n:int | n >= 0] arraysize (a, n)
-// end of [Arraysize]
+viewtypedef Arrpsz (a:vt0p) = [n:int | n >= 0] arrpsz (a, n)
 
 (* ****** ****** *)
 //

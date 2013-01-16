@@ -290,13 +290,13 @@ in
       fprint_hiexplst (pf | out, hies_elt);
       prstr ")"
     end // end of [HIEarrinit]
-  | HIEarrsize (hit_elt, hies_elt) => begin
-      prstr "HIEarrsize(";
+  | HIEarrpsz (hit_elt, hies_elt) => begin
+      prstr "HIEarrpsz(";
       fprint_hityp (pf | out, hit_elt);
       prstr "; ";
       fprint_hiexplst (pf | out, hies_elt);
       prstr ")"
-    end // end of [HIEarrsize]
+    end // end of [HIEarrpsz]
   | HIEassgn_ptr (hie, hils, hie_val) => begin
       prstr "HIEassgn_ptr(";
       fprint_hiexp (pf | out, hie);

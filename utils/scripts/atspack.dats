@@ -555,7 +555,6 @@ fn Anairiats_doc_dir_copy () = let
     val SRCROOTdoc_BOOK = SRCROOTdoc ++ "BOOK/"
     val DSTROOTdoc_BOOK = DSTROOTdoc ++ "BOOK/"
     val () = mkdir_exn (DSTROOTdoc_BOOK, DIRmode)
-(*
     val SRCROOTdoc_BOOK_manual = SRCROOTdoc_BOOK ++ "manual/"
     val DSTROOTdoc_BOOK_manual = DSTROOTdoc_BOOK ++ "manual/"
     val () = mkdir_exn (DSTROOTdoc_BOOK_manual, DIRmode)
@@ -563,7 +562,6 @@ fn Anairiats_doc_dir_copy () = let
       SRCROOTdoc_BOOK_manual ++ "manual_main.pdf"
   ,   DSTROOTdoc_BOOK_manual ++ "manual_main.pdf"
     ) // end of [fcopy_exn]
-*)
   } // end of [val]
 //
   val SRCROOTdoc_EXAMPLE = SRCROOTdoc ++ "EXAMPLE/"

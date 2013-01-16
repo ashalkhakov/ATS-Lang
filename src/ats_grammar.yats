@@ -644,7 +644,7 @@ extern d0exp_t d0exp_arrinit_none
 extern d0exp_t d0exp_arrinit_some
   (t0kn_t, s0exp_t, d0exp_t /*asz*/, d0explst_t /*elt*/, t0kn_t) ;
 //
-extern d0exp_t d0exp_arrsize
+extern d0exp_t d0exp_arrpsz
   (t0kn_t, s0exp_t, t0kn_t/*lparen*/, d0explst_t, t0kn_t/*rparen*/) ;
 //
 extern d0exp_t d0exp_arrsub (arrqi0de_t, d0arrind_t) ;
@@ -1226,7 +1226,7 @@ d0eclst_t d0eclst ;
 %token <t0kn> BACKQUOTELPAREN
 %token <t0kn> COMMALPAREN
 %token <t0kn> PERCENTLPAREN
-%token <t0kn> DLRARRSZ
+%token <t0kn> DLRARRPSZ
 %token <t0kn> DLRLST_T
 %token <t0kn> DLRLST_VT
 %token <t0kn> DLRREC_T
@@ -2410,7 +2410,7 @@ atmd0exp
   | DLREFFMASK_REF  { $$ = d0exp_effmask_ref($1) ; }
   | ATLBRACKET s0exp RBRACKET LPAREN d0expcommaseq RPAREN  { $$ = d0exp_arrinit_none ($1, $2, $5, $6) ; }
   | ATLBRACKET s0exp RBRACKET LBRACKET d0exp RBRACKET LPAREN d0expcommaseq RPAREN  { $$ = d0exp_arrinit_some ($1, $2, $5, $8, $9) ; }
-  | DLRARRSZ s0expelt LPAREN d0expcommaseq RPAREN  { $$ = d0exp_arrsize ($1, $2, $3, $4, $5) ; }
+  | DLRARRPSZ s0expelt LPAREN d0expcommaseq RPAREN  { $$ = d0exp_arrpsz ($1, $2, $3, $4, $5) ; }
   | arrqi0de d0arrind  { $$ = d0exp_arrsub ($1, $2) ; }
   | s0elop l0ab  { $$ = d0exp_sel_lab ($1, $2) ; }
   | s0elop LBRACKET d0arrind  { $$ = d0exp_sel_ind ($1, $3) ; }

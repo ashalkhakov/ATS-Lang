@@ -406,18 +406,19 @@ assume array_viewt0ype_int_type
 
 (*
 viewtypedef
-arraysize_viewt0ype_int_viewt0ype
+arrayptrsize_viewt0ype_int_viewt0ype
   (a: viewt@ype, n:int) = [l:addr] (free_gc_v l, @[a][n] @ l | ptr l, int n)
-// end of [arraysize_viewt0ype_int_viewt0ype]
+// end of [arrayptrsize_viewt0ype_int_viewt0ype]
 *)
 
 implement
-array_make_arrsz {a} {n} (arrsz) = let
-  prval () = free_gc_elim {a?} (arrsz.0) // return the certificate
-  val (pfbox | ()) = vbox_make_view_ptr (arrsz.1 | arrsz.2)
+array_make_arrpsz
+  {a}{n} (psz) = let
+  prval () = free_gc_elim {a?} (psz.0) // return the certificate
+  val (pfbox | ()) = vbox_make_view_ptr (psz.1 | psz.2)
 in
-  @{ data= arrsz.2, view= pfbox }
-end // end of [array_make_arrsz]
+  @{ data= psz.2, view= pfbox }
+end // end of [array_make_arrpsz]
 
 (* ****** ****** *)
 

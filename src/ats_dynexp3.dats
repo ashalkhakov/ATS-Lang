@@ -335,8 +335,10 @@ implement d3exp_app_sta (loc, s2e_app, d3e_fun) = '{
 
 (* ****** ****** *)
 
-implement d3exp_arrinit
-  (loc, s2e_arr, s2e_elt, od3e_asz, d3es_elt) = let
+implement
+d3exp_arrinit (
+  loc, s2e_arr, s2e_elt, od3e_asz, d3es_elt
+) = let
   val s2fe = S2EFFnil ()
   val s2fe = d3expopt_eff_union (s2fe, od3e_asz)
   val s2fe = d3explst_eff_union (s2fe, d3es_elt)
@@ -346,13 +348,16 @@ in '{
 , d3exp_node= D3Earrinit (s2e_elt, od3e_asz, d3es_elt)
 } end // end of [d3exp_arrinit]
 
-implement d3exp_arrsize (loc, s2e_arr, s2e_elt, d3es_elt) = let
+implement
+d3exp_arrpsz (
+  loc, s2e_arr, s2e_elt, d3es_elt
+) = let
   val s2fe = d3explst_eff_union (S2EFFnil (), d3es_elt)
 in '{
   d3exp_loc= loc
 , d3exp_eff= s2fe, d3exp_typ= s2e_arr
-, d3exp_node= D3Earrsize (s2e_elt, d3es_elt)
-} end // end of [d3exp_arrsize]
+, d3exp_node= D3Earrpsz (s2e_elt, d3es_elt)
+} end // end of [d3exp_arrpsz]
 
 (* ****** ****** *)
 

@@ -197,7 +197,7 @@ and d3exp_node =
       d3exp
   | D3Earrinit of (* arraysize expression *)
       (s2exp(*eltyp*), d3expopt(*asz*), d3explst(*elt*))
-  | D3Earrsize of (* arraysize expression *)
+  | D3Earrpsz of (* arraysize expression *)
       (s2exp(*eltyp*), d3explst(*elements*))
   | D3Eassgn_ptr of (* assignment to a pointer *)
       (d3exp, d3lab1lst, d3exp)
@@ -495,7 +495,7 @@ fun d3exp_app_dyn
 fun d3exp_arrinit
   (_: loc_t, arr: s2exp, elt: s2exp, asz: d3expopt, elts: d3explst): d3exp
 
-fun d3exp_arrsize
+fun d3exp_arrpsz
   (_: loc_t, arr: s2exp, elt: s2exp, elts: d3explst): d3exp
 
 fun d3exp_assgn_ptr

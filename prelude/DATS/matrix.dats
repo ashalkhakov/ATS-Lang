@@ -120,22 +120,22 @@ fun vbox_make_view_ptr_matrix
 (* ****** ****** *)
 
 implement
-matrix_make_arrsz
-  {a} {m,n} (m, n, arrsz) = let
+matrix_make_arrpsz
+  {a} {m,n} (m, n, psz) = let
   prval pfmul = mul_istot {m,n} ()
   prval () = mul_elim (pfmul)
 in
-  matrix_make_arrsz__main {a} (pfmul | m, n, arrsz)
-end // end of [matrix_make_arrsz]
+  matrix_make_arrpsz__main {a} (pfmul | m, n, psz)
+end // end of [matrix_make_arrpsz]
 
 implement
-matrix_make_arrsz__main
-  {a} (pfmul | m, n, arrsz) = let
-  prval () = free_gc_elim {a?} (arrsz.0) // return the certificate
-  prval pfmat = matrix_v_of_array_v (pfmul, arrsz.1)
-  val (pfmat_box | ()) = vbox_make_view_ptr_matrix (pfmat | arrsz.2)
+matrix_make_arrpsz__main
+  {a} (pfmul | m, n, psz) = let
+  prval () = free_gc_elim {a?} (psz.0) // return the certificate
+  prval pfmat = matrix_v_of_array_v (pfmul, psz.1)
+  val (pfmat_box | ()) = vbox_make_view_ptr_matrix (pfmat | psz.2)
 in @{
-  data= arrsz.2, view= pfmat_box
+  data= psz.2, view= pfmat_box
 } end // end of [matrix_make_arrsize__main]
 
 (* ****** ****** *)

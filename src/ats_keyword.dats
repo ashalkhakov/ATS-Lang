@@ -245,7 +245,7 @@ keyval_insert("withview", WITHVIEW) ;
 keyval_insert("withvtype", WITHVIEWTYPE) ;
 keyval_insert("withviewtype", WITHVIEWTYPE) ;
 //
-keyval_insert("$arrsz", DLRARRSZ) ;
+keyval_insert("$arrpsz", DLRARRPSZ) ;
 keyval_insert("$decrypt", DLRDECRYPT) ;
 keyval_insert("$delay", DLRDELAY) ; // $delay
 keyval_insert("$dynload", DLRDYNLOAD) ;

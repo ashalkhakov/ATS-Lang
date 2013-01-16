@@ -271,15 +271,15 @@ case+ d1e0.d1exp_node of
     fprint_d1explst (pf | out, d1es_elt);
     prstr ")"
   end // end of [D1Earrinit]
-| D1Earrsize (os1e_elt, d1es_elt) => begin
-    prstr "D1Earrsize(";
+| D1Earrpsz (os1e_elt, d1es_elt) => begin
+    prstr "D1Earrpsz(";
     begin case+ os1e_elt of
     | Some s1e => fprint_s1exp (pf | out, s1e) | None () => ()
     end; // end of [begin]
     prstr "; ";
     fprint_d1explst (pf | out, d1es_elt);
     prstr ")"
-  end // end of [D1Earrsize]
+  end // end of [D1Earrpsz]
 | D1Earrsub (d1e_arr, _(*loc_ind*), d1ess_ind) => begin
     prstr "D1Earrsub(";
     fprint_d1exp (pf | out, d1e_arr);

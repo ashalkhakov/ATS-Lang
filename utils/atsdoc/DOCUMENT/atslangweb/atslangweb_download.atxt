@@ -71,7 +71,7 @@ padding-right: 10px ;
 #ulink("\#installation_precomp", "Installation from a precompiled package")
 )
 #litxt(
-#ulink("\#installation_source", "Installation through source compilation")
+#ulink("\#installation_srccomp", "Installation through source compilation")
 )
 #litxt(
 #ulink("\#installation_bootstrap", "Installation through bootstrapping")

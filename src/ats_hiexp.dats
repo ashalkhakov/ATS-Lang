@@ -353,12 +353,12 @@ implement hiexp_arrinit
 , hiexp_typ= hit_arr
 } // end of [hiexp_arrinit]
 
-implement hiexp_arrsize
+implement hiexp_arrpsz
   (loc, hit_arr, hit_elt, hies_elt) = '{
   hiexp_loc= loc
-, hiexp_node= HIEarrsize (hit_elt, hies_elt)
+, hiexp_node= HIEarrpsz (hit_elt, hies_elt)
 , hiexp_typ= hit_arr
-} // end of [hiexp_arrsize]
+} // end of [hiexp_arrpsz]
 
 implement hiexp_assgn_ptr
   (loc, hit, hie_ptr, hils, hie_val) = '{

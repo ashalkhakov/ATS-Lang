@@ -578,7 +578,7 @@ and d2exp_node =
   | D2Eapps of (d2exp, d2exparglst)
   | D2Earrinit of (* array initialization *)
       (s2exp (*eltyp*), d2expopt (*asz*), d2explst (*elt*))
-  | D2Earrsize of (* array expression *)
+  | D2Earrpsz of (* array expression *)
       (s2expopt (*element type*), d2explst (*elements*))
   | D2Earrsub of (* array subscription *)
       (d2sym (*[] overloading*), d2exp, loc_t(*ind*), d2explstlst)
@@ -1028,7 +1028,7 @@ fun d2exp_apps (_: loc_t, _fun: d2exp, _arg: d2exparglst): d2exp
 fun d2exp_arrinit
   (_: loc_t, eltyp: s2exp, asz: d2expopt, elts: d2explst): d2exp
 
-fun d2exp_arrsize (_: loc_t, eltyp: s2expopt, elts: d2explst): d2exp
+fun d2exp_arrpsz (_: loc_t, eltyp: s2expopt, elts: d2explst): d2exp
 
 fun d2exp_arrsub (
   loc: loc_t, d2s: d2sym, arr: d2exp, locind: loc_t, ind: d2explstlst

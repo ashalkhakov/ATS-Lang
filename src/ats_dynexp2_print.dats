@@ -353,16 +353,16 @@ in
       prstr "; ";
       fprint_d2explst (pf | out, d2es_elt);
       prstr ")"
-    end // end of [D2Earrsize]
-  | D2Earrsize (os2e_elt, d2es_elt) => begin
-      prstr "D2Earrsize(";
+    end // end of [D2Earrinit]
+  | D2Earrpsz (os2e_elt, d2es_elt) => begin
+      prstr "D2Earrpsz(";
       begin case+ os2e_elt of
       | Some s2e => fprint_s2exp (pf | out, s2e) | None () => ()
       end;
       prstr "; ";
       fprint_d2explst (pf | out, d2es_elt);
       prstr ")"
-    end // end of [D2Earrsize]
+    end // end of [D2Earrpsz]
   | D2Earrsub (d2s, d2e_arr, _(*loc_ind*), d2ess_ind) => begin
       prstr "D2Earrsub(";
       fprint_d2sym (pf | out, d2s);

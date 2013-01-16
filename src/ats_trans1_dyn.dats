@@ -912,16 +912,16 @@ in
     in
       $Fix.ITEMatm (d1exp_arrinit (loc0, s1e_elt, od1e_asz, d1es_elt))
     end // end of [D0Earrinit]
-  | D0Earrsize (os0e_elt, d0e_elts) => let
+  | D0Earrpsz (os0e_elt, d0e_elts) => let
       val os1e_elt = s0expopt_tr os0e_elt
       val d1e_elts = d0exp_tr (d0e_elts)
       val d1es_elt = (case+ d1e_elts.d1exp_node of
         | D1Elist (_(*npf*), d1es) => d1es | _ => cons (d1e_elts, nil ())
       ) : d1explst // end of [val]
-      val d1e_arrsize = d1exp_arrsize (loc0, os1e_elt, d1es_elt)
+      val d1e_arrpsz = d1exp_arrpsz (loc0, os1e_elt, d1es_elt)
     in
-      $Fix.ITEMatm (d1e_arrsize)
-    end // end of [D0Earrsize]
+      $Fix.ITEMatm (d1e_arrpsz)
+    end // end of [D0Earrpsz]
   | D0Earrsub (qid, loc_ind, d0ess) => let
       val d1e_arr =
         d1exp_qid (qid.arrqi0de_loc, qid.arrqi0de_qua, qid.arrqi0de_sym)

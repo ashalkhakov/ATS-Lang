@@ -141,19 +141,19 @@ prval () = view@ A := pf_arr
 //
 in
   res
-end // end of [list_vt_of_arraysize]
+end // end of [list_vt_make_array]
 *)
 
 (* ****** ****** *)
 
 implement{a}
-list_vt_of_arraysize (arrsz) = let
-  val (pf_gc, pf_arr | p_arr, asz) = arrsz
+list_vt_of_arrpsz (psz) = let
+  val (pf_gc, pf_arr | p_arr, asz) = psz
   val res = list_vt_make_array (!p_arr, asz)
   val () = array_ptr_free {a?} (pf_gc, pf_arr | p_arr)
 in
   res
-end // end of [list_vt_of_arraysize]
+end // end of [list_vt_of_arrpsz]
 
 (* ****** ****** *)
 

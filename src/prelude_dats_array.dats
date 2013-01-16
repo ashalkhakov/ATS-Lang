@@ -93,11 +93,12 @@ arraysize_viewt0ype_int_viewt0ype (a: viewt@ype, n:int) =
 *)
 
 implement
-array_make_arrsz {a} {n} (arrsz) = let
-  prval () = free_gc_elim {a?} {n} (arrsz.0)
-  val (pfbox | ()) = vbox_make_view_ptr (arrsz.1 | arrsz.2)
+array_make_arrpsz
+  {a}{n} (psz) = let
+  prval () = free_gc_elim {a?} {n} (psz.0)
+  val (pfbox | ()) = vbox_make_view_ptr (psz.1 | psz.2)
 in
-  @{ data= arrsz.2, view= pfbox }
+  @{ data= psz.2, view= pfbox }
 end // end of [array]
 
 implement array_get_view_ptr (A) = @(A.view | A.data)

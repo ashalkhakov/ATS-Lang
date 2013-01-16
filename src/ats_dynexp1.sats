@@ -270,7 +270,7 @@ and d1exp_node =
       (d1exp, s1exparglst)
   | D1Earrinit of (* array initialization *)
       (s1exp (*eltyp*), d1expopt (*asz*), d1explst (*elt*))
-  | D1Earrsize of (* arraysize expression *)
+  | D1Earrpsz of (* arraysize expression *)
       (s1expopt (*element type*), d1explst (*elements*))
   | D1Earrsub of (* array subscription *)
       (d1exp, loc_t(*ind*), d1explstlst)
@@ -709,7 +709,7 @@ fun d1exp_arrinit (
   _: loc_t, s1e_elt: s1exp, od1e_asz: d1expopt, d1es_elt: d1explst
 ) : d1exp // end of [d1exp_arrinit]
 
-fun d1exp_arrsize
+fun d1exp_arrpsz
   (_: loc_t, os1e_elt: s1expopt, d1es_elt: d1explst): d1exp
 
 fun d1exp_arrsub

@@ -190,13 +190,13 @@ in
       fprint_d3explst (pf | out, d3es_elt);
       prstr ")"
     end // end of [D3Earrinit]
-  | D3Earrsize (s2e, d3es) => begin
-      prstr "D3Earrsize(";
+  | D3Earrpsz (s2e, d3es) => begin
+      prstr "D3Earrpsz(";
       fprint_s2exp (pf | out, s2e);
       prstr "; ";
       fprint_d3explst (pf | out, d3es);
       prstr ")"
-    end // end of [D3Earrsize]
+    end // end of [D3Earrpsz]
   | D3Eassgn_ptr (d3e_ptr, d3ls, d3e_val) => begin
       prstr "D3Eassgn_ptr(";
       fprint_d3exp (pf | out, d3e_ptr);

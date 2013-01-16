@@ -694,22 +694,22 @@ exception ArraySubscriptException of ()
 (* ****** ****** *)
 
 castfn array_make_view_ptr
-  {a:vt0p} {n:nat} {l:addr}
+  {a:vt0p}{n:nat}{l:addr}
   (pf: array_v (a, n, l) | p: ptr l):<> array (a, n)
 // end of [array_make_view_ptr]
 
 castfn array_get_view_ptr
-  {a:vt0p} {n:nat}
+  {a:vt0p}{n:nat}
   (A: array (a, n)):<> [l:addr] (vbox (array_v (a, n, l)) | ptr l)
 // end of [array_get_view_ptr]
 
 (* ****** ****** *)
 
-fun array_make_arrsz
-  {a:vt0p} {n:nat} (arrsz: arraysize (a, n)):<> array (a, n)
-// end of [array_make_arrsz]
+fun array_make_arrpsz
+  {a:vt0p} {n:nat} (psz: arrpsz (a, n)):<> array (a, n)
+// end of [array_make_arrpsz]
 
-macdef array (x) = array_make_arrsz ,(x)
+macdef array (x) = array_make_arrpsz ,(x)
 
 (* ****** ****** *)
 

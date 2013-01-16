@@ -1808,7 +1808,7 @@ end // end of [ccomp_exp_arrinit_tmpvar]
 
 (* ****** ****** *)
 
-fn ccomp_exp_arrsize_tmpvar (
+fn ccomp_exp_arrpsz_tmpvar (
   res: &instrlst_vt
 , loc0: loc_t
 , hit_elt: hityp_t
@@ -1821,7 +1821,7 @@ fn ccomp_exp_arrsize_tmpvar (
   val vp_arr = valprim_tmp (tmp_arr)
   val () = let
     val vp_res = valprim_tmp (tmp_res)
-    val hit_arrsz = tmpvar_get_typ (tmp_res)
+    val hit_arrpsz = tmpvar_get_typ (tmp_res)
 (*
 //
 viewtypedef
@@ -1831,14 +1831,14 @@ arraysize_viewt0ype_int_viewt0ype
 //
 *)
     val off = OFFSETlab
-      ($Lab.label_make_int 2(*arr*), hit_arrsz)
+      ($Lab.label_make_int 2(*arr*), hit_arrpsz)
     // end of [val]
   in
     instr_add_load_var_offs (res, loc0, tmp_arr, vp_res, '[off])
   end // end of [var]
 in
   ccomp_exp_assgn_arr (res, vp_arr, hit_elt, hies_elt)
-end // end of [ccomp_exp_arrsize_tmpvar]
+end // end of [ccomp_exp_arrpsz_tmpvar]
 
 (* ****** ****** *)
 
@@ -1991,10 +1991,10 @@ in
         res, loc0, level, hit_fun, hie_fun, hies_arg, tmp_res
       ) // end of [ccomp_exp_app_tmpvar]
     end // end of [HIEapp]
-  | HIEarrsize (hit_elt, hies) => let
+  | HIEarrpsz (hit_elt, hies) => let
       val hit_elt = hityp_normalize (hit_elt)
     in
-      ccomp_exp_arrsize_tmpvar (res, loc0, hit_elt, hies, tmp_res)
+      ccomp_exp_arrpsz_tmpvar (res, loc0, hit_elt, hies, tmp_res)
     end // end of [HIElst]
   | HIEassgn_ptr (hie_ptr, hils, hie_val) =>
       ccomp_exp_assgn_ptr (res, loc0, hie_ptr, hils, hie_val)

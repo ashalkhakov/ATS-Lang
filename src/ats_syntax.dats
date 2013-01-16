@@ -1896,7 +1896,7 @@ d0exp_arrinit_some
 (* ****** ****** *)
 
 implement
-d0exp_arrsize (
+d0exp_arrpsz (
   t_beg, os0e, t_lp, d0es, t_rp
 ) = let
   val loc = combine (t_beg.t0kn_loc, t_rp.t0kn_loc)
@@ -1905,8 +1905,8 @@ d0exp_arrsize (
     | _ => d0exp_list (t_lp, d0es, t_rp)
   ) : d0exp // end of [val]
 in '{
-  d0exp_loc= loc, d0exp_node= D0Earrsize (os0e, d0e_elts)
-} end // end of [d0exp_arrsize]
+  d0exp_loc= loc, d0exp_node= D0Earrpsz (os0e, d0e_elts)
+} end // end of [d0exp_arrpsz]
 
 (* ****** ****** *)
 

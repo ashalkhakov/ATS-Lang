@@ -260,8 +260,8 @@ d1exp_arrinit (loc, s1e, od1e_asz, d1es_elt) = '{
 }
 
 implement
-d1exp_arrsize (loc, os1e_elt, d1es_elt) = '{
-  d1exp_loc= loc, d1exp_node= D1Earrsize (os1e_elt, d1es_elt)
+d1exp_arrpsz (loc, os1e_elt, d1es_elt) = '{
+  d1exp_loc= loc, d1exp_node= D1Earrpsz (os1e_elt, d1es_elt)
 }
 
 implement

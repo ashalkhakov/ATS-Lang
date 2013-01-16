@@ -52,11 +52,11 @@ staload "prelude/SATS/list0.sats"
 (* ****** ****** *)
 
 implement{a}
-list0_of_arraysize (arrsz) = let
-  val xs = list_vt_of_arraysize<a> (arrsz)
+list0_of_arrpsz (psz) = let
+  val xs = list_vt_of_arrpsz<a> (psz)
 in
   list0_of_list_vt (xs)
-end // end of [list0_make_arraysize]
+end // end of [list0_make_arrpsz]
 
 (* ****** ****** *)
 

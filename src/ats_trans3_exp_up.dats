@@ -2058,7 +2058,7 @@ val d3e0 = (case+ d2e0.d2exp_node of
         d2exp_apps_tr_up (d3e_fun, d2as_arg)
       end // end of [_]
     end // end of [D2Eapps]
-  | D2Earrsize
+  | D2Earrpsz
       (os2e_elt, d2es_elt) => let
       val sz = $Lst.list_length d2es_elt
       val s2e_elt = (case+ os2e_elt of
@@ -2067,12 +2067,12 @@ val d3e0 = (case+ d2e0.d2exp_node of
           end // end of [None]
       ) : s2exp // end of [val]
       val d3es_elt = d2explst_elt_tr_dn (d2es_elt, s2e_elt)
-      val s2e_arrsz = begin
+      val s2e_arrpsz = begin
         s2exp_arraysize_viewt0ype_int_viewt0ype (s2e_elt, sz)
       end // end of [val]
     in
-      d3exp_arrsize (loc0, s2e_arrsz, s2e_elt, d3es_elt)
-    end // end of [D2Earrsize]
+      d3exp_arrpsz (loc0, s2e_arrpsz, s2e_elt, d3es_elt)
+    end // end of [D2Earrpsz]
   | D2Earrsub (
       d2s_brackets, d2e_arr, loc_ind, d2ess_ind
     ) => begin
