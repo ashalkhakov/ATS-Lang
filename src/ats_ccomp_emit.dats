@@ -1142,7 +1142,7 @@ emit_kont
 extern
 fun emit_patck {m:file_mode} (
   pf: fmlte (m, w) | out: &FILE m, vp: valprim, patck: patck, fail: kont
-) : void // end of [emit_patch]
+) : void // end of [emit_patck]
 
 implement
 emit_patck (

@@ -501,7 +501,9 @@ instr_node =
   | INSTRselcon_ptr of // sum value selection
       (tmpvar_t, valprim, hityp_t, int)
   | INSTRswitch of branchlst // switch statement
+//
 // store instructions
+//
   | INSTRstore_ptr of
       (valprim(*ptr*), valprim(*val*))
   | INSTRstore_ptr_offs of
@@ -999,13 +1001,8 @@ fun ccomp_exp_template_var (
 (* ****** ****** *)
 
 fun ccomp_hiclaulst (
-    level: int
-  , vps: valprimlst
-  , hicls: hiclaulst
-  , tmp_res: tmpvar_t
-  , fail: kont
-  ) : branchlst
-// end of [ccomp_hiclaulst]
+  level: int, vps: valprimlst, hicls: hiclaulst, tmp_res: tmpvar_t, fail: kont
+) : branchlst // end of [ccomp_hiclaulst]
 
 (* ****** ****** *)
 
@@ -1019,13 +1016,12 @@ fun ccomp_declst (res: &instrlst_vt, hids: hideclst): void
 
 fun ccomp_main
   {m:file_mode} (
-    pf: file_mode_lte (m, w)
-  | flag: int
-  , out: &FILE m
-  , fil: fil_t
-  , hids: hideclst
-  ) : void
-// end of [ccomp_main]
+  pf: file_mode_lte (m, w)
+| flag: int
+, out: &FILE m
+, fil: fil_t
+, hids: hideclst
+) : void // end of [ccomp_main]
 
 (* ****** ****** *)
 
