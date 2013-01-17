@@ -717,7 +717,7 @@ in
 end // end of [shape_6]
 
 val shape_arr =
-  array_make_arrsz {shape} $arrsz(
+  array_make_arrpsz{shape}$arrpsz(
   shape_0
 , shape_1
 , shape_2

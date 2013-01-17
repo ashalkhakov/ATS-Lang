@@ -24,8 +24,8 @@ implement
 main (argc, argv) = let
   val () = () where {
     #define asz 10
-    val A = array_make_arrsz
-      {int} ($arrsz (0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+    val A = array_make_arrpsz
+      {int} ($arrpsz (0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
     // end of [val]
 // testing [array_iforeach_fun]
     val () = print "A (0-9) = "

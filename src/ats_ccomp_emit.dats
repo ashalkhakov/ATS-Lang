@@ -1485,9 +1485,9 @@ end // end of [emit_instr_assgn_arr]
 // HX: This definition should not be changed!!!
 //
 viewtypedef
-arraysize_viewt0ype_int_viewt0ype (a: viewt@ype, n:int) =
+arrayptrsize_viewt0ype_int_viewt0ype (a: viewt@ype, n:int) =
   [l:addr | l <> null] (free_gc_v (a, n, l), @[a][n] @ l | ptr l, int n)
-// end of [arraysize_viewt0ype_int_viewt0ype]
+// end of [arrayptrsize_viewt0ype_int_viewt0ype]
 *)
 
 fn emit_instr_arr_heap {m:file_mode} (

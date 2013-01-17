@@ -87,7 +87,7 @@ array_viewt0ype_int_type
 
 (*
 viewtypedef // this one is declared in [prelude/basic_sta.sats]
-arraysize_viewt0ype_int_viewt0ype (a: viewt@ype, n:int) =
+arrayptrsize_viewt0ype_int_viewt0ype (a: viewt@ype, n:int) =
   [l:addr | l <> null] (free_gc_v (a?, n, l), @[a][n] @ l | ptr l, int n)
 *)
 

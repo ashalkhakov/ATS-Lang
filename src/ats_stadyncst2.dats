@@ -257,8 +257,8 @@ implement Array_viewt0ype_int_type =
 implement Array_viewt0ype_int_viewtype = 
   s2cstref_make "array_viewt0ype_int_viewtype"
 
-implement Arraysize_viewt0ype_int_viewt0ype = 
-  s2cstref_make "arraysize_viewt0ype_int_viewt0ype"
+implement Arrayptrsize_viewt0ype_int_viewt0ype = 
+  s2cstref_make "arrayptrsize_viewt0ype_int_viewt0ype"
 
 (* ****** ****** *)
 
@@ -829,12 +829,13 @@ in
 end // end of [s2exp_array_viewt0ype_int_viewtype]
 
 // the length of an array is assumed to be less than [INTMAX]
-implement s2exp_arraysize_viewt0ype_int_viewt0ype (s2e_elt, sz) = let
-  val s2c = s2cstref_get_cst (Arraysize_viewt0ype_int_viewt0ype)
+implement
+s2exp_arrayptrsize_viewt0ype_int_viewt0ype (s2e_elt, sz) = let
+  val s2c = s2cstref_get_cst (Arrayptrsize_viewt0ype_int_viewt0ype)
   val s2e_sz = s2exp_int sz
 in
   s2exp_app_srt (s2rt_viewt0ype, s2exp_cst s2c, '[s2e_elt, s2e_sz])
-end // end of [s2exp_arraysize_viewt0ype_int_viewt0ype]
+end // end of [s2exp_arrayptrsize_viewt0ype_int_viewt0ype]
 
 (* ****** ****** *)
 

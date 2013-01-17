@@ -217,7 +217,7 @@ val n = atoi (s)
 val n = int1_of_int n
 val () = assert (n >= 0)
 val (pf_stdout | stdout) = stdout_get ()
-val @(pf_gc, pf_iub | iub, iub_sz) = $arrsz {amino} (
+val @(pf_gc, pf_iub | iub, iub_sz) = $arrpsz{amino}(
   @{c='a', p=0.27}
 , @{c='c', p=0.12}
 , @{c='g', p=0.12}
@@ -234,7 +234,7 @@ val @(pf_gc, pf_iub | iub, iub_sz) = $arrsz {amino} (
 , @{c='W', p=0.02}
 , @{c='Y', p=0.02}
 ) // end of [$arrsz]
-val @(pf_homo_gc, pf_homo | homo, homo_sz) = $arrsz {amino} (
+val @(pf_homo_gc, pf_homo | homo, homo_sz) = $arrpsz{amino}(
   @{c='a', p=0.3029549426680}
 , @{c='c', p=0.1979883004921}
 , @{c='g', p=0.1975473066391}

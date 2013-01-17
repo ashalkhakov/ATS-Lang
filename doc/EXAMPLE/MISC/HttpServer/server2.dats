@@ -113,7 +113,7 @@ end // end of [socket_write_substring]
 local
 
 typedef string2 = @(string, string)
-val (pfgc, pfarr | ptr, len) = $arrsz {string2} (
+val (pfgc, pfarr | ptr, len) = $arrpsz{string2}(
   ("ats",  "text/plain")
 , ("au",   "audio/basic")
 , ("c",    "text/plain")

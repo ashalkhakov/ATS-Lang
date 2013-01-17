@@ -62,9 +62,9 @@ end // end of [list0_make_arrpsz]
 
 implement{a}
 list0_append (xs, ys) = let
-  val xs = list1_of_list0 xs and ys = list1_of_list0 ys
+  val xs = list_of_list0 (xs) and ys = list_of_list0 (ys)
 in
-  list0_of_list1 (list_append (xs, ys))
+  list0_of_list (list_append (xs, ys))
 end // end of [list0_append]
 
 (* ****** ****** *)
@@ -72,7 +72,7 @@ end // end of [list0_append]
 implement{a,b}
 list0_assoc_fun
   (xs, f, x) = let
-  val xs = list1_of_list0 (xs)
+  val xs = list_of_list0 (xs)
   val ans = list_assoc_fun<a,b> (xs, f, x)
 in
   option0_of_option_vt (ans)
@@ -81,7 +81,7 @@ end // end of [list0_assoc_fun]
 implement{a,b}
 list0_assoc_cloref
   (xs, f, x) = let
-  val xs = list1_of_list0 (xs)
+  val xs = list_of_list0 (xs)
   val ans = list_assoc_cloref<a,b> (xs, f, x)
 in
   option0_of_option_vt (ans)
@@ -95,11 +95,11 @@ list0_concat (xss) = let
     (xss: list (list0 a, n)):<> List (List a) =
     case+ xss of
     | list_cons (xs, xss) => let
-        val xs = list1_of_list0 (xs) in list_cons (xs, __cast xss)
+        val xs = list_of_list0 (xs) in list_cons (xs, __cast xss)
       end // end of [list0_cons]
     | list_nil () => list_nil ()
   // end of [castfn]
-  val xss = list1_of_list0 {list0 a} (xss)
+  val xss = list_of_list0 {list0 a} (xss)
 in
   list0_of_list_vt (list_concat (__cast xss)) 
 end // end of [list0_concat]
@@ -108,12 +108,12 @@ end // end of [list0_concat]
 
 implement{a}
 list0_exists_fun (xs, f) =
-  list_exists_fun (list1_of_list0 xs, f)
+  list_exists_fun (list_of_list0 xs, f)
 // end of [list0_exists_fun]
 
 implement{a}
 list0_exists_cloref (xs, f) =
-  list_exists_cloref (list1_of_list0 xs, f)
+  list_exists_cloref (list_of_list0 xs, f)
 // end of [list0_exists_cloref]
 
 (* ****** ****** *)
@@ -121,35 +121,35 @@ list0_exists_cloref (xs, f) =
 // HX: this implementation
 implement{a} // of [list0_filter] is tail-recursive
 list0_filter_fun (xs, pred) = let
-  val xs = list1_of_list0 (xs)
+  val xs = list_of_list0 (xs)
   val xs = list_filter_fun (xs, pred)
   val xs = list_of_list_vt (xs)
 in
-  list0_of_list1 (xs)
+  list0_of_list (xs)
 end // end of [list0_filter]
 
 // HX: this implementation
 implement{a} // of [list0_filter] is tail-recursive
 list0_filter_cloref (xs, pred) = let
-  val xs = list1_of_list0 (xs)
+  val xs = list_of_list0 (xs)
   val xs = list_filter_cloref (xs, pred)
   val xs = list_of_list_vt (xs)
 in
-  list0_of_list1 (xs)
+  list0_of_list (xs)
 end // end of [list0_filter]
 
 (* ****** ****** *)
 
 implement{a}
 list0_find_fun (xs, pred) = let
-  val ans = list_find_fun (list1_of_list0 (xs), pred)
+  val ans = list_find_fun (list_of_list0 (xs), pred)
 in
   option0_of_option_vt (ans)
 end // end of [list0_find_fun]
 
 implement{a}
 list0_find_cloref (xs, pred) = let
-  val ans = list_find_cloref (list1_of_list0 (xs), pred)
+  val ans = list_find_cloref (list_of_list0 (xs), pred)
 in
   option0_of_option_vt (ans)
 end // end of [list0_find_cloref]
@@ -158,34 +158,34 @@ end // end of [list0_find_cloref]
 
 implement{init}{a}
 list0_fold_left (f, init, xs) =
-  list_fold_left_cloref<init><a> (f, init, list1_of_list0 xs)
+  list_fold_left_cloref<init><a> (f, init, list_of_list0 xs)
 // end of [list0_fold_left]
 
 implement{a}{sink}
 list0_fold_right (f, xs, sink) =
-  list_fold_right_cloref<a><sink> (f, list1_of_list0 xs, sink)
+  list_fold_right_cloref<a><sink> (f, list_of_list0 xs, sink)
 // end of [list0_fold_right]
 
 (* ****** ****** *)
 
 implement{a}
 list0_forall_fun (xs, f) =
-  list_forall_fun (list1_of_list0 xs, f)
+  list_forall_fun (list_of_list0 xs, f)
 
 implement{a}
 list0_forall_cloref (xs, f) =
-  list_forall_cloref (list1_of_list0 xs, f)
+  list_forall_cloref (list_of_list0 xs, f)
 
 (* ****** ****** *)
 
 implement{a}
 list0_foreach_fun (xs, f) =
-  list_foreach_fun<a> (list1_of_list0 xs, f)
+  list_foreach_fun<a> (list_of_list0 xs, f)
 // end of [list0_foreach_fun]
   
 implement{a}
 list0_foreach_cloref (xs, f) = let
-  val () = list_foreach_cloref<a> (list1_of_list0 xs, f)
+  val () = list_foreach_cloref<a> (list_of_list0 xs, f)
 in
   // empty
 end // end of [list0_foreach_cloref]
@@ -194,12 +194,12 @@ end // end of [list0_foreach_cloref]
 
 implement{a}
 list0_iforeach_fun (xs, f) =
-  list_iforeach_fun<a> (list1_of_list0 xs, f)
+  list_iforeach_fun<a> (list_of_list0 xs, f)
 // end of [list0_iforeach_fun]
   
 implement{a}
 list0_iforeach_cloref (xs, f) = let
-  val () = list_iforeach_cloref<a> (list1_of_list0 xs, f)
+  val () = list_iforeach_cloref<a> (list_of_list0 xs, f)
 in
   // empty
 end // end of [list0_iforeach_cloref]
@@ -214,18 +214,18 @@ end // end of [list0_head_exn]
 (* ****** ****** *)
 
 implement{a}
-list0_length (xs) = list_length (list1_of_list0 xs)
+list0_length (xs) = list_length (list_of_list0 xs)
 
 (* ****** ****** *)
 
 implement{a}{b}
 list0_map_fun (xs, f) =
-  list0_of_list_vt (list_map_fun (list1_of_list0 xs, f))
+  list0_of_list_vt (list_map_fun (list_of_list0 xs, f))
 // end of [list0_map_fun]
 
 implement{a}{b}
 list0_map_cloref (xs, f) =
-  list0_of_list_vt (list_map_cloref (list1_of_list0 xs, f))
+  list0_of_list_vt (list_map_cloref (list_of_list0 xs, f))
 // end of [list0_map_cloref]
 
 (* ****** ****** *)
@@ -250,7 +250,7 @@ list0_map2_fun (xs1, xs2, f) = let
   // end of [loop]
   var res: list0 b // uninitialized
   val () = loop (xs1, xs2, res) where {
-    val xs1 = list1_of_list0 (xs1) and xs2 = list1_of_list0 (xs2)
+    val xs1 = list_of_list0 (xs1) and xs2 = list_of_list0 (xs2)
   } // end of [val]
 in
   res
@@ -276,7 +276,7 @@ list0_map2_cloref (xs1, xs2, f) = let
   // end of [loop]
   var res: list0 b // uninitialized
   val () = loop (xs1, xs2, res) where {
-    val xs1 = list1_of_list0 (xs1) and xs2 = list1_of_list0 (xs2)
+    val xs1 = list_of_list0 (xs1) and xs2 = list_of_list0 (xs2)
   } // end of [val]
 in
   res
@@ -321,9 +321,9 @@ list0_reverse (xs) =
 
 implement{a}
 list0_reverse_append (xs, ys) = let
-  val xs = list1_of_list0 xs and ys = list1_of_list0 ys
+  val xs = list_of_list0 (xs) and ys = list_of_list0 (ys)
 in
-  list0_of_list1 (list_reverse_append (xs, ys))
+  list0_of_list (list_reverse_append (xs, ys))
 end // end of [list0_reverse_append]
 
 implement{a}

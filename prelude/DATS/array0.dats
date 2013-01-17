@@ -81,7 +81,7 @@ end // end of [array0_make_elt]
 
 implement{a}
 array0_make_lst (xs) = let
-  val [n:int] xs = list1_of_list0 (xs)
+  val [n:int] xs = list_of_list0 (xs)
   val n = list_length (xs)
   val asz = size1_of_int1 (n)
   val (pf_gc, pf_arr | p_arr) = array_ptr_alloc_tsz {a} (asz, sizeof<a>)

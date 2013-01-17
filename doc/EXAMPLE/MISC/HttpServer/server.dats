@@ -74,7 +74,7 @@ staload _(*anonymous*) = "prelude/DATS/list_vt.dats"
 local
 
 typedef string2 = @(string, string)
-val (pfgc, pfarr | ptr, len) = $arrsz {string2} (
+val (pfgc, pfarr | ptr, len) = $arrpsz{string2}(
   ("ats",  "text/plain")
 , ("au",   "audio/basic")
 , ("c",    "text/plain")

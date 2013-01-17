@@ -1825,7 +1825,7 @@ fn ccomp_exp_arrpsz_tmpvar (
 (*
 //
 viewtypedef
-arraysize_viewt0ype_int_viewt0ype
+arrayptrsize_viewt0ype_int_viewt0ype
   (a: viewt@ype, n:int) = [l:addr | l > null]
   (free_gc_v (a, n, l), @[a][n] @ l | ptr l(*arr*), int n(*size*))
 //

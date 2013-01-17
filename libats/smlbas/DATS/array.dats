@@ -69,7 +69,7 @@ end // end of [array]
 
 implement{a}
 fromList (xs) = let
-  val [n:int] xs = list1_of_list0 (xs)
+  val [n:int] xs = list_of_list0 (xs)
   val asz = size1_of_int1 (list_length xs)
   val A = array_make_lst (asz, xs) in '(A, asz)
 end // end of [fromList]

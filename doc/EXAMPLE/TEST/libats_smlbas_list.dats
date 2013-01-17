@@ -32,7 +32,7 @@ implement main () = () where {
   val abs =
     list_of_list_vt (string_explode "abcdefghijklmnopqrstuvwxyz")
   // end of [val]  
-  val abs = list0_of_list1 (abs)
+  val abs = list0_of_list (abs)
 //
   val () = app<char> (lam (c) => print c, abs)
   val () = print_newline ()

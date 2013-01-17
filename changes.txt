@@ -1,5 +1,14 @@
 ########################################################################
 
+ats-lang-anairiats-0.2.10:
+
+1. arrsz -> arrpsz
+   arraysize -> arrayptrsize
+2. list0_of_list1 -> list0_of_list
+   list1_of_list0 -> list_of_list0
+
+########################################################################
+
 ats-lang-anairiats-0.2.9:
 
 1. Fixing some macros in ccomp/runtime/ats_exception.h

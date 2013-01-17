@@ -120,12 +120,12 @@ end // end of [array_ptr_fprint_fun]
 
 implement{a}
 list0_fprint_elt (out, xs, sep) =
-  list_fprint_elt (out, list1_of_list0 xs, sep)
+  list_fprint_elt (out, list_of_list0 (xs), sep)
 // end of [list0_fprint_elt]
 
 implement{a}
 list0_fprint_fun (out, xs, sep, pr) =
-  list_fprint_fun (out, list1_of_list0 xs, sep, pr)
+  list_fprint_fun (out, list_of_list0 (xs), sep, pr)
 // end of [list0_fprint_fun]
 
 (* ****** ****** *)

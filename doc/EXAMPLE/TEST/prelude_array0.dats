@@ -23,8 +23,10 @@ implement main () = let
   val () = () where {
     #define asz 10
 //
-    val A = array0_make_arrsz {int}
-      ($arrsz (0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+    val A =
+      array0_make_arrpsz {int} (
+      $arrpsz (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+    ) // end of [val]
 //
     var i: int // uninitialized
     val () = for

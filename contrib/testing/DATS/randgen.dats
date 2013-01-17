@@ -53,7 +53,7 @@ implement{a}
 array0_randgen (n) = let
   val (pfgc, pfarr | p) = array_ptr_randgen<a> (n)
 in
-  array0_make_arrsz {a} @(pfgc, pfarr | p, n) // HX: a unary fun
+  array0_make_arrpsz {a} @(pfgc, pfarr | p, n) // HX: a unary fun
 end // end of [array0_randgen]
 
 (* ****** ****** *)
@@ -104,7 +104,7 @@ end // end of [array_ptr_randinit]
 
 implement{a}
 list0_randgen (n) = let
-  val xs = list_randgen (n) in list0_of_list1 (xs)
+  val xs = list_randgen (n) in list0_of_list (xs)
 end // end of [list0_randgen]
 
 (* ****** ****** *)
@@ -136,7 +136,7 @@ matrix0_randgen (m, n) = let
   val (pfmul | mn) = mul2_size1_size1 (m, n)
   val (pfgc, pfarr | p) = array_ptr_randgen<a> (mn)
 in
-  matrix0_make_arrsz__main {a} (pfmul | m, n, (pfgc, pfarr | p, mn))
+  matrix0_make_arrpsz__main {a} (pfmul | m, n, (pfgc, pfarr | p, mn))
 end // end of [matrix0_randgen]
 
 (* ****** ****** *)
@@ -146,7 +146,7 @@ matrix_randgen (m, n) = let
   val (pfmul | mn) = mul2_size1_size1 (m, n)
   val (pfgc, pfarr | p) = array_ptr_randgen<a> (mn)
 in
-  matrix_make_arrsz__main {a} (pfmul | m, n, (pfgc, pfarr | p, mn))
+  matrix_make_arrpsz__main {a} (pfmul | m, n, (pfgc, pfarr | p, mn))
 end // end of [matrix_randgen]
 
 (* ****** ****** *)

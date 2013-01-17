@@ -24,8 +24,10 @@ main (argc, argv) = let
   val () = () where {
     #define row 2
     #define col 5
-    val M = matrix_make_arrsz {int}
-      (row, col, $arrsz (0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+    val M =
+      matrix_make_arrpsz{int}(
+      row, col, $arrpsz (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+    ) // end of [val]
 //
 // testing [matrix_iforeach_fun]
 //

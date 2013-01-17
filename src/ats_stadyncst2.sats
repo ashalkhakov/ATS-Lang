@@ -114,7 +114,7 @@ val None_viewt0ype : s2cstref_t
 
 val Array_viewt0ype_int_type : s2cstref_t
 val Array_viewt0ype_int_viewtype : s2cstref_t
-val Arraysize_viewt0ype_int_viewt0ype : s2cstref_t
+val Arrayptrsize_viewt0ype_int_viewt0ype : s2cstref_t
 
 (* ****** ****** *)
 
@@ -330,7 +330,7 @@ fun un_s2exp_at_viewt0ype_addr_view
 
 fun s2exp_array_viewt0ype_int_type (elt: s2exp, sz: int): s2exp
 fun s2exp_array_viewt0ype_int_viewtype (elt: s2exp, sz: int): s2exp
-fun s2exp_arraysize_viewt0ype_int_viewt0ype (elt: s2exp, sz: int): s2exp
+fun s2exp_arrayptrsize_viewt0ype_int_viewt0ype (elt: s2exp, sz: int): s2exp
 
 (* ****** ****** *)
 

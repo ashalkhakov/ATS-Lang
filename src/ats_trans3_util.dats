@@ -273,7 +273,7 @@ d2exp_typ_syn (d2e0) = begin
           end // end of [None]
       ) : s2exp // end of [val]
     in
-      s2exp_arraysize_viewt0ype_int_viewt0ype (s2e_elt, sz)
+      s2exp_arrayptrsize_viewt0ype_int_viewt0ype (s2e_elt, sz)
     end // end of [D2Earrpsz]
 //
   | D2Eassgn _ => s2exp_void_t0ype ()

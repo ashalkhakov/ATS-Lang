@@ -55,32 +55,24 @@
 #endif // end of [VERBOSE_PRELUDE]
 
 (* ****** ****** *)
-
+//
 // for forming singleton lists
 // macdef list0_sing (x) = list0_cons (,(x), list0_nil ())
-
+//
 (* ****** ****** *)
 //
 // HX: a casting function implemented in [prelude/CATS/list.cats]
 //
-castfn list0_of_list1
-  {a:t@ype} (xs: List a):<> list0 a = "atspre_list0_of_list1"
-// end of [castfn list0_of_list1]
-
+castfn list0_of_list {a:t@ype} (xs: List a):<> list0 a
 //
 // HX: a casting function implemented in [prelude/CATS/list.cats]
 //
-castfn list0_of_list_vt
-  {a:t@ype} (xs: List_vt a):<> list0 a = "atspre_list0_of_list_vt"
-// end of [castfn list0_of_list_vt]
+castfn list0_of_list_vt {a:t@ype} (xs: List_vt a):<> list0 a
 
+(* ****** ****** *)
 //
-// HX: a casting function implemented in [prelude/DATS/list.cats]
+castfn list_of_list0 {a:t@ype} (xs: list0 a):<> List a
 //
-castfn list1_of_list0
-  {a:t@ype} (xs: list0 a):<> List a = "atspre_list1_of_list0"
-// end of [list1_of_list0]
-
 (* ****** ****** *)
 
 fun{a:t@ype}

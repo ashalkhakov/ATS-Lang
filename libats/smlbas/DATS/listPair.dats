@@ -70,7 +70,7 @@ zip (xs, ys) = res where {
       end // end of [list_cons, list_cons]
     | (_, _) =>> (res := list_vt_nil ())
   var res: res_t
-  val xs = list1_of_list0 (xs) and ys = list1_of_list0 (ys)
+  val xs = list_of_list0 (xs) and ys = list_of_list0 (ys)
   val () = loop (xs, ys, res)
   val res = list0_of_list_vt (res)
 } // end of [zip]
@@ -91,7 +91,7 @@ zipEq (xs, ys) = let
     | (_, _) =>> (err := 1; res := list_vt_nil ())
   // end of [loop]  
   var res: res_t?; var err: int = 0 
-  val xs = list1_of_list0 (xs) and ys = list1_of_list0 (ys)
+  val xs = list_of_list0 (xs) and ys = list_of_list0 (ys)
   val () = loop (xs, ys, res, err)
 in
   if err = 0 then
@@ -105,7 +105,7 @@ end (* end of [zipEq] *)
 
 implement{a,b}
 unzip (xys) = (xs, ys) where {
-  val xys = list1_of_list0 (xys)
+  val xys = list_of_list0 (xys)
   val (xs, ys) = list_unzip<a,b> (xys)
   val xs = list0_of_list_vt xs and ys = list0_of_list_vt ys
 } (* end of [unzip] *)

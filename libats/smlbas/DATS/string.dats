@@ -96,13 +96,16 @@ end // end of [str]
 
 (* ****** ****** *)
 
-implement concat (ss) = let
-  val ss = list1_of_list0 (ss); val sbp = stringlst_concat (ss) in
+implement
+concat (ss) = let
+  val ss = list_of_list0 (ss)
+  val sbp = stringlst_concat (ss)
+in
   string_of_strptr (sbp)
 end // end of [concat]
 
 implement concatWith (sep, ss) = let
-  val [n:int] ss = list1_of_list0 (ss)
+  val [n:int] ss = list_of_list0 (ss)
   fun loop {i:nat} .<i>. (
       sep: string
     , s: string, ss: list (string, i)
@@ -141,7 +144,7 @@ end // end of [concatWith]
 (* ****** ****** *)
 
 implement implode (cs) = let
-  val sbp = string_implode (list1_of_list0 cs) in string1_of_strbuf sbp
+  val sbp = string_implode (list_of_list0 cs) in string1_of_strbuf sbp
 end // end of [implode]
 
 implement explode (str) = begin
