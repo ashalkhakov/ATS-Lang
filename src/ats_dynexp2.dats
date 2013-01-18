@@ -1041,14 +1041,18 @@ d2exp_while (
   d2exp_loc= loc
 , d2exp_node= D2Ewhile (inv, d2e_test, d2e_body)
 , d2exp_typ= None ()
-}
+} // end of [d2exp_while]
 
 (* ****** ****** *)
 
 implement
-d2exp_tup
-  (loc, tupknd, npf, d2es) = let
-  fun aux (i: int, d2es: d2explst): labd2explst =
+d2exp_tup (
+  loc, knd, npf, d2es
+) = let
+  fun aux (
+    i: int, d2es: d2explst
+  ) : labd2explst = let
+  in
     case+ d2es of
     | list_cons (d2e, d2es) => let
         val l = $Lab.label_make_int i
@@ -1056,10 +1060,11 @@ d2exp_tup
         LABD2EXPLSTcons (l, d2e, aux (i+1, d2es))
       end // end of [list_cons]
     | list_nil () => LABD2EXPLSTnil ()
+  end // end of [aux]
   val ld2es = aux (0, d2es)
 in '{
   d2exp_loc= loc
-, d2exp_node= D2Erec (tupknd, npf, ld2es)
+, d2exp_node= D2Erec (knd, npf, ld2es)
 , d2exp_typ= None ()
 } end // end of [d2exp_tup]
 

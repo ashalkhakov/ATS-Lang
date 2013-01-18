@@ -1156,7 +1156,7 @@ fun d2exp_sym (_: loc_t, d2s: d2sym): d2exp
 fun d2exp_tmpid (_: loc_t, _: d2exp, _: tmps2explstlst): d2exp
 fun d2exp_top (_: loc_t): d2exp
 fun d2exp_trywith (_: loc_t, _: i2nvresstate, _: d2exp, _: c2laulst 1): d2exp
-fun d2exp_tup (_: loc_t, kind: int, npf: int, _: d2explst): d2exp
+fun d2exp_tup (_: loc_t, knd: int, npf: int, _: d2explst): d2exp
 fun d2exp_var (_: loc_t, d2v: d2var_t): d2exp
 fun d2exp_viewat (_: loc_t, d2e: d2exp): d2exp
 fun d2exp_where (_: loc_t, _: d2exp, _: d2eclst): d2exp
