@@ -578,14 +578,17 @@ d2exp_app_dyn (
   loc0
 , d2e_fun, loc_arg, npf, darg
 ) = let
-  val d2a = D2EXPARGdyn (loc_arg, npf, darg)
-  val node = case+ d2e_fun.d2exp_node of
+  val d2a =
+    D2EXPARGdyn (loc_arg, npf, darg)
+  // end of [val]
+  val node = (
+    case+ d2e_fun.d2exp_node of
     | D2Eapps (d2e_fun, d2as) => let
         val d2as = $Lst.list_extend (d2as, d2a) in
         D2Eapps (d2e_fun, d2as)
       end
     | _ => D2Eapps (d2e_fun, cons (d2a, nil ()))
-  // end of [val]
+  ) // end of [val]
 in
   '{ d2exp_loc= loc0, d2exp_node= node, d2exp_typ= None () }
 end // end of [d2exp_app_dyn]

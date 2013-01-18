@@ -1688,31 +1688,37 @@ fun eval0ctx_extend_arg {n:nat} (
     loc0: loc_t
   , ctx: !eval0ctx, env: &alphaenv
   , d2es: d2explst
-  ) : v2aluelst = begin case+ d2es of
+  ) : v2aluelst = let
+  in
+    case+ d2es of
     | list_cons (d2e, d2es) => let
         val v2al = aux (loc0, ctx, env, d2e)
       in
         list_cons (v2al, auxlst (loc0, ctx, env, d2es))
-      end
+      end // end of [list_cons]
     | list_nil () => list_nil ()
   end // end of [auxlst]
 in
   case+ d2vs of
-  | list_cons (d2v, d2vs) => let
+  | list_cons
+      (d2v, d2vs) => let
       val+ list_cons (d2e, d2es) = d2es
-      val v2al: v2alue = begin case+ knd of
-        | 0 (*short*) => begin case+ d2e.d2exp_node of
+      val v2al: v2alue = let
+      in
+        case+ knd of
+        | 0 (*short*) => (
+          case+ d2e.d2exp_node of
           | D2Elist (npf, d2es) => let
               val v2als = auxlst (loc0, ctx, env, d2es) in V2ALlst v2als
-            end // end of [D2Erec]
+            end // end of [D2Elist]
           | _ => aux (loc0, ctx, env, d2e)
-          end // end of [0(*short*)]
+          ) // end of [0(*short*)]
         | _ (*long*) => eval0_exp (loc0, ctx, env, d2e)
       end // end of [val]
       val res = eval0ctx_add (res, d2v, v2al)
     in
       eval0ctx_extend_arg (loc0, knd, ctx, env, d2vs, d2es, res)
-    end
+    end // end of [list_cons]
   | list_nil () => res
 end // end of [eval0ctx_extend_arg]
 

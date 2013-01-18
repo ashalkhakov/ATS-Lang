@@ -431,14 +431,34 @@ implement d1exp_let (loc, d1cs, d1e) = '{
 
 implement
 d1exp_list
-  (loc, d1es) = case+ d1es of
-  | cons (
-      d1e, nil ()
-    ) => d1e
-  | _ => '{
-      d1exp_loc= loc, d1exp_node= D1Elist (0, d1es)
-    } (* end of [_] *)
-// end of [d1exp_list]
+  (loc, d1es) = let
+//
+fun auxsin (
+  d1es: d1explst
+) : bool = let
+in
+//
+case+ d1es of
+| list_cons (
+    d1e, list_nil ()
+  ) => (
+  case+ d1e.d1exp_node of
+  | D1Elist (_, d1es) => auxsin (d1es) | _ => true
+  ) // end of [cons]
+| _ => false
+//
+end // end [auxsin]
+//
+val issin = auxsin (d1es)
+//
+in
+//
+if issin then let
+  val-list_cons (d1e, _) = d1es in d1e
+end else '{
+  d1exp_loc= loc, d1exp_node= D1Elist (0, d1es)
+} // end of [if]
+end // end of [d1exp_list]
 
 implement
 d1exp_list2
@@ -451,23 +471,30 @@ in '{
 
 (* ****** ****** *)
 
-implement d1exp_loopexn (loc, i) = '{
+implement
+d1exp_loopexn (loc, i) = '{
   d1exp_loc= loc, d1exp_node= D1Eloopexn (i)
 } // end of [d1exp_loopexn]
 
-implement d1exp_lst (loc, lin, os1e, d1es) = '{
+(* ****** ****** *)
+
+implement
+d1exp_lst (loc, lin, os1e, d1es) = '{
   d1exp_loc= loc, d1exp_node= D1Elst (lin, os1e, d1es)
 } // end of [d1exp_lst]
 
-implement d1exp_macsyn (loc, knd, d1e) = '{
+implement
+d1exp_macsyn (loc, knd, d1e) = '{
   d1exp_loc= loc, d1exp_node= D1Emacsyn (knd, d1e)
 } // end of [d1exp_macsyn]
 
-implement d1exp_ptrof (loc, d1e) = '{
+implement
+d1exp_ptrof (loc, d1e) = '{
   d1exp_loc= loc, d1exp_node= D1Eptrof d1e
 } // end of [d1exp_ptrof]
 
-implement d1exp_qid (loc, q, id) = '{
+implement
+d1exp_qid (loc, q, id) = '{
   d1exp_loc= loc, d1exp_node= D1Eqid (q, id)
 } // end of [d1exp_qid]
 
@@ -476,23 +503,28 @@ d1exp_raise (loc, d1e) = '{
   d1exp_loc= loc, d1exp_node= D1Eraise (d1e)
 } // end of [d1exp_raise]
 
-implement d1exp_rec (loc, recknd, ld1es) = '{
+implement
+d1exp_rec (loc, recknd, ld1es) = '{
   d1exp_loc= loc, d1exp_node= D1Erec (recknd, ld1es)
 } // end of [d1exp_rec]
 
-implement d1exp_scaseof (loc, inv, s1e, sc1ls) = '{
+implement
+d1exp_scaseof (loc, inv, s1e, sc1ls) = '{
   d1exp_loc= loc, d1exp_node = D1Escaseof (inv, s1e, sc1ls)
 } // end of [d1exp_scaseof]
 
-implement d1exp_sel (loc, knd, d1e, d1l) = '{
+implement
+d1exp_sel (loc, knd, d1e, d1l) = '{
   d1exp_loc= loc, d1exp_node= D1Esel (knd, d1e, d1l)
-}
+} // end of [d1exp_sel]
 
-implement d1exp_seq (loc, d1es) = '{
+implement
+d1exp_seq (loc, d1es) = '{
   d1exp_loc= loc, d1exp_node= D1Eseq d1es
 }
 
-implement d1exp_sexparg (loc, s1a) = '{
+implement
+d1exp_sexparg (loc, s1a) = '{
   d1exp_loc= loc, d1exp_node= D1Esexparg s1a
 }
 
@@ -501,7 +533,8 @@ d1exp_showtype (loc, d1e) = '{
   d1exp_loc= loc, d1exp_node= D1Eshowtype (d1e)
 } // end of [d1exp_showtype]
 
-implement d1exp_sif
+implement
+d1exp_sif
   (loc, inv, s1e_cond, d1e_then, d1e_else) = let
   // empty
 in '{
@@ -509,23 +542,28 @@ in '{
   d1exp_node = D1Esif (inv, s1e_cond, d1e_then, d1e_else)
 } end // end of [d1exp_sif]
 
-implement d1exp_string (loc, str, len) = '{
+implement
+d1exp_string (loc, str, len) = '{
   d1exp_loc= loc, d1exp_node= D1Estring (str, len)
 }
 
-implement d1exp_struct (loc, ld1es) = '{
+implement
+d1exp_struct (loc, ld1es) = '{
   d1exp_loc= loc, d1exp_node= D1Estruct (ld1es)
 }
 
-implement d1exp_tmpid (loc, qid, ts1ess) = '{
+implement
+d1exp_tmpid (loc, qid, ts1ess) = '{
   d1exp_loc= loc, d1exp_node= D1Etmpid (qid, ts1ess)
 }
 
-implement d1exp_top (loc) = '{
+implement
+d1exp_top (loc) = '{
   d1exp_loc= loc, d1exp_node= D1Etop ()
 }
 
-implement d1exp_trywith (loc, res, d1e, c1ls) = '{
+implement
+d1exp_trywith (loc, res, d1e, c1ls) = '{
   d1exp_loc= loc, d1exp_node= D1Etrywith (res, d1e, c1ls)
 }
 

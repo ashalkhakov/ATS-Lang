@@ -97,6 +97,19 @@ for viewing ATS source code with cross-reference support.
 <h2>#uid("ATS_courses", "Courses about ATS and based on ATS")</h2>
 
 #menu('\
+
+#lisub("\
+#strong("BU CAS CS 320:")
+ATS is mostly used like SML in this undergraduate-level course:
+#para("")
+#menu('\
+#litxt(#ulink("http://www.cs.bu.edu/~hwxi/academic/courses/Spring13/CS320.html", "Spring 2013"))
+#litxt(#ulink("http://www.cs.bu.edu/~hwxi/academic/courses/Summer10/CS320.html", "Summer I, 2010"))
+#litxt(#ulink("http://www.cs.bu.edu/~hwxi/academic/courses/Summer09/CS320.html", "Summer I, 2009"))
+')#comment("menu")
+#para("")
+")
+
 #lisub("\
 #strong("BU CAS CS 511:")
 ATS is employed
@@ -140,17 +153,6 @@ currently targets x86-32 and MIPS32 (plus pseudo instructions accepted by
 ')#comment("menu")
 #para("")
 ")#comment("lisub")
-
-#lisub("\
-#strong("BU CAS CS 320:")
-ATS is mostly used like SML in this undergraduate-level course:
-#para("")
-#menu('\
-#litxt(#ulink("http://www.cs.bu.edu/~hwxi/academic/courses/Spring13/CS320.html", "Spring 2013"))
-#litxt(#ulink("http://www.cs.bu.edu/~hwxi/academic/courses/Summer10/CS320.html", "Summer I, 2010"))
-#litxt(#ulink("http://www.cs.bu.edu/~hwxi/academic/courses/Summer09/CS320.html", "Summer I, 2009"))
-')#comment("menu")
-")
 
 ')#comment("menu")
 

@@ -1004,8 +1004,8 @@ fn d1exp_qid_app_dyn_tr (
   , loc_arg: loc_t
   , npf: int, darg: d1explst
   ) : d2exp = let
-  val sarg = s1exparglst_tr sarg
-  val darg = d1explst_tr darg
+  val sarg = s1exparglst_tr (sarg)
+  val d2es_arg = d1explst_tr (darg)
   val od2i = the_d2expenv_find_qua (q, id)
 in
   case+ od2i of
@@ -1026,14 +1026,14 @@ in
             end // end of [D2CONLSTnil]
         ) : d2con_t // end of [val]
       in
-        d2exp_con (loc_dap, d2c, sarg, npf, darg)
+        d2exp_con (loc_dap, d2c, sarg, npf, d2es_arg)
       end // end of [D2ITEMcon]
     | D2ITEMcst d2c => let
 //
         val () = dyncstuseloc_posmark (loc_qid, d2c)
 //
         val d2e_fun = d2exp_cst (loc_qid, d2c) in
-        d2exp_app_sta_dyn (loc_dap, loc_sap, d2e_fun, sarg, loc_arg, npf, darg)
+        d2exp_app_sta_dyn (loc_dap, loc_sap, d2e_fun, sarg, loc_arg, npf, d2es_arg)
       end // end of [D2ITEMcst]
     | D2ITEMe1xp _ => begin
         prerr_loc_interror loc_qid;
@@ -1045,7 +1045,7 @@ in
         val () = macro_def_check (loc_qid, knd, id)
         val d2e_fun = d2exp_mac (loc_qid, d2m)
       in
-        d2exp_app_sta_dyn (loc_dap, loc_sap, d2e_fun, sarg, loc_arg, npf, darg)
+        d2exp_app_sta_dyn (loc_dap, loc_sap, d2e_fun, sarg, loc_arg, npf, d2es_arg)
       end // end of [D2ITEMmacdef]
     | D2ITEMmacvar _ => begin
         prerr_loc_error2 loc_qid;
@@ -1059,11 +1059,11 @@ in
           d2sym_make (loc_qid, q, id, d2is)
         // end of [val]
         val d2e_fun = d2exp_sym (loc_qid, d2s) in
-        d2exp_app_sta_dyn (loc_dap, loc_sap, d2e_fun, sarg, loc_arg, npf, darg)
+        d2exp_app_sta_dyn (loc_dap, loc_sap, d2e_fun, sarg, loc_arg, npf, d2es_arg)
       end // end of [D2ITEMsym]
     | D2ITEMvar d2v => let
         val d2e_fun = d2exp_var (loc_qid, d2v) in
-        d2exp_app_sta_dyn (loc_dap, loc_sap, d2e_fun, sarg, loc_arg, npf, darg)
+        d2exp_app_sta_dyn (loc_dap, loc_sap, d2e_fun, sarg, loc_arg, npf, d2es_arg)
       end // end of [D2ITEMvar]
     end (* end of [Some_vt] *)
   | ~None_vt () => begin
@@ -1473,7 +1473,7 @@ in
       d1e_fun, loc_arg, npf, darg
     ) => let
       val loc1 = d1e_fun.d1exp_loc
-      val d1e_fun = d1exp_make_d1exp d1e_fun
+      val d1e_fun = d1exp_make_d1exp (d1e_fun)
     in
       case+ d1e_fun.d1exp_node of
       | D1Eqid (q, id) => let
@@ -1500,18 +1500,18 @@ in
           | _ => let
               val d2e_fun = d1exp_tr d1e_fun
               val sarg = s1exparglst_tr sarg
-              val darg = d1explst_tr darg
+              val d2es_arg = d1explst_tr (darg)
             in
               d2exp_app_sta_dyn (
-                loc0, loc1, d2e_fun, sarg, loc_arg, npf, darg
+                loc0, loc1, d2e_fun, sarg, loc_arg, npf, d2es_arg
               ) // end of [d1exp_app_sta_dyn]
             end // end of [_]
         end // end of [D1Eapp_sta]
       | _ => let
           val d2e_fun = d1exp_tr d1e_fun
-          val darg = d1explst_tr darg
+          val d2es_arg = d1explst_tr (darg)
         in
-          d2exp_app_dyn (loc0, d2e_fun, loc_arg, npf, darg)
+          d2exp_app_dyn (loc0, d2e_fun, loc_arg, npf, d2es_arg)
         end // end of [_]
     end // end of [D1Eapp_dyn]
   | D1Eapp_sta (d1e_fun, sarg) => let
@@ -1699,11 +1699,13 @@ in
     in
       d2exp_let (loc0, d2cs, d2e)
     end // end of [D1Elet]
-  | D1Elist (npf, d1es) => begin case+ d1es of
-    | cons _ => let
-        val d2es = d1explst_tr d1es in d2exp_list (loc0, npf, d2es)
-      end // end of [cons]
-    | nil () => d2exp_empty (loc0)
+  | D1Elist (npf, d1es) => let
+    in
+      case+ d1es of
+      | cons _ => let
+          val d2es = d1explst_tr d1es in d2exp_list (loc0, npf, d2es)
+        end // end of [cons]
+      | nil () => d2exp_empty (loc0)
     end // end of [D1Elist]
   | D1Eloopexn flag => d2exp_loopexn (loc0, flag)
   | D1Elst (lin, os1e_elt, d1es_elt) => let
@@ -1713,8 +1715,8 @@ in
         case+ os1e_elt of
         | Some s1e_elt => Some (s1exp_tr_dn (s1e_elt, s2t_elt))
         | None () => None ()
-      ) : s2expopt
-      val d2es_elt = d1explst_tr d1es_elt
+      ) : s2expopt // end of [val]
+      val d2es_elt = d1explst_tr (d1es_elt)
     in
       d2exp_lst (loc0, lin, os2e_elt, d2es_elt)
     end // end of [D1Elst]

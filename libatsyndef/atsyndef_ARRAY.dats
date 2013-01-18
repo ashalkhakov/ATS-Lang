@@ -69,7 +69,7 @@ fun d1exp_ofarrsz_n1_p1 (
   val qfid = d1exp_qid (loc0, q, fid)
 //
   val d1e_fun = d1exp_app_sta (loc0, qfid, s1as)
-  val d1e_arg = d1exp_arrsize (loc0, None (), d1es_elt)
+  val d1e_arg = d1exp_arrpsz (loc0, None (), d1es_elt)
 //
 in
   d1exp_app_dyn (loc0, d1e_fun, loc0, 0(*npf*), list_sing (d1e_arg))
