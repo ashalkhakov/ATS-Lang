@@ -426,8 +426,8 @@ overload prerr with prerr_eval0ctx
 extern fun eval0_exp
   (loc0: loc_t, ctx: !eval0ctx, env: &alphaenv, d2e: d2exp): v2alue
 
-extern fun eval0_labexplst
-  (loc0: loc_t, ctx: !eval0ctx, env: &alphaenv, ld2e: labd2explst): v2aluelst
+extern fun eval0_explst
+  (loc0: loc_t, ctx: !eval0ctx, env: &alphaenv, d2es: d2explst): v2aluelst
 
 (* ****** ****** *)
 
@@ -869,11 +869,6 @@ in
   | D2Eseq '[d2e] => eval0_exp (loc0, ctx, env, d2e)
 *)
   | D2Estring (str, len) => V2ALstring (str, len)
-  | D2Erec (_(*recknd*), _(*npf*), ld2es) => let
-      val v2ls = eval0_labexplst (loc0, ctx, env, ld2es)
-    in
-      V2ALlst (v2ls)
-    end // end of [D2Erec]
   | D2Evar d2v => eval0_var (loc0, ctx, d2v)
   | _ => begin
      prerr_loc_errmac loc0;
@@ -883,16 +878,18 @@ in
    end // end of [_]
 end // end of [eval0_exp]
 
-implement eval0_labexplst
-  (loc0, ctx, env, ld2es) = case+ ld2es of
-  | LABD2EXPLSTcons (_(*lab*), d2e, ld2es) => let
+implement eval0_explst
+  (loc0, ctx, env, d2es) = let
+in
+  case+ d2es of
+  | list_cons (d2e, d2es) => let
       val v2l = eval0_exp (loc0, ctx, env, d2e)
-      val v2ls = eval0_labexplst (loc0, ctx, env, ld2es)
+      val v2ls = eval0_explst (loc0, ctx, env, d2es)
     in
       list_cons (v2l, v2ls)
-    end // end of [LABD2EXPLSTcons]
-  | LABD2EXPLSTnil () => list_nil ()
-// end of [eval0_labexplst]
+    end // end of [list_cons]
+  | list_nil () => list_nil ()
+end // end of [eval0_explst]
 
 (* ****** ****** *)
 
@@ -1377,6 +1374,11 @@ in
     in
       d2exp_let (loc0, d2cs, d2e)
     end // end of [D2Elet]
+  | D2Elist (npf, d2es) => let
+      val d2es = eval1_d2explst (loc0, ctx, env, d2es)
+    in
+      d2exp_list (loc0, npf, d2es)
+    end // end of [D2Elist]
   | D2Elst (lin, os2e, d2es) => let
       val d2es = eval1_d2explst (loc0, ctx, env, d2es)
     in
@@ -1685,14 +1687,14 @@ fun eval0ctx_extend_arg {n:nat} (
   fun auxlst (
     loc0: loc_t
   , ctx: !eval0ctx, env: &alphaenv
-  , ld2es: labd2explst
-  ) : v2aluelst = begin case+ ld2es of
-    | LABD2EXPLSTcons (_(*lab*), d2e, ld2es) => let
+  , d2es: d2explst
+  ) : v2aluelst = begin case+ d2es of
+    | list_cons (d2e, d2es) => let
         val v2al = aux (loc0, ctx, env, d2e)
       in
-        list_cons (v2al, auxlst (loc0, ctx, env, ld2es))
+        list_cons (v2al, auxlst (loc0, ctx, env, d2es))
       end
-    | LABD2EXPLSTnil () => list_nil ()
+    | list_nil () => list_nil ()
   end // end of [auxlst]
 in
   case+ d2vs of
@@ -1700,8 +1702,8 @@ in
       val+ list_cons (d2e, d2es) = d2es
       val v2al: v2alue = begin case+ knd of
         | 0 (*short*) => begin case+ d2e.d2exp_node of
-          | D2Erec (_(*recknd*), _(*npf*), ld2es) => let
-              val v2als = auxlst (loc0, ctx, env, ld2es) in V2ALlst v2als
+          | D2Elist (npf, d2es) => let
+              val v2als = auxlst (loc0, ctx, env, d2es) in V2ALlst v2als
             end // end of [D2Erec]
           | _ => aux (loc0, ctx, env, d2e)
           end // end of [0(*short*)]

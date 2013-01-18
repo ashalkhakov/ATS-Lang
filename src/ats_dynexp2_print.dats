@@ -566,9 +566,13 @@ in
     in
       fprint_d2exp (pf | out, d2e); prstr ")"
     end // end of [D2Emacsyn]
-  | D2Eptrof d2e => begin
-      prstr "D2Eptrof("; fprint_d2exp (pf | out, d2e); prstr ")"
-    end // end of [D2Eptrof]
+  | D2Elist (npf, d2es) => begin
+      prstr "D2Elist(";
+      fprint_int (pf | out, npf);
+      prstr "; ";
+      fprint_d2explst (pf | out, d2es);
+      prstr ")"
+    end // end of [D2Elist]
   | D2Eloopexn i => begin
       prstr "D2Eloopexn("; fprint1_int (pf | out, i); prstr ")"
     end // end of [D2Eloopexn]
@@ -585,6 +589,9 @@ in
       fprint_d2explst (pf | out, d2es);
       prstr ")"
     end // end of [D2Elst]
+  | D2Eptrof d2e => begin
+      prstr "D2Eptrof("; fprint_d2exp (pf | out, d2e); prstr ")"
+    end // end of [D2Eptrof]
   | D2Eraise (d2e) => begin
       prstr "D2Eraise("; fprint_d2exp (pf | out, d2e); prstr ")"
     end // end of [D2Eraise]

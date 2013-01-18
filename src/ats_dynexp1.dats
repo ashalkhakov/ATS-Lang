@@ -429,28 +429,19 @@ implement d1exp_let (loc, d1cs, d1e) = '{
 
 (* ****** ****** *)
 
-implement d1exp_list
+implement
+d1exp_list
   (loc, d1es) = case+ d1es of
-(*
-  // HX: this one affects postion marking
-  | cons (d1e, nil ()) => '{ // singleton elimination
-      d1exp_loc= loc, d1exp_node= d1e.d1exp_node
-    }
-*)
   | cons (
       d1e, nil ()
-    ) => (
-    case+ d1e.d1exp_node of
-    | D1Elist (npf, d1es) =>
-        d1exp_tup_npf (loc, 0(*tupknd*), npf, d1es)
-    | _ => d1e // end of [_]
-    )
+    ) => d1e
   | _ => '{
       d1exp_loc= loc, d1exp_node= D1Elist (0, d1es)
     } (* end of [_] *)
 // end of [d1exp_list]
 
-implement d1exp_list2
+implement
+d1exp_list2
   (loc, d1es1, d1es2) = let
   val npf = $Lst.list_length d1es1
   val d1es = $Lst.list_append (d1es1, d1es2)

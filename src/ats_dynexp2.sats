@@ -639,6 +639,7 @@ and d2exp_node =
       (d2exp (*eval*), d2exp (*free*))
   | D2Elet of (* dynamic let-expression *)
       (d2eclst, d2exp)
+  | D2Elist of (int(*npf*), d2explst)
   | D2Eloopexn of (* break: 0 and continue: 1 *)
       int
   | D2Elst of ( // list expression
@@ -1114,9 +1115,11 @@ fun d2exp_lazy_ldelay (_: loc_t, _: d2exp, _: d2exp): d2exp
 
 fun d2exp_let (_: loc_t, _: d2eclst, _: d2exp): d2exp
 
+fun d2exp_list (_: loc_t, npf: int, d2es: d2explst): d2exp
+
 fun d2exp_loopexn (_: loc_t, kind: int (*break/continue*)): d2exp
 
-fun d2exp_lst (_: loc_t, lin: int, elt: s2expopt, elts: d2explst): d2exp
+fun d2exp_lst (_: loc_t, lin: int, elt: s2expopt, d2es: d2explst): d2exp
 
 fun d2exp_mac (_: loc_t, d2m: d2mac_t): d2exp
 

@@ -1701,7 +1701,7 @@ in
     end // end of [D1Elet]
   | D1Elist (npf, d1es) => begin case+ d1es of
     | cons _ => let
-        val d2es = d1explst_tr d1es in d2exp_tup (loc0, 0, npf, d2es)
+        val d2es = d1explst_tr d1es in d2exp_list (loc0, npf, d2es)
       end // end of [cons]
     | nil () => d2exp_empty (loc0)
     end // end of [D1Elist]

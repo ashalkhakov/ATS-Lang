@@ -868,6 +868,13 @@ d2exp_let
 } // end of [d2exp_let]
 
 implement
+d2exp_list
+  (loc, npf, d2es) = '{
+  d2exp_loc= loc
+, d2exp_node= D2Elist (npf, d2es), d2exp_typ= None ()
+} // end of [d2exp_list]
+
+implement
 d2exp_loopexn
   (loc, flag) = '{
   d2exp_loc= loc

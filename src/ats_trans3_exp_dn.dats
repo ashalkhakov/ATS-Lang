@@ -667,6 +667,11 @@ val d3e0 = case+ d2e0.d2exp_node of
           val d3e0 = d2exp_tr_up d2e0 in d3exp_tr_dn (d3e0, s2e0); d3e0
         end // end of [let]
     end // end of [D2Elam_dyn]
+  | D2Elist (npf, d2es) => let
+      val d2e0 = d2exp_tup (loc0, 0(*knd*), npf, d2es)
+    in
+      d2exp_tr_dn (d2e0, s2e0)
+    end // end of [D2Elist]
   | D2Elet (d2cs, d2e) => let
       val (pf_effect | ()) = the_effect_env_push ()
       val (pf_s2cstlst | ()) = the_s2cstlst_env_push ()

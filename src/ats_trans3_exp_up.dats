@@ -2286,10 +2286,17 @@ val d3e0 = (case+ d2e0.d2exp_node of
     in
       d3exp_let (loc0, d3cs, d3e)
     end // end of [D2Elet]
+  | D2Elist (npf, d2es) => let
+      val d2e0 = d2exp_tup (loc0, 0(*knd*), npf, d2es)
+    in
+      d2exp_tr_up (d2e0)
+    end // end of [D2Elist]
   | D2Eloopexn i => begin
       d2exp_loopexn_tr_up (loc0, i) // 0/1: break/continue
     end // end of [D2Eloopexn]
-  | D2Elst (lin, os2e_elt, d2es_elt) => let
+  | D2Elst (
+      lin, os2e_elt, d2es_elt
+    ) => let
       val s2e_elt = case+ os2e_elt of
         | Some s2e_elt => s2e_elt
         | None () => let
