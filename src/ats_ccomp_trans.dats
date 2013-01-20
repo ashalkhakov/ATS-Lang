@@ -1648,12 +1648,13 @@ fn ccomp_exp_app_tmpvar (
   ) : valprim // end of [val]
 (*
   val () = begin
-    print "ccomp_exp_app_tmpvar: vp_fun = "; print vp_fun; print_newline ()
+    println! ("ccomp_exp_app_tmpvar: vp_fun = ", vp_fun)
   end // end of [val]
 *)
-  val vps_arg = ccomp_explst (res, hies_arg) where {
+  val vps_arg =
+    ccomp_explst (res, hies_arg) where {
     val hies_arg = hiexplst_refarg_tr (res, level, vps_free, hies_arg)
-  } // end of [where]
+  } // end of [where] // end of [val]
 //
   val vps_free = $Lst.list_vt_reverse {valprim} (vps_free)
 //

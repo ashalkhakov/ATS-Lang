@@ -256,7 +256,9 @@ implement
 eval1_p2at 
   (loc0, env, p2t0) = let
 (*
-  val () = println! ("eval1_p2at")
+  val () = (
+    print ("eval1_p2at"); print_newline ()
+  ) // end of [val]
 *)
 in
   case+ p2t0.p2at_node of
