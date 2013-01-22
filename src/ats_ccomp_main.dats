@@ -1515,11 +1515,14 @@ implement ccomp_main {m}
 //
   val res = (
     if flag > 0 then let // defining the dynload function
-      val dynloadflag =
-        (if mainatsknd >= 0 then 0 else $Glo.atsopt_dynloadflag_get ()): int
+      val dynloadflag = (
+        if mainatsknd >= 0 then 0 else $Glo.atsopt_dynloadflag_get ()
+      ) : int // end of [val]
       val () = fprint1_string (pf | out, "/* dynamic load function */\n\n")
-      val () = emit_dynload
-        (pf | out, dynloadflag, fil, res, tmps_static, extvals)
+      val () =
+        emit_dynload (
+        pf | out, dynloadflag, fil, res, tmps_static, extvals
+      ) // end of [val]
     in
       res
     end else begin
