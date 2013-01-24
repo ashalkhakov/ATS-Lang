@@ -350,10 +350,14 @@ end // end of [play24]
 
 (* ****** ****** *)
 
+#define MAX 13.0
+
+(* ****** ****** *)
+
 fun suit_spinner_gen
   (): GtkSpinButton_ref1 = let
   val adj = gtk_adjustment_new
-    (1.0, 1.0, 13.0, 1.0, 0.0(*ignored*), 0.0(*ignored*))
+    (1.0, 1.0, MAX, 1.0, 0.0(*ignored*), 0.0(*ignored*))
   val spinner = gtk_spin_button_new (adj, (gdouble)0.0, (guint)0)
   val () = gtk_spin_button_set_numeric (spinner, GTRUE)
   val () = gtk_spin_button_set_wrap (spinner, GTRUE)
