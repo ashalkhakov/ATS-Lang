@@ -1032,14 +1032,14 @@ fn ccomp_exp_lam (
     | ~Some_vt (vpr) => !vpr := valprim_fun (fl) | ~None_vt () => ()
   ) : void // end of [val]
 *)
-  val (pf_tailcallst_mark | ()) = the_tailcallst_mark ()
+  val (pfmark | ()) = the_tailcallst_mark ()
   val () = the_tailcallst_add (fl, list_nil ())
   val _(*funentry*) = let
     val ins = instr_funlab (fl); val prolog = '[ins]
   in
     ccomp_exp_arg_body_funlab (loc0, prolog, hips_arg, hie_body, fl)
   end // end of [val]
-  val () = the_tailcallst_unmark (pf_tailcallst_mark | (*none*))
+  val () = the_tailcallst_unmark (pfmark | (*none*))
 in
   valprim_funclo_make (fl)
 end // end of [ccomp_exp_lam]
@@ -1688,7 +1688,8 @@ fn ccomp_exp_app_tmpvar (
           print "ccomp_exp_app_tmpvar: fl = "; print fl; print_newline ()
         end // end of [val]
 *)
-        val () = case+ vps_free of
+        val () = (
+          case+ vps_free of
           | list_vt_nil _ => let
               val () = if tmpvar_get_ret (tmp_res) > 0 then istail := 1
               val () = fold@ vps_free
@@ -1696,7 +1697,7 @@ fn ccomp_exp_app_tmpvar (
               // nothing
             end // end of [list_vt_nil]
           | list_vt_cons _ => (fold@ vps_free)
-        // end of [val]
+        ) : void // end of [val]
 (*
         val () = begin
           print "ccomp_exp_app_tmpvar: istail = "; print istail; print_newline ()
@@ -2200,7 +2201,12 @@ in
   | HIEtrywith (hie_try, hicls) => let
       val level = d2var_current_level_get ()
       var res_try: instrlst_vt = list_vt_nil ()
-      val () = ccomp_exp_tmpvar (res_try, hie_try, tmp_res)
+      //
+      // HX-2013-02: no tail-call optimization for [hie_try]
+      //
+      val () = instr_add_move_val
+        (res_try, loc0, tmp_res, ccomp_exp (res_try, hie_try))
+      // end of [val]
       val res_try: instrlst = $Lst.list_vt_reverse_list res_try
       val hit_exn = hityp_encode (hityp_ptr)
       val tmp_exn = tmpvar_make hit_exn; val vp_exn = valprim_tmp tmp_exn
