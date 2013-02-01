@@ -88,36 +88,58 @@ fun array0_size {a:t@ype} (A: array0 a):<!ref> size_t
 (* ****** ****** *)
 
 fun{a:t@ype}
-array0_get_elt_at (A: array0 a, i: size_t):<!exnref> a
+array0_get_elt_at (
+  A: array0 a, i: size_t
+) :<!exnref> a // endfun
 overload [] with array0_get_elt_at
-
 fun{a:t@ype}
-array0_set_elt_at (A: array0 a, i: size_t, x: a):<!exnref> void
-overload [] with array0_set_elt_at
-
-(* ****** ****** *)
-
-fun{a:t@ype} array0_get_elt_at__intsz
+array0_get_elt_at__intsz
   (A: array0 a, i: int):<!exnref> a
 overload [] with array0_get_elt_at__intsz
 
-fun{a:t@ype} array0_set_elt_at__intsz
+
+fun{a:t@ype}
+array0_set_elt_at (
+  A: array0 a, i: size_t, x: a
+) :<!exnref> void // endfun
+overload [] with array0_set_elt_at
+fun{a:t@ype}
+array0_set_elt_at__intsz
   (A: array0 a, i: int, x: a):<!exnref> void
 overload [] with array0_set_elt_at__intsz
 
 (* ****** ****** *)
 
-fun{a:t@ype} array0_foreach
+fun{
+a:viewt@ype
+} array0_exch (
+  A: array0 a, i: size_t, j: size_t
+) :<!exnref> void // endfun
+
+fun{
+a:viewt@ype
+} array0_exch__intsz
+  (A: array0 a, i: int, j: int):<!exnref> void
+// end of [array0_exch__intsz]
+
+(* ****** ****** *)
+
+fun{a:t@ype}
+array0_foreach
   (A: array0 a, f: (&a) -<cloref> void):<!ref> void
 // end of [array0_foreach]
 
-fun{a:t@ype} array0_iforeach
+(* ****** ****** *)
+
+fun{a:t@ype}
+array0_iforeach
   (A: array0 a, f: (size_t, &a) -<cloref> void):<!ref> void
 // end of [array0_iforeach]
 
 (* ****** ****** *)
 
-fun{a:t@ype} array0_tabulate
+fun{a:t@ype}
+array0_tabulate
   (asz: size_t, f: size_t -<cloref> a):<> array0 a
 // end of [array0_tabulate]
 

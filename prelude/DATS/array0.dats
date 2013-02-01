@@ -118,7 +118,21 @@ in
   end // end of [if]
 end (* end of [array0_get_elt_at] *)
 
-implement{a} array0_set_elt_at (A, i, x) = let
+implement{a}
+array0_get_elt_at__intsz (A, i) = let
+  val i = int1_of_int i
+in
+  if i >= 0 then begin
+    array0_get_elt_at<a> (A, i2sz i)
+  end else begin
+    $raise ArraySubscriptException ()
+  end // end of [if]
+end (* end of [array0_get_elt_at__intsz] *)
+  
+(* ****** ****** *)
+
+implement{a}
+array0_set_elt_at (A, i, x) = let
   val (vbox pf_psz | p_psz) = ref_get_view_ptr (A)
   val i = size1_of_size i
   val p_data = p_psz->2; val asz = p_psz->3
@@ -134,19 +148,6 @@ in
   end // end of [if]
 end (* end of [array0_set_elt_at] *)
 
-(* ****** ****** *)
-
-implement{a}
-array0_get_elt_at__intsz (A, i) = let
-  val i = int1_of_int i
-in
-  if i >= 0 then begin
-    array0_get_elt_at<a> (A, i2sz i)
-  end else begin
-    $raise ArraySubscriptException ()
-  end // end of [if]
-end (* end of [array0_get_elt_at__intsz] *)
-  
 implement{a}
 array0_set_elt_at__intsz (A, i, x) = let
   val i = int1_of_int i
@@ -161,41 +162,115 @@ end (* end of [array0_set_elt_at__intsz] *)
 (* ****** ****** *)
 
 implement{a}
-array0_foreach (A, f) = let
-  fun loop {n:nat} {l:addr} .<n>. (
-      pf: !array_v (a, n, l)
-    | p: ptr l, n: size_t n, f: (&a) -<cloref> void
-    ) :<> void =
-    if n > 0 then let
-      prval (pf1, pf2) = array_v_uncons {a} (pf)
-      val () = f (!p)
-      val () = loop (pf2 | p+sizeof<a>, n-1, f)
-    in
-      pf := array_v_cons {a} (pf1, pf2)
-    end // end of [if]
-  // end of [loop]
-  val (vbox pf_psz | p_psz) = ref_get_view_ptr (A)
+array0_exch
+  (A, i, j) = let
+//
+val (
+  vbox pf_psz | p_psz
+) = ref_get_view_ptr (A)
+val i = size1_of_size (i)
+val j = size1_of_size (j)
+val p_data = p_psz->2; val asz = p_psz->3
+//
+in
+//
+if i < asz then (
+  if j < asz then let
+    prval pf_data = p_psz->1
+    val () = array_ptr_exch<a> (!p_data, i, j)
+    prval () = p_psz->1 := pf_data
+  in
+    // nothing
+  end else (
+    $raise ArraySubscriptException ()
+  ) // end of [if]
+) else (
+  $raise ArraySubscriptException ()
+) // end of [if]
+//
+end // end of [array0_exch]
+
+implement{a}
+array0_exch__intsz
+  (A, i, j) = let
+  val i = int1_of_int (i)
+  val j = int1_of_int (j)
+in
+//
+if i >= 0 then let
+in
+//
+if j >= 0 then (
+  array0_exch<a> (A, (i2sz)i, (i2sz)j)
+) else $raise ArraySubscriptException ()
+//
+end else (
+  $raise ArraySubscriptException ()
+) // end of [if]
+//
+end (* end of [array0_exch__intsz] *)
+  
+(* ****** ****** *)
+
+implement{a}
+array0_foreach
+  (A, f) = let
+fun loop {n:nat} {l:addr} .<n>. (
+  pf: !array_v (a, n, l)
+| p: ptr l, n: size_t n, f: (&a) -<cloref> void
+) :<> void = let
+in
+//
+if n > 0 then let
+  prval (
+    pf1, pf2
+  ) = array_v_uncons {a} (pf)
+  val () = f (!p)
+  val () = loop (pf2 | p+sizeof<a>, n-1, f)
+in
+  pf := array_v_cons {a} (pf1, pf2)
+end // end of [if]
+//
+end // end of [loop]
+//
+val (
+  vbox pf_psz | p_psz
+) = ref_get_view_ptr (A)
+//
 in
   loop (p_psz->1 | p_psz->2, p_psz->3, f)
 end // end of [array0_foreach]
 
 implement{a}
-array0_iforeach (A, f) = let
-  val (vbox pf_psz | p_psz) = ref_get_view_ptr (A)
-  stavar n0: int
-  val n0: size_t n0 = p_psz->3
-  fun loop {n,i:nat | n0==n+i} {l:addr} .<n>. (
-      pf: !array_v (a, n, l)
-    | p: ptr l, n: size_t n, i: size_t i, f: (size_t, &a) -<cloref> void
-    ) :<> void =
-    if n > 0 then let
-      prval (pf1, pf2) = array_v_uncons {a} (pf)
-      val () = f (i, !p)
-      val () = loop {n-1,i+1} (pf2 | p+sizeof<a>, n-1, i+1, f)
-    in
-      pf := array_v_cons {a} (pf1, pf2)
-    end // end of [if]
-  // end of [loop]
+array0_iforeach
+  (A, f) = let
+//
+val (
+  vbox pf_psz | p_psz
+) = ref_get_view_ptr (A)
+stavar n0: int
+val n0: size_t n0 = p_psz->3
+fun loop
+  {n,i:nat | n0==n+i} {l:addr} .<n>. (
+  pf: !array_v (a, n, l)
+| p: ptr l, n: size_t n, i: size_t i, f: (size_t, &a) -<cloref> void
+) :<> void = let
+in
+//
+if n > 0 then let
+  prval (
+    pf1, pf2
+  ) = array_v_uncons {a} (pf)
+  val () = f (i, !p)
+  val () = loop {n-1,i+1} (pf2 | p+sizeof<a>, n-1, i+1, f)
+  prval () = pf := array_v_cons {a} (pf1, pf2)
+//
+in
+  // nothing
+end // end of [if]
+//
+end // end of [loop]
+//
 in
   loop (p_psz->1 | p_psz->2, n0, 0, f)
 end // end of [array0_iforeach]
@@ -203,28 +278,41 @@ end // end of [array0_iforeach]
 (* ****** ****** *)
 
 implement{a}
-array0_tabulate (asz, f) = let
-  val [n0:int] asz = size1_of_size asz
-  val (pf_gc, pf_arr | p_arr) = array_ptr_alloc_tsz {a} (asz, sizeof<a>)
-  fun loop {n,i:nat | n0 == n+i} {l:addr} .<n>. (
-      pf: !array_v (a?, n, l) >> array_v (a, n, l)
-    | p: ptr l, n: size_t n, i: size_t i, f: size_t -<cloref> a
-    ) :<> void =
-    if n > 0 then let
-      prval (pf1, pf2) = array_v_uncons {a?} (pf)
-      val () = !p := f (i)
-      val () = loop (pf2 | p+sizeof<a>, n-1, i+1, f)
-    in
-      pf := array_v_cons {a} (pf1, pf2)
-    end else let
-      prval () = array_v_unnil {a?} (pf)
-    in
-      pf := array_v_nil {a} ()
-    end // end of [if]
-  // end of [loop]
-  val () = loop (pf_arr | p_arr, asz, 0, f)
+array0_tabulate
+  (asz, f) = let
+//
+val [n0:int] asz = size1_of_size asz
+val (
+  pf_gc, pf_arr | p_arr
+) = array_ptr_alloc_tsz {a} (asz, sizeof<a>)
+//
+fun loop
+  {n,i:nat | n0 == n+i} {l:addr} .<n>. (
+  pf: !array_v (a?, n, l) >> array_v (a, n, l)
+| p: ptr l, n: size_t n, i: size_t i, f: size_t -<cloref> a
+) :<> void = let
 in
-  array0_make_arrpsz {a} {n0} @(pf_gc, pf_arr | p_arr, asz)
+//
+if n > 0 then let
+  prval (pf1, pf2) = array_v_uncons {a?} (pf)
+  val () = !p := f (i)
+  val () = loop (pf2 | p+sizeof<a>, n-1, i+1, f)
+  prval () = pf := array_v_cons {a} (pf1, pf2)
+in
+  // nothing
+end else let
+  prval () = array_v_unnil {a?} (pf)
+  prval () = pf := array_v_nil {a} ()
+in
+  // nothing
+end // end of [if]
+//
+end // end of [loop]
+//
+val () = loop (pf_arr | p_arr, asz, 0, f)
+//
+in
+  array0_make_arrpsz {a}{n0} @(pf_gc, pf_arr | p_arr, asz)
 end // end of [array0_tabulate]
 
 (* ****** ****** *)
