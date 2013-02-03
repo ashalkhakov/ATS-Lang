@@ -222,6 +222,7 @@ above libraries.
 #litxt(#myliblink("libats/ML", "option0"))
 #litxt(#myliblink("libats/ML", "array0"))
 #litxt(#myliblink("libats/ML", "string"))
+#litxt(#myliblink("libats/ML", "string0"))
 #litxt(#myliblink("libats/ML", "filebas"))
 #litxt(#myliblink("libats/ML", "funmap"))
 #litxt(#myliblink("libats/ML", "funset"))

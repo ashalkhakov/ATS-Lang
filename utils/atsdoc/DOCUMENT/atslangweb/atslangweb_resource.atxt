@@ -64,8 +64,9 @@ padding-right: 10px ;
 
 #menu('\
 #litxt(#ulink("\#ATS_edit", "Editing ATS source code"))
-#litxt(#ulink("\#ATS_crossref", "Viewing ATS source code"))
-#litxt(#ulink("\#ATS_mler", "ML programmer\'s guide to ATS"))
+#litxt(#ulink("\#ATS_view", "Viewing ATS source code"))
+#litxt(#ulink("\#ATS_compile", "Compiling ATS source code"))
+#litxt(#ulink("\#ATS_mlguide", "ML programmer\'s guide to ATS"))
 #litxt(#ulink("\#ATS_courses", "Courses about ATS and based on ATS"))
 ')#comment("menu")
 
@@ -84,11 +85,36 @@ A #ulink("http://cs-people.bu.edu/md/ats-mode/", "mode") for editing ATS source 
 
 #HR(1)
 
-<h2>#uid("ATS_crossref", "Viewing ATS source code")</h2>
+<h2>#uid("ATS_view", "Viewing ATS source code")</h2>
 #menu("\
 #lisub('\
 A #ulink("http://xrats.illtyped.com", "site")
 for viewing ATS source code with cross-reference support.
+')
+")#comment("menu")
+
+#HR(1)
+
+<h2>#uid("ATS_compile", "Compiling ATS source code")</h2>
+#menu("\
+#lisub('\
+
+#ulink("https://github.com/steinwaywhw/ATS-CMake", "ATS-CMake") is a
+#ulink("http://www.cmake.org", "CMake") utility for compiling ATS source
+code (contained in multiple files).\
+
+')
+")#comment("menu")
+
+#HR(1)
+
+<h2>#uid("ATS_mlguide", "ML programmer\'s guide to ATS")</h2>
+
+#menu("\
+#lisub('\
+A
+#ulink("http://cs.likai.org/ats/ml-programmers-guide-to-ats", "guide")
+to learning ATS for someone who is familiar with an ML-like language.
 ')
 ")#comment("menu")
 

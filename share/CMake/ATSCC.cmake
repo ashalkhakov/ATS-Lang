@@ -1,4 +1,41 @@
-#########################################################################
+##*********************************************************************##
+##                                                                     ##
+##                              ATS-CMake                              ##
+##                                                                     ##
+##*********************************************************************##
+
+##
+## ATS-CMake - CMake modules for ATS projects.
+## Copyright (c) 2012-2013 Hanwen Wu <hwwu AT bu DOT edu>
+## All rights reserved.
+##
+## ATS-CMake is a free software under MIT license. You can use it as long
+## as you acknowledge my original work.
+##
+## The MIT License (MIT)
+## Copyright (c) 2012-2013 Hanwen Wu <hwwu AT bu DOT edu>
+## 
+## Permission is hereby granted, free of charge, to any person obtaining 
+## a copy of this software and associated documentation files (the 
+## "Software"), to deal in the Software without restriction, including 
+## without limitation the rights to use, copy, modify, merge, publish, 
+## distribute, sublicense, and/or sell copies of the Software, and to permit 
+## persons to whom the Software is furnished to do so, subject to the following 
+## conditions:
+## 
+## The above copyright notice and this permission notice shall be included in all 
+## copies or substantial portions of the Software.
+## 
+## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+## AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+## THE SOFTWARE.
+##
+
+##################################################################################
 #
 # ATS_DEPGEN (OUTPUT SRC)
 #
@@ -7,8 +44,7 @@
 #
 # The output is a STRING, not a LIST.
 #
-#########################################################################
-
+##################################################################################
 MACRO (ATS_DEPGEN OUTPUT SRC)
 
 	IF (${ARGC} GREATER 2)
@@ -68,14 +104,15 @@ MACRO (ATS_DEPGEN OUTPUT SRC)
 	UNSET (_TEXT_INCLUDE)
 ENDMACRO ()
 
-#########################################################################
+##################################################################################
 #
 # ATS_DEPGEN_C (DEP)
 #
 # Expend dependencies for generated C files.
-# For example: 
 #
-# If we have 1.sats <- 2.sats, then we add 1_sats.c <- 2_sats.c
+# For example: 
+# 	If we have 		1.sats <- 2.sats
+#	Then we add 	1_sats.c <- 2_sats.c
 #
 # This is useful when 1.sats inludes a HATS file. When the HATS file updates, 
 # 1.sats is not changed, but 1_sats.c is changed. And since 2.sats depends on
@@ -84,8 +121,7 @@ ENDMACRO ()
 #
 # The output is a STRING, not a LIST.
 #
-#########################################################################
-
+##################################################################################
 MACRO (ATS_DEPGEN_C DEP)
 	FOREACH (_E ${${DEP}})
 		IF (_E MATCHES "\\.sats$|\\.dats$")
@@ -110,7 +146,8 @@ MACRO (ATS_TYPE_CHECK SRC)
 	UNSET (_ATS_TC_ERROR)
 ENDMACRO ()
 
-#########################################################################
+
+##################################################################################
 #
 # ATS_AUX_UNIFY_PATH (IN OUT)
 #
@@ -118,8 +155,7 @@ ENDMACRO ()
 # IN is expected to be a relative path starting from ${CMAKE_CURRENT_LIST_DIR}
 # IN should be a single file.
 #
-#########################################################################
-
+##################################################################################
 MACRO (ATS_AUX_UNIFY_PATH IN OUT)
 	# resolve soft/hard link?
 	GET_FILENAME_COMPONENT (${OUT} "${IN}" REALPATH)
@@ -134,7 +170,8 @@ MACRO (ATS_AUX_UNIFY_PATH IN OUT)
 	STRING (STRIP "${${OUT}}" ${OUT})
 ENDMACRO ()
 
-#########################################################################
+
+##################################################################################
 #
 # ATS_COMPILE (OUTPUT ...)
 #
@@ -143,8 +180,7 @@ ENDMACRO ()
 #
 # Note, OUTPUT is a LIST, not a STRING.
 #
-#########################################################################
-
+##################################################################################
 MACRO (ATS_COMPILE OUTPUT)
 
 	IF (NOT "${OUTPUT}" MATCHES "^${OUTPUT}$")
@@ -204,7 +240,8 @@ MACRO (ATS_INCLUDE_RESET)
 	SET (ATS_INCLUDE)
 ENDMACRO ()
 
-#########################################################################
+
+##################################################################################
 #
 # ATS_INCLUDE (...)
 #
@@ -213,8 +250,7 @@ ENDMACRO ()
 # Append all paths as INCLUDE paths, for ATSCC/ATSOPT to find SATS/HATS files.
 # It operates ATS_INCLUDE, which is a LIST.
 #
-#########################################################################
-
+##################################################################################
 MACRO (ATS_INCLUDE)
 	FOREACH (_PATH ${ARGN})
 		ATS_AUX_UNIFY_PATH ("${_PATH}" _PATH)
@@ -227,6 +263,7 @@ MACRO (ATS_INCLUDE)
 	UNSET (_INCLUDE)
 	UNSET (_PATH)
 ENDMACRO ()
+
 
 MACRO (ATS_AUX_LIST_TO_STRING IN OUT)
 	IF (${ARGC} GREATER 2)
@@ -243,7 +280,8 @@ MACRO (ATS_AUX_LIST_TO_STRING IN OUT)
 	UNSET (_E)
 ENDMACRO ()
 
-#########################################################################
+
+##################################################################################
 #
 # ATS_AUX_STRING_TO_LIST (IN OUT)
 #
@@ -253,8 +291,7 @@ ENDMACRO ()
 #
 # TODO: UNIX_COMMAND? WINDOWS_COMMAND?
 #
-#########################################################################
-
+##################################################################################
 MACRO (ATS_AUX_STRING_TO_LIST IN OUT)
 
 	IF (${ARGC} EQUAL 2)
@@ -262,19 +299,26 @@ MACRO (ATS_AUX_STRING_TO_LIST IN OUT)
 		#STRING (REGEX REPLACE "[ ]" ";" _TEMP "${IN}")
 		#SET (${OUT} ${_TEMP})
 		#UNSET (_TEMP)
-		SEPARATE_ARGUMENTS (${OUT} UNIX_COMMAND "${IN}")
+
+		# Workaround for CMake 2.6
+	    IF (${CMAKE_VERSION} VERSION_LESS "2.8.3")
+                SET (${OUT} "${IN}")
+                SEPARATE_ARGUMENTS (${OUT})
+        ELSE ()
+                SEPARATE_ARGUMENTS (${OUT} UNIX_COMMAND "${IN}")
+        ENDIF ()
+        
 	ENDIF ()
 	
 ENDMACRO ()
 
-#########################################################################
+##################################################################################
 #
 # ATS_AUX_GET_C_FILE_NAME (IN OUT)
 #
 # Compute a corresponing C file name for a SATS/DATS file
 #
-#########################################################################
-
+##################################################################################
 MACRO (ATS_AUX_GET_C_FILE_NAME IN OUT)
 
 	STRING(REGEX REPLACE "\\.sats$" "_sats.c" ${OUT} "${IN}")	
@@ -282,14 +326,14 @@ MACRO (ATS_AUX_GET_C_FILE_NAME IN OUT)
 
 ENDMACRO ()
 
-#########################################################################
+
+##################################################################################
 #
 # ATS_AUX_TO_ABSOLUTE_PATH (OUTOUT ...)
 #
 # Compute absolute paths for a list of files.
 #
-#########################################################################
-
+##################################################################################
 MACRO (ATS_AUX_TO_ABSOLUTE_PATH OUTPUT)
 	UNSET (${OUTPUT})
 	FOREACH (_E ${ARGN})
@@ -344,7 +388,8 @@ MACRO (ATS_IMPORT PACKAGE)
 
 ENDMACRO ()
 
-#########################################################################
+
+##################################################################################
 #
 # ATS_EXPORT (
 #	PACKAGE
@@ -354,8 +399,7 @@ ENDMACRO ()
 #
 # This will create an ${PACKAGE_IMPORT.cmake under ${CMAKE_CURRENT_LIST_DIR}
 #
-#########################################################################
-
+##################################################################################
 MACRO (ATS_EXPORT PACKAGE)
 	SET (_FILE "${CMAKE_CURRENT_LIST_DIR}/${PACKAGE}_IMPORT.cmake")
 	FILE (WRITE ${_FILE} "#AUTOGENERATED\n")
@@ -386,5 +430,3 @@ MACRO (ATS_EXPORT PACKAGE)
 		ENDIF ()
 	ENDFOREACH ()
 ENDMACRO ()
-
-###### end of [ATSCC.cmake] ######
