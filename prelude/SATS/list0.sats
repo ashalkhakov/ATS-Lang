@@ -82,6 +82,13 @@ list0_of_arrpsz
 
 (* ****** ****** *)
 
+fun{}
+list0_is_nil {a:t@ype} (xs: list0 a):<> bool
+fun{}
+list0_is_cons {a:t@ype} (xs: list0 a):<> bool
+
+(* ****** ****** *)
+
 fun{a:t@ype}
 list0_append (xs: list0 a, ys: list0 a):<> list0 a
 overload + with list0_append

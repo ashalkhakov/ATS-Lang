@@ -60,6 +60,18 @@ end // end of [list0_make_arrpsz]
 
 (* ****** ****** *)
 
+implement{}
+list0_is_nil (xs) = (
+  case+ xs of list0_nil () => true | _ => false
+) // end of [list0_is_nil]
+
+implement{}
+list0_is_cons (xs) = (
+  case+ xs of list0_cons _ => true | _ => false
+) // end of [list0_is_cons]
+
+(* ****** ****** *)
+
 implement{a}
 list0_append (xs, ys) = let
   val xs = list_of_list0 (xs) and ys = list_of_list0 (ys)
