@@ -37,16 +37,12 @@
 
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
-MESSAGE (STATUS "*********************************")
+MESSAGE (STATUS "************************************")
 MESSAGE (STATUS "Finding ATS")
 
 INCLUDE (ATSCC)
 
-
-
-FIND_PATH (ATS_HOME
-	NAMES bin/atscc
-	PATHS ENV ATSHOME)
+FIND_PATH (ATS_HOME NAMES bin/atscc PATHS ENV ATSHOME)
 
 SET (ATS_INCLUDE_DIR ${ATS_HOME} ${ATS_HOME}/ccomp/runtime)
 SET (ATS_LIBRARY ${ATS_HOME}/ccomp/lib)
@@ -69,7 +65,4 @@ MESSAGE (STATUS "ATS Home: ${ATS_HOME}")
 MESSAGE (STATUS "Includes: ${ATS_INCLUDE_DIRS}")
 MESSAGE (STATUS "Libraries: ${ATS_LIBRARIES}")
 
-# Workaround for CMake 2.6
-IF ("${CMAKE_CURRENT_LIST_DIR}" STREQUAL "")
-	SET (CMAKE_CURRENT_LIST_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-ENDIF ()
+###### end of [FindATS.cmake] ######
