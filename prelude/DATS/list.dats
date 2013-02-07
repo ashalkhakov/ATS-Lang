@@ -499,7 +499,7 @@ fun loop {n,i:nat} .<i>.
   (xs: list (a, n), i: int i):<!exn> [i <= n] list (a, n-i) =
   if i > 0 then begin case+ xs of
     | list_cons (_, xs) => loop (xs, i-1)
-    | list_nil () => $raise ListSubscriptException ()
+    | list_nil () => $raise ListSubscriptException()
   end else xs // end of [if]
 //
 prval () = list_length_is_nonnegative (xs)
@@ -1743,7 +1743,7 @@ list_get_elt_at_exn (xs, i) = let
     (xs: list (a, n), i: int i):<!exn> [n>0] a =
     case+ xs of
     | x :: xs => if i > 0 then loop (xs, i - 1) else x
-    | nil () => $raise ListSubscriptException ()
+    | nil () => $raise ListSubscriptException()
   // end of [loop]
   prval () = list_length_is_nonnegative (xs)
 in
@@ -1774,7 +1774,7 @@ implement{a}
 list_head (xs) = let val x :: _ = xs in x end
 implement{a}
 list_head_exn (xs) = case xs of
-  | x :: _ => x | nil () => $raise ListSubscriptException
+  | x :: _ => x | nil () => $raise ListSubscriptException()
 // end of [list_hean_exn]
 
 (* ****** ****** *)
@@ -1818,7 +1818,7 @@ implement{a}
 list_last_exn (xs) =
   case+ xs of
   | list_cons _ => list_last (xs)
-  | list_nil () => $raise ListSubscriptException
+  | list_nil () => $raise ListSubscriptException()
 // end of [list_last_exn]
 
 implement{a}
@@ -2269,7 +2269,7 @@ list_set_elt_at_exn (xs, i, x0) = let
   prval () = list_length_is_nonnegative (xs)
 in
   if aux_test<a> (xs, i) then list_set_elt_at (xs, i, x0)
-  else $raise ListSubscriptException
+  else $raise ListSubscriptException()
 end // end of [list_set_elt_at_exn]
 
 implement{a}
@@ -2313,7 +2313,7 @@ implement{a}
 list_tail (xs) = let val _ :: xs = xs in xs end
 implement{a}
 list_tail_exn (xs) = case+ xs of
-  | _ :: xs => xs | nil () => $raise ListSubscriptException
+  | _ :: xs => xs | nil () => $raise ListSubscriptException()
 
 (* ****** ****** *)
 
@@ -2371,7 +2371,7 @@ val err = loop {n,i} (xs, i, res)
 //
 in
   if err then let
-    val () = list_vt_free res in $raise ListSubscriptException ()
+    val () = list_vt_free res in $raise ListSubscriptException()
   end else begin
     res // i <= n && length (res) == i
   end (* end of [if] *)
