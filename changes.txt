@@ -6,6 +6,7 @@ ats-lang-anairiats-0.2.10:
    arraysize -> arrayptrsize
 2. list0_of_list1 -> list0_of_list
    list1_of_list0 -> list_of_list0
+3. Fixing a glitch involving tail-call optimization
 
 ########################################################################
 

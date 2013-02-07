@@ -96,14 +96,26 @@ ats_exn_type
 DivisionByZeroExceptionCon = { 30, "DivisionByZeroException" } ;
 ats_exn_ptr_type DivisionByZeroException = &DivisionByZeroExceptionCon ;
 
+/* ****** ****** */
+
 ats_exn_type
-SubscriptExceptionCon = { 40, "SubscriptException" } ;
-ats_exn_ptr_type SubscriptException = &SubscriptExceptionCon ;
+ListSubscriptExceptionCon = { 40, "ListSubscriptException" } ;
+ats_exn_ptr_type ListSubscriptException = &ListSubscriptExceptionCon ;
+ats_exn_ptr_type
+ListSubscriptExceptionFun () { return ListSubscriptException ; }
+
+ats_exn_type
+ArraySubscriptExceptionCon = { 50, "ArraySubscriptException" } ;
+ats_exn_ptr_type ArraySubscriptException = &ArraySubscriptExceptionCon ;
+ats_exn_ptr_type
+ArraySubscriptExceptionFun () { return ArraySubscriptException ; }
 
 /* ****** ****** */
 //
-// HX: the numbers less than 1000 are all
-int ats_exception_con_tag = 1000 ; // reserved for special use
+// HX: the numbers less than 1024 are all
+int ats_exception_con_tag = 1024 ; // reserved for special use
+
+/* ****** ****** */
 
 /*
 ** function for handling uncaught exceptions

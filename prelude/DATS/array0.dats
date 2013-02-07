@@ -103,7 +103,9 @@ end // end of [array0_size]
 
 implement{a}
 array0_get_elt_at (A, i) = let
-  val (vbox pf_psz | p_psz) = ref_get_view_ptr (A)
+  val (
+    vbox pf_psz | p_psz
+  ) = ref_get_view_ptr (A)
   val i = size1_of_size i
   val p_data = p_psz->2; val asz = p_psz->3
 in
@@ -114,7 +116,7 @@ in
   in
     x // return value
   end else begin
-    $raise ArraySubscriptException ()
+    $raise ArraySubscriptException()
   end // end of [if]
 end (* end of [array0_get_elt_at] *)
 
@@ -125,7 +127,7 @@ in
   if i >= 0 then begin
     array0_get_elt_at<a> (A, i2sz i)
   end else begin
-    $raise ArraySubscriptException ()
+    $raise ArraySubscriptException()
   end // end of [if]
 end (* end of [array0_get_elt_at__intsz] *)
   
@@ -144,7 +146,7 @@ in
   in
     () // return no value
   end else begin
-    $raise ArraySubscriptException ()
+    $raise ArraySubscriptException()
   end // end of [if]
 end (* end of [array0_set_elt_at] *)
 
@@ -155,7 +157,7 @@ in
   if i >= 0 then begin
     array0_set_elt_at<a> (A, i2sz i, x)
   end else begin
-    $raise ArraySubscriptException ()
+    $raise ArraySubscriptException()
   end // end of [if]
 end (* end of [array0_set_elt_at__intsz] *)
   
@@ -174,18 +176,21 @@ val p_data = p_psz->2; val asz = p_psz->3
 //
 in
 //
-if i < asz then (
-  if j < asz then let
-    prval pf_data = p_psz->1
-    val () = array_ptr_exch<a> (!p_data, i, j)
-    prval () = p_psz->1 := pf_data
-  in
-    // nothing
-  end else (
-    $raise ArraySubscriptException ()
-  ) // end of [if]
-) else (
-  $raise ArraySubscriptException ()
+if i < asz then let
+in
+//
+if j < asz then let
+  prval pf_data = p_psz->1
+  val () = array_ptr_exch<a> (!p_data, i, j)
+  prval () = p_psz->1 := pf_data
+in
+  // nothing
+end else (
+  $raise ArraySubscriptException()
+) // end of [if]
+//
+end else (
+  $raise ArraySubscriptException()
 ) // end of [if]
 //
 end // end of [array0_exch]
@@ -202,10 +207,11 @@ in
 //
 if j >= 0 then (
   array0_exch<a> (A, (i2sz)i, (i2sz)j)
-) else $raise ArraySubscriptException ()
+) else
+  $raise ArraySubscriptException()
 //
 end else (
-  $raise ArraySubscriptException ()
+  $raise ArraySubscriptException()
 ) // end of [if]
 //
 end (* end of [array0_exch__intsz] *)

@@ -689,7 +689,10 @@ fun array2_ptr_takeout_tsz
 
 (* ****** ****** *)
 
+(*
 exception ArraySubscriptException of ()
+*)
+fun ArraySubscriptException ():<> exn = "ext#ArraySubscriptExceptionFun"
 
 (* ****** ****** *)
 

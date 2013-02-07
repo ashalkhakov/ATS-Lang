@@ -220,7 +220,7 @@ end // end of [list0_iforeach_cloref]
 
 implement{a}
 list0_head_exn (xs) = begin case+ xs of
-  | list0_cons (x, xs) => x | list0_nil () => $raise ListSubscriptException
+  | list0_cons (x, xs) => x | list0_nil () => $raise ListSubscriptException()
 end // end of [list0_head_exn]
 
 (* ****** ****** *)
@@ -302,11 +302,11 @@ list0_nth_exn
   fun loop {i:nat} .<i>.
     (xs: list0 a, i: int i): a = case+ xs of
     | cons (x, xs) => if i > 0 then loop (xs, i-1) else x
-    | nil () => $raise ListSubscriptException
+    | nil () => $raise ListSubscriptException()
   // end of [loop]
   val i = int1_of_int i
 in
-  if i >= 0 then loop (xs, i) else $raise ListSubscriptException ()
+  if i >= 0 then loop (xs, i) else $raise ListSubscriptException()
 end // end of [list0_nth_exn]
 
 implement{a}
@@ -345,7 +345,7 @@ list0_revapp (xs, ys) = list0_reverse_append<a> (xs, ys)
 
 implement{a}
 list0_tail_exn (xs) = begin case+ xs of
-  | list0_cons (x, xs) => xs | list0_nil () => $raise ListSubscriptException
+  | list0_cons (x, xs) => xs | list0_nil () => $raise ListSubscriptException()
 end // end of [list0_tail_exn]
 
 (* ****** ****** *)
@@ -373,7 +373,7 @@ list0_take_exn (xs, n) = res where {
       extern castfn __cast (_: list0 a): List_vt a
     } // end of [val]
   in
-    $raise ListSubscriptException ()
+    $raise ListSubscriptException()
   end // end of [val]
 } // end of [list0_take_exn]
 
@@ -393,7 +393,7 @@ list0_drop_exn (xs, n) = res where {
   val res = (
     if n >= 0 then loop (xs, n, err) else (err := 1; list0_nil ())
   ) : list0 a
-  val () = if err > 0 then $raise ListSubscriptException ()
+  val () = if err > 0 then $raise ListSubscriptException()
 } // end of [list0_drop_exn]
 
 (* ****** ****** *)
