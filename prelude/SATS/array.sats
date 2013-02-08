@@ -695,7 +695,7 @@ exception ArraySubscriptException of ()
 fun ArraySubscriptException
   ():<> exn = "ext#ArraySubscriptException_make"
 fun isArraySubscriptException
-  (x: !exn):<> bool = "ext#ArraySubscriptException"
+  (x: !exn):<> bool = "ext#isArraySubscriptException"
 
 (* ****** ****** *)
 

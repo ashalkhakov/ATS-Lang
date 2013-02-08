@@ -88,9 +88,9 @@ implement{a} getItem (xs) = case+ xs of
 
 local
 
-fun
+fun{a:t@ype}
 ListSubscriptExn2Subscript_raise
-  {a:t@ype} (exn: exn): (a) = let
+  (exn: exn): a = let
 in
 //
 if isListSubscriptException (exn) then let

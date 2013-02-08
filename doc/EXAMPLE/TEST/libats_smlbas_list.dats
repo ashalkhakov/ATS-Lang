@@ -10,6 +10,12 @@
 
 (* ****** ****** *)
 
+staload
+"libats/smlbas/SATS/general.sats"
+// end of [staload]
+
+(* ****** ****** *)
+
 staload "libats/smlbas/SATS/char.sats"
 staload "libats/smlbas/SATS/list.sats"
 
@@ -33,6 +39,9 @@ implement main () = () where {
     list_of_list_vt (string_explode "abcdefghijklmnopqrstuvwxyz")
   // end of [val]  
   val abs = list0_of_list (abs)
+//
+  val () = assertloc ('a' = nth (abs, 0))
+  val () = assertloc ('a' = (try nth (abs, 26) with ~Subscript() => 'a'))
 //
   val () = app<char> (lam (c) => print c, abs)
   val () = print_newline ()

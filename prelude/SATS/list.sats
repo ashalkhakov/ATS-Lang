@@ -104,7 +104,7 @@ exception ListSubscriptException of ()
 fun ListSubscriptException
   ():<> exn = "ext#ListSubscriptException_make"
 fun isListSubscriptException
-  (x: !exn):<> bool = "ext#ListSubscriptException"
+  (x: !exn):<> bool = "ext#isListSubscriptException"
 
 (* ****** ****** *)
 //
