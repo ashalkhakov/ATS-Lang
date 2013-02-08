@@ -65,7 +65,7 @@ padding-right: 10px ;
 #menu('\
 #litxt(#ulink("\#ATS_edit", "Editing ATS source code"))
 #litxt(#ulink("\#ATS_view", "Viewing ATS source code"))
-#litxt(#ulink("\#ATS_compile", "Compiling ATS source code"))
+#litxt(#ulink("\#ATS_compile", "Compiling projects based on ATS"))
 #litxt(#ulink("\#ATS_mlguide", "ML programmer\'s guide to ATS"))
 #litxt(#ulink("\#ATS_courses", "Courses about ATS and based on ATS"))
 ')#comment("menu")
@@ -95,7 +95,7 @@ for viewing ATS source code with cross-reference support.
 
 #HR(1)
 
-<h2>#uid("ATS_compile", "Compiling ATS source code")</h2>
+<h2>#uid("ATS_compile", "Compiling projects based on ATS")</h2>
 #menu("\
 #lisub('\
 

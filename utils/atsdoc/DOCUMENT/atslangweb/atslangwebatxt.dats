@@ -325,7 +325,7 @@ val _LIBRARY = $lst{string}(
 val _RESOURCE = $lst{string}(
   "ATS_edit", "Editing ATS source code"
 , "ATS_view", "Viewing ATS source code"
-, "ATS_compile", "Compiling ATS source code"
+, "ATS_compile", "Compiling projects based on ATS"
 , "ATS_courses", "Courses about ATS and based on ATS"
 ) // end of [val]
 val _COMMUNITY = $lst{string}(
