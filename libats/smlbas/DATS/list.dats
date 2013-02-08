@@ -86,25 +86,46 @@ implement{a} getItem (xs) = case+ xs of
 
 (* ****** ****** *)
 
+local
+
+fun
+ListSubscriptExn2Subscript_raise
+  {a:t@ype} (exn: exn): (a) = let
+in
+//
+if isListSubscriptException (exn) then let
+  prval () = __assert (exn) where {
+    extern praxi __assert (exn: exn): void
+  }
+in
+  $raise Subscript()
+end else $raise (exn)
+//
+end // end of [ListSubscriptExn2Subscript_raise]
+
+in (* in of [local] *)
+
 implement{a} nth (xs, i) = try
   list0_nth_exn<a> (xs, i) // [prelude/DATS/list0.dats]
 with
-  | ~ListSubscriptException () => $raise Subscript ()
+  | exn => ListSubscriptExn2Subscript_raise (exn)
 // end of [nth]
-
-(* ****** ****** *)
 
 implement{a} take (xs, i) = try
   list0_take_exn<a> (xs, i) // [prelude/DATS/list0.dats]
 with
-  | ~ListSubscriptException () => $raise Subscript ()
+  | exn => ListSubscriptExn2Subscript_raise (exn)
 // end of [take] 
 
 implement{a} drop (xs, i) = try
   list0_drop_exn<a> (xs, i) // [prelude/DATS/list0.dats]
 with
-  | ~ListSubscriptException () => $raise Subscript ()
+  | exn => ListSubscriptExn2Subscript_raise (exn)
 // end of [drop] 
+
+end // end of [local]
+
+(* ****** ****** *)
 
 implement{a} rev (xs) = list0_reverse<a> (xs)
 implement{a} revAppend (xs, ys) = list0_reverse_append<a> (xs, ys)

@@ -102,13 +102,21 @@ ats_exn_type
 ListSubscriptExceptionCon = { 40, "ListSubscriptException" } ;
 ats_exn_ptr_type ListSubscriptException = &ListSubscriptExceptionCon ;
 ats_exn_ptr_type
-ListSubscriptExceptionFun () { return ListSubscriptException ; }
+ListSubscriptException_make () { return ListSubscriptException ; }
+ats_bool_type
+isListSubscriptException (ats_exn_ptr_type exn) {
+  return (ListSubscriptException->tag==exn->tag ? ats_true_bool : ats_false_bool) ;
+}
 
 ats_exn_type
 ArraySubscriptExceptionCon = { 50, "ArraySubscriptException" } ;
 ats_exn_ptr_type ArraySubscriptException = &ArraySubscriptExceptionCon ;
 ats_exn_ptr_type
-ArraySubscriptExceptionFun () { return ArraySubscriptException ; }
+ArraySubscriptException_make () { return ArraySubscriptException ; }
+ats_bool_type
+isArraySubscriptException (ats_exn_ptr_type exn) {
+  return (ArraySubscriptException->tag==exn->tag ? ats_true_bool : ats_false_bool) ;
+}
 
 /* ****** ****** */
 //

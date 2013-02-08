@@ -692,7 +692,10 @@ fun array2_ptr_takeout_tsz
 (*
 exception ArraySubscriptException of ()
 *)
-fun ArraySubscriptException ():<> exn = "ext#ArraySubscriptExceptionFun"
+fun ArraySubscriptException
+  ():<> exn = "ext#ArraySubscriptException_make"
+fun isArraySubscriptException
+  (x: !exn):<> bool = "ext#ArraySubscriptException"
 
 (* ****** ****** *)
 

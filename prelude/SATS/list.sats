@@ -101,7 +101,10 @@ macdef list_pair (x1, x2) = list_cons (,(x1), list_cons (,(x2), list_nil))
 (*
 exception ListSubscriptException of ()
 *)
-fun ListSubscriptException ():<> exn = "ext#ListSubscriptExceptionFun"
+fun ListSubscriptException
+  ():<> exn = "ext#ListSubscriptException_make"
+fun isListSubscriptException
+  (x: !exn):<> bool = "ext#ListSubscriptException"
 
 (* ****** ****** *)
 //
