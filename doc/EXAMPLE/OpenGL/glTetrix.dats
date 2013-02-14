@@ -1223,9 +1223,9 @@ val SHAPE6_matrix
 (* ****** ****** *)
   
 implement theShapeArray =
-  array_make_arrsz{shape0} $arrsz(
+  array_make_arrpsz{shape0}($arrpsz(
   SHAPE0, SHAPE1, SHAPE2, SHAPE3, SHAPE4, SHAPE5, SHAPE6
-) where {
+)) where {
   val SHAPE0 = shape_make (SHAPE0_X, SHAPE0_Y, SHAPE0_matrix, SHAPE0_points)
   val SHAPE1 = shape_make (SHAPE1_X, SHAPE1_Y, SHAPE1_matrix, SHAPE1_points)
   val SHAPE2 = shape_make (SHAPE2_X, SHAPE2_Y, SHAPE2_matrix, SHAPE2_points)
