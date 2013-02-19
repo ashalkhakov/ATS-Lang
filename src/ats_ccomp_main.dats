@@ -1306,7 +1306,7 @@ in
       if main_dummy_is_implemented () then MAINATS_DUMMY else MAINATS_NONE
     end // end of [if]
   end (* end of [if] *)
-end // end of [main_is_implemented]
+end // end of [mainatsknd_get]
 
 (* ****** ****** *)
 

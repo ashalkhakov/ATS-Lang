@@ -179,13 +179,18 @@ fun prerr_strbuf {m,n:int} (buf: &strbuf (m, n)): void
 //
 // HX: casting functions
 //
-castfn string1_of_string
+castfn
+string1_of_string
   (str: string):<> [n:nat] string n
+// end of [string1_of_string]
 
-castfn string1_of_strbuf
+castfn
+string1_of_strbuf
   {n:nat} (bufptr: strbufptr_gc n):<> string n
+// end of [string1_of_strbuf]
 
-castfn strbuf_of_string1 {n:nat} (str: string n)
+castfn
+strbuf_of_string1 {n:nat} (str: string n)
   :<> [m:int;l:addr | m > n] (vbox (strbuf (m, n) @ l) | ptr l)
 // end of [strbuf_of_string1]
 
@@ -707,25 +712,35 @@ fun string_toupper {n:nat} (str: string n):<> strbufptr_gc n
 fun string_hash_33 (str: string):<> ulint = "atspre_string_hash_33"
 
 (* ****** ****** *)
-
 //
 // HX: functions for optional strings
 //
-
+(* ****** ****** *)
 //
 // HX: stropt_none = $extval (ats_ptr_type, "0")
 //
 val stropt_none : stropt (~1) = "atspre_stropt_none"
+//
+symintr stropt_some
+//
+castfn
+stropt0_some
+  (str: string):<> [n:nat] stropt (n) = "atspre_stropt_some"
+overload stropt_some with stropt0_some
+castfn
+stropt1_some
+  {n:nat} (str: string n):<> stropt (n) = "atspre_stropt_some"
+overload stropt_some with stropt1_some
 
-castfn stropt_some {n:nat} (str: string n):<> stropt n
-  = "atspre_stropt_some"
-castfn stropt_unsome {n:nat} (stropt: stropt n):<> string n
-  = "atspre_stropt_unsome"
+castfn
+stropt_unsome
+  {n:nat} (stropt: stropt n):<> string n = "atspre_stropt_unsome"
+// end of [stropt_unsome]
 
-fun stropt_is_none {i:int} (stropt: stropt i):<> bool (i < 0)
-  = "atspre_stropt_is_none"
-fun stropt_is_some {i:int} (stropt: stropt i):<> bool (i >= 0)
-  = "atspre_stropt_is_some"
+fun stropt_is_none
+  {i:int} (stropt: stropt i):<> bool (i < 0) = "atspre_stropt_is_none"
+fun stropt_is_some
+  {i:int} (stropt: stropt i):<> bool (i >= 0) = "atspre_stropt_is_some"
 
 (* ****** ****** *)
 
