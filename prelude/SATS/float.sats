@@ -194,6 +194,7 @@ and neq_float_float (f1: float, f2: float):<> bool
   = "atspre_neq_float_float"
 overload = with eq_float_float
 overload <> with neq_float_float
+overload != with neq_float_float
 
 fun compare_float_float (f1: float, f2: float):<> Sgn
   = "atspre_compare_float_float"
@@ -389,6 +390,7 @@ and neq_double_double (d1: double, d2: double):<> bool
   = "atspre_neq_double_double"
 overload = with eq_double_double
 overload <> with neq_double_double
+overload != with neq_double_double
 
 fun compare_double_double (d1: double, d2: double):<> Sgn
   = "atspre_compare_double_double"
@@ -562,6 +564,7 @@ and neq_ldouble_ldouble (ld1: ldouble, ld2: ldouble):<> bool
   = "atspre_neq_ldouble_ldouble"
 overload = with eq_ldouble_ldouble
 overload <> with neq_ldouble_ldouble
+overload != with neq_ldouble_ldouble
 
 fun compare_ldouble_ldouble (ld1: ldouble, ld2: ldouble):<> Sgn
   = "atspre_compare_ldouble_ldouble"

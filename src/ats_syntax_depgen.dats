@@ -104,7 +104,7 @@ fun fprint_target {m:file_mode} (
           pr (out, basename, k, i+1)
         end // end of [if]
       val () = pr (out, basename, k, 0)
-      val () = fprint_string (pf | out, ".o")
+      val () = fprint_string (pf | out, ".c")
     in
       // nothing
     end // end of [_ when ...]

@@ -97,7 +97,6 @@ array0_get_elt_at__intsz
   (A: array0 a, i: int):<!exnref> a
 overload [] with array0_get_elt_at__intsz
 
-
 fun{a:t@ype}
 array0_set_elt_at (
   A: array0 a, i: size_t, x: a

@@ -253,9 +253,8 @@ ats_grammar_yats.o: ats_grammar_yats.c
 ######
 
 libc_sats.o: \
-  libc_sats_gmp_sats.o libc_sats_time_sats.o
-	ld -r -o $@ \
-  libc_sats_gmp_sats.o libc_sats_time_sats.o
+  libc_sats_gmp_sats.o libc_sats_time_sats.o ; \
+  ld -r -o $@ libc_sats_gmp_sats.o libc_sats_time_sats.o
 
 ######
 
@@ -268,8 +267,13 @@ libats_lex.o: \
 
 %_lats.dats: %.lats ; $(ATSLEX) < $< > $@
 
-%_sats.o: %.sats ; $(ATSCC) $(ATSCCFLAGS) -c $<
-%_dats.o: %.dats ; $(ATSCC) $(ATSCCFLAGS) -c $<
+######
+
+%_sats.c: %.sats ; $(ATSCC) $(ATSCCFLAGS) -c $<
+%_sats.o: %_sats.c ; $(ATSCC) $(ATSCCFLAGS) -c $<
+
+%_dats.c: %.dats ; $(ATSCC) $(ATSCCFLAGS) -c $<
+%_dats.o: %_dats.c ; $(ATSCC) $(ATSCCFLAGS) -c $<
 
 ######
 

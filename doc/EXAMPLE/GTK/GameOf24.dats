@@ -80,9 +80,9 @@ fun eval_exp
   | Div (e1, e2) => eval_exp e1 / eval_exp e2
 // end of [eval_exp]
 
-fun priority_mac (e: exp): Nat = (case+ e of
+fun priority_of (e: exp): Nat = (case+ e of
   | Num _ => 0 | Add _ => 2 | Sub _ => 2 | Mul _ => 1 | Div _ => 1
-) : Nat // end of [priority]
+) : Nat // end of [priority_of]
 
 (* ****** ****** *)
 
@@ -91,7 +91,8 @@ fun g_print_exp {l:agz}
   case+ e of
   | Num r => g_string_append_printf (gs, "%.0f", @(r))
   | Add (e1, e2) => let
-      val p1 = priority_mac e1 and p2 = priority_mac e2
+      val p1 = priority_of (e1)
+      and p2 = priority_of (e2)
       val () = g_print_exp_ (gs, 2, p1, e1)
       val _ = g_string_append_c (gs, (gchar)'+')
       val () = g_print_exp_ (gs, 2, p2, e2)
@@ -99,7 +100,8 @@ fun g_print_exp {l:agz}
       // nothing
     end // end of [Add]
   | Sub (e1, e2) => let
-      val p1 = priority_mac e1 and p2 = priority_mac e2
+      val p1 = priority_of (e1)
+      and p2 = priority_of (e2)
       val () = g_print_exp_ (gs, 2, p1, e1)
       val _ = g_string_append_c (gs, (gchar)'-')
       val () = g_print_exp_ (gs, 2, p2, e2)
@@ -107,7 +109,8 @@ fun g_print_exp {l:agz}
       // nothing
     end // end of [Sub]
   | Mul (e1, e2) => let
-      val p1 = priority_mac e1 and p2 = priority_mac e2
+      val p1 = priority_of (e1)
+      and p2 = priority_of (e2)
       val () = g_print_exp_ (gs, 1, p1, e1)
       val _ = g_string_append_c (gs, (gchar)'*')
       val () = g_print_exp_ (gs, 1, p2, e2)
@@ -115,7 +118,8 @@ fun g_print_exp {l:agz}
       // nothing
     end // end of [Mul]
   | Div (e1, e2) => let
-      val p1 = priority_mac e1 and p2 = priority_mac e2
+      val p1 = priority_of (e1)
+      and p2 = priority_of (e2)
       val () = g_print_exp_ (gs, 1, p1, e1)
       val _ = g_string_append_c (gs, (gchar)'/')
       val () = g_print_exp_ (gs, 1, p2, e2)
@@ -223,6 +227,8 @@ macdef gs = gstring_of_string
 (* ****** ****** *)
 
 overload gint with gint_of_GtkResponseType
+
+(* ****** ****** *)
 
 fun answering
   {c:cls | c <= GtkWindow} {l:agz} (
