@@ -98,9 +98,7 @@ avltree_dec (a:t@ype, h:int) =
 (* ****** ****** *)
 
 assume
-set_t0ype_type
-  (a:t@ype) = [h:nat] avltree (a, h)
-// end of [set_t0ype_type]
+set_t0ype_viewtype (a:t@ype) = [h:nat] avltree (a, h)
 
 (* ****** ****** *)
 

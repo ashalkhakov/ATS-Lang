@@ -64,9 +64,9 @@ padding-right: 10px ;
 
 #menu('\
 #litxt(#ulink("\#ATS_mailinglist", "Mailing-list for ATS users"))
+#litxt(#ulink("\#ATS_QandA_forum", "Q&amp;A forum for ATS users"))
 #litxt(#ulink("\#ATS_irc_channel", "IRC channel for ATS users: \#\#ats"))
 #litxt(#ulink("\#ATS_reddit_news", "ATS news at reddit"))
-#litxt(#ulink("\#ATS_QandA_forum", "Q&amp;A forum for ATS users"))
 ')
 
 #HR(2)
