@@ -101,12 +101,10 @@ implement atslex_getchar () = let
   val (vbox pf | p) = ref_get_view_ptr (theInputRef)
 in
   case+ !p of
-  | INPUTsome (!pf_fil_r | p_fil) => let
-      prval pf_fil = !pf_fil_r
-      val c = $STDIO.fgetc1_err (file_mode_lte_r_r | !p_fil)
-      prval () = !pf_fil_r := pf_fil
+  | INPUTsome (!pf_fil | !p_fil) => let
+      val c = $effmask_ref (utf8_decode (file_mode_lte_r_r, !pf_fil | !p_fil))
     in
-      fold@ !p; c
+      fold@ (!p); c
     end // end of [INPUTsome]
   | INPUTnone () => (fold@ !p; ~1 (*EOF*))
 end // end of [atslex_getchar]

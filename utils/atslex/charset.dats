@@ -42,7 +42,7 @@ staload "top.sats"
 (* ****** ****** *)
 
 datatype chars =
-  | chars_nil | chars_cons of (char, char, chars)
+  | chars_nil | chars_cons of (int, int, chars)
 
 assume charset_t = chars
 
@@ -53,9 +53,9 @@ implement fprint_charset
   fun loop (fil: &FILE m, cs: chars): void = begin case+ cs of
     | chars_cons (c1, c2, cs) => begin
         if c1 = c2 then begin
-          fprintf (pf_mod | fil, " '%c'", @(c1)); loop (fil, cs)
+          fprintf (pf_mod | fil, " %d", @(c1)); loop (fil, cs)
         end else begin
-          fprintf (pf_mod | fil, " '%c'-'%c'", @(c1, c2)); loop (fil, cs)
+          fprintf (pf_mod | fil, " %d-%d", @(c1, c2)); loop (fil, cs)
         end
       end // end of [chars_cons]
     | chars_nil () => ()
@@ -64,11 +64,11 @@ in
   case+ cs of
   | chars_cons (c1, c2, cs) => begin
       if c1 = c2 then begin
-        fprintf (pf_mod | fil, "[ '%c'", @(c1));
+        fprintf (pf_mod | fil, "[ %d", @(c1));
         loop (fil, cs);
         fprint_string (pf_mod | fil, " ]")
       end else begin
-        fprintf (pf_mod | fil, "[ '%c'-'%c'", @(c1, c2));
+        fprintf (pf_mod | fil, "[ %d-%d", @(c1, c2));
         loop (fil, cs);
         fprint_string (pf_mod | fil, " ]")
       end // end of [if]
@@ -83,9 +83,9 @@ implement prerr_charset (cs) = prerr_mac (fprint_charset, cs)
 
 (* ****** ****** *)
 
-#define CHAR_NUL '\000'
-#define CHAR_MAX '\177'
-#define CHAR_EOF '\377'
+#define CHAR_NUL 0
+#define CHAR_MAX 0x10ffff // must be less than MAX_INT
+#define CHAR_EOF ~1
 
 implement charset_nil = chars_nil ()
 implement charset_all = chars_cons (CHAR_NUL, CHAR_MAX, chars_nil ())
@@ -114,7 +114,7 @@ implement charset_complement (cs) =
 
 implement charset_is_member
   (cs, c0) = loop (cs, c0) where {
-  fun loop (cs: chars, c0: char): bool = begin
+  fun loop (cs: chars, c0: int): bool = begin
     case+ cs of
     | chars_cons (c1, c2, cs) => begin
         if c1 <= c0 then
@@ -172,13 +172,6 @@ implement charset_intersect (cs1, cs2) = let
 in
   loop (cs1, cs2)
 end // end of [charset_intersect]
-
-//
-
-implement add_char_int (c, i) = char_of_int (int_of_char c + i)
-implement sub_char_int (c, i) = char_of_int (int_of_char c - i)
-
-//
 
 implement charset_difference (cs1, cs2) = let
   fun loop (cs1: chars, cs2: chars)

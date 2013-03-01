@@ -39,6 +39,8 @@
 
 staload "top.sats"
 
+staload _ = "prelude/DATS/reference.dats"
+
 (* ****** ****** *)
 
 extern fun errmsg {a:viewt@ype} (msg: string): a
@@ -52,7 +54,7 @@ implement errmsg (msg) = (prerr msg; prerr_newline (); exit 1)
 
 (* ****** ****** *)
 
-typedef intch = intBtw (~1, UCHAR_MAX+1)
+typedef intch = intBtw (~1, CODEPOINT_MAX+1)
 
 extern fun char_get (): intch = "char_get"
 extern fun char_update (): void = "char_update"
@@ -92,7 +94,7 @@ pos_prev_reset (
 
 ATSinline()
 ats_void_type
-pos_advance (ats_char_type c) {
+pos_advance (ats_int_type c) {
   switch (c) {
     case '\n':
       ++the_line_cnt ; the_char_cnt = 0 ; break ;
@@ -137,7 +139,7 @@ char_update_get() {
 
 dataviewtype chars (int) =
   | chars_nil (0)
-  | {n:nat} chars_cons (n+1) of (char, chars n)
+  | {n:nat} chars_cons (n+1) of (int, chars n)
 // end of [chars]
 
 #define nil chars_nil
@@ -155,7 +157,7 @@ chars_is_nil (cs) = case+ cs of
 
 extern
 fun chars_uncons {n:pos}
-  (cs: &chars n >> chars (n-1)): char = "chars_uncons"
+  (cs: &chars n >> chars (n-1)): int = "chars_uncons"
 // end of [chars_uncons]
 
 implement
@@ -170,11 +172,71 @@ fun chars_free
 
 (* ****** ****** *)
 
-extern // [cs] must not contain null bytes
+fun list_vt_of_chars {n:nat} .<n>. (
+  cs: chars n
+, res: &List_vt Nat? >> list_vt (Nat, n)
+) :<!exn> void = case+ cs of
+  | ~nil () => res := list_vt_nil ()
+  | ~(c :: cs) => let
+      val [c:int] c = int1_of_int c
+      val () = assert (c >= 0)
+      val () = res := list_vt_cons {Nat} {0} (c, ?)
+      val+ list_vt_cons (_, !p_res) = res
+      val () = list_vt_of_chars (cs, !p_res)
+      val () = fold@ (res)
+    in
+      (*empty*)
+    end // end of [let]
+// end of [list_vt_of_chars]
+
+// TODO: move to unicode.dats?
+fun string32_make_charlst_rev_int {n:nat} (
+  cs: chars n, n: int n
+) : string32_vt n = let
+  val nsz = size1_of_int1 n
+  val tsz = sizeof<Nat>
+  val (pf_gc, pf_arr | p_arr) = array_ptr_alloc_tsz {Nat} (nsz, tsz)
+  prval () = free_gc_elim {Nat?} (pf_gc) // return the certificate to GC
+  val (pfmul | ofs) = mul2_size1_size1 (nsz, tsz)
+  fun loop {m,n:nat} {ofs:int} {l:addr} .<m>. (
+    pfmul: MUL (m, sizeof Nat, ofs)
+  , pf1: array_v (Nat?, m, l)
+  , pf2: array_v (Nat, n, l+ofs)
+  | p: ptr (l+ofs), cs: chars m
+  ) : (array_v (Nat, m+n, l) | void) = let
+    prval () = mul_nat_nat_nat (pfmul)
+  in
+    case+ cs of
+    | ~nil () => let
+        prval MULbas () = pfmul
+        prval () = array_v_unnil {Nat?} (pf1)
+      in
+        (pf2 | ())
+      end // end of [let]
+    | ~(c :: cs) => let
+        prval (pf11, pf1at) = array_v_unextend {Nat?} (pfmul, pf1)
+        val [c:int] c = int1_of_int c
+        val () = assert (c >= 0)
+        val p = p-sizeof<Nat>
+        val () = !p := c
+        prval () = mul_nat_nat_nat (pfmul)
+        prval MULind pf1mul = pfmul
+        prval pf22 = array_v_cons {Nat} (pf1at, pf2)
+      in
+        loop (pf1mul, pf11, pf22 | p, cs)
+      end // end of [let]
+  end // end of [loop]
+  val (pf1_arr | ()) = loop (pfmul, pf_arr, array_v_nil {Nat} () | p_arr+ofs, cs)
+  prval () = pf_arr := pf1_arr
+in
+  array_make_view_ptr {Nat} (pf_arr | p_arr)
+end // end of [string32_make_charlst_rev_int]
+
+extern // [cs] must not contain nulls
 fun string_make_charlst_rev_int
   {n:nat} (
   cs: chars n, n: int n
-) : string n =
+) : [m:nat] string m =
   "string_make_charlst_rev_int"
 // end of [fun]
 
@@ -183,9 +245,21 @@ fun string_make_charlst_rev_int
 ats_ptr_type
 string_make_charlst_rev_int
   (ats_ptr_type cs, const ats_int_type n) {
-  char *s0, *s;
-  s0 = ats_malloc_gc(n+1) ; s = s0 + n ; *s = '\0' ; --s ;
-  while (!chars_is_nil(cs)) { *s = chars_uncons(&cs) ; --s ; }
+  ats_ptr_type cs0 = cs ;
+  int i0 ;
+  ats_size_type m = 0 ;
+  char *s0, *s ;
+
+  while (!chars_is_nil(cs)) { i0 = chars_uncons(&cs) ; m += utf8_codepoint_width(i0) ; }
+  cs = cs0 ;
+  s0 = ats_malloc_gc(m+1) ; s = s0 + m ; *s = '\0' ; --s ;
+  while (!chars_is_nil(cs)) {
+    int wdt ; /* uninitialized */
+    i0 = chars_uncons(&cs) ;
+    wdt = utf8_codepoint_width(i0) ;
+    s -= wdt ;
+    utf8_codepoint_store(s, wdt, i0) ;
+  }
   return s0 ;
 } /* string_make_charlst_rev_int */
 
@@ -197,11 +271,10 @@ implement
 tokenize_line_comment () = loop () where {
   fun loop (): void = let
     val c = char_get () in
-    if c >= 0 then let
-      val c = i2c c in char_update (); if c <> '\n' then loop () else ()
-    end else begin // end of [if]
-      // loop returns
-    end // end of [if]
+    if c >= 0 then begin
+      char_update ();
+      if c <> 0x0a (* \n *) then loop ()
+    end
   end // end of [let]
 } // end of [tokenize_line_comment]
 
@@ -211,8 +284,8 @@ implement
 tokenize_rest_text () = loop (nil (), 0) where {
   fun loop {n:nat} (cs: chars n, n: int n): string = let
     val c = char_get () in
-    if c >= 0 then let
-      val c = i2c c in char_update (); loop (c :: cs, n+1)
+    if c >= 0 then begin
+      char_update (); loop (c :: cs, n+1)
     end else begin // c = EOF
       string_make_charlst_rev_int (cs, n) // the end of file is reached
     end // end of [if]
@@ -239,28 +312,27 @@ tokenize_logue () =
     (cs: chars n, n: int n, level: int level): string = let
     val c = char_get ()
   in
-    if c >= 0 then let
-      val c = i2c c in case+ c of
-      | '%' => let
-          val c1 = char_update_get () in
-          if c1 >= 0 then let
-            val c1 = i2c c1 in case+ c1 of
-            | '}' => if level > 0 then begin
-                char_update (); loop (c1 :: c :: cs, n+2, level-1)
-              end else begin
-                char_update (); string_make_charlst_rev_int (cs, n)
-              end // end of ['}']
-            | '\{' => begin
-                char_update (); loop (c1 :: c :: cs, n+2, level+1)
-              end // end of ['\{']
-            | _ => loop (c :: cs, n+1, level)
-          end else begin // c1 = EOF
-            chars_free cs; errmsg_unclosed_logue ()
-          end // end of [if]
-        end (* end of ['%'] *)
-      | _ (* c <> '%' *) => begin
-          char_update (); loop (c :: cs, n+1, level)
-        end // end of [_]
+    if c >= 0 then begin
+      if c = 37 (* '%' *) then let
+        val c1 = char_update_get () in
+        if c1 >= 0 then begin
+          if c1 = 123 (* '}' *) then begin
+            if level > 0 then begin
+              char_update (); loop (c1 :: c :: cs, n+2, level-1)
+            end else begin
+              char_update (); string_make_charlst_rev_int (cs, n)
+            end // end of ['}']
+          end else if c1 = 123 (* '\{' *) then begin
+            char_update (); loop (c1 :: c :: cs, n+2, level+1)
+          end // end of ['\{']
+          else loop (c :: cs, n+1, level)
+        end else begin // c1 = EOF
+          chars_free cs; errmsg_unclosed_logue ()
+        end // end of [if]
+      end (* end of ['%'] *)
+      else (* c <> '%' *) begin
+        char_update (); loop (c :: cs, n+1, level)
+      end // end of [_]
     end else begin // c = EOF
       chars_free cs; errmsg_unclosed_logue ()
     end // end of [if]
@@ -286,12 +358,11 @@ tokenize_funarg () =
   fun loop {n:nat} (cs: chars n, n: int n): string = let
     val c = char_get ()
   in
-    if c >= 0 then let
-      val c = i2c c in case+ c of
-      | ')' => begin
-          char_update (); string_make_charlst_rev_int (cs, n)
-        end // end of [')']
-      | _ => (char_update (); loop (c :: cs, n+1))
+    if c >= 0 then begin
+      if c = 41 (* ')' *) then begin
+        char_update (); string_make_charlst_rev_int (cs, n)
+      end // end of [')']
+      else (char_update (); loop (c :: cs, n+1))
     end else begin
       chars_free cs; errmsg_unclosed_funarg ()
     end // end of [if]
@@ -314,62 +385,60 @@ end // end of [errmsg_char_esc]
 fun tokenize_char_esc_code (ci: int, i: int): int =
   if i < 2 then let
     val c = char_get () in
-    if c >= 0 then let
-      val c = i2c c in case+ 0 of 
-      | _ when char_isdigit c => begin
-          char_update (); tokenize_char_esc_code (BASE * ci + (c - '0'), i+1)
-        end // end of [_ when ...]
-      | _ => ci // end of [_]
+    if c >= 0 then begin
+      if utf32_isdigit c then begin
+          char_update (); tokenize_char_esc_code (BASE * ci + (c - 48 (* '0' *)), i+1)
+      end // end of [_ when ...]
+      else ci // end of [_]
     end else ci
   end else begin
     ci // function returns: an error is to be reported later
   end // end of [if]
 // end of [tokenize_char_esc_code]
 
-fun tokenize_char_esc (): char = let
+fun tokenize_char_esc (): int = let
   val c = char_get_update () in case+ 0 of
-  | _ when c >= 0 => let
-      val c = i2c c in
-      if char_isdigit c then
-        char_of_int (tokenize_char_esc_code (c - '0', 0))
+  | _ when c >= 0 => begin
+      if utf32_isdigit c then
+        tokenize_char_esc_code (c - 48 (* '0' *), 0)
       else begin case+ c of
-        | 'a' => '\007' (* alert *)
-        | 'b' => '\010' (* backspace *)
-        | 'f' => '\014' (* line feed *)
-        | 'n' => '\012' (* newline *)
-        | 'r' => '\015' (* carriage return *)
-        | 't' => '\011' (* horizonal tab *)
-        | 'v' => '\013' (* vertical tab *)
+        | 97 (*'a'*) => 7 (* alert *)
+        | 98 (*'b'*) => 10 (* backspace *)
+        | 102 (*'f'*) => 14 (* line feed *)
+        | 110 (*'n'*) => 12 (* newline *)
+        | 114 (*'r'*) => 15 (* carriage return *)
+        | 116 (*'t'*) => 11 (* horizonal tab *)
+        | 118 (*'v'*) => 13 (* vertical tab *)
         | _ => c (* no effect on other chars *)
       end // end of [if]
     end // end of [_ when ...]
-  | _ (* c = EOF *) => '\000' // an error is to be reported later
+  | _ (* c = EOF *) => 0 // an error is to be reported later
 end // end of [tokenize_char_esc]
 
-fn errmsg_unclosed_char (): char = let
+fn errmsg_unclosed_char (): int = let
   val pos = position_prev_get ()
 in
   prerr_string ("The char starting at [");
   prerr_pos pos;
   prerr_string ("] is not closed.");
   prerr_newline ();
-  exit {char} (1)
+  exit {int} (1)
 end // end of [errmsg_unclose_char]
 
-fun tokenize_char (): char = let
+fun tokenize_char (): int = let
   val c0 = char_get (); val c = case+ 0 of
-  | _ when c0 >= 0 => let
-      val c0 = i2c c0 in case+ c0 of
-      | '\\' => (char_update (); tokenize_char_esc ())
-      | '\'' => '\0' (* '' stands for '\0' *)
+  | _ when c0 >= 0 => begin
+      case+ c0 of
+      | 92 (*'\\'*) => (char_update (); tokenize_char_esc ())
+      | 39 (*'\''*) => 0 (* '' stands for '\0' *)
       | _ => (char_update (); c0)
     end // end of [_ when ...]
-  | _ (* c0 < 0 *) => '\000'
+  | _ (* c0 < 0 *) => 0
   val c1 = char_get_update ()
 in
   case+ 0 of
-  | _ when c1 >= 0 => let val c1 = i2c c1 in
-      if c1 <> '\'' then errmsg_unclosed_char () else c
+  | _ when c1 >= 0 => begin
+      if c1 <> 39 (* '\'' *) then errmsg_unclosed_char () else c
     end // end of [_ when ...]
   | _ (* c1 < 0 *) => errmsg_unclosed_char ()
 end // end of [tokenize_char]
@@ -393,15 +462,15 @@ fun tokenize_code
 ) : string = let
   val c = char_get ()
 in
-  if c >= 0 then let
-    val c = i2c c in case+ c of
-    | '\{' => begin
+  if c >= 0 then begin
+    case+ c of
+    | 123 (*'\{'*) => begin
         char_update (); tokenize_code (c :: cs, n+1, level+1)
       end // end of ['\{']
-    | '}' when level > 0 => begin
+    | 125 (*'}'*) when level > 0 => begin
         char_update (); tokenize_code (c :: cs, n+1, level-1)
       end // end of ['}' when ...]
-    | '}' (* level = 0 *) => begin
+    | 125 (*'}'*) (* level = 0 *) => begin
         char_update (); string_make_charlst_rev_int (cs, n)
       end // end of ['}']
     | _ => begin
@@ -429,21 +498,21 @@ fun tokenize_comment
   {level:nat} (level: int level): void = let
   val c = char_get ()
 in
-  if c >= 0 then let
-    val c = i2c c in case+ c of
-    | '\(' => let
+  if c >= 0 then begin
+    case+ c of
+    | 40 (*'\('*) => let
         val c1 = char_update_get () in case+ 0 of
-        | _ when c1 >= 0 => let
-            val c1 = i2c c1 in case+ c1 of
-            | '*' => tokenize_comment (level+1) | _ => tokenize_comment level
+        | _ when c1 >= 0 => begin
+            case+ c1 of
+            | 42 (* '*' *) => tokenize_comment (level+1) | _ => tokenize_comment level
           end // end of [_ when ...]
         | _ (* c1 < 0 *) => tokenize_comment level
       end // end of ['\(']
-    | '*' => let
+    | 42 (* '*' *) => let
         val c1 = char_update_get () in case+ 0 of
-        | _ when c1 >= 0 => let
-            val c1 = i2c c1 in case+ c1 of 
-            | ')' => begin
+        | _ when c1 >= 0 => begin
+            case+ c1 of
+            | 41 (*')'*) => begin
                 if level > 0 then tokenize_comment (level-1) else char_update ()
               end // end of [')']
             | _ => tokenize_comment level
@@ -462,9 +531,9 @@ fun tokenize_int
   (i: int): int = let
   val c = char_get () in
   case+ 0 of
-  | _ when c >= 0 => let val c = i2c c in
-      if char_isdigit c then
-        (char_update (); tokenize_int (BASE * i + (c - '0')))
+  | _ when c >= 0 => begin
+      if utf32_isdigit c then
+        (char_update (); tokenize_int (BASE * i + (c - 48 (*'0'*))))
       else i
     end // end of [_ when ...]
   | _ (* c = EOF *) => i
@@ -472,40 +541,40 @@ end // end of [tokenize_int]
 
 (* ****** ****** *)
 
-fun tokenize_string_char () = let
+fun tokenize_string_char (): int = let
   val c = char_get_update () in case+ 0 of
-  | _ when c >= 0 => let
-      val c = i2c c in if c = '\\' then tokenize_char_esc () else c
+  | _ when c >= 0 => begin
+      if c = 92 (* '\\' *) then tokenize_char_esc () else c
     end // end of [_ when ...]
-  | _ (* c = EOF *) => '\000' // an error is to be reported later
+  | _ (* c = EOF *) => 0 // an error is to be reported later
 end // end of [tokenize_string_char]
 
-fn errmsg_unclosed_string (): string = let
+fn errmsg_unclosed_string {n:nat} (): @(size_t n, string32_vt n) = let
   val pos = position_prev_get ()
 in
   prerr_string ("The string starting at [");
   prerr_pos pos;
   prerr_string ("] is not closed.");
   prerr_newline ();
-  exit {string} (1)
+  exit {@(size_t n, string32_vt n)} (1)
 end // end of [errmsg_unclosed_string]
 
 fun tokenize_string {n:nat}
-  (cs: chars n, n: int n): string = let
+  (cs: chars n, n: int n): [m:nat] @(size_t m, string32_vt m) = let
   val c0 = char_get ()
 in
   case+ 0 of
-  | _ when (c0 >= 0) => let
-      val c0 = i2c c0 in if c0 = '"' then begin
-        char_update (); string_make_charlst_rev_int (cs, n)
+  | _ when (c0 >= 0) => begin
+      if c0 = 34 (*'"'*) then begin
+        char_update (); @(size1_of_int1 n, string32_make_charlst_rev_int (cs, n))
       end else let
         val c = tokenize_string_char ()
       in
         tokenize_string (c :: cs, n+1)
       end // end of [if]
-    end // end of [_ when ...]
+    end // end of [begin]
   | _ (* c0 < 0 *) => begin
-      chars_free cs; errmsg_unclosed_string ()
+      chars_free cs; errmsg_unclosed_string {n} ()
     end // end of [_]
 end // end of [tokenize_string]
 
@@ -514,55 +583,87 @@ end // end of [tokenize_string]
 fn char_iseof (c: int): bool =
   if c >= 0 then false else true
 
-fn char_issymbl (c: char): bool =
-  string_contains ("!%&#+-/:<=>@\\~`|*", c)
+fn char_issymbl (c: int): bool =
+  case+ c of
+  | 33 (* ! *) => true
+  | 37 (* % *) => true
+  | 38 (* & *) => true
+  | 35 (* # *) => true
+  | 43 (* + *) => true
+  | 45 (* - *) => true
+  | 47 (* / *) => true
+  | 58 (* : *) => true
+  | 60 (* < *) => true
+  | 61 (* = *) => true
+  | 62 (* > *) => true
+  | 64 (* @ *) => true
+  | 92 (* \\ *) => true
+  | 126 (* ~ *) => true
+  | 96 (* ` *) => true
+  | 124 (* | *) => true
+  | 42 (* * *) => true
+  | _ => false
+// end of [char_issymbl]
 
 fun tokenize_word_sym {n:nat}
-  (cs: chars n, n: int n): string = let
+  (cs: chars n, n: int n): [m:nat] @(size_t m, string32_vt m) = let
   val c = char_get () in case+ 0 of
-  | _ when c >= 0 => let
-      val c = i2c c in if char_issymbl c then
+  | _ when c >= 0 => begin
+      if char_issymbl c then
         (char_update (); tokenize_word_sym (c :: cs, n+1))
-      else string_make_charlst_rev_int (cs, n)
+      else @(size1_of_int1 n, string32_make_charlst_rev_int (cs, n))
     end // end of [_ when ...]
-  | _ (* c = EOF *) => string_make_charlst_rev_int (cs, n)
+  | _ (* c = EOF *) => @(size1_of_int1 n, string32_make_charlst_rev_int (cs, n))
 end // end of [tokenize_word_sym]
 
 fun tokenize_word_ide
   {n:nat} (
   cs: chars n, n: int n
-) : string = let
+) : [m:nat] @(size_t m, string32_vt m) = let
+  fn char_islttr (c: int): bool =
+    if c >= 97 (* 'a' *) || c <= 122 (* 'z' *) then true
+    else if c >= 65 (* 'A' *) || c <= 90 (* 'Z' *) then true
+    else if utf32_isdigit c then true
+    else c = 95 (* '_' *)
+  // end of [char_islttr]
   val c = char_get () in case+ 0 of
-  | _ when c >= 0 => let
-      val c = i2c c in if char_islttr c then
+  | _ when c >= 0 => begin
+      if char_islttr c then
         (char_update (); tokenize_word_ide (c :: cs, n+1))
-      else string_make_charlst_rev_int (cs, n)
+      else @(size1_of_int1 n, string32_make_charlst_rev_int (cs, n))
     end // end of [_ when ...]
-  | _ (* c = EOF *) => string_make_charlst_rev_int (cs, n)
-end where {
-  fn char_islttr (c: char): bool =
-    if char_isalnum c then true else c = '_'
-} // end of [tokenize_word_ide]
+  | _ (* c = EOF *) => @(size1_of_int1 n, string32_make_charlst_rev_int (cs, n))
+end // end of [tokenize_word_ide]
 
 (* ****** ****** *)
 
 extern fun
 fprint_token {m:file_mode}
-  (pf_mod: file_mode_lte (m, w) | fil: &FILE m, tok: token): void =
+  (pf_mod: file_mode_lte (m, w) | fil: &FILE m, tok: !token): void =
   "fprint_token"
 
 implement
 fprint_token (
   pf_mod | fil, tok
 ) = begin case+ tok of
-  | TOKchar c => fprintf (pf_mod | fil, "char(%c)", @(c))
-  | TOKcode s => fprintf (pf_mod | fil, "code(%s)", @(s))
-  | TOKint i => fprintf (pf_mod | fil, "int(%i)", @(i))
-  | TOKstring s => fprintf (pf_mod | fil, "string(%s)", @(s))
-  | TOKword s => fprintf (pf_mod | fil, "word(%s)", @(s))
-  | TOKlit c => fprintf (pf_mod | fil, "lit(%c)", @(c))
-  | TOKmark s => fprintf (pf_mod | fil, "mark(%s)", @(s))
-  | TOKeof () => fprint_string (pf_mod | fil, "EOF")
+  | TOKchar c => (fprintf (pf_mod | fil, "char(%x)", @(uint_of_int c)); fold@ tok)
+  | TOKcode s => (fprintf (pf_mod | fil, "code(%s)", @(s)); fold@ tok)
+  | TOKint i => (fprintf (pf_mod | fil, "int(%i)", @(i)); fold@ tok)
+  | TOKstring @(n, s) => begin
+      fprint (pf_mod | fil, "string(");
+      fprint_string32 (pf_mod, view@ fil | &fil, s, n);
+      fprint (pf_mod | fil, ")");
+      fold@ tok
+    end // end of [begin]
+  | TOKword @(n, s) => begin
+      fprint (pf_mod | fil, "word(");
+      fprint_string32 (pf_mod, view@ fil | &fil, s, n);
+      fprint (pf_mod | fil, ")");
+      fold@ tok
+    end // end of [begin]
+  | TOKlit c => (fprintf (pf_mod | fil, "lit(%x)", @(uint_of_int c)); fold@ tok)
+  | TOKmark s => (fprintf (pf_mod | fil, "mark(%s)", @(s)); fold@ tok)
+  | TOKeof () => (fprint_string (pf_mod | fil, "EOF"); fold@ tok)
 end // end of [fprint_token]
 
 implement
@@ -589,62 +690,58 @@ extern fun tokenize (): token = "tokenize"
 
 implement
 tokenize () = let
-  val c = char_get () in case+ 0 of
-  | _ when c >= 0 => tokenize_main (i2c c)
-  | _ (* c = EOF *) => TOKeof ()
-end where {
 //
-fun tokenize_main (c: char) = case+ c of
-  | '\'' => let
+fun tokenize_main (c: int): token = case+ c of
+  | 39 (* '\'' *) => let
       val () = pos_prev_reset_and_char_update ()
     in
       TOKchar (tokenize_char ())
     end // end of ['\'']
-  | '\(' => let
+  | 40 (* '\(' *) => let
       val () = pos_prev_reset_and_char_update ()
       val c1 = char_get (); val isstar = (
-        if c1 >= 0 then let
-          val c1 = i2c c1 in case+ c1 of '*' => true | _ => false
+        if c1 >= 0 then begin
+          case+ c1 of 42 (* '*' *) => true | _ => false
         end else false
       ) : bool // end of [isstar]
     in
       if isstar then (tokenize_comment (0); tokenize ())
-      else TOKlit '\('
+      else TOKlit 40 (* '\(' *)
     end // end of ['\(']
-  | '/' => let
+  | 47 (* '/' *) => let
       val () = pos_prev_reset_and_char_update ()
       val c1 = char_get (); val isslash = (
-        if c1 >= 0 then let
-          val c1 = i2c c1 in case+ c1 of '/' => true | _ => false
+        if c1 >= 0 then begin
+          case+ c1 of 47 (* '/' *) => true | _ => false
         end else false
       ) : bool // end of [isslash]
     in
       if isslash then begin
         tokenize_line_comment (); tokenize ()
       end else begin
-        TOKword (tokenize_word_sym ('/' :: nil (), 1))
+        TOKword (tokenize_word_sym (47 (* '/' *) :: nil (), 1))
       end // end of [if]
     end // end of ['/']
-  | '\{' => let
+  | 123 (* '\{' *) => let
       val () = pos_prev_reset_and_char_update ()
     in
       TOKcode (tokenize_code (nil (), 0, 0))
     end // end of ['\{']
-  | '"' => let
+  | 34 (* '"' *) => let
       val () = pos_prev_reset_and_char_update ()
     in
       TOKstring (tokenize_string (nil (), 0))
     end // end of ['"']
-  | '_' => let
+  | 95 (* '_' *) => let
       val () = pos_prev_reset_and_char_update ()
     in
       TOKword (tokenize_word_ide (c :: nil (), 1))
     end // end of ['_']
-  | '%' => let
+  | 37 (* '%' *) => let
       val () = pos_prev_reset_and_char_update ()
       val c1 = char_get (); val islbrace = (
-        if c1 >= 0 then let
-          val c1 = i2c c1 in case+ c1 of '\{' => true | _ => false
+        if c1 >= 0 then begin
+          case+ c1 of 123 (* '\{' *) => true | _ => false
         end else false
       ) : bool // end of [islbrace]
     in
@@ -654,12 +751,12 @@ fun tokenize_main (c: char) = case+ c of
         TOKword (tokenize_word_sym (c :: nil (), 1))
       end // end of [if]
     end // end of ['%']
-  | _ when char_isdigit c => let
+  | _ when utf32_isdigit c => let
       val () = pos_prev_reset_and_char_update ()
     in
-      TOKint (tokenize_int (c - '0'))
+      TOKint (tokenize_int (c - 48 (* '0' *)))
     end // end of [digit]
-  | _ when char_isalpha c => let
+  | _ when c >= 97 && c <= 122 || c >= 65 && c <= 90 (* char_isalpha c *) => let
       val () = pos_prev_reset_and_char_update ()
     in
       TOKword (tokenize_word_ide (c :: nil (), 1))
@@ -669,7 +766,7 @@ fun tokenize_main (c: char) = case+ c of
     in
       TOKword (tokenize_word_sym (c :: nil (), 1))
     end // end of [symbl]
-  | _ when char_isspace c => let
+  | _ when utf32_isspace c (* char_isspace c *) => let
       val () = char_update () in tokenize ()
     end // end of [space]
   | _ => let
@@ -679,39 +776,83 @@ fun tokenize_main (c: char) = case+ c of
     end // end of [_]
 (* end of [tokenize_main] *)
 //
-} // end of [tokenize ... where ...]
+  val c = char_get () in case+ 0 of
+  | _ when c >= 0 => tokenize_main c
+  | _ (* c = EOF *) => TOKeof ()
+end // end of [tokenize]
 
 (* ****** ****** *)
 
-%{$
+implement
+token_get () = tokenize ()
+(*
+local
 
-static ats_ptr_type the_token ;
+val the_token = ref<Option_vt token> (None_vt ())
 
-ats_ptr_type token_get () { return the_token ; }
+in // in of [local]
 
-ats_void_type
-token_update () {
-  the_token = tokenize () ; return ;
-}
+implement
+token_get () = let
+  val (vbox pf | p) = ref_get_view_ptr (the_token)
+in
+  case+ !p of
+  | ~Some_vt tok => (!p := None_vt (); tok)
+  | None_vt () => (fold@ !p; $effmask_ref (exit_errmsg (1, "[token_get]: internal error")))
+end // end of [token_get]
 
-ats_ptr_type
-token_get_update () {
-  ats_ptr_type tok = the_token ; the_token = tokenize () ; return tok;
-} // end of [token_get_update]
+implement
+token_update () = let
+  val (vbox pf | p) = ref_get_view_ptr (the_token)
+in
+  case+ !p of
+  | ~Some_vt tok => (token_free tok; !p := Some_vt ($effmask_ref (tokenize ())))
+  | ~None_vt () => !p := Some_vt ($effmask_ref (tokenize ()))
+end // end of [token_update]
 
-%} // end of [%{$]
+implement
+token_get_update () = let
+  val (vbox pf | p) = ref_get_view_ptr (the_token)
+in
+  case+ !p of
+  | ~Some_vt tok => (token_free tok; !p := None_vt (); $effmask_ref (tokenize ()))
+  | None_vt () => (fold@ !p; $effmask_ref (tokenize ()))
+end // end of [token_get_update]
+
+implement
+token_putback (x) = let
+  val (vbox pf | p) = ref_get_view_ptr (the_token)
+in
+  case+ !p of
+  | Some_vt _ => (fold@ !p; token_free x; $effmask_ref (exit_errmsg (1, "[token_putback]: internal error")))
+  | ~None_vt () => (!p := Some_vt x)
+end // end of [token_putback]
+
+end // end of [local]
+*)
+
+(* ****** ****** *)
+
+implement
+token_free (
+  tok
+) = begin case+ tok of
+  | ~TOKchar c => ()
+  | ~TOKcode s => ()
+  | ~TOKint _ => ()
+  | ~TOKstring @(n, arr) => ()
+  | ~TOKword @(n, arr) => ()
+  | ~TOKlit c => ()
+  | ~TOKmark s => ()
+  | ~TOKeof () => ()
+end // end of [token_free]
 
 (* ****** ****** *)
 //
 // HX: initialization
 //
 implement
-token_initialization () = let
-  val () = char_update () // flush out a junk value
-  val () = token_update () // flush out a junk value
-in
-  // empty
-end // end of [let]
+token_initialization () = char_update () // flush out a junk value
 
 (* ****** ****** *)
 

@@ -38,6 +38,10 @@
 
 staload "top.sats"
 
+staload "libc/SATS/stdio.sats"
+
+staload _ = "prelude/DATS/array.dats"
+
 (* ****** ****** *)
 
 fun prerr_range (): void = let
@@ -59,54 +63,74 @@ end // end of [errmsg_illegal]
 
 (* ****** ****** *)
 
-fun errmsg_literal (c: char): void = begin
+fun errmsg_literal (c: int): void = begin
   prerr ("The token at [");
   prerr_range ();
-  prerr ("] is not ["); prerr_char (c); prerr ("].");
+  prerr ("] is not [");
+  let
+    val (pf_stderr | p_stderr) = stderr_get ()
+    val c = int1_of_int c
+    val () = assert_errmsg (c >= 0, "[errmsg_literal]: invalid codepoint")
+    val res = utf8_encode (file_mode_lte_w_w, pf_stderr | p_stderr, c)
+    val () = assert_errmsg (res >= 0, "[errmsg_literal]: error while trying to decode UTF-32")
+  in
+    fclose1_exn (pf_stderr | p_stderr)
+  end;
+  prerr ("].");
   prerr_newline ();
   exit {void} (1)
 end // end of [errmsg_literal]
 
-fun literal (c0: char): void = let
-  val tok = token_get () in case+ tok of
-  | TOKlit c when c0 = c => token_update ()
+fun literal (tok: &token, c0: int): void =
+  case+ tok of
+  | ~TOKlit c when c0 = c => tok := token_get ()
   | _ => errmsg_literal (c0)
-end // end of [literal]
+// end of [literal]
 
 (* ****** ****** *)
 
-fun errmsg_litword (s: string): void = begin
+fun
+errmsg_litword {n:nat} (
+  s: string32_vt n, n: size_t n
+): void = begin
   prerr ("The token at [");
   prerr_range ();
-  prerr ("] is not ["); prerr (s); prerr ("].");
+  prerr ("] is not [");
+  let
+    val (pf_stderr | p_stderr) = stderr_get ()
+  in
+      fprint_string32 (file_mode_lte_w_w, pf_stderr | p_stderr, s, n);
+    stderr_view_set (pf_stderr | (*none*))
+  end;
+  prerr ("].");
   prerr_newline ();
   exit {void} (1)
 end // end of [errmsg_litword]
 
-fun litword (s0: string): void = let
-  val tok = token_get () in case+ tok of
-  | TOKword s when s0 = s => token_update ()
-  | _ => errmsg_litword (s0)
-  // end of [case]
-end // end of [litword]
+fun litword {n:nat} (tok: &token, s0: string32_vt n, n0: size_t n): void =
+  case+ tok of
+  | ~TOKword @(n, s) when eq_string32_string32 (n, s, n0, s0) => tok := token_get ()
+  | _ => errmsg_litword (s0, n0)
+// end of [litword]
 
 (* ****** ****** *)
 
-fun errmsg_char (): char = begin
+fun errmsg_char (): int = begin
   prerr ("The token at [");
   prerr_range ();
   prerr ("] is not a char.");
   prerr_newline ();
-  exit {char} (1)
+  exit {int} (1)
 end // end of [errmsg_char]
 
-fun char (): char = let
-  val tok = token_get () in case+ tok of
-  | TOKchar c => (token_update (); c) | _ => errmsg_char ()
-end // end of [char ()]
+fun char (tok: &token): int =
+  case+ tok of
+  | ~TOKchar c => (tok := token_get (); c)
+  | _ => errmsg_char ()
+// end of [char ()]
 
 (* ****** ****** *)
-
+(* TODO: remove?
 fun errmsg_string (): string = begin
   prerr ("The token at [");
   prerr_range ();
@@ -115,10 +139,12 @@ fun errmsg_string (): string = begin
   exit {string} (1)
 end // end of [errmsg_string]
 
-fun string (): string = let
-  val tok = token_get () in case+ tok of
-  | TOKstring s => (token_update (); s) | _ => errmsg_string ()
-end // end of [string ()]
+fun string (tok: &token): [n:nat] @(size_t n, string32_vt n) =
+  case+ tok of
+  | ~TOKstring s => (tok := token_get (); s)
+  | _ => errmsg_string ()
+// end of [string ()]
+*)
 
 (* ****** ****** *)
 
@@ -130,10 +156,11 @@ fun errmsg_ident (): string = begin
   exit {string} (1)
 end // end of [errmsg_ident]
 
-fun ident (): string = let
-  val tok = token_get () in case+ tok of
-  | TOKword s => (token_update (); s) | _ => errmsg_ident ()
-end // end of [ident]
+fun ident (tok: &token): string =
+  case+ tok of
+  | ~TOKword @(n, s) => (tok := token_get (); string_of_string32 (s, n))
+  | _ => errmsg_ident ()
+// end of [ident]
 
 (* ****** ****** *)
 
@@ -145,61 +172,59 @@ fun errmsg_code (): string = begin
   exit {string} (1)
 end // end of [errmsg_code]
 
-fun code (): string = let
-  val tok = token_get () in case+ tok of
-  | TOKcode s => (token_update (); s) | _ => errmsg_code ()
-end // end of [code]
+fun code (tok: &token): string =
+  case+ tok of
+  | ~TOKcode s => (tok := token_get (); s)
+  | _ => errmsg_code ()
+// end of [code]
 
 (* ****** ****** *)
 
 fun charset_atm_r
-  (c0: char): charset_t = let
-  val tok = token_get () in case+ tok of
-  | TOKword "-" => let
-      val () = token_update (); val c1 = char ()
+  (tok: &token, c0: int): charset_t =
+  case+ tok of
+  | ~TOKword @(n, s) when (n = 1 andalso bool1_of_bool (s[0] = 45) (* '-' *)) => let
+      val () = tok := token_get (); val c1 = char (tok)
     in
       charset_interval (c0, c1)
     end // end of [TOKword]
   | _ => charset_singleton c0
-  // end of [case]
-end // end of [charset_atm_r]
+// end of [charset_atm_r]
 
 fun charset_seq_r
-  (cs0: charset_t): charset_t = let
-  val tok = token_get () in case+ tok of
-  | TOKchar c => let
-      val () = token_update (); val cs1 = charset_atm_r c
+  (tok: &token, cs0: charset_t): charset_t =
+  case+ tok of
+  | ~TOKchar c => let
+      val () = tok := token_get (); val cs1 = charset_atm_r (tok, c)
     in
-      charset_seq_r (charset_union (cs0, cs1))
+      charset_seq_r (tok, charset_union (cs0, cs1))
     end //end of [TOKchar]
   | _ => cs0
-  // end of [case]
-end // end of [charset_seq_r]
+// end of [charset_seq_r]
 
 (* ****** ****** *)
 
-fun charset_r (): charset_t = let
-  val tok = token_get () in case+ tok of
-  | TOKlit ']' => let
-      val () = token_update () in charset_nil
+fun charset_r (tok: &token): charset_t =
+  case+ tok of
+  | ~TOKlit 93 (* ']' *) => let
+      val () = tok := token_get () in charset_nil
     end // end of [TOKlit ']']
-  | TOKlit '^' => let
-      val () = token_update (); val c = charset_r ()
+  | ~TOKlit 94 (* '^' *) => let
+      val () = tok := token_get (); val c = charset_r (tok)
     in
       charset_complement (c)
     end // end of [TOKlit '^']
-  | TOKchar c => let
-      val () = token_update ()
-      val cs = charset_seq_r (charset_atm_r c)
-      val () = literal ']'
+  | ~TOKchar c => let
+      val () = tok := token_get ()
+      val cs = charset_seq_r (tok, charset_atm_r (tok, c))
+      val () = literal (tok, 93) (* ']' *)
     in
       cs
     end // end of [TOKchar]
   | _ => begin
       errmsg_illegal {charset_t} ("charset_r")
     end // end of [_]
-  // end of [case]
-end // end of [charset_seq_r]
+// end of [charset_seq_r]
 
 (* ****** ****** *)
 
@@ -258,9 +283,9 @@ implement fprint_regex (pf_mod | fil, reg): void = begin
       fprint_regex (pf_mod | fil, reg);
       fprint_string (pf_mod | fil, ")");
     end // end of [REGstar]
-  | REGstr s => begin
+  | REGstr @(n, s) => begin
       fprint_string (pf_mod | fil, "REGstr(\"");
-      fprint_string (pf_mod | fil, s);
+      fprint_string32 (pf_mod, view@ fil | &fil, s, n);
       fprint_string (pf_mod | fil, "\")");
     end // end of [REGstr]
 end // end of [fprint_regex]
@@ -281,76 +306,91 @@ end // end of [prerr_regex]
 
 (* ****** ****** *)
 
-fun is_regex_0 (): bool = begin
-  case+ token_get () of
-  | TOKword "_" => true
-  | TOKchar c => true
-  | TOKlit '$' => true
-  | TOKstring s => true
-  | TOKlit '\[' => true
-  | TOKlit '\(' => true
+fun is_regex_0 (tok: &token): bool = begin
+  case+ tok of
+  | TOKword @(n, s) when (n = 1 andalso bool1_of_bool (s[0] = 95 (*'_'*))) => (fold@ tok; true)
+  | TOKchar c => (fold@ tok; true)
+  | TOKlit 36 (* '$' *) => (fold@ tok; true)
+  | TOKstring s => (fold@ tok; true)
+  | TOKlit 91 (* '\[' *) => (fold@ tok; true)
+  | TOKlit 40 (* '\(' *) => (fold@ tok; true)
   | _ => false
 end // end of [is_regex_0]
 
-fun regex_0 (): regex = let
-  val tok = token_get () in case+ tok of
-  | TOKword "_" => begin
-      token_update (); REGchars (charset_all)
+extern
+fun regex_3 (tok: &token): regex
+// extern
+// fun regex_1_r (tok: &token, reg: regex): regex
+
+fun regex_0 (tok: &token): regex =
+  case+ tok of
+  | ~TOKword @(n, s) when n = 1 andalso bool1_of_bool (s[0] = 95 (* "_" *)) => begin
+      tok := token_get (); REGchars (charset_all)
     end // end of [TOKword]
-  | TOKchar c => begin
-      token_update (); REGchars (charset_singleton c)
+  | ~TOKchar c => begin
+      tok := token_get (); REGchars (charset_singleton c)
     end // end of [TOKchar]
-  | TOKlit '$' => (token_update (); REGid (ident ()))
-  | TOKstring s => (token_update (); REGstr s)
-  | TOKlit '\[' => let
-      val () = token_update (); val cs = charset_r ()
+  | ~TOKlit 36 (* '$' *) => (tok := token_get (); REGid (ident (tok)))
+  | ~TOKstring s => (tok := token_get (); REGstr s)
+  | ~TOKlit 91 (* '\[' *) => let
+      val () = tok := token_get (); val cs = charset_r (tok)
     in
       REGchars cs
     end // end of [TOKlit]
-  | TOKlit '\(' => let
-      val () = token_update (); val re = regex_3 (); val () = literal ')'
+  | ~TOKlit 40 (* '\(' *) => let
+      val () = tok := token_get (); val re = regex_3 (tok); val () = literal (tok, 41 (* ')' *))
     in
       re
     end // end of [TOKlit]
   | _ => errmsg_illegal {regex} ("regex_0")
-end // end of [regex_0]
+// end of [regex_0]
 
-and regex_1 (): regex = begin
-  let val reg = regex_0 () in regex_1_r (reg) end
+and regex_1 (tok: &token): regex = begin
+  let val reg = regex_0 (tok) in regex_1_r (tok, reg) end
 end // end of [regex_1]
 
-and regex_1_r (reg0: regex): regex = let
-  val tok = token_get () in case+ tok of
-  | TOKword "*" =>
-      let val () = token_update () in regex_1_r (REGstar reg0) end
-  | TOKword "+" =>
-      let val () = token_update () in regex_1_r (REGplus reg0) end
-  | TOKlit '?' =>
-      let val () = token_update () in regex_1_r (REGopt reg0) end
+and regex_1_r (tok: &token, reg0: regex): regex = let
+  #define b2b bool1_of_bool
+in
+  case+ tok of
+  | TOKword @(n, s) when n = 1 => begin
+      if s[0] = 42 (* '*' *) then (free@ {0} tok; tok := token_get (); regex_1_r (tok, REGstar reg0))
+      else if s[0] = 43 (* '+' *) then (free@ {0} tok; tok := token_get (); regex_1_r (tok, REGplus reg0))
+      else (fold@ tok; reg0)
+    end // end of [begin]
+  (*
+   * AS-20130227: these consecutive patterns cause atsopt to hang during compilation...
+   * rewritten into the above code
+  | ~TOKword @(n, s) when n = 1 andalso b2b (s[0] = 42 (* '*' *)) =>
+      let val () = tok := token_get () in regex_1_r (tok, REGstar reg0) end
+  | ~TOKword @(n, s) when n = 1 andalso b2b (s[0] = 43 (* "+" *)) =>
+      let val () = tok := token_get () in regex_1_r (tok, REGplus reg0) end
+  *)
+  | ~TOKlit 63 (* '?' *) =>
+      let val () = tok := token_get () in regex_1_r (tok, REGopt reg0) end
   | _ => reg0
-  // end of [case]
 end // end of [regex_1_r]
 
-and regex_2 (): regex = regex_2_r (regex_1 ())
+and regex_2 (tok: &token): regex = regex_2_r (tok, regex_1 (tok))
 
-and regex_2_r (reg0: regex): regex = begin
-  if is_regex_0 () then let
-    val reg1 = regex_1 () in regex_2_r (REGseq (reg0, reg1))
+and regex_2_r (tok: &token, reg0: regex): regex = begin
+  if is_regex_0 (tok) then let
+    val reg1 = regex_1 (tok) in regex_2_r (tok, REGseq (reg0, reg1))
   end else reg0
 end // end of [regex_2_r]
 
-and regex_3 (): regex = regex_3_r (regex_2 ())
+and regex_3 (tok: &token): regex = regex_3_r (tok, regex_2 (tok))
 
-and regex_3_r (reg0: regex): regex = let
-  val tok = token_get () in case+ tok of
-  | TOKword "|" => let
-      val () = token_update (); val reg1 = regex_2 ()
+and regex_3_r (tok: &token, reg0: regex): regex =
+  case+ tok of
+  | ~TOKword @(n, s) when n = 1 andalso bool1_of_bool (s[0] = 124 (* "|" *)) => let
+      val () = tok := token_get (); val reg1 = regex_2 (tok)
     in
-      regex_3_r (REGalt (reg0, reg1))
+      regex_3_r (tok, REGalt (reg0, reg1))
     end // end of [TOKword]
   | _ => reg0
   // end of [case]
-end // end of [regex_3_r]
+// end of [regex_3_r]
 
 val regex = regex_3
 
@@ -367,24 +407,34 @@ in
   loop (rds, redef_nil ())
 end // end of [redef_reverse]
 
-fun redef (rds: redef): redef = let
-  val tok = token_get () in case+ tok of
-  | TOKword id when id <> "%%" => let
+fun isnotmrk {n:nat} (n: size_t n, s: string32_vt n): bool =
+  if n = 2 then s[0] <> 37 || s[1] <> 37
+  else false
+// end of [isnotmrk]
+
+fun redef (tok: &token, rds: redef): redef =
+  case+ tok of
+  | ~TOKword @(n, id) when isnotmrk (n, id) (* id <> "%%" *) => let
 (*
       val () = (prerr "redef: id = "; prerr id; prerr_newline ())
 *)
-      val () = token_update ()
-      val () = litword ("=")
-      val reg = regex ()
+      val id = string_of_string32 (id, n)
+      val () = tok := token_get ()
+      val () = litword (tok, array_make_lst_vt (asz, 61(* '=' *) :: nil), asz) where {
+        #define :: list_vt_cons
+        #define nil list_vt_nil
+        val asz = size1_of_int1 1
+      } // end of [val]
+      val reg = regex (tok)
 (*
       val () = (prerr "redef: reg = "; prerr_regex reg; prerr_newline ())
 *)
     in
-      redef (redef_cons (id, reg, rds))
+      redef (tok, redef_cons (id, reg, rds))
     end // end of [TOKword]
   | _ => redef_reverse rds
   // end of [case]
-end // end of [redef]
+// end of [redef]
 
 (* ****** ****** *)
 
@@ -399,76 +449,83 @@ in
   loop (rls, rules_nil ())
 end // end of [rules_reverse]
 
-fun barrules (rls: rules): rules = let
-  val tok = token_get () in case+ tok of
-  | TOKword "|" => let
-      val () = token_update ()
-      val reg = regex ()
-      val cstr = code ()
+fun barrules (tok: &token, rls: rules): rules =
+  case+ tok of
+  | ~TOKword @(n, s) when n = 1 andalso bool1_of_bool (s[0] = 124 (* "|" *)) => let
+      val () = tok := token_get ()
+      val reg = regex (tok)
+      val cstr = code (tok)
 (*
       val () = (prerr "rules: reg = "; prerr_regex reg; prerr_newline ())
       val () = (prerr "rules: cstr = "; prerr cstr; prerr_newline ())
 *)
     in
-      barrules (rules_cons (reg, cstr, rls))
+      barrules (tok, rules_cons (reg, cstr, rls))
     end // end of [TOKword "|"]
   | _ => rules_reverse rls
-end // end of [barrules]
+// end of [barrules]
 
-fun rules (): rules = let
-  val tok = token_get () in case+ tok of
-  | TOKword "|" => barrules (rules_nil ())
+fun rules (tok: &token): rules =
+  case+ tok of
+  | TOKword @(n, s) when n = 1 andalso bool1_of_bool (s[0] = 124 (* "|" *)) => (fold@ tok; barrules (tok, rules_nil ()))
   | _ => let
-      val reg = regex ()
+      val reg = regex (tok)
 (*
       val () = (prerr "rules: reg = "; prerr_regex reg; prerr_newline ())
 *)
-      val cstr = code ()
+      val cstr = code (tok)
 (*
       val () = (prerr "rules: cstr = "; prerr cstr; prerr_newline ())
 *)
     in
-      barrules (rules_cons (reg, cstr, rules_nil ()))
+      barrules (tok, rules_cons (reg, cstr, rules_nil ()))
     end // end of [_]
   // end of [case]
-end // end of [rules]
+// end of [rules]
 
 (* ****** ****** *)
 
-fun lexfn_funarg (): string = case+ token_get () of
-  | TOKlit '\(' => begin
-      let val arg = tokenize_funarg () in token_update (); arg end
+fun lexfn_funarg (tok: &token): string = case+ tok of
+  | ~TOKlit 40 (* '\(' *) => begin
+      let val arg = tokenize_funarg () in tok := token_get (); arg end
     end
   | _ => ""
 // end of [lexfn_funarg]
 
-fun lexfns (): lexfns = case+ token_get () of
-  | TOKword id when id <> "%%" => let
+fun lexfns (tok: &token): lexfns = case+ tok of
+  | ~TOKword @(n, id) when isnotmrk (n, id) (* id <> "%%" *) => let
 (*
       val () = (prerr "lexfns: id = "; prerr id; prerr_newline ())
 *)
-      val () = token_update ()
-      val arg = lexfn_funarg ()
-      val () = litword "="
-      val rls = rules ()
+      val id = string_of_string32 (id, n)
+      val () = tok := token_get ()
+      val arg = lexfn_funarg (tok)
+      val () = litword (tok, array_make_lst_vt (asz, 61(* '=' *) :: nil), asz) where {
+        #define :: list_vt_cons
+        #define nil list_vt_nil
+        val asz = size1_of_int1 1
+      } // end of [val]
+      val rls = rules (tok)
     in
-      lexfns_cons (id, arg, rls, lexfns ())
+      lexfns_cons (id, arg, rls, lexfns (tok))
     end // end of [TOKword id when ...]
   | _ => lexfns_nil ()
 // end of [lexfns]
 
 (* ****** ****** *)
 
-fun preamble (): string = let
+fun preamble (tok: &token): string = let
 (*
   val () = begin
     prerr "preamble: enter"; prerr_newline ()
   end
 *)
-  val result = case+ token_get () of
-    | TOKmark "%{" => begin
-        let val s = tokenize_logue () in (token_update (); s) end
-      end
+  val result = case+ tok of
+    | ~TOKmark "%{" => let
+        val s = tokenize_logue ()
+      in
+        tok := token_get (); s
+      end // end of [let]
     | _ => ""
   // end of [result]
 (*
@@ -480,31 +537,38 @@ in
   result
 end // end of [preamble]
 
-fun postamble (): string = case+ token_get () of
-  | TOKword "%%" => let
-      val s = tokenize_rest_text () in (token_update (); s)
+fun postamble (tok: token): string =
+  case+ tok of
+  | ~TOKword @(n, s) when ~isnotmrk (n, s) (* "%%" *) => let
+      val s = tokenize_rest_text () in s
     end // end of [TOKword "%%"]
-  | _ => ""
+  | _ => (token_free tok; "")
 // end of [postamble]
 
 (* ****** ****** *)
 
-fun done (): void = let
-  val tok = token_get () in case+ tok of
-  | TOKeof () => () | _ => errmsg_illegal {void} "done"
-end // end of [done()]
+fun done (tok: token): void =
+  case+ tok of
+  | ~TOKeof () => ()
+  | _ => (token_free tok; errmsg_illegal {void} "done")
+// end of [done()]
 
 (* ****** ****** *)
 
 implement lexer_parse () = let
-  val str1 = preamble ()
+  var tok = token_get ()
+  val str1 = preamble (tok)
 (*
   val () = (prerr "preamble =\n"; prerr str1; prerr_newline ())
 *)
-  val rds = redef (redef_nil ())
-  val () = litword "%%"
-  val lfs = lexfns ()
-  val str2 = postamble ()
+  val rds = redef (tok, redef_nil ())
+  val () = litword (tok, array_make_lst_vt (asz, 37(* '%' *) :: 37(* '%' *) :: nil ()), asz) where {
+    #define :: list_vt_cons
+    #define nil list_vt_nil
+    val asz = size1_of_int1 2
+  } // end of [val]
+  val lfs = lexfns (tok)
+  val str2 = postamble (tok)
 (*
   val () = (prerr "postamble =\n"; prerr str2; prerr_newline ())
 *)

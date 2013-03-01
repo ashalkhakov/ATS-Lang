@@ -44,14 +44,16 @@
 
 staload "top.sats"
 
+staload _ = "prelude/DATS/array.dats"
+
 typedef intset = intset_t
 
 // datatype for regular expressions
 datatype regex1_node =
   | REG1alt of (regex1, regex1)
-  | REG1chars of (int, charset_t)
+  | REG1chars of (int(*position*), charset_t)
   | REG1nil
-  | REG1end of int
+  | REG1end of int(*position*)
   | REG1opt of regex1
   | REG1plus of regex1
   | REG1seq of (regex1, regex1)
@@ -68,7 +70,7 @@ exception Fatal
 
 (* ****** ****** *)
 
-datatype CSI = CSI_cs of charset_t | CSI_i of int
+datatype CSI = CSI_cs of charset_t | CSI_i of int(*irule*)
 dataviewtype CSIlst (int) =
   | CSIlst_nil (0) | {n:nat} CSIlst_cons (n+1) of (CSI, CSIlst n)
 
@@ -241,10 +243,10 @@ array_of_CSIlst (
 
 fun regex_mark_str
   {i,l:nat | i <= l} .<l-i>. (
-  env: redef, x0: &T, i: size_t i, l: size_t l, s: string l, r1e: regex1
+  env: redef, x0: &T, i: size_t i, l: size_t l, s: string32_vt l, r1e: regex1
 ) : regex1 = begin
   if i < l then let
-    val cs = charset_singleton s[i]
+    val cs = charset_singleton (s[i])
     val r1e = regex1_seq (r1e, regex1_chars (x0, cs))
   in
     regex_mark_str (env, x0, i+1, l, s, r1e)
@@ -288,11 +290,7 @@ fun regex_mark (
       regex1_seq (r1e1, r1e2)
     end // end of [REGseq]
   | REGstar (r0e0) => regex1_star (regex_mark (env, x0, r0e0))
-  | REGstr (str) => let
-      val str = string1_of_string str
-    in
-      regex_mark_str (env, x0, 0, string_length str, str, regex1_nil ())
-    end // end of [REGstr]
+  | REGstr @(n, str) => regex_mark_str (env, x0, 0, n, str, regex1_nil ())
 end // end of [regex_mark]
 
 and regex_mark_rep (
@@ -425,7 +423,7 @@ end (* rules_mark *)
 
 (* ****** ****** *)
 
-dataviewtype acclst =
+dataviewtype acclst = // list of accept states and actions
   | acclst_nil of ()
   | acclst_cons of (int (*state*), int (*rule*), acclst)
 // end of [acclst]
@@ -434,12 +432,12 @@ dataviewtype
 intlst = intlst_nil | intlst_cons of (int, intlst)
 // end of [dataviewtype]
 
-dataviewtype statelst =
+dataviewtype statelst = // list of DFA states
   | statelst_nil of () | statelst_cons of (intset, statelst)
 // end of [statelst]
 
 dataviewtype
-translst (int) =
+translst (int) = // list of transitions
   | translst_nil (0) of ()
   | {n:nat} translst_cons (n+1) of (int, intlst, translst n)
 // end of [translst]
@@ -454,7 +452,7 @@ fn transition_char
 , pf2: !array_v (intset, n, l_pos)
 | A_csi: ptr l_csi
 , A_pos: ptr l_pos
-, n: int n, st: intset, c: char
+, n: int n, st: intset, c: int
 ) : intset = let
 (*
   val () = prerrf ("transition_char: c = %i\n", @(int_of c))
@@ -493,13 +491,26 @@ in
   st_res
 end // end of [transition_char]
 
+// FIXME: if we are to support Unicode,
+// this function must be made a tad more intelligent:
+// - instead of iterating through all characters,
+//   we should compute a partition of \Sigma (alphabet)
+//   for a given regexp (partition of set X is a set of
+//   subsets of X such that all such subsets are disjoint,
+//   but their union gives X);
+// - if C in partition(\Sigma,r) (where r is a regexp),
+//   and if characters a,b in C, then deriv(r,a) = deriv(r,b)
+//   (i.e., the next state is the same for any two characters
+//   drawn from C)
+// NOTE: [ns] is the list of DFA states that automaton
+// will move to after consuming [c]s
 fun transition_one {n:nat} {l_csi,l_pos:addr}
   (pf1: !array_v (CSI, n, l_csi),
    pf2: !array_v (intset, n, l_pos) |
    A_csi: ptr l_csi, A_pos: ptr l_pos, n: int n,
-   nst_r: &int, sts: &states_t, stlst: &statelst,
-   st0: intset, c: char, ns: intlst): intlst = begin
-  if int_of_char c >= ~1 then let
+   nst_r: &int, sts: &states_t(*marked states*), stlst: &statelst(*unmarked states*),
+   st0: intset, c: int, ns: intlst): intlst = begin
+  if c >= ~1 then let
     val st = transition_char (pf1, pf2 | A_csi, A_pos, n, st0, c)
     val nst = states_find (sts, st)
     val nst =
@@ -523,7 +534,7 @@ fun transition_one {n:nat} {l_csi,l_pos:addr}
   end // end of [if]
 end (* end of [transition_one] *)
 
-macdef CHAR_MAX = '\177'
+macdef CHAR_MAX = 128 // '\177'
 
 fun transition_all {n:nat} {l_csi,l_pos:addr}
   (pf1: !array_v (CSI, n, l_csi),
@@ -686,20 +697,20 @@ fprint_irule (
 //
   int x, x0, x1, x2 ;
 //
-  x = i >> 8 ;
+  x = i >> 8 ; // write the most significant byte first
   x2 = '0' + (x & 07) ; x >>= 3 ;
   x1 = '0' + (x & 07) ; x >>= 3 ;
   x0 = '0' + (x & 07) ; x >>= 3 ;
   fputc ('\\', fil); fputc (x0, fil) ; fputc (x1, fil) ; fputc (x2, fil) ;
 //
-  if (x != 0) {
+  if (x != 0) { // it is assumed that rule index will fit in two bytes
     fprintf (
       stderr, "lexgen.dats: fprint_irule: rule number is too large: %i .\n", i
     ) ;
     exit (1) ;
   } // end of [if]
 //
-  x = i & 0xff ;
+  x = i & 0xff ; // now write the least significant byte
   x2 = '0' + (x & 07) ; x >>= 3 ;
   x1 = '0' + (x & 07) ; x >>= 3 ;
   x0 = '0' + (x & 07) ;
@@ -902,6 +913,7 @@ fprint_DFA (
 var x0: T = @{ lst= CSIlst_nil (), len= 0 }
 // EOF is pre-defined and cannot be overwritten
 val env = redef_cons ("EOF", regex_eof, env)
+// TODO: push more pre-defined character sets
 val root_regex1 = rules_mark (env, x0, rls)
 val root_fstpos = root_regex1.fstpos
 //
