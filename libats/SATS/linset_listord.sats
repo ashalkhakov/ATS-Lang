@@ -86,12 +86,10 @@ linset_isnot_member (xs: !set a, x0: a, cmp: cmp a):<> bool
 (* ****** ****** *)
 
 fun{a:t@ype}
-linset_copy (xs: !set (a)):<> set (a)
-
-(* ****** ****** *)
+linset_free (xs: set (a)):<> void
 
 fun{a:t@ype}
-linset_free (xs: set (a)):<> void
+linset_copy (xs: !set (a)):<> set (a)
 
 (* ****** ****** *)
 

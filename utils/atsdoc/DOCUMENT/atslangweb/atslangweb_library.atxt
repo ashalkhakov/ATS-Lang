@@ -191,25 +191,40 @@ above libraries.
 <h2>#uid("ATSLIB_libats", "ATSLIB/libats")</h2>
 
 #menu('\
-#litxt(#myliblink("libats", "gnode"))
+#litxt(#myliblink("libats", "qlist"))
+#litxt(#myliblink("libats", "sllist"))
+#litxt(#myliblink("libats", "dllist"))
+
+#litxt(#myliblink("libats", "ilist_prf"))
+
 #litxt(#myliblink("libats", "gflist"))
 #litxt(#myliblink("libats", "gflist_vt"))
 #litxt(#myliblink("libats", "gfarray"))
-#litxt(#myliblink("libats", "ilist_prf"))
-#litxt(#myliblink("libats", "dlist_vt"))
+
+#litxt(#myliblink("libats", "gnode"))
+
 #litxt(#myliblink("libats", "funmap_list"))
 #litxt(#myliblink("libats", "funmap_avltree"))
-#litxt(#myliblink("libats", "funset_avltree"))
+
 #litxt(#myliblink("libats", "funset_listord"))
+#litxt(#myliblink("libats", "funset_avltree"))
+
 #litxt(#myliblink("libats", "funralist_nested"))
+
 #litxt(#myliblink("libats", "fundeque_fingertree"))
+
 #litxt(#myliblink("libats", "linmap_list"))
 #litxt(#myliblink("libats", "linmap_randbst"))
 #litxt(#myliblink("libats", "linmap_skiplist"))
+
+#litxt(#myliblink("libats", "linset_listord"))
+#litxt(#myliblink("libats", "linset_avltree"))
+
 #litxt(#myliblink("libats", "linhashtbl_chain"))
+
 #litxt(#myliblink("libats", "linheap_binomial"))
 #litxt(#myliblink("libats", "linheap_fibonacci"))
-#litxt(#myliblink("libats", "linqueue_list"))
+
 #litxt(#myliblink("libats", "linralist_nested"))
 ')#comment("menu")
 

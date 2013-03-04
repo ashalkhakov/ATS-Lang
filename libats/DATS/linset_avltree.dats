@@ -180,6 +180,34 @@ end // end of [linset_free]
 
 (* ****** ****** *)
 
+implement{a}
+linset_copy (xs) = let
+//
+fun aux
+  {h:nat} .<h>. (
+  t: !avltree (a, h)
+) :<> avltree (a, h) = let
+in
+//
+case+ t of
+| B (h, x, !p_tl, !p_tr) => let
+    val t2 = B (h, x, aux (!p_tl), aux (!p_tr))
+    prval () = fold@ (t)
+  in
+    t2
+  end // end of [B]
+| E () => let
+   prval () = fold@ (t) in E (*void*)
+  end // end of [E]
+//
+end // end of [aux]
+//
+in
+  aux (xs)
+end // end of [linset_copy]
+
+(* ****** ****** *)
+
 (*
 ** left rotation for restoring height invariant
 *)

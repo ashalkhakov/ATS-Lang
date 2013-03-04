@@ -95,6 +95,11 @@ linset_free (xs: set (a)):<> void
 (* ****** ****** *)
 
 fun{a:t@ype}
+linset_copy (xs: !set (a)):<> set (a)
+
+(* ****** ****** *)
+
+fun{a:t@ype}
 linset_insert (
   xs: &set (a), x0: a, cmp: cmp a
 ) :<> bool(*[x0] alreay exists in [xs]*) // end of [linset_insert]
