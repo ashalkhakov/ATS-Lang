@@ -668,7 +668,7 @@ end // end of [emit_d2cst_val_class]
 (* ****** ****** *)
 
 fn emit_d2cst_dec
-  {m:file_mode} ( // for a non-proof constant
+  {m:file_mode} (
   pf: fmlte (m, w)
 | out: &FILE m, d2c: d2cst_t
 ) : void = let
@@ -717,6 +717,7 @@ f_isfun_FUNCLOfun_mac
 in
 //
 case+ 0 of
+//
 | _ when d2cst_is_fun (d2c) => let
     val hits_arg = hityplst_encode ,(hits_arg)
     val hit_res = hityp_encode ,(hit_res)
@@ -731,7 +732,9 @@ case+ 0 of
   in
     (*nothing*)
   end // end of [_ when ...]
+//
 | _ when d2cst_is_castfn d2c => () // casting function
+//
 | _ => let // function value
     val () =
       emit_d2cst_val_class (pf | out, d2c)
