@@ -2810,44 +2810,64 @@ end // end of [ccomp_impdec]
 // HX: [d2c] is a terminating constant
 //
 fn ccomp_impdec_prfck
-  (loc: loc_t, d2c: d2cst_t, d2cs: dyncstset_t): void = let
+  (loc: loc_t, d2c: d2cst_t, d2cs: dyncstset): void = let
 (*
-  val () = begin
-    print "ccomp_impdec_prfck: d2c = "; print d2c; print_newline ()
-  end // end of [val]
+val () = (
+  print "ccomp_impdec_prfck: d2c = "; print d2c; print_newline ()
+) // end of [val]
 *)
-  val fl = funlab_make_cst_prfck (d2c)
-  val vp_fun = valprim_funclo_make (fl)
-  val (pf_funlab_mark | ()) = funlab_push (fl)
-  val () = funentry_add_lablst (fl)
-  val entry = funentry_make (loc, fl,
-    0(*level*), $Set.set_nil (*fls*), $Set.set_nil(*vtps*), tmp_ret, inss
-  ) where {
-    val tmp_ret = tmpvar_make_ret (hityp_t_void)
-    var res: instrlst_vt = list_vt_nil ()
-    val () = res := list_vt_cons (instr_prfck_beg d2c, res)
-    val () = dyncstset_foreach_main
-      {V} {T} (view@ res | d2cs, f, &res) where {
-      viewdef V = instrlst_vt @ res; typedef T = ptr res
-      fn f (pf: !V | d2c: d2cst_t, p_res: !T):<> void =
-        case+ 0 of
-        | _ when d2cst_is_praxi d2c => ()
-        | _ when d2cst_is_prfun d2c => begin
-            !p_res := list_vt_cons (instr_prfck_tst d2c, !p_res)
-          end // end of [_ when ...]
-        | _ when d2cst_is_prval d2c => begin
-            !p_res := list_vt_cons (instr_prfck_tst d2c, !p_res)
-          end // end of [_ when ...]
-        | _ => ()
-    } // end of [val]
-    val () = res := list_vt_cons (instr_prfck_end d2c, res)
-    val inss = $Lst.list_vt_reverse_list (res)
-  } // end of [val]
-  val () = funentry_associate (entry)
-  val () = funlab_pop (pf_funlab_mark | (*none*))
-  val () = the_topcstctx_add (d2c, vp_fun)
+val fl = funlab_make_cst_prfck (d2c)
+val vp_fun = valprim_funclo_make (fl)
+val (pf_funlab_mark | ()) = funlab_push (fl)
+val () = funentry_add_lablst (fl)
+val entry =
+  funentry_make (
+  loc
+, fl
+, 0(*level*)
+, $Set.set_nil (*fls*)
+, $Set.set_nil(*vtps*)
+, tmp_ret
+, inss
+) where {
+//
+val ins = instr_prfck_beg (d2c)
+var res: instrlst_vt = list_vt_sing (ins)
+//
+val tmp_ret = tmpvar_make_ret (hityp_t_void)
+//
+val () = let
+  viewdef V = instrlst_vt @ res
+  fn f (
+    pf: !V | d2c: d2cst_t, p_res: !ptr (res)
+  ) :<> void = let
+  in
+    case+ 0 of
+    | _ when d2cst_is_praxi d2c => ()
+    | _ when d2cst_is_prfun d2c => begin
+        !p_res := list_vt_cons (instr_prfck_tst d2c, !p_res)
+      end // end of [_ when ...]
+    | _ when d2cst_is_prval d2c => begin
+        !p_res := list_vt_cons (instr_prfck_tst d2c, !p_res)
+      end // end of [_ when ...]
+    | _ => ()
+  end // end of [f]
 in
-  // empty
+  dyncstset_foreach_main {V} {ptr(res)} (view@ res | d2cs, f, &res)
+end // end of [val]
+//
+val ins = instr_prfck_end (d2c)
+val res = list_vt_cons (ins, res)
+val inss = $Lst.list_vt_reverse_list (res)
+//
+} (* end of [where] // end of val] *)
+//
+val () = funentry_associate (entry)
+val () = funlab_pop (pf_funlab_mark | (*none*))
+val () = the_topcstctx_add (d2c, vp_fun)
+//
+in
+  (*nothing*)
 end // end of [ccomp_impdec_prfck]
 
 (* ****** ****** *)

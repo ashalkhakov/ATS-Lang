@@ -173,133 +173,180 @@ end // end of [emit_include_cats]
 fn atarray_name_test
   (name: string): bool = let
   val name = string1_of_string name
+  val isend = string_is_atend (name, 0)
 in
-  if string_is_atend (name, 0) then false else
+  if isend then false else
     eq_char_char (string_get_char_at (name, 0), '\[')
   // end of [if]
 end // end of [atarray_name_test]
 
-fn fprint_atarray_name {m:file_mode} (
+fn fprint_atarray_name
+  {m:file_mode} (
   pf: fmlte (m, w) | out: &FILE m, name: string
 ) : void = let
-  fun aux {n,i:nat | i <= n}
-    (out: &FILE m, name: string n, i: size_t i)
-    : void = begin
-    if string_is_atend (name, i) then ()
-    else let
-      val c = name[i]
-    in
-      if c <> ']' then begin
-        fprint1_char (pf | out, c); aux (out, name, i+1)
-      end
-    end // end of [if]
-  end // end of [aux]
-  val name = string1_of_string name
+//
+fun aux
+  {n:int}{i:nat | i <= n} (
+  out: &FILE m, name: string n, i: size_t i
+) : void = let
+  val isnot = string_isnot_atend (name, i)
 in
-  if string_is_atend (name, 0) then () else aux (out, name, 1)
+//
+if isnot then let
+  val c = name[i] in
+  if c <> ']' then
+    fprint1_char (pf | out, c); aux (out, name, i+1)
+  // end of [if]
+end // end of [if]
+//
+end // end of [aux]
+//
+val name = string1_of_string (name)
+//
+in
+  if string_isnot_atend (name, 0) then aux (out, name, 1)
 end // end of [fprint_atarray_name]
 
-fn emit_typdef_rec {m:file_mode} (
+fn emit_typdef_rec
+  {m:file_mode} (
   pf: fmlte (m, w) | out: &FILE m, lnames: labstrlst
 ) : void = let
-  fun aux (out: &FILE m, lnames: labstrlst)
-    : void = begin case+ lnames of
-    | LABSTRLSTcons (l, name, lnames) => let
-        val () = case+ 0 of
-        | _ when atarray_name_test name => let
-            val () = fprint_atarray_name (pf | out, name)
-            val () = fprint1_string (pf | out, " atslab_")
-            val () = emit_label (pf | out, l)
-            val () = fprint1_string (pf | out, "[] ;\n")
-          in
-            // empty
-          end
-        | _ => let
-            val () = fprint1_string (pf | out, name)
-            val () = fprint1_string (pf | out, " atslab_")
-            val () = emit_label (pf | out, l)
-            val () = fprint1_string (pf | out, " ;\n")
-          in
-            // empty
-          end
-      in
-        aux (out, lnames)
-      end
-    | LABSTRLSTnil () => ()
-  end // end of [aux]
+//
+fun aux (
+  out: &FILE m, lnames: labstrlst
+) : void = let
 in
-  fprint1_string (pf | out, "typedef struct {\n");
-  aux (out, lnames);
-  fprint1_string (pf | out, "}")
+//
+case+ lnames of
+| LABSTRLSTcons (
+    l, name, lnames
+  ) => let
+    val () = (
+      case+ 0 of
+      | _ when atarray_name_test name => let
+          val () = fprint_atarray_name (pf | out, name)
+          val () = fprint1_string (pf | out, " atslab_")
+          val () = emit_label (pf | out, l)
+          val () = fprint1_string (pf | out, "[] ;\n")
+        in
+          // empty
+        end // end of [_ when ...]
+      | _ => let
+          val () = fprint1_string (pf | out, name)
+          val () = fprint1_string (pf | out, " atslab_")
+          val () = emit_label (pf | out, l)
+          val () = fprint1_string (pf | out, " ;\n")
+        in
+          // empty
+        end // end of [_]
+    ) : void // end of [val]
+  in
+    aux (out, lnames)
+  end // end of [LABSTRLSTcons]
+| LABSTRLSTnil () => ()
+//
+end // end of [aux]
+//
+val () =
+  fprint1_string (pf | out, "typedef\n")
+val () =
+  fprint1_string (pf | out, "struct {\n")
+val () = aux (out, lnames)
+val () = fprint1_string (pf | out, "}")
+//
+in
+  (*nothing*)
 end // end of [emit_typdef_rec]
 
 fn emit_typdef_sum
   {m:file_mode} (
-    pf: fmlte (m, w)
-  | out: &FILE m
-  , tag: int
-  , names: strlst
-  ) : void = let
-  fun aux (out: &FILE m, i: int, names: strlst)
-    : void = begin case+ names of
-    | list_cons (name, names) => let
-        val () = fprint1_string (pf | out, name);
-        val () = fprintf1_exn (pf | out, " atslab_%i", @(i))
-        val () = fprint1_string (pf | out, " ;\n")
-      in
-        aux (out, i+1, names)
-      end // end of [list_cons]
-    | list_nil () => ()
-  end // end of [aux]
+  pf: fmlte (m, w)
+| out: &FILE m, tag: int, names: strlst
+) : void = let
+//
+fun aux (
+  out: &FILE m, i: int, names: strlst
+) : void = let
 in
-  case+ tag of
-  | _ when tag = 0 => begin
-      fprint1_string (pf | out, "typedef struct {\n");
-      aux (out, 0, names);
-      fprint1_string (pf | out, "}")
-    end
-  | _ when tag = 1 => begin
-      fprint1_string (pf | out, "typedef struct {\n");
-      fprint1_string (pf | out, "int tag ;\n");
-      aux (out, 0, names);
-      fprint1_string (pf | out, "}")
-    end
-  | _ when tag = ~1 => begin
-      fprint1_string (pf | out, "typedef struct {\n");
-      fprint1_string (pf | out, "int tag ;\n");
-      fprint1_string (pf | out, "char *name ;\n");
-      aux (out, 0, names);
-      fprint1_string (pf | out, "}")
-    end
-  | _ => begin
-      prerr_interror ();
-      prerr ": aux_sum_con: tag = "; prerr tag; prerr_newline ();
-      $Err.abort {void} ()
-    end // end of [_]
+//
+case+ names of
+| list_cons
+    (name, names) => let
+    val () = fprint1_string (pf | out, name);
+    val () = fprintf1_exn (pf | out, " atslab_%i", @(i))
+    val () = fprint1_string (pf | out, " ;\n")
+  in
+    aux (out, i+1, names)
+  end // end of [list_cons]
+| list_nil () => ()
+//
+end // end of [aux]
+//
+in
+//
+case+ tag of
+| _ when tag = 0 => begin
+    fprint1_string (pf | out, "typedef struct {\n");
+    aux (out, 0, names);
+    fprint1_string (pf | out, "}")
+  end // end of [0]
+| _ when tag = 1 => begin
+    fprint1_string (pf | out, "typedef struct {\n");
+    fprint1_string (pf | out, "int tag ;\n");
+    aux (out, 0, names);
+    fprint1_string (pf | out, "}")
+  end // end of [1]
+| _ when tag = ~1 => begin
+    fprint1_string (pf | out, "typedef struct {\n");
+    fprint1_string (pf | out, "int tag ;\n");
+    fprint1_string (pf | out, "char *name ;\n");
+    aux (out, 0, names);
+    fprint1_string (pf | out, "}")
+  end // end of [~1]
+| _ => begin
+    prerr_interror ();
+    prerr ": aux_sum_con: tag = "; prerr tag; prerr_newline ();
+    $Err.abort {void} ()
+  end // end of [_]
+//
 end // end of [emit_typdef_sum]
 
-fn emit_typdeflst_free {m:file_mode} (
-    pf: fmlte (m, w) | out: &FILE m, tds: typdeflst
-  ) : int = let
-  fun aux (out: &FILE m, i: int, tds: typdeflst)
-    : int = begin case+ tds of
-    | ~TYPDEFLSTcons (tk, name_def, tds) => let
-        val () = if i > 0 then fprint1_char (pf | out, '\n')
-        val () = case+ tk of
-        | TYPKEYrec lnames => begin
-            emit_typdef_rec (pf | out, lnames);
-            fprintf1_exn (pf | out, " %s ;\n", @(name_def));
-          end
-        | TYPKEYsum (tag, names) => begin
-            emit_typdef_sum (pf | out, tag, names);
-            fprintf1_exn (pf | out, " %s ;\n", @(name_def));
-          end
-        | TYPKEYuni lnames => ()
-      in
-        aux (out, i+1, tds)
-      end // end of [TYPDEFLSTcons]
-    | ~TYPDEFLSTnil () => i
-  end // end of [aux]
+fn emit_typdeflst_free
+  {m:file_mode} (
+  pf: fmlte (m, w)
+| out: &FILE m, tds: typdeflst
+) : int = let
+//
+fun aux (
+  out: &FILE m, i: int, tds: typdeflst
+) : int = let
+in
+//
+case+ tds of
+| ~TYPDEFLSTcons
+    (tk, name_def, tds) => let
+    val () =
+      if i > 0 then fprint1_char (pf | out, '\n')
+    // end of [val]
+    val () = (
+      case+ tk of
+      | TYPKEYrec lnames => begin
+          emit_typdef_rec (pf | out, lnames);
+          fprintf1_exn (pf | out, " %s ;\n", @(name_def));
+        end
+      | TYPKEYsum (tag, names) => begin
+          emit_typdef_sum (pf | out, tag, names);
+          fprintf1_exn (pf | out, " %s ;\n", @(name_def));
+        end
+      | TYPKEYuni lnames => ()
+    ) : void // end of [val]
+  in
+    aux (out, i+1, tds)
+  end // end of [TYPDEFLSTcons]
+| ~TYPDEFLSTnil () => (i)
+//
+end // end of [aux]
+//
 in
   aux (out, 0, tds)
 end // end of [emit_typdeflst_free]
@@ -308,32 +355,34 @@ end // end of [emit_typdeflst_free]
 
 fun emit_saspcstlst
   {m:file_mode} (
-    pf: fmlte (m, w)
-  | out: &FILE m
-  , xs: !saspcstlst
-  ) : int = let
-  fun aux (
-    out: &FILE m, i: int, xs: !saspcstlst
-  ) : int =
-    case+ xs of
-    | list_vt_cons (x, !p_xs1) => let
-        val s2c = x
-        val- Some (fil) = s2cst_get_fil (s2c)
-        val name = $Sym.symbol_name (s2cst_get_sym (s2c))
-        val () = fprint1_string (pf | out, "int ")
-        val () = emit_filename (pf | out, fil)
-        val () = fprint1_string (pf | out, "__sasp__")
-        val () = emit_identifier (pf | out, name)
-        val () = fprint1_string (pf | out, " = 0 ;\n")
-        val res = aux (out, i+1, !p_xs1)
-        prval () = fold@ (xs)
-      in
-        res
-      end // end of [list_vt_cons]
-    | list_vt_nil () => let
-        val () = fold@ (xs) in i
-      end // end of [list_vt_nil]
-  // end of [aux]
+  pf: fmlte (m, w)
+| out: &FILE m, xs: !saspcstlst
+) : int = let
+//
+fun aux (
+  out: &FILE m, i: int, xs: !saspcstlst
+) : int = let
+in
+//
+case+ xs of
+| list_vt_cons
+    (x, !p_xs1) => let
+    val s2c = x
+    val- Some (fil) = s2cst_get_fil (s2c)
+    val name = $Sym.symbol_name (s2cst_get_sym (s2c))
+    val () = fprint1_string (pf | out, "int ")
+    val () = emit_filename (pf | out, fil)
+    val () = fprint1_string (pf | out, "__sasp__")
+    val () = emit_identifier (pf | out, name)
+    val () = fprint1_string (pf | out, " = 0 ;\n")
+    val res = aux (out, i+1, !p_xs1)
+  in
+    fold@ (xs); res
+  end // end of [list_vt_cons]
+| list_vt_nil () => (fold@ (xs); i)
+//
+end // end of [aux]
+//
 in
   aux (out, 0, xs)
 end // end of [emit_saspcstlst]
@@ -342,41 +391,54 @@ end // end of [emit_saspcstlst]
 
 fn emit_datcstlst
   {m:file_mode} (
-    pf: fmlte (m, w)
-  | out: &FILE m
-  , s2cs: !datcstlst
-  ) : int = let
+  pf: fmlte (m, w)
+| out: &FILE m, s2cs: !datcstlst
+) : int = let
 //
-  fun aux_conlst
-    (out: &FILE m, d2cs: d2conlst)
-    : void = begin case+ d2cs of
-    | D2CONLSTcons (d2c, d2cs) => let
-        val () = fprint1_string (pf | out, "ATSglobal(ats_sum_type, ")
-        val () = emit_d2con (pf | out, d2c)
-        val () = fprint1_string (pf | out, ") ;\n")
-      in
-        aux_conlst (out, d2cs)
-      end
-    | D2CONLSTnil () => ()
-  end // end of [aux_conlst]
+fun aux_conlst (
+  out: &FILE m, d2cs: d2conlst
+) : void = let
+in
 //
-  fn aux_cst (
-    out: &FILE m, s2c: s2cst_t
-  ) : void = (
-    case+ s2cst_get_conlst (s2c) of
-    | Some d2cs => aux_conlst (out, d2cs) | None () => ()
-  ) // end of [aux_cst]
+case+ d2cs of
+| D2CONLSTcons
+   (d2c, d2cs) => let
+    val () = 
+      fprint1_string (
+      pf | out, "ATSglobal(ats_sum_type, "
+    )
+    val () = emit_d2con (pf | out, d2c)
+    val () = fprint1_string (pf | out, ") ;\n")
+  in
+    aux_conlst (out, d2cs)
+  end
+| D2CONLSTnil () => ()
 //
-  fun aux
-    (out: &FILE m, i: int, s2cs: !datcstlst): int = begin
-    case+ s2cs of
-    | DATCSTLSTcons (s2c, !s2cs1) => let
-        val () = aux_cst (out, s2c); val n = aux (out, i+1, !s2cs1)
-      in
-        fold@ (s2cs); n
-      end
-    | DATCSTLSTnil () => (fold@ (s2cs); i)
-  end // end of [aux]
+end // end of [aux_conlst]
+//
+fn aux_cst (
+  out: &FILE m, s2c: s2cst_t
+) : void = (
+  case+ s2cst_get_conlst (s2c) of
+  | Some d2cs => aux_conlst (out, d2cs) | None () => ()
+) // end of [aux_cst]
+//
+fun aux (
+  out: &FILE m, i: int, s2cs: !datcstlst
+) : int = let
+in
+//
+case+ s2cs of
+| DATCSTLSTcons
+    (s2c, !p_s2cs1) => let
+    val () = aux_cst (out, s2c)
+    val res = aux (out, i+1, !p_s2cs1)
+  in
+    fold@ (s2cs); res
+  end
+| DATCSTLSTnil () => (fold@ (s2cs); i)
+//
+end // end of [aux]
 //
 in
   aux (out, 0, s2cs)
@@ -386,25 +448,32 @@ end // end of [emit_datcstlst]
 
 fn emit_exnconlst
   {m:file_mode} (
-    pf: fmlte (m, w)
-  | out: &FILE m
-  , d2cs: !exnconlst
-  ) : int = let
-  fun aux (
-      out: &FILE m
-    , i: int
-    , d2cs: !exnconlst
-    ) : int = begin case+ d2cs of
-    | EXNCONLSTcons (d2c, !d2cs1) => let
-        val () = fprint1_string (pf | out, "ATSglobal(ats_exn_type, ")
-        val () = emit_d2con (pf | out, d2c)
-        val () = fprint1_string (pf | out, ") ;\n")
-        val n = aux (out, i+1, !d2cs1);
-      in
-        fold@ (d2cs); n
-      end
-    | EXNCONLSTnil () => (fold@ d2cs; i)
-  end // end of [aux]
+  pf: fmlte (m, w)
+| out: &FILE m, d2cs: !exnconlst
+) : int = let
+//
+fun aux (
+  out: &FILE m, i: int, d2cs: !exnconlst
+) : int = let
+in
+//
+case+ d2cs of
+| EXNCONLSTcons
+    (d2c, !p_d2cs1) => let
+    val () =
+      fprint1_string (
+      pf | out, "ATSglobal(ats_exn_type, "
+    ) // end of [val]
+    val () = emit_d2con (pf | out, d2c)
+    val () = fprint1_string (pf | out, ") ;\n")
+    val res = aux (out, i+1, !p_d2cs1)
+  in
+    fold@ (d2cs); res
+  end // end of [EXNCONLSTcons]
+| EXNCONLSTnil () => (fold@ (d2cs); i)
+//
+end // end of [aux]
+//
 in
   aux (out, 0, d2cs)
 end // end of [emit_exnconlst]
@@ -413,38 +482,53 @@ end // end of [emit_exnconlst]
 
 fn emit_free_glocstlst
   {m:file_mode} (
-    pf: fmlte (m, w)
-  | out: &FILE m
-  , xs: glocstlst
-  ) : int = let
-  fun aux (
-    out: &FILE m, i: int, xs: glocstlst
-  ) : int = begin case+ xs of
-    | ~GLOCSTLSTcons_clo (d2c, xs) => let
-        val () = fprint1_string (pf | out, "ATSglobal(ats_clo_ptr_type, ")
-        val () = emit_d2cst (pf | out, d2c)
-        val () = fprint1_string (pf | out, ") ;\n")
-      in
-        aux (out, i+1, xs)
-      end // end of [GLOCSTLSTcons_clo]
-    | ~GLOCSTLSTcons_fun (d2c, xs) => let
-        val () = fprint1_string (pf | out, "ATSglobal(ats_fun_ptr_type, ")
-        val () = emit_d2cst (pf | out, d2c)
-        val () = fprint1_string (pf | out, ") ;\n")
-      in
-        aux (out, i+1, xs)
-      end // end of [GLOCSTLSTcons_fun]
-    | ~GLOCSTLSTcons_val (d2c, vp, xs) => let
-        val () = fprint1_string (pf | out, "ATSglobal(")
-        val () = emit_hityp (pf | out, vp.valprim_typ)
-        val () = fprint1_string (pf | out, ", ")
-        val () = emit_d2cst (pf | out, d2c)
-        val () = fprint1_string (pf | out, ") ;\n")
-      in
-        aux (out, i+1, xs)
-      end // end of [GLOCSTLSTcons_val]
-    | ~GLOCSTLSTnil () => i // end of [GLOCSTLSTnil]
-  end // end of [aux]
+  pf: fmlte (m, w)
+| out: &FILE m, xs: glocstlst
+) : int = let
+//
+fun aux (
+  out: &FILE m, i: int, xs: glocstlst
+) : int = let
+in
+//
+case+ xs of
+| ~GLOCSTLSTcons_clo
+    (d2c, xs) => let
+    val () =
+      fprint1_string (
+      pf | out, "ATSglobal(ats_clo_ptr_type, "
+    ) // end of [val]
+    val () = emit_d2cst (pf | out, d2c)
+    val () = fprint1_string (pf | out, ") ;\n")
+  in
+    aux (out, i+1, xs)
+  end // end of [GLOCSTLSTcons_clo]
+| ~GLOCSTLSTcons_fun
+    (d2c, xs) => let
+    val () =
+      fprint1_string (
+      pf | out, "ATSglobal(ats_fun_ptr_type, "
+    ) // end of [val]
+    val () = emit_d2cst (pf | out, d2c)
+    val () = fprint1_string (pf | out, ") ;\n")
+  in
+    aux (out, i+1, xs)
+  end // end of [GLOCSTLSTcons_fun]
+| ~GLOCSTLSTcons_val
+    (d2c, vp, xs) => let
+    val () =
+      fprint1_string (pf | out, "ATSglobal(")
+    val () = emit_hityp (pf | out, vp.valprim_typ)
+    val () = fprint1_string (pf | out, ", ")
+    val () = emit_d2cst (pf | out, d2c)
+    val () = fprint1_string (pf | out, ") ;\n")
+  in
+    aux (out, i+1, xs)
+  end // end of [GLOCSTLSTcons_val]
+| ~GLOCSTLSTnil () => i // end of [GLOCSTLSTnil]
+//
+end // end of [aux]
+//
 in
   aux (out, 0, xs)
 end // end of [emit_free_glocstlst]
@@ -453,30 +537,36 @@ end // end of [emit_free_glocstlst]
 
 fn emit_free_partvalst
   {m:file_mode} (
-    pf: fmlte (m, w)
-  | out: &FILE m
-  , xs: partvalst
-  ) : int = let
-  fun aux (
-    out: &FILE m, i: int, xs: partvalst
-  ) : int = begin case+ xs of
-    | ~PARTVALSTcons (name, vp, xs) => let
+  pf: fmlte (m, w)
+| out: &FILE m, xs: partvalst
+) : int = let
 //
-        val () = fprint1_string (pf | out, "/*\n")
+fun aux (
+  out: &FILE m, i: int, xs: partvalst
+) : int = let
+in
 //
-        val () = fprint1_string (pf | out, "ATSstatic(")
-        val () = emit_hityp (pf | out, vp.valprim_typ)
-        val () = fprint1_string (pf | out, ", ")
-        val () = fprint1_string (pf | out, name)
-        val () = fprint1_string (pf | out, ") ;\n")
+case+ xs of
+| ~PARTVALSTcons
+    (name, vp, xs) => let
 //
-        val () = fprint1_string (pf | out, "*/\n")
+    val () = fprint1_string (pf | out, "/*\n")
 //
-      in
-        aux (out, i+1, xs)
-      end // end of [PARTVALSTcons]
-    | ~PARTVALSTnil () => i // end of [PARTVALSTnil]
-  end // end of [aux]
+    val () = fprint1_string (pf | out, "ATSstatic(")
+    val () = emit_hityp (pf | out, vp.valprim_typ)
+    val () = fprint1_string (pf | out, ", ")
+    val () = fprint1_string (pf | out, name)
+    val () = fprint1_string (pf | out, ") ;\n")
+//
+    val () = fprint1_string (pf | out, "*/\n")
+//
+  in
+    aux (out, i+1, xs)
+  end // end of [PARTVALSTcons]
+| ~PARTVALSTnil () => (i)
+//
+end // end of [aux]
+//
 in
   aux (out, 0, xs)
 end // end of [emit_free_partvalst]
@@ -485,51 +575,60 @@ end // end of [emit_free_partvalst]
 
 fn _emit_dynconset
   {m:file_mode} {l:addr} (
-    pf_mod: fmlte (m, w)
-  , pf_fil: !FILE m @ l
-  | p_l: ptr l
-  , d2cs: dynconset_t
-  ) : int = let
-  var i: int = 0
-  viewdef V = (FILE m @ l, int @ i)
-  dataviewtype ENV2
-    (l:addr, i:addr) = ENV2con (l, i) of (ptr l, ptr i)
-  // end of [ENV2]
-  viewtypedef VT = ENV2 (l, i)
-  fn f_con (
-    pf: !V | d2c: d2con_t, env: !VT
-  ) : void = let
-    prval @(pf_fil, pf_int) = pf
-    val+ ENV2con (p_l, p_i)= env
-    val i = !p_i; val () = (!p_i := i + 1)
+  pf_mod: fmlte (m, w)
+, pf_fil: !FILE (m) @ l
+| p_l: ptr (l), d2cs: dynconset
+) : int = let
 //
-   val () = fprint1_string (pf_mod | !p_l, "ATSextern_val(")
+var i: int = 0
 //
-    val () = (case+ 0 of
-      | _ when d2con_is_exn d2c => begin
-          fprint1_string (pf_mod | !p_l, "ats_exn_type, ")
-        end // end of [_ when ...]
-      | _ => begin
-          fprint1_string (pf_mod | !p_l, "ats_sum_type, ")
-        end // end of [_]
-    ) : void // end of [val]
-    val () = emit_d2con (pf_mod | !p_l, d2c)
-    val () = fprint1_string (pf_mod | !p_l, ") ;\n")
-  in
-    pf := @(pf_fil, pf_int); fold@ env
-  end // end of [f_con]
-  val env = ENV2con (p_l, &i)
-  prval pf = @(pf_fil, view@ i)
-  val () = dynconset_foreach_main {V} {VT} (pf | d2cs, f_con, env)
-  prval () = (pf_fil := pf.0; view@ i := pf.1)
-  val+ ~ENV2con (_, _) = env
+viewdef V = (FILE m @ l, int @ i)
+dataviewtype ENV2
+  (l:addr, i:addr) = ENV2con (l, i) of (ptr l, ptr i)
+// end of [ENV2]
+viewtypedef VT = ENV2 (l, i)
+//
+fn f_con (
+  pf: !V | d2c: d2con_t, env: !VT
+) : void = let
+  prval @(pf_fil, pf_int) = pf
+  val+ ENV2con (p_l, p_i)= env
+  val i = !p_i; val () = (!p_i := i + 1)
+//
+  val () = fprint1_string (pf_mod | !p_l, "ATSextern_val(")
+//
+  val () = (
+    case+ 0 of
+    | _ when d2con_is_exn d2c => begin
+        fprint1_string (pf_mod | !p_l, "ats_exn_type, ")
+      end // end of [_ when ...]
+    | _ => begin
+        fprint1_string (pf_mod | !p_l, "ats_sum_type, ")
+      end // end of [_]
+  ) : void // end of [val]
+  val () = emit_d2con (pf_mod | !p_l, d2c)
+  val () = fprint1_string (pf_mod | !p_l, ") ;\n")
 in
-  i // the number of dynamic constructors
+  pf := @(pf_fil, pf_int); fold@ env
+end // end of [f_con]
+//
+val env = ENV2con (p_l, &i)
+prval pf = @(pf_fil, view@ i)
+val () = dynconset_foreach_main {V} {VT} (pf | d2cs, f_con, env)
+prval () = (pf_fil := pf.0; view@ i := pf.1)
+val+ ~ENV2con (_, _) = env
+//
+in
+  i // the number of dyncons
 end // end of [_emit_dynconset]
 
-fn emit_dynconset {m:file_mode}
-  (pf: fmlte (m, w) | out: &FILE m, d2cs: dynconset_t): int =
+fn emit_dynconset
+  {m:file_mode} (
+  pf: fmlte (m, w)
+| out: &FILE m, d2cs: dynconset
+) : int =
   _emit_dynconset (pf, view@ out | &out, d2cs)
+// end of [emit_dynconset]
 
 (* ****** ****** *)
 
@@ -539,7 +638,8 @@ fn emit_dynconset {m:file_mode}
 
 fn emit_d2cst_fun_class // static/extern
   {m:file_mode} (
-  pf: fmlte (m, w) | out: &FILE m, d2c: d2cst_t
+  pf: fmlte (m, w)
+| out: &FILE m, d2c: d2cst_t
 ) : void = let
   val issta = d2cst_is_extsta (d2c)
 in
@@ -552,120 +652,162 @@ end // end of [emit_d2cst_fun_class]
 
 fn emit_d2cst_val_class // static/extern
   {m:file_mode} (
-  pf: fmlte (m, w) | out: &FILE m, d2c: d2cst_t
+  pf: fmlte (m, w)
+| out: &FILE m, d2c: d2cst_t
 ) : void = let
   val issta = d2cst_is_extsta (d2c)
 in
-  if issta then
-    fprint1_string (pf | out, "ATSstatic_val")
-   else
-     fprint1_string (pf | out, "ATSextern_val")        
-   // end of [if]
+//
+if issta then
+  fprint1_string (pf | out, "ATSstatic_val")
+else
+  fprint1_string (pf | out, "ATSextern_val")        
+//
 end // end of [emit_d2cst_val_class]
 
 (* ****** ****** *)
 
 fn emit_d2cst_dec
-  {m:file_mode} // for a non-proof constant
-  (pf: fmlte (m, w)| out: &FILE m, d2c: d2cst_t): void = let
-  val hit0 = d2cst_get_hityp_some (d2c); val hit1 = hityp_decode (hit0)
+  {m:file_mode} ( // for a non-proof constant
+  pf: fmlte (m, w)
+| out: &FILE m, d2c: d2cst_t
+) : void = let
 //
-  macdef f_isprf_mac () = begin
-    fprint1_string (pf | out, "ATSextern_prf(");
-    emit_d2cst (pf | out, d2c);
-    fprint1_string (pf | out, ") ;\n")
-  end // end of [macdef]  
+val hit0 =
+  d2cst_get_hityp_some (d2c)
 //
-  macdef f_isfun_FUNCLOclo_mac
-    (hits_arg, hit_res) = let
+val hit1 = hityp_decode (hit0)
+//
+macdef
+f_isprf_mac () = let
+  val () =
+    fprint1_string (
+    pf | out, "ATSextern_prf("
+  ) // end of [val]
+  val () = emit_d2cst (pf | out, d2c)
+  val () = fprint1_string (pf | out, ") ;\n")
+in
+  (*nothing*)
+end // end of [macdef]
+//
+macdef
+f_isfun_FUNCLOclo_mac
+  (hits_arg, hit_res) = let
 (*
+  val hits_arg = hityplst_encode ,(hits_arg)
+  val hit_res = hityp_encode ,(hit_res)
+*)
+  val () =
+    emit_d2cst_val_class (pf | out, d2c);
+  val () =
+    fprint1_string (pf | out, "(ats_ptr_type, ")
+  val () = emit_d2cst (pf | out, d2c)
+  val () = fprint1_string (pf | out, ") ;\n")
+in
+  (*nothing*)
+end // end of [macdef]
+//
+macdef
+f_isfun_FUNCLOfun_mac
+  (hits_arg, hit_res) = let
+(*
+  val hits_arg = hityplst_encode ,(hits_arg)
+  val hit_res = hityp_encode ,(hit_res)
+*)
+in
+//
+case+ 0 of
+| _ when d2cst_is_fun (d2c) => let
     val hits_arg = hityplst_encode ,(hits_arg)
     val hit_res = hityp_encode ,(hit_res)
-*)
-   in
-     emit_d2cst_val_class (pf | out, d2c);
-     fprint1_string (pf | out, "(ats_ptr_type, "); // HX: is [ats_clo_ptr_type]
-     emit_d2cst (pf | out, d2c);
-     fprint1_string (pf | out, ") ;\n");
-   end // end of [macdef]
-//
-  macdef f_isfun_FUNCLOfun_mac
-    (hits_arg, hit_res) = let
-(*
-    val hits_arg = hityplst_encode ,(hits_arg)
-    val hit_res = hityp_encode ,(hit_res)
-*)
-  in
-    case+ 0 of
-    | _ when d2cst_is_fun d2c => let
-        val hits_arg = hityplst_encode ,(hits_arg)
-        val hit_res = hityp_encode ,(hit_res)
-      in
-        emit_d2cst_fun_class (pf | out, d2c);
-        fprint1_string (pf | out, "(");
-        emit_hityp (pf | out, hit_res);
-        fprint1_string (pf | out, ", ");
-        emit_d2cst (pf | out, d2c);
-        fprint1_string (pf | out, ") (");
-        emit_hityplst_sep (pf | out, hits_arg, HITARGSEP);
-        fprint1_string (pf | out, ") ;\n")
-       end // end of [_ when ...]
-     | _ when d2cst_is_castfn d2c => () // casting function
-     | _ => let // function value
-       in
-         emit_d2cst_val_class (pf | out, d2c);
-         fprint1_string (pf | out, "(ats_ptr_type, "); // HX: is [ats_fun_ptr_type]
-         emit_d2cst (pf | out, d2c);
-         fprint1_string (pf | out, ") ;\n");
-       end // end of [_]
-    // end of [case]
-  end // end of [macdef]
-//
-  macdef f_isnotfun_mac () = () where {
-    val () = emit_d2cst_val_class (pf | out, d2c);
-    val () = fprint1_string (pf | out, "(");
-    val () = emit_hityp (pf | out, hit0)
+    val () = emit_d2cst_fun_class (pf | out, d2c)
+    val () = fprint1_string (pf | out, "(")
+    val () = emit_hityp (pf | out, hit_res)
     val () = fprint1_string (pf | out, ", ")
     val () = emit_d2cst (pf | out, d2c)
+    val () = fprint1_string (pf | out, ") (")
+    val () = emit_hityplst_sep (pf | out, hits_arg, HITARGSEP)
     val () = fprint1_string (pf | out, ") ;\n")
-  } // end of [_]
+  in
+    (*nothing*)
+  end // end of [_ when ...]
+| _ when d2cst_is_castfn d2c => () // casting function
+| _ => let // function value
+    val () =
+      emit_d2cst_val_class (pf | out, d2c)
+    val () =
+      fprint1_string (pf | out, "(ats_ptr_type, ")
+    val () = emit_d2cst (pf | out, d2c)
+    val () = fprint1_string (pf | out, ") ;\n")
+  in
+    (*nothing*)
+  end // end // end of [_]
+//
+end // end of [macdef]
+//
+macdef
+f_isnotfun_mac () = let
+  val () =
+    emit_d2cst_val_class (pf | out, d2c);
+  val () = fprint1_string (pf | out, "(");
+  val () = emit_hityp (pf | out, hit0)
+  val () = fprint1_string (pf | out, ", ")
+  val () = emit_d2cst (pf | out, d2c)
+  val () = fprint1_string (pf | out, ") ;\n")
+in
+  (*nothing*)
+end // end of [_]
 //
 in // in of [let]
 //
-  case+ 0 of
-  | _ when d2cst_is_proof d2c => ()
-  | _ when d2cst_is_extmac d2c => ()
-  | _ => begin case+ hit1.hityp_node of
-    | HITfun (fc, hits_arg, hit_res) => begin case+ fc of
-      | $Syn.FUNCLOclo _ => f_isfun_FUNCLOclo_mac (hits_arg, hit_res)
-      | $Syn.FUNCLOfun _ => f_isfun_FUNCLOfun_mac (hits_arg, hit_res)
-      end // end of [HITfun]
-    | _ => f_isnotfun_mac ()
-    end // end of [_]
+case+ 0 of
+| _ when d2cst_is_proof d2c => ()
+| _ when d2cst_is_extmac d2c => ()
+| _ => (
+  case+ hit1.hityp_node of
+  | HITfun (fc, hits_arg, hit_res) => begin case+ fc of
+    | $Syn.FUNCLOclo _ => f_isfun_FUNCLOclo_mac (hits_arg, hit_res)
+    | $Syn.FUNCLOfun _ => f_isfun_FUNCLOfun_mac (hits_arg, hit_res)
+    end // end of [HITfun]
+  | _ => f_isnotfun_mac ()
+  ) // end of [_]
 //
 end // end of [emit_d2cst_dec]
 
-fn emit_d2cst_dec_prfck {m:file_mode} // for terminating constants
-  (pf: fmlte (m, w)| out: &FILE m, d2c: d2cst_t): void = let
+(* ****** ****** *)
+
+fn emit_d2cst_dec_prfck
+  {m:file_mode} ( // for terminating constants
+  pf: fmlte (m, w)
+| out: &FILE m, d2c: d2cst_t
+) : void = let
 //
-  val hit0 = d2cst_get_hityp_some (d2c); val hit1 = hityp_decode (hit0)
+val hit0 =
+  d2cst_get_hityp_some (d2c)
 //
-  macdef f_isprf_mac () = begin
-    fprint1_string (pf | out, "extern\n");
-    emit_hityp (pf | out, hityp_t_void);
-    fprint1_char (pf | out, ' ');
-    emit_d2cst (pf | out, d2c);
-    fprint1_string (pf | out, "_prfck (");
-    fprint1_string (pf | out, ") ;\n")
-  end // end of [macdef]
+val hit1 = hityp_decode (hit0)
+//
+macdef
+f_isprf_mac () = let
+  val () =
+    fprint1_string (pf | out, "extern\n")
+  val () =
+    emit_hityp (pf | out, hityp_t_void)
+  val () = fprint1_char (pf | out, ' ')
+  val () = emit_d2cst (pf | out, d2c)
+  val () = fprint1_string (pf | out, "_prfck (")
+  val () = fprint1_string (pf | out, ") ;\n")
+in
+  (*nothing*)
+end // end of [macdef]
 //
 in
 //
-  case+ 0 of
-  | _ when d2cst_is_praxi d2c => ()
-  | _ when d2cst_is_prfun d2c => f_isprf_mac ()
-  | _ when d2cst_is_prval d2c => f_isprf_mac ()
-  | _ => () // needs some fixing later
+case+ 0 of
+| _ when d2cst_is_praxi d2c => ()
+| _ when d2cst_is_prfun d2c => f_isprf_mac ()
+| _ when d2cst_is_prval d2c => f_isprf_mac ()
+| _ => () // needs some fixing later
 //
 end // end of [emit_d2cst_dec]
 
@@ -673,73 +815,97 @@ end // end of [emit_d2cst_dec]
 
 fn _emit_dyncstset_proc
   {m:file_mode} {l:addr} (
-    pf_mod: fmlte (m, w), pf_fil: !FILE m @ l
-  | p_l: ptr l, d2cs: dyncstset_t
-  , proc: (fmlte (m, w) | &FILE m, d2cst_t) -> void
-  ) : int = let
-  var i: int = 0
-  viewdef V = (FILE m @ l, int @ i)
-  typedef fun_type (m:file_mode) =
-    (fmlte (m, w) | &FILE m, d2cst_t) -> void
-  dataviewtype ENV3 (m: file_mode, l:addr, i:addr) =
-    ENV3con (m, l, i) of (ptr l, ptr i, fun_type m)
-  viewtypedef VT = ENV3 (m, l, i)
-  fn f_cst (
-    pf: !V | d2c: d2cst_t, env: !VT
-  ) : void = let
-    prval @(pf_fil, pf_int) = pf
-    val+ ENV3con (p_l, p_i, proc)= env
-    val i = !p_i; val () = (!p_i := i + 1)
-    val () = proc (pf_mod | !p_l, d2c)
-  in
-    pf := @(pf_fil, pf_int); fold@ env
-  end // end of [f_cst]
-  fn f_cst_if (
-    pf: !V | d2c: d2cst_t, env: !VT
-  ) : void = begin
-    case+ d2cst_get_decarg (d2c) of
-    | list_cons _ => () | list_nil _ => f_cst (pf | d2c, env)
-  end // end of [f_cst_if]
-  val env = ENV3con (p_l, &i, proc)
-  prval pf = @(pf_fil, view@ i)
-  val () = dyncstset_foreach_main {V} {VT} (pf | d2cs, f_cst_if, env)
-  prval () = (pf_fil := pf.0; view@ i := pf.1)
-  val+ ~ENV3con (_, _, _) = env
+  pf_mod: fmlte (m, w)
+, pf_fil: !FILE (m) @ l
+| p_l: ptr l, d2cs: dyncstset
+, proc: (fmlte (m, w) | &FILE m, d2cst_t) -> void
+) : int = let
+//
+var i: int = 0
+//
+viewdef V = (FILE m @ l, int @ i)
+typedef fun_type (m:file_mode) =
+  (fmlte (m, w) | &FILE m, d2cst_t) -> void
+dataviewtype ENV3 (m: file_mode, l:addr, i:addr) =
+  ENV3con (m, l, i) of (ptr l, ptr i, fun_type m)
+viewtypedef VT = ENV3 (m, l, i)
+//
+fn f_cst (
+  pf: !V | d2c: d2cst_t, env: !VT
+) : void = let
+  prval @(pf_fil, pf_int) = pf
+  val+ ENV3con (p_l, p_i, proc)= env
+  val i = !p_i; val () = (!p_i := i + 1)
+  val () = proc (pf_mod | !p_l, d2c)
+in
+  pf := @(pf_fil, pf_int); fold@ env
+end // end of [f_cst]
+//
+fn f_cst_if (
+  pf: !V | d2c: d2cst_t, env: !VT
+) : void = let
+in
+  case+ d2cst_get_decarg (d2c) of
+  | list_cons _ => () | list_nil _ => f_cst (pf | d2c, env)
+end // end of [f_cst_if]
+//
+val env = ENV3con (p_l, &i, proc)
+//
+prval pf = @(pf_fil, view@ i)
+val () = dyncstset_foreach_main {V} {VT} (pf | d2cs, f_cst_if, env)
+prval () = (pf_fil := pf.0; view@ i := pf.1)
+//
+val+ ~ENV3con (_, _, _) = env
+//
 in
   i // the number of dynamic constructors
 end // end of [_emit_dyncstset]
 
-fn emit_dyncstset {m:file_mode}
-  (pf: fmlte (m, w) | out: &FILE m, d2cs: dyncstset_t): int =
+fn emit_dyncstset
+  {m:file_mode} (
+  pf: fmlte (m, w) | out: &FILE m, d2cs: dyncstset
+) : int =
   _emit_dyncstset_proc (pf, view@ out | &out, d2cs, emit_d2cst_dec)
 // end of [emit_dyncstset]
 
-fn emit_dyncstset_prfck {m:file_mode}
-  (pf: fmlte (m, w) | out: &FILE m, d2cs: dyncstset_t): int =
+fn emit_dyncstset_prfck
+  {m:file_mode} (
+  pf: fmlte (m, w) | out: &FILE m, d2cs: dyncstset
+) : int =
   _emit_dyncstset_proc (pf, view@ out | &out, d2cs, emit_d2cst_dec_prfck)
 // end of [emit_dyncstset_prfck]
 
 (* ****** ****** *)
 
-fn emit_instrlst_vt {m:file_mode} (
-  pf: fmlte (m, w) | out: &FILE m, inss: !instrlst_vt
+fn emit_instrlst_vt
+  {m:file_mode} (
+  pf: fmlte (m, w)
+| out: &FILE m, inss: !instrlst_vt
 ) : void = let
 //
-  fun aux
-    (out: &FILE m, i: int, inss: !instrlst_vt)
-    : int = begin case+ inss of
-    | list_vt_cons (ins, !inss1) => let
-        val () = if i > 0 then fprint1_char (pf | out, '\n')
-        val () = emit_instr (pf | out, ins)
-        val n = aux (out, i+1, !inss1)
-      in
-        fold@ (inss); n
-      end
-    | list_vt_nil () => (fold@ inss; i)
-  end // end of [aux]
+fun aux (
+  out: &FILE m, i: int, inss: !instrlst_vt
+) : int = let
+in
 //
-  val n = aux (out, 0, inss)
-  val () = if n > 0 then fprint_newline (pf | out)
+case+ inss of
+| list_vt_cons
+    (ins, !p_inss1) => let
+    val () = (
+      if i > 0 then fprint1_char (pf | out, '\n')
+    ) : void // endval
+    val () = emit_instr (pf | out, ins)
+    val res = aux (out, i+1, !p_inss1)
+  in
+    fold@ (inss); res
+  end
+| list_vt_nil () => (fold@ inss; i)
+//
+end // end of [aux]
+//
+val n = aux (out, 0, inss)
+//
+val () = if n > 0 then fprint_newline (pf | out)
 //
 in
   // empty
@@ -749,57 +915,82 @@ end // end of [emit_instrlst_vt]
 
 fun emit_funentry_lablst
   {m:file_mode} (
-  pf: fmlte (m, w) | out: &FILE m, fls0: !funlablst_vt
-) : void = begin case+ fls0 of
-  | list_vt_cons (fl, !fls) => let
-      val prfck = funlab_get_prfck fl
-      val entry = funlab_get_entry_some fl
-      val () = if prfck > 0 then
+  pf: fmlte (m, w)
+| out: &FILE m, fls0: !funlablst_vt
+) : void = let
+in
+//
+case+ fls0 of
+| list_vt_cons
+    (fl, !p_fls) => let
+    val prfck = funlab_get_prfck fl
+    val entry = funlab_get_entry_some fl
+    val () = (
+      if prfck > 0 then
         fprint1_string (pf | out, "#ifdef _ATS_PROOFCHECK\n")
       // end of [if]
-      val () = emit_funentry (pf | out, entry)
-      val () = fprint1_string (pf | out, "\n")
-      val () = if prfck > 0 then
+    ) : void // endval
+    val () = emit_funentry (pf | out, entry)
+    val () = fprint1_string (pf | out, "\n")
+    val () = (
+      if prfck > 0 then
         fprint1_string (pf | out, "#endif /* _ATS_PROOFCHECK */\n")
       // end of [if]
-      val () = fprint1_string (pf | out, "\n")
-      val () = emit_funentry_lablst (pf | out, !fls)
-    in
-      fold@ (fls0)
-    end
-  | list_vt_nil () => fold@ (fls0)
+    ) : void // endval
+    val () = fprint1_string (pf | out, "\n")
+    val () = emit_funentry_lablst (pf | out, !p_fls)
+  in
+    fold@ (fls0)
+  end // end of [list_cons]
+| list_vt_nil () => fold@ (fls0)
+//
 end // end of [emit_funentry_lablst]
 
 fun emit_funentry_lablst_prototype
   {m:file_mode} (
   pf: fmlte (m, w) | out: &FILE m, i: int, fls0: !funlablst_vt
-) : int = begin case+ fls0 of
-  | list_vt_cons (fl, !fls) => let
-      val entry = funlab_get_entry_some fl
-      val () = emit_funentry_prototype (pf | out, entry)
-      val n = emit_funentry_lablst_prototype (pf | out, i+1, !fls)
-    in
-      fold@ (fls0); n
-    end (* end of [list_vt_cons] *)
-  | list_vt_nil () => (fold@ (fls0); i)
+) : int = let
+in
+//
+case+ fls0 of
+| list_vt_cons
+    (fl, !p_fls) => let
+    val entry = funlab_get_entry_some fl
+    val () = emit_funentry_prototype (pf | out, entry)
+    val res = emit_funentry_lablst_prototype (pf | out, i+1, !p_fls)
+  in
+    fold@ (fls0); res
+  end // end of [list_vt_cons]
+| list_vt_nil () => (fold@ (fls0); i)
+//
 end // end of [emit_funentry_lablst_prototype]
 
 (* ****** ****** *)
 
 fun instrlst_vt_tmpvarmap_gen
   (inss0: !instrlst_vt): tmpvarmap_vt = let
-  fun aux (m: &tmpvarmap_vt, inss0: !instrlst_vt)
-    : void = begin case+ inss0 of
-    | list_vt_cons (ins, !inss) => let
-        val () = instr_tmpvarmap_add (m, ins); val () = aux (m, !inss)
-      in
-        fold@ inss0
-      end
-    | list_vt_nil () => fold@ inss0
-  end // end of [aux]
-  var m = tmpvarmap_nil ()
+//
+fun aux (
+  m: &tmpvarmap_vt, inss0: !instrlst_vt
+) : void = let
 in
-  aux (m, inss0); m
+//
+case+ inss0 of
+| list_vt_cons
+    (ins, !p_inss) => let
+    val () = instr_tmpvarmap_add (m, ins)
+    val () = aux (m, !p_inss)
+  in
+    fold@ (inss0)
+  end // end of [list_vt_cons]
+| list_vt_nil () => fold@ (inss0)
+//
+end // end of [aux]
+//
+var map = tmpvarmap_nil ()
+//
+in
+  aux (map, inss0); map
 end // end of [instrlst_vt_tmpvarmap_gen]
 
 (* ****** ****** *)
@@ -809,40 +1000,59 @@ fn emit_extvalist_dec
   pf: fmlte (m, w)
 | out: &FILE m, exts: !extvalist
 ) : int = let
-  fun aux (
-    out: &FILE m, i: int, exts: !extvalist
-  ) : int = begin case+ exts of
-    | EXTVALLSTcons (name, vp, !exts_rest) => let
-        val () = emit_hityp (pf | out, vp.valprim_typ)
-        val () = fprintf1_exn (pf | out, " %s ;\n", @(name))
-        val n = aux (out, i+1, !exts_rest)
-      in
-        fold@ exts; n
-      end // end of [EXTVALLSTcons]
-    | EXTVALLSTnil () => (fold@ exts; i)
-  end // end of [aux]
+//
+fun aux (
+  out: &FILE m, i: int, exts: !extvalist
+) : int = let
+in
+//
+case+ exts of
+| EXTVALLSTcons
+    (name, vp, !p_exts1) => let
+    val () = emit_hityp (pf | out, vp.valprim_typ)
+    val () = fprintf1_exn (pf | out, " %s ;\n", @(name))
+    val res = aux (out, i+1, !p_exts1)
+  in
+    fold@ exts; res
+  end // end of [EXTVALLSTcons]
+| EXTVALLSTnil () => (fold@ exts; i)
+//
+end // end of [aux]
+//
 in
   aux (out, 0, exts)
 end // end of [emit_extvalist_dec]
 
 fn emit_extvalist_markroot
   {m:file_mode} (
-  pf: fmlte (m, w) | out: &FILE m, exts: !extvalist
+  pf: fmlte (m, w)
+| out: &FILE m, exts: !extvalist
 ) : int = let
-  fun aux (out: &FILE m, i: int, exts: !extvalist)
-    : int = begin case+ exts of
-    | EXTVALLSTcons (name, vp, !exts_rest) => let
-        val () = fprint1_string (pf | out, "ATS_GC_MARKROOT (&")
-        val () = fprint1_string (pf | out, name)
-        val () = fprint1_string (pf | out, ", sizeof(")
-        val () = emit_hityp (pf | out, vp.valprim_typ)
-        val () = fprint1_string (pf | out, ")) ;\n")
-        val n = aux (out, i+1, !exts_rest)
-      in
-        fold@ exts; n
-      end
-    | EXTVALLSTnil () => (fold@ exts; i)
-  end // end of [aux]
+//
+fun aux (
+  out: &FILE m, i: int, exts: !extvalist
+) : int = let
+in
+//
+case+ exts of
+| EXTVALLSTcons
+    (name, vp, !p_exts1) => let
+    val () =
+      fprint1_string (
+      pf | out, "ATS_GC_MARKROOT (&"
+     ) // end of [val]
+    val () = fprint1_string (pf | out, name)
+    val () = fprint1_string (pf | out, ", sizeof(")
+    val () = emit_hityp (pf | out, vp.valprim_typ)
+    val () = fprint1_string (pf | out, ")) ;\n")
+    val res = aux (out, i+1, !p_exts1)
+  in
+    fold@ exts; res
+  end
+| EXTVALLSTnil () => (fold@ exts; i)
+//
+end // end of [aux]
+//
 in
   aux (out, 0, exts)
 end // end of [emit_extvalist_markroot]
@@ -851,35 +1061,48 @@ end // end of [emit_extvalist_markroot]
 
 fun emit_stafile_extcode
   {m:file_mode} (
-  pf: fmlte (m, w) | out: &FILE m, fil: fil_t
+  pf: fmlte (m, w)
+| out: &FILE m, fil: fil_t
 ) : void = let
-  val fil_sym = $Fil.filename_full_sym (fil)
-  val od2cs = $TR2Env.d2eclst_namespace_find (fil_sym)
-  val d2cs = (case+ od2cs of
-    | ~Some_vt (d2cs) => d2cs | ~None_vt () => begin
-        prerr_interror ();
-        prerr ": emit_stafile_extcode: fil = "; $Fil.prerr_filename fil;
-        prerr_newline ();
-        $Err.abort {d2eclst} ()
-      end // end of [None_vt]
-  ) : d2eclst
-  fun aux
-    (out: &FILE m, d2cs: d2eclst): void =
-    case+ d2cs of
-    | list_cons (d2c, d2cs) => let
-        val () = (case+ d2c.d2ec_node of
-          | D2Cextcode (pos, code) => begin
-              if (pos >= 0) then () else fprint1_string (pf | out, code)
-            end // end of [D2Cextcode]
-          | D2Cstaload (_qua, fil, _loaded, _loadflag, _d2cs) =>
-              emit_stafile_extcode (pf | out, fil) // end of [D2Cstaload]
-          | _ => ()
-        ) : void // end of [val]
-      in
-        aux (out, d2cs)
-      end // end of [list_cons]
-    | list_nil () => ()
-  // end of [aux]
+//
+val fil_sym = $Fil.filename_full_sym (fil)
+val od2cs = $TR2Env.d2eclst_namespace_find (fil_sym)
+val d2cs = (
+  case+ od2cs of
+  | ~Some_vt
+      (d2cs) => d2cs
+  | ~None_vt () => begin
+      prerr_interror ();
+      prerr ": emit_stafile_extcode: fil = "; $Fil.prerr_filename fil;
+      prerr_newline ();
+      $Err.abort {d2eclst} ()
+    end // end of [None_vt]
+) : d2eclst // end of [val]
+//
+fun aux (
+  out: &FILE m, d2cs: d2eclst
+) : void = let
+in
+//
+case+ d2cs of
+| list_cons
+    (d2c, d2cs) => let
+    val () = (
+      case+ d2c.d2ec_node of
+      | D2Cextcode (pos, code) =>
+          if (pos >= 0) then () else fprint1_string (pf | out, code)
+        // end of [D2Cextcode]
+      | D2Cstaload (_qua, fil, _loaded, _loadflag, _d2cs) =>
+          emit_stafile_extcode (pf | out, fil) // end of [D2Cstaload]
+      | _ => ()
+    ) : void // end of [val]
+  in
+    aux (out, d2cs)
+  end // end of [list_cons]
+| list_nil () => ()
+//
+end // end of [aux]
+//
 in
   aux (out, d2cs)
 end // end of [emit_stafile_extcode]
@@ -887,250 +1110,306 @@ end // end of [emit_stafile_extcode]
 fun emit_stafilelst_extcode
   {m:file_mode} (
   pf: fmlte (m, w) | out: &FILE m, fils: !stafilelst
-) : void = begin case+ fils of
-  | STAFILELSTcons (fil, loadflag, !fils_rest) => let
-     val () = emit_stafile_extcode (pf | out, fil)
-     val () = emit_stafilelst_extcode (pf | out, !fils_rest)
-   in
-     fold@ fils
-   end // end of [STAFILELSTcons]
-  | STAFILELSTnil () => fold@ fils
+) : void = let
+in
+//
+case+ fils of
+| STAFILELSTcons
+    (fil, loadflag, !p_fils1) => let
+    val () = emit_stafile_extcode (pf | out, fil)
+    val () = emit_stafilelst_extcode (pf | out, !p_fils1)
+  in
+    fold@ (fils)
+  end // end of [STAFILELSTcons]
+| STAFILELSTnil () => fold@ (fils)
+//
 end (* end of [emit_stafilelst_extcode] *)
 
 (* ****** ****** *)
 
 fn emit_staload
   {m:file_mode} (
-    pf: fmlte (m, w)
-  | out: &FILE m, fil: fil_t
-  , stafils: stafilelst, s2cs: !datcstlst, d2cs: !exnconlst
+  pf: fmlte (m, w)
+| out: &FILE m
+, fil: fil_t
+, stafils: stafilelst
+, s2cs: !datcstlst
+, d2cs: !exnconlst
 ) : void = let
 //
-  fun aux_staload_dec (
-    out: &FILE m, fils: !stafilelst, i: int
-  ) : void = begin case+ fils of
-    | STAFILELSTcons (fil, loadflag, !fils_rest) => let
-        val () =
-          if (loadflag = 0) then fprint1_string (pf | out, "// ")
-        // end of [val]
-        val () = fprint1_string (pf | out, "extern ats_void_type ")
-        val () = emit_filename (pf | out, fil)
-        val () = fprint1_string (pf | out, "__staload (void) ;\n")
-        val () = aux_staload_dec (out, !fils_rest, i+1)
-      in
-        fold@ fils
-      end // end of [STAFILELSTcons]
-    | STAFILELSTnil () => let
-        val () = if i > 0 then fprint_char (pf | out, '\n')
-      in
-        fold@ fils
-      end // [STAFIELSTnil]
-  end // end of [ats_staload_dec]
+fun aux_staload_dec (
+  out: &FILE m, fils: !stafilelst, i: int
+) : void = let
+in
 //
-  fun aux_staload_app (
-    out: &FILE m, fils: !stafilelst, i: int
-  ) : void = begin case+ fils of
-    | STAFILELSTcons (fil, loadflag, !fils_rest) => let
-        val () =
-          if (loadflag = 0) then fprint1_string (pf | out, "// ")
-        // end of [val]
-        val () = emit_filename (pf | out, fil)
-        val () = fprint1_string (pf | out, "__staload () ;\n")
-        val () = aux_staload_app (out, !fils_rest, i+1)
-      in
-        fold@ fils
-      end // end of [STAFILELSTcons]
-    | STAFILELSTnil () => let
-        val () = if i > 0 then fprint_char (pf | out, '\n')
-      in
-        fold@ fils
-      end // end of [STAFILELSTnil]
-  end // end of [ats_staload_app]
-//
-  fun aux_staload_datcstlst (
-    out: &FILE m, s2cs: !datcstlst
-  ) : int = let
-    fun aux_conlst (
-      out: &FILE m, d2cs: d2conlst
-    ) : void = begin case+ d2cs of
-      | D2CONLSTcons (d2c, d2cs) => let
-          val () = begin // only needed for a constructor with no arguments!
-            if d2con_get_arity_real (d2c) > 0 then fprint1_string (pf | out, "// ")
-          end // end of [val]
-          val () = emit_d2con (pf | out, d2c);
-          val tag = d2con_get_tag (d2c)
-          val () = fprintf1_exn (pf | out, ".tag = %i ;\n", @(tag))
-        in
-          aux_conlst (out, d2cs)
-        end // end of [D2CONLSTcons]
-      | D2CONLSTnil () => ()
-    end // end of [aux_conlst]
-    fn aux_cst (
-      out: &FILE m, s2c: s2cst_t
-    ) : void = (
-      case+ s2cst_get_conlst (s2c) of
-      | Some d2cs => aux_conlst (out, d2cs) | None () => ()
-    ) // end of [aux_cst]
-    fun aux (
-      out: &FILE m, s2cs: !datcstlst, i: int
-    ) : int = begin
-      case+ s2cs of
-      | DATCSTLSTcons (s2c, !s2cs1) => let
-          val () = aux_cst (out, s2c); val n = aux (out, !s2cs1, i+1)
-        in
-          fold@ s2cs; n
-        end // end of [DATCSTLSTcons]
-      | DATCSTLSTnil () => (fold@ s2cs; i) // end of [DATCSTLSTnil]
-    end // end of [aux]
+case+ fils of
+| STAFILELSTcons
+    (fil, loadflag, !p_fils1) => let
+    val () =
+      if (loadflag = 0) then fprint1_string (pf | out, "// ")
+    // end of [val]
+    val () = fprint1_string (pf | out, "extern ats_void_type ")
+    val () = emit_filename (pf | out, fil)
+    val () = fprint1_string (pf | out, "__staload (void) ;\n")
+    val () = aux_staload_dec (out, !p_fils1, i+1)
   in
-    aux (out, s2cs, 0)
-  end // end of [aux_staload_datcstlst]
+    fold@ (fils)
+  end // end of [STAFILELSTcons]
+| STAFILELSTnil () => let
+    val () = if i > 0 then fprint_char (pf | out, '\n')
+  in
+    fold@ (fils)
+  end // [STAFIELSTnil]
 //
-  fun aux_staload_exnconlst (
-    out: &FILE m, d2cs: !exnconlst
+end // end of [ats_staload_dec]
+//
+fun aux_staload_app (
+  out: &FILE m, fils: !stafilelst, i: int
+) : void = let
+in
+//
+case+ fils of
+| STAFILELSTcons
+    (fil, loadflag, !p_fils1) => let
+    val () =
+      if (loadflag = 0) then fprint1_string (pf | out, "// ")
+    // end of [val]
+    val () = emit_filename (pf | out, fil)
+    val () = fprint1_string (pf | out, "__staload () ;\n")
+    val () = aux_staload_app (out, !p_fils1, i+1)
+  in
+    fold@ (fils)
+  end // end of [STAFILELSTcons]
+| STAFILELSTnil () => let
+    val () = (
+      if i > 0 then fprint_char (pf | out, '\n')
+    ) : void // endval
+  in
+    fold@ (fils)
+  end // end of [STAFILELSTnil]
+//
+end // end of [ats_staload_app]
+//
+fun aux_staload_datcstlst (
+  out: &FILE m, s2cs: !datcstlst
+) : int = let
+  fun aux_conlst (
+    out: &FILE m, d2cs: d2conlst
+  ) : void = let
+  in
+    case+ d2cs of
+    | D2CONLSTcons
+        (d2c, d2cs) => let
+        val () = (
+          // only needed for a constructor with no arguments!
+          if d2con_get_arity_real (d2c) > 0 then fprint1_string (pf | out, "// ")
+        ) // end of [val]
+        val () = emit_d2con (pf | out, d2c);
+        val tag = d2con_get_tag (d2c)
+        val () = fprintf1_exn (pf | out, ".tag = %i ;\n", @(tag))
+      in
+        aux_conlst (out, d2cs)
+      end // end of [D2CONLSTcons]
+    | D2CONLSTnil () => ()
+  end // end of [aux_conlst]
+  fn aux_cst (
+    out: &FILE m, s2c: s2cst_t
+  ) : void = (
+    case+ s2cst_get_conlst (s2c) of
+    | Some d2cs => aux_conlst (out, d2cs) | None () => ()
+  ) // end of [aux_cst]
+  fun aux (
+    out: &FILE m, s2cs: !datcstlst, i: int
   ) : int = let
-    fun aux (
-      out: &FILE m, d2cs: !exnconlst, i: int
-    ) : int = begin
-      case+ d2cs of
-      | EXNCONLSTcons (d2c, !d2cs1) => let
-          val () = emit_d2con (pf | out, d2c)
-          val () = fprint1_string (
-            pf | out, ".tag = ats_exception_con_tag_new () ;\n"
-          ) // end of [fprint1_string]
-          val () = emit_d2con (pf | out, d2c)
-          val () = fprint1_string (pf | out, ".name = \"")
+  in
+    case+ s2cs of
+    | DATCSTLSTcons
+        (s2c, !p_s2cs1) => let
+        val () = aux_cst (out, s2c)
+        val res = aux (out, !p_s2cs1, i+1)
+      in
+        fold@ (s2cs); res
+      end // end of [DATCSTLSTcons]
+    | DATCSTLSTnil () => (fold@ (s2cs); i)
+  end // end of [aux]
+in
+  aux (out, s2cs, 0)
+end // end of [aux_staload_datcstlst]
+//
+fun aux_staload_exnconlst (
+  out: &FILE m, d2cs: !exnconlst
+) : int = let
+//
+fun aux (
+  out: &FILE m, d2cs: !exnconlst, i: int
+) : int = let
+in
+//
+case+ d2cs of
+| EXNCONLSTcons
+    (d2c, !p_d2cs1) => let
+    val () = emit_d2con (pf | out, d2c)
+    val () =
+      fprint1_string (
+      pf | out, ".tag = ats_exception_con_tag_new () ;\n"
+    ) // end of [fprint1_string]
+    val () = emit_d2con (pf | out, d2c)
+    val () = fprint1_string (pf | out, ".name = \"")
 (*
-          val () = $Fil.fprint1_string_filename (pf | out, d2con_fil_get d2c)
-          val () = fprint1_string (pf | out, "::")
-          val () = fprint1_string_d2con (pf | out, d2c)
+    val () = $Fil.fprint1_string_filename (pf | out, d2con_fil_get d2c)
+    val () = fprint1_string (pf | out, "::")
+    val () = fprint1_string_d2con (pf | out, d2c)
 *)
-          val () = emit_d2con (pf | out, d2c)
-          val () = fprint1_string (pf | out, "\" ;\n")
-          val n = aux (out, !d2cs1, i+1)
-        in
-          fold@ d2cs; n
-        end // end of [EXNCONLSTcons]
-      | EXNCONLSTnil () => (fold@ d2cs; i)
-    end // end of [aux]
+    val () = emit_d2con (pf | out, d2c)
+    val () = fprint1_string (pf | out, "\" ;\n")
+    val res = aux (out, !p_d2cs1, i+1)
   in
-    aux (out, d2cs, 0)
-  end // end of [aux_staload_exnconlst]
+    fold@ (d2cs); res
+   end // end of [EXNCONLSTcons]
+| EXNCONLSTnil () => (fold@ (d2cs); i)
+//
+end // end of [aux]
+//
+in
+  aux (out, d2cs, 0)
+end // end of [aux_staload_exnconlst]
 (*  
-  // *_staload function should always be defined!
-  val () = fprint1_string (pf | out, "#ifndef _ATS_STALOADFUN_NONE\n")
+//
+// *_staload function should always be defined!
+//
+val () = fprint1_string (pf | out, "#ifndef _ATS_STALOADFUN_NONE\n")
+//
 *)
-  val () = aux_staload_dec (out, stafils, 0)
+val () = aux_staload_dec (out, stafils, 0)
 //
-  val () = fprint1_string (pf | out, "ats_void_type\n")
-  val () = emit_filename (pf | out, fil)
-  val () = fprint1_string (pf | out, "__staload () {\n")
+val () = fprint1_string (pf | out, "ats_void_type\n")
+val () = emit_filename (pf | out, fil)
+val () = fprint1_string (pf | out, "__staload () {\n")
 //
-  val () = fprint1_string (pf | out, "static int ")
-  val () = emit_filename (pf | out, fil)
-  val () = fprint1_string (pf | out, "__staload_flag = 0 ;\n")
-  val () = fprint1_string (pf | out, "if (");
-  val () = emit_filename (pf | out, fil)
-  val () = fprint1_string (pf | out, "__staload_flag) return ;\n")
-  val () = emit_filename (pf | out, fil)
-  val () = fprint1_string (pf | out, "__staload_flag = 1 ;\n\n")
+val () = fprint1_string (pf | out, "static int ")
+val () = emit_filename (pf | out, fil)
+val () = fprint1_string (pf | out, "__staload_flag = 0 ;\n")
+val () = fprint1_string (pf | out, "if (");
+val () = emit_filename (pf | out, fil)
+val () = fprint1_string (pf | out, "__staload_flag) return ;\n")
+val () = emit_filename (pf | out, fil)
+val () = fprint1_string (pf | out, "__staload_flag = 1 ;\n\n")
 //
-  val () = aux_staload_app (out, stafils, 0)
+val () = aux_staload_app (out, stafils, 0)
 //
-  val () = stafilelst_free (stafils)
+val () = stafilelst_free (stafils)
 //
-  val _(*int*) = aux_staload_datcstlst (out, s2cs)
-  val _(*int*) = aux_staload_exnconlst (out, d2cs)
+val _(*int*) = aux_staload_datcstlst (out, s2cs)
+val _(*int*) = aux_staload_exnconlst (out, d2cs)
 //
-  val () = fprint1_string (pf | out, "return ;\n")
-  val () = fprint1_string (pf | out, "} /* staload function */\n\n")
+val () = fprint1_string (pf | out, "return ;\n")
+val () = fprint1_string (pf | out, "} /* staload function */\n\n")
 (*
-  val () = fprint1_string (pf | out, "#endif /* [_ATS_STALOADFUN_NONE] */\n\n")
+val () = fprint1_string (pf | out, "#endif /* [_ATS_STALOADFUN_NONE] */\n\n")
 *)
 in
-  // empty
+  (*DoNothing*)
 end // end of [emit_staload]
 
 (* ****** ****** *)
 
 fn emit_dynload
   {m:file_mode} (
-    pf: fmlte (m, w)
-  | out: &FILE m
-  , dynloadflag: int
-  , fil: fil_t
-  , res: !instrlst_vt
-  , tmps: !tmpvarmap_vt
-  , exts: !extvalist
-  ) : void = let
+  pf: fmlte (m, w)
+| out: &FILE m
+, dynloadflag: int
+, fil: fil_t
+, res: !instrlst_vt
+, tmps: !tmpvarmap_vt
+, exts: !extvalist
+) : void = let
 //
 // HX: code for dynamic loading
 //
-  val dynfils = the_dynfilelst_get ()
-  val () = aux_dynload_dec (out, dynfils, 0) where {
-    fun aux_dynload_dec (
-      out: &FILE m, fils: !dynfilelst, i: int
-    ) : void = case+ fils of
-      | DYNFILELSTcons (fil, !fils_rest) => let
-//
-          val () = fprint1_string (pf | out, "ats_int_type ")
-          val () = emit_filename (pf | out, fil)
-          val () = fprint1_string (pf | out, "__dynload_flag = 0 ;\n")
-//
-          val () = fprint1_string (pf | out, "extern ats_void_type ")
-          val () = emit_filename (pf | out, fil)
-          val () = fprint1_string (pf | out, "__dynload (void) ;\n")
-//
-          val () = aux_dynload_dec (out, !fils_rest, i + 1)
-        in
-          fold@ fils
-        end // end of [DYNFILELSTcons]
-      | DYNFILELSTnil () => let
-          val () = if i > 0 then fprint_char (pf | out, '\n')
-        in
-          fold@ fils
-        end // end of [DYNFILELSTnil]
-    // end of [aux_dynload_dec]
-  } // end of [where]
-  val () = dynfilelst_free (dynfils)
-//
-  val () = fprint1_string
-    (pf | out, "// dynload flag declaration\n")
-  // end of [val]
-//
-  val () = let
-    val () = if dynloadflag = 0 then fprint1_string (pf | out, "// ")
-    val () = fprint1_string (pf | out, "extern ats_int_type ")
-    val () = emit_filename (pf | out, fil)
-    val () = fprint1_string (pf | out, "__dynload_flag ;\n\n")
+val dynfils = the_dynfilelst_get ()
+val () =
+  aux_dynload_dec (out, dynfils, 0) where
+{
+  fun aux_dynload_dec (
+    out: &FILE m, fils: !dynfilelst, i: int
+  ) : void = let
   in
-    // empty
-  end // end of [val]
+    case+ fils of
+    | DYNFILELSTcons
+        (fil, !p_fils1) => let
 //
-  val () = fprint1_string (pf | out, "ats_void_type\n")
+        val () = fprint1_string (pf | out, "ats_int_type ")
+        val () = emit_filename (pf | out, fil)
+        val () = fprint1_string (pf | out, "__dynload_flag = 0 ;\n")
+//
+        val () = fprint1_string (pf | out, "extern ats_void_type ")
+        val () = emit_filename (pf | out, fil)
+        val () = fprint1_string (pf | out, "__dynload (void) ;\n")
+//
+        val () = aux_dynload_dec (out, !p_fils1, i + 1)
+      in
+        fold@ fils
+      end // end of [DYNFILELSTcons]
+    | DYNFILELSTnil () => let
+        val () = (
+          if i > 0 then fprint_char (pf | out, '\n')
+        ) : void // end of [val]
+      in
+        fold@ (fils)
+      end // end of [DYNFILELSTnil]
+  end // end of [aux_dynload_dec]
+} (* end of [where] // end of [val] *)
+//
+val () = dynfilelst_free (dynfils)
+//
+val () =
+  fprint1_string (pf | out, "// dynload flag declaration\n")
+//
+val () = let
+  val () = if dynloadflag = 0 then fprint1_string (pf | out, "// ")
+  val () = fprint1_string (pf | out, "extern ats_int_type ")
   val () = emit_filename (pf | out, fil)
-  val () = fprint1_string (pf | out, "__dynload () {\n")
+  val () = fprint1_string (pf | out, "__dynload_flag ;\n\n")
+in
+  (*nothing*)
+end // end of [val]
 //
-  val () = let
-    val () =
-      if dynloadflag = 0 then fprint1_string (pf | out, "// ")
-    val () = emit_filename (pf | out, fil)
-    val () = fprint1_string (pf | out, "__dynload_flag = 1 ;\n")
-  in
-    // empty
-  end // end of [val]
+val () = fprint1_string (pf | out, "ats_void_type\n")
+val () = emit_filename (pf | out, fil)
+val () = fprint1_string (pf | out, "__dynload () {\n")
 //
-  // code for static loading
+val () = let
+  val () =
+    if dynloadflag = 0 then fprint1_string (pf | out, "// ")
   val () = emit_filename (pf | out, fil)
-  val () = fprint1_string (pf | out, "__staload () ;\n\n")
+  val () = fprint1_string (pf | out, "__dynload_flag = 1 ;\n")
+in
+  // empty
+end // end of [val]
 //
-  // code for termination checking
-  val () = fprint1_string (pf | out, "#ifdef _ATS_PROOFCHECK\n")
-  stavar l_out: addr; val p_out: ptr l_out = &out
-  val () = dyncstset_foreach_main {FILE m @ l_out} {ptr l_out}
-    (view@ out | the_dyncstset_get (), f, p_out) where {
-    fn f (pf_out: !FILE m @ l_out | d2c: d2cst_t, p_out: !ptr l_out): void = let
-      val () = begin case+ 0 of
+// HX: code for static loading
+//
+val () = emit_filename (pf | out, fil)
+val () = fprint1_string (pf | out, "__staload () ;\n\n")
+//
+// HX: code for termination checking
+//
+val () =
+  fprint1_string (pf | out, "#ifdef _ATS_PROOFCHECK\n")
+// end of [val]
+//
+stavar l_out: addr; val p_out: ptr l_out = &out
+val () =
+  dyncstset_foreach_main
+    {FILE m @ l_out} {ptr l_out} (
+    view@ out | the_dyncstset_get (), f, p_out
+  ) where {
+    fn f (
+      pf_out: !FILE m @ l_out
+    | d2c: d2cst_t, p_out: !ptr l_out
+    ) : void = let
+      val () = (
+        case+ 0 of
         | _ when d2cst_is_praxi (d2c) => ()
         | _ when d2cst_is_prfun (d2c) => begin
             emit_d2cst (pf | !p_out, d2c); fprint1_string (pf | !p_out, "_prfck () ;\n")
@@ -1139,46 +1418,53 @@ fn emit_dynload
             emit_d2cst (pf | !p_out, d2c); fprint1_string (pf | !p_out, "_prfck () ;\n")
           end // end of [_]
         | _ => () // should nonproof terminating functions be checked as well?
-      end // end of [val]
+      ) : void // end of [val]
     in
       // empty
     end // end of [f]
   } // end of [where]
-  val () = fprint1_string (pf | out, "#endif /* _ATS_PROOFCHECK */\n")
 //
-  // code marking GC roots
-  val () = fprint1_string
-    (pf | out, "\n/* marking static variables for GC */\n")
-  val _(*n*) = emit_tmpvarmap_markroot (pf | out, tmps)
-  val () = fprint1_string
-    (pf | out, "\n/* marking external values for GC */\n")
-  val _(*n*) = emit_extvalist_markroot (pf | out, exts)
+val () =
+  fprint1_string (pf | out, "#endif /* _ATS_PROOFCHECK */\n")
+// end of [val]
 //
-  val () = fprint1_string
-    (pf | out, "\n/* code for dynamic loading */\n")
-  val () = emit_instrlst_vt (pf | out, res)
+// HX: code marking GC roots
 //
-  val () = fprint1_string (pf | out, "return ;\n")
-  val () = fprint1_string (pf | out, "} /* end of [dynload function] */\n\n")
+val () = fprint1_string
+  (pf | out, "\n/* marking static variables for GC */\n")
+val _(*n*) = emit_tmpvarmap_markroot (pf | out, tmps)
+val () = fprint1_string
+  (pf | out, "\n/* marking external values for GC */\n")
+val _(*n*) = emit_extvalist_markroot (pf | out, exts)
 //
-  // this is used for explicit dynamic loading
-  val () = let
-    val name = $Glo.atsopt_dynloadfun_name_get () // ATS_DYNLOADFUN_NAME
+val () = fprint1_string
+  (pf | out, "\n/* code for dynamic loading */\n")
+val () = emit_instrlst_vt (pf | out, res)
+//
+val () = fprint1_string (pf | out, "return ;\n")
+val () = fprint1_string (pf | out, "} /* end of [dynload function] */\n\n")
+//
+// HX: this is used for explicit dynamic loading
+//
+val () = let
+  val name = $Glo.atsopt_dynloadfun_name_get () // ATS_DYNLOADFUN_NAME
+in
+//
+case+ 0 of
+| _ when stropt_is_some name => let
+    val name = stropt_unsome name
+    val () = fprintf1_exn (pf | out, "ats_void_type %s () {\n", @(name))
+    val () = emit_filename (pf | out, fil)
+    val () = fprint1_string (pf | out, "__dynload () ; return ;\n}\n\n")
   in
-    case+ 0 of
-    | _ when stropt_is_some name => let
-        val name = stropt_unsome name
-        val () = fprintf1_exn (pf | out, "ats_void_type %s () {\n", @(name))
-        val () = emit_filename (pf | out, fil)
-        val () = fprint1_string (pf | out, "__dynload () ; return ;\n}\n\n")
-      in
-        // empty
-      end // end of [_ when ...]
-    | _ => () // end of [_]
-  end // end of [val]
+    // empty
+  end // end of [_ when ...]
+  | _ => () // end of [_]
+//
+end // end of [val]
 //
 in
-  // empty
+  (*nothing*)
 end // end of [emit_dynload]
 
 (* ****** ****** *)
@@ -1187,18 +1473,28 @@ fn emit_extypelst_free
   {m:file_mode} (
   pf: fmlte (m, w) | out: &FILE m, ets: extypelst
 ) : int = let
-  fun aux (out: &FILE m, i: int, ets: extypelst): int =
-    case+ ets of
-    | ~EXTYPELSTcons (name, hit_def, ets) => let
-        val hit_def = hityp_decode hit_def
-        val HITNAM (knd, name_def) = hit_def.hityp_name
-        val () = fprintf1_exn (pf | out, "typedef %s ", @(name_def))
-        val () = if knd > 0 then fprint1_char (pf | out, '*')
-        val () = fprintf1_exn (pf | out, "%s ;\n", @(name))
-      in
-        aux (out, i + 1, ets)
-      end
-    | ~EXTYPELSTnil () => i
+//
+fun aux (
+  out: &FILE m, i: int, ets: extypelst
+) : int = let
+in
+//
+case+ ets of
+| ~EXTYPELSTcons
+    (name, hit_def, ets) => let
+    val hit_def = hityp_decode hit_def
+    val HITNAM (knd, name_def) = hit_def.hityp_name
+    val () =
+      fprintf1_exn (pf | out, "typedef %s ", @(name_def))
+    val () = if knd > 0 then fprint1_char (pf | out, '*')
+    val () = fprintf1_exn (pf | out, "%s ;\n", @(name))
+  in
+    aux (out, i + 1, ets)
+  end // end of [EXTYPELSTcons]
+| ~EXTYPELSTnil () => (i)
+//
+end // end of [aux]
+//
 in
   aux (out, 0, ets)
 end // end of [emit_extypelst_free]
@@ -1207,53 +1503,59 @@ end // end of [emit_extypelst_free]
 
 fn emit_extcodelst
   {m:file_mode} (
-    pf: fmlte (m, w)
-  | out: &FILE m
-  , pos0: int (* top(0), mid(1), bot(2) *)
-  , xs0: &extcodelst
-  ) : int = let
+  pf: fmlte (m, w)
+| out: &FILE m
+, pos0: int (* top(0), mid(1), bot(2) *)
+, xs0: &extcodelst
+) : int = let
 //
-  fn test (
-     pos0: int, pos: int
-  ) : bool =
-    case+ 0 of
-    | _ when pos0 = 0 => pos <= 0 (* pos = ~1 or pos = 0 *)
-    | _ when pos0 = 1 => pos = 1
-    | _ => true // pos = 2
-  (* end of [test] *)
+fn test (
+   pos0: int, pos: int
+) : bool = let
+in
+  if pos0 = 0
+    then pos <= 0 // pos = 0/~1
+    else (if pos0 = 1 then pos = 1 else true)
+  // end of [if]
+end (* end of [test] *)
 //
-  fun aux_main (
-      out: &FILE m
-    , pos0: int
-    , xs0: &extcodelst
-    , i: &int
-    ) : void = begin case+ xs0 of
-    | EXTCODELSTcons
-        (loc, pos, code, !p_xs) => let
-      in
-        if test (pos0, pos) then let
+fun aux_main (
+  out: &FILE m
+, pos0: int
+, xs0: &extcodelst
+, i: &int
+) : void = let
+in
 //
-          val gline = $Deb.gline_flag_get ()
-          val () = if gline >= 1 then
-            $Loc.fprint_line_pragma (pf | out, loc)
-          // end of [val]
+case+ xs0 of
+| EXTCODELSTcons
+    (loc, pos, code, !p_xs) => let
+  in
+    if test (pos0, pos) then let
 //
-          val () = fprint1_string (pf | out, code)
-          val xs = !p_xs; val () = free@ (xs0); val () = xs0 := xs
-          val () = i := i + 1
-        in
-          aux_main (out, pos0, xs0, i)
-        end else let
-          val () = aux_main (out, pos0, !p_xs, i)
-          val () = fold@ (xs0)
-        in
-          // nothing
-        end (* end of [if] *)
-      end // end of [EXTCODELSTcons]
-    | EXTCODELSTnil () => fold@ (xs0)
-  end // end of [aux]
+      val gline = $Deb.gline_flag_get ()
+      val () = if gline >= 1 then
+        $Loc.fprint_line_pragma (pf | out, loc)
+      // end of [val]
 //
-  var i: int = 0
+      val () = fprint1_string (pf | out, code)
+      val xs = !p_xs
+      val () = free@ (xs0)
+      val () = xs0 := xs
+      val () = i := i + 1
+    in
+      aux_main (out, pos0, xs0, i)
+    end else let
+      val () =
+        aux_main (out, pos0, !p_xs, i) in fold@ (xs0)
+      // end of [val]
+    end (* end of [if] *)
+  end // end of [EXTCODELSTcons]
+| EXTCODELSTnil () => fold@ (xs0)
+//
+end // end of [aux]
+//
+var i: int = 0
 //
 in
   aux_main (out, pos0, xs0, i); i
@@ -1294,7 +1596,8 @@ fn mainatsknd_get (): int = let
   val is_main_argc_argv = main_argc_argv_is_implemented ()
 in
   if is_main_void then begin
-    if not (is_main_argc_argv) then MAINATS_VOID else let
+    if not (is_main_argc_argv)
+      then MAINATS_VOID else let
       val () = prerr "error(ccomp)"
       val () = prerr ": it is not allowed to implement both [main_void] and [main_argc_argv]"
       val () = prerr_newline ()
@@ -1302,9 +1605,9 @@ in
       $Err.abort {int} ()
     end // end of [if]
   end else begin
-    if is_main_argc_argv then MAINATS_ARGC_ARGV else begin
+    if is_main_argc_argv then MAINATS_ARGC_ARGV else (
       if main_dummy_is_implemented () then MAINATS_DUMMY else MAINATS_NONE
-    end // end of [if]
+    ) // end of [if]
   end (* end of [if] *)
 end // end of [mainatsknd_get]
 
