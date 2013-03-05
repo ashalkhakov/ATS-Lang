@@ -1613,8 +1613,11 @@ end // end of [mainatsknd_get]
 
 (* ****** ****** *)
 
-implement ccomp_main {m}
-  (pf | flag, out, fil, hids) = let
+implement
+ccomp_main
+(
+  pf | flag, out, fil, hids
+) = let
   var res: instrlst_vt = list_vt_nil ()
   val () = ccomp_declst (res, hids)
   val () = the_dynctx_free ()
@@ -1628,24 +1631,38 @@ implement ccomp_main {m}
 // HX: including prologues in staloaded files
 //
   val stafils = the_stafilelst_get ()
-  val () = () where {
-    val () = fprint1_string
-      (pf | out, "/* prologues from statically loaded files */\n")
+//
+  val () = let
+    val () =
+      fprint1_string (
+      pf | out, "/* prologues from statically loaded files */\n"
+    ) // end of [val]
     val () = emit_stafilelst_extcode (pf | out, stafils)
-  } // end of [val]
+  in
+    (*nothing*)
+  end // end of [val]
 //
 // HX: including external codes at top position
 //
   var extcodes = the_extcodelst_get ()
-  val () = fprint1_string (pf | out, "/* external codes at top */\n")
+//
+  val () =
+    fprint1_string (
+    pf | out, "/* external codes at top */\n"
+  ) // end of [val]
   val n = emit_extcodelst (pf | out, 0(*top*), extcodes)
   val () = if n > 0 then fprint1_char (pf | out, '\n')
 //
 // HX: declaring type definitions
 //
   val () = let
-    val () = fprint1_string (pf | out, "/* type definitions */\n")
-    val n = emit_typdeflst_free (pf | out, typdeflst_get ())
+    val () =
+      fprint1_string (
+      pf | out, "/* type definitions */\n"
+    ) // end of [val]
+    val n =
+      emit_typdeflst_free (pf | out, typdeflst_get ())
+    // end of [val]
   in
     if n > 0 then fprint1_char (pf | out, '\n')
   end // end of [val]
@@ -1653,7 +1670,10 @@ implement ccomp_main {m}
 // HX: declaring external type definitions
 //
   val () = let
-    val () = fprint1_string (pf | out, "/* external typedefs */\n")
+    val () =
+      fprint1_string (
+      pf | out, "/* external typedefs */\n"
+    ) // end of [val]
     val ets = the_extypelst_get ()
     val n = emit_extypelst_free (pf | out, ets)
   in
@@ -1662,9 +1682,12 @@ implement ccomp_main {m}
 //
 // HX: declaring external dynamic constructors
 //
-  val () = if (flag > 0) then let
-    val () = fprint1_string
-      (pf | out, "/* external dynamic constructor declarations */\n")
+  val () =
+    if (flag > 0) then let
+    val () =
+      fprint1_string (pf | out
+    , "/* external dynamic constructor declarations */\n"
+    ) // end of [val]
     val n = emit_dynconset (pf | out, the_dynconset_get ())
   in
     if n > 0 then fprint1_char (pf | out, '\n')
@@ -1672,10 +1695,12 @@ implement ccomp_main {m}
 //
 // HX: declaring external dynamic constants
 //
-  val () = if (flag > 0) then let
-    val () = begin
-      fprint1_string (pf | out, "/* external dynamic constant declarations */\n")
-    end // end of [val]
+  val () =
+    if (flag > 0) then let
+    val () =
+      fprint1_string (pf | out
+    , "/* external dynamic constant declarations */\n"
+    ) // end of [val]
     val n = emit_dyncstset (pf | out, the_dyncstset_get ())
   in
     if n > 0 then fprint1_char (pf | out, '\n')
@@ -1683,13 +1708,20 @@ implement ccomp_main {m}
 //
 // HX: declaring dynamic terminating constants
 //
-  val () = if (flag > 0) then let
-    val () = fprint1_string
-      (pf | out, "/* external dynamic terminating constant declarations */\n")
-    val () = fprint1_string (pf | out, "#ifdef _ATS_PROOFCHECK\n")
-    val n = emit_dyncstset_prfck (pf | out, the_dyncstset_get ())
-    val () = if n = 0 then fprint1_string (pf | out, "/* empty */\n")
-    val () = fprint1_string (pf | out, "#endif /* _ATS_PROOFCHECK */\n\n")
+  val () =
+    if (flag > 0) then let
+    val () =
+      fprint1_string (pf | out
+    , "/* external dynamic terminating constant declarations */\n"
+    ) // end of [val]
+    val () =
+      fprint1_string (pf | out, "#ifdef _ATS_PROOFCHECK\n")
+    val n =
+      emit_dyncstset_prfck (pf | out, the_dyncstset_get ())
+    val () =
+      if n = 0 then fprint1_string (pf | out, "/* empty */\n")
+    val () =
+      fprint1_string (pf | out, "#endif /* _ATS_PROOFCHECK */\n\n")
   in
     // empty
   end // end of [val]
@@ -1698,7 +1730,10 @@ implement ccomp_main {m}
 //
   val s2cs = the_saspcstlst_get ()
   val () = let
-    val () = fprint1_string (pf | out, "/* assuming abstract types */\n")
+    val () =
+      fprint1_string (
+      pf | out, "/* assuming abstract types */\n"
+    ) // end of [val]
     val n = emit_saspcstlst (pf | out, s2cs)
   in
     if n > 0 then fprint1_char (pf | out, '\n')
@@ -1709,7 +1744,10 @@ implement ccomp_main {m}
 //
   val datcsts = the_datcstlst_get ()
   val () = let
-    val () = fprint1_string (pf | out, "/* sum constructor declarations */\n")
+    val () =
+      fprint1_string (
+      pf | out, "/* sum constructor declarations */\n"
+    ) // end of [val]
     val n = emit_datcstlst (pf | out, datcsts)
   in
     if n > 0 then fprint1_char (pf | out, '\n')
@@ -1719,8 +1757,10 @@ implement ccomp_main {m}
 //
   val exncons = the_exnconlst_get ()
   val () = let
-    val () = fprint1_string
-      (pf | out, "/* exn constructor declarations */\n")
+    val () =
+      fprint1_string (
+      pf | out, "/* exn constructor declarations */\n"
+    ) // end of [val]
     val n = emit_exnconlst (pf | out, exncons)
   in
     if n > 0 then fprint1_char (pf | out, '\n')
@@ -1730,8 +1770,9 @@ implement ccomp_main {m}
 //
   val () = if (flag > 0) then let
     val glocstlst = the_glocstlst_get ()
-    val () = fprint1_string (pf |
-      out, "/* global dynamic (non-functional) constant declarations */\n"
+    val () =
+      fprint1_string (pf | out
+    , "/* global dynamic (non-functional) constant declarations */\n"
     ) // end of [val]
     val n = emit_free_glocstlst (pf | out, glocstlst)
     val () = if n > 0 then fprint1_char (pf | out, '\n')
@@ -1742,8 +1783,10 @@ implement ccomp_main {m}
 // HX: declaring implemented static functional constants
 //
   val () = if (flag > 0) then let
-    val () = fprint1_string
-      (pf | out, "/* internal function declarations */\n")
+    val () =
+      fprint1_string (
+      pf | out, "/* internal function declarations */\n"
+    ) // end of [val]
     val n = emit_funentry_lablst_prototype (pf | out, 0, fls)
     val () = if n > 0 then fprint1_char (pf | out, '\n')
   in
@@ -1752,12 +1795,13 @@ implement ccomp_main {m}
 //
 // HX: declaring implemented partial value templates
 //
-  val () = if (flag > 0) then let
+  val () =
+    if (flag > 0) then let
     val partvalst = the_partvalst_get ()
-    val () = begin
-      fprint1_string (pf | out, "/* partial value template declarations */\n")
-    end // end of [val]
-    // HX: not implemented
+    val () =
+      fprint1_string (pf | out
+    , "/* partial value template declarations */\n"
+    ) // end of [val]
     val n = emit_free_partvalst (pf | out, partvalst)
     val () = if n > 0 then fprint1_char (pf | out, '\n')
   in
@@ -1768,9 +1812,10 @@ implement ccomp_main {m}
 //
   val tmps_static = instrlst_vt_tmpvarmap_gen (res)
   val () = if (flag > 0) then let // static variable declarations
-    val () = begin
-      fprint1_string (pf | out, "/* static temporary variable declarations */\n")
-    end // end of [val]
+    val () =
+      fprint1_string (
+      pf | out, "/* static temporary variable declarations */\n"
+    ) // end of [val]
     val n = emit_tmpvarmap_dec_static (pf | out, tmps_static)
     val () = if n > 0 then fprint1_char (pf | out, '\n')
   in
@@ -1780,10 +1825,12 @@ implement ccomp_main {m}
 // HX: declaring external variables
 //
   val extvals = the_extvalist_get ()
-  val () = if (flag > 0) then let // external variable declarations
-    val () = begin
-      fprint1_string (pf | out, "/* external value variable declarations */\n\n")
-    end // end of [val]
+  val () =
+    if (flag > 0) then let // external variable declarations
+    val () =
+      fprint1_string (
+      pf | out, "/* external value variable declarations */\n\n"
+    ) // end of [val]
     val n = emit_extvalist_dec (pf | out, extvals)
     val () = if n > 0 then fprint1_char (pf | out, '\n')
   in
@@ -1792,7 +1839,10 @@ implement ccomp_main {m}
 //
   val fls = (
     if (flag > 0) then let
-      val () = fprint1_string (pf | out, "/* function implementations */\n\n")
+      val () =
+        fprint1_string (
+        pf | out, "/* function implementations */\n\n"
+      ) // edn of [val]
       val () = emit_funentry_lablst (pf | out, fls)
     in
       fls
@@ -1802,8 +1852,13 @@ implement ccomp_main {m}
   ) : funlablst_vt
 //
   val () = let
-    val () = fprint1_string (pf | out, "/* static load function */\n\n")
-    val () = emit_staload (pf | out, fil, stafils, datcsts, exncons)
+    val () =
+      fprint1_string (
+      pf | out, "/* static load function */\n\n"
+    ) // end of [val]
+    val () =
+      emit_staload (pf | out, fil, stafils, datcsts, exncons)
+    // end of [val]
   in
     // empty
   end // end of [val]
@@ -1821,7 +1876,10 @@ implement ccomp_main {m}
       val dynloadflag = (
         if mainatsknd >= 0 then 0 else $Glo.atsopt_dynloadflag_get ()
       ) : int // end of [val]
-      val () = fprint1_string (pf | out, "/* dynamic load function */\n\n")
+      val () =
+        fprint1_string (
+        pf | out, "/* dynamic load function */\n\n"
+      ) // end of [val]
       val () =
         emit_dynload (
         pf | out, dynloadflag, fil, res, tmps_static, extvals
@@ -1833,28 +1891,37 @@ implement ccomp_main {m}
     end // end of [if]
   ) : instrlst_vt
 //
-  val () = $Lst.list_vt_free__boxed (res)
+  val () =
+    $Lst.list_vt_free__boxed (res)
   val () = tmpvarmap_free (tmps_static)
   val () = extvalist_free (extvals)
 //
-  val () = begin case+ 0 of
-    | _ when mainatsknd >= 0 => begin
+  val () = (
+    case+ 0 of
+    | _ when
+        mainatsknd >= 0 => (
         emit_mainfun (pf | out, fil); fprint1_char (pf | out, '\n')
-      end // end of [_ when ...]
+      ) // end of [_ when ...]
     | _ => () // end of [_]
-  end // end of [val]
+  ) : void // end of [val]
 //
   val () = $Lst.list_vt_free__boxed (fls)
 //
 // HX: including external codes at mid position
 //
-  val () = fprint1_string (pf | out, "/* external codes at mid */\n")
+  val () =
+    fprint1_string (
+    pf | out, "/* external codes at mid */\n"
+  ) // end of [val]
   val n = emit_extcodelst (pf | out, 1(*mid*), extcodes)
   val () = if n > 0 then fprint1_char (pf | out, '\n')
 //
 // HX: including external codes at bot position
 //
-  val () = fprint1_string (pf | out, "/* external codes at bot */\n")
+  val () =
+    fprint1_string (
+    pf | out, "/* external codes at bot */\n"
+  ) // end of [val]
   val n = emit_extcodelst (pf | out, 2(*bot*), extcodes)
   val () = if n > 0 then fprint1_char (pf | out, '\n')
 //
