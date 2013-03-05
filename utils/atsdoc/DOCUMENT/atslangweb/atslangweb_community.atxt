@@ -90,9 +90,9 @@ The archive of messages sent to the ATS users mailing-list can be found
 <h2>#uid("ATS_QandA_forum", "Q&amp;A forum for ATS users")</h2>
 #menu("\
 #lisub('\
-A google group
+The google group
 #ulink("http://groups.google.com/group/ats-lang-users", "ats-lang-users")
-acts a forum for discussing any and all questions about or related to ATS.
+acts as a forum for discussing any and all questions about or related to ATS.
 ')
 ")#comment("menu")
 
