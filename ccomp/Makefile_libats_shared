@@ -36,4 +36,10 @@ step1:: ; $(ATSLIB) -fPIC ${ATSHOME}/libats/dynloadall.dats
 # step1:: ; $(ATSLIB) -fPIC ${ATSHOME}/libats/smlbas/dynloadall.dats
 #
 
+RMF=rm -f
+
+cleanall:: ; $(RMF) lib/libats.so
+cleanall:: ; $(RMF) lib/libats_mt.so
+cleanall:: ; $(RMF) lib/libats_smlbas.so
+
 ###### end of [Makefile_libats_shared.txt] ######

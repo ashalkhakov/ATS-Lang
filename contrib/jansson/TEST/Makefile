@@ -29,17 +29,17 @@ cleanall::
 ######
 
 test01: test01_dats.c
-	$(ATSCC) $(CCFLAGS) -I$(ATSCTRB) -o $@ $< -ljansson
+	$(ATSCC) $(CCFLAGS) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< -ljansson
 cleanall:: ; $(RMF) test01
 
 test02: test02_dats.c
-	$(ATSCC) $(CCFLAGS) -I$(ATSCTRB) -o $@ $< -ljansson
+	$(ATSCC) $(CCFLAGS) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< -ljansson
 cleanall:: ; $(RMF) test02
 
 ######
 
 github_commits: github_commits_dats.c
-	$(ATSCC) $(CCFLAGS) -I$(ATSCTRB) -o $@ $< -ljansson -lcurl
+	$(ATSCC) $(CCFLAGS) -I$(ATSCTRB) -IATS$(ATSCTRB) -o $@ $< -ljansson -lcurl
 cleanall:: ; $(RMF) github_commits
 
 ######
