@@ -38,11 +38,6 @@
 
 /* ****** ****** */
 
-#include "ats_memory.h"
-#include "ats_types.h"
-
-/* ****** ****** */
-
 ATSinline()
 ats_ptr_type
 atspre_matrix_ptr_takeout_row_tsz (

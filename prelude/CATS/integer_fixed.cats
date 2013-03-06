@@ -38,19 +38,15 @@
 
 /* ****** ****** */
 
-#include <stdio.h>
-
-/* ****** ****** */
-
-#include "ats_exception.h"
-#include "ats_memory.h"
-#include "ats_types.h"
+extern
+int fprintf (FILE *stream, const char *format, ...) ;
+// in [stdio.h]
 
 /* ****** ****** */
 
 extern
 ats_void_type
-ats_exit_errmsg(ats_int_type n, ats_ptr_type msg) ;
+ats_exit_errmsg (ats_int_type n, ats_ptr_type msg) ;
 
 /* ****** ****** */
 

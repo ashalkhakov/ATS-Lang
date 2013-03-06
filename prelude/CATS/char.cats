@@ -39,12 +39,24 @@
 /* ****** ****** */
 
 #include <ctype.h>
-#include <stdio.h>
+
+#ifndef isascii
+extern int isascii (int c) ; // _XOPEN_SOURCE
+#endif // end of [isascii]
+
+#ifndef isblank
+extern int isblank (int c) ; // _XOPEN_SOURCE >= 600
+#endif // end of [isblank]
+
+#ifndef toascii
+extern int toascii (int c) ; // _XOPEN_SOURCE
+#endif // end of [toascii]
 
 /* ****** ****** */
 
-#include "ats_memory.h"
-#include "ats_types.h"
+extern
+int fprintf (FILE *stream, const char *format, ...) ;
+// in [stdio.h]
 
 /* ****** ****** */
 //

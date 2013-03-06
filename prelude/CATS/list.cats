@@ -38,10 +38,6 @@
 
 /* ****** ****** */
 
-#include "ats_types.h"
-
-/* ****** ****** */
-
 ATSinline()
 ats_ptr_type
 atspre_list0_of_list1 (ats_ptr_type x) { return x ; }

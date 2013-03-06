@@ -38,14 +38,14 @@
 
 /* ****** ****** */
 
-#include <stdarg.h>
 #include <stdio.h>
+#include <stdarg.h>
 
 /* ****** ****** */
 
 extern
 ats_void_type
-ats_exit_errmsg(ats_int_type n, ats_ptr_type msg) ;
+ats_exit_errmsg (ats_int_type n, ats_ptr_type msg) ;
 
 extern ats_void_type atspre_stdout_view_get() ;
 extern ats_void_type atspre_stdout_view_set() ;

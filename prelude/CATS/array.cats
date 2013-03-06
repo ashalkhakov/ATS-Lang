@@ -38,14 +38,9 @@
 
 /* ****** ****** */
 
-#include <string.h> /* for [memcpy] */
-
-/* ****** ****** */
-
-/*
-#include "ats_types.h"
-#include "ats_memory.h"
-*/
+extern
+void *memcpy(void *dest, const void *src, size_t n) ;
+// in [string.h]
 
 /* ****** ****** */
 
