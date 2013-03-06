@@ -10,6 +10,8 @@ staload "contrib/JNI/SATS/jni.sats"
 
 #define ATS_DYNLOADFLAG 0
 
+(* ****** ****** *)
+
 extern
 fun printHello {l:agz}
   (env: !JNIEnvptr, obj: !jobject l): void = "ext#Java_Hello_printHello"
@@ -30,7 +32,7 @@ val () = printf ("Hello, world!\n", @())
 val () = loop (msg, 0) where {
   fun loop {n,i:nat | i <= n} .<n-i>.
     (msg: string n, i: size_t i): void =
-    if string_isnot_at_end (msg, i) then let
+    if string_isnot_atend (msg, i) then let
       val () = fprint_char (stdout_ref, msg[i]) in loop (msg, i+1)
     end else ()
   // end of [loop]
