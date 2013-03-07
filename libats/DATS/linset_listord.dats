@@ -190,6 +190,57 @@ end // end of [linset_remove]
 
 (* ****** ****** *)
 
+(*
+** By Brandon Barker
+*)
+implement{a}
+linset_choose
+  (xs, x0) = let
+in
+//
+case+ xs of
+| list_vt_cons
+    (x, !p_xs) => let
+    prval () = fold@ xs
+    val () = x0 := x
+    prval () = opt_some {a} (x0)
+  in
+    true
+  end // end of [list_vt_cons]
+| list_vt_nil () => let
+    prval () = fold@ (xs)
+    prval () = opt_none {a} (x0)
+  in
+    false
+  end // end of [list_vt_nil]
+//
+end // end of [linset_choose]
+
+implement{a}
+linset_choose_out
+  (xs0, x0) = let
+in
+//
+case+ xs0 of
+| ~list_vt_cons
+    (x, xs) => let
+    val () = x0 := x
+    prval () = opt_some {a} (x0)
+    val () = xs0 := xs
+  in
+    true
+  end // end of [list_vt_cons]
+| list_vt_nil () => let
+    prval () = fold@ (xs0)
+    prval () = opt_none {a} (x0)
+  in
+    false
+  end // end of [list_vt_nil]
+//
+end // end of [linset_choose_out]
+
+(* ****** ****** *)
+
 implement{a}
 linset_union
   (xs1, xs2, cmp) = let

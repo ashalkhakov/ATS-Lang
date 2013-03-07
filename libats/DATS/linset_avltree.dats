@@ -705,7 +705,7 @@ linset_choose
 // end of [linset_choose]
 
 implement{a}
-linset_takeout
+linset_choose_out
   (xs, x0) = case+ xs of
   | ~B (_(*h*), x, tl, tr) => let
       val () = x0 := x
@@ -720,7 +720,7 @@ linset_takeout
     in
       false
     end // end of [E]
-// end of [linset_takeout]
+// end of [linset_choose_out]
 
 (* ****** ****** *)
 
