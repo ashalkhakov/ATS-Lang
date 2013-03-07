@@ -52,6 +52,8 @@ staload Lst = "ats_list.sats"
 staload Par = "ats_parser.sats"
 staload PM = "ats_posmark.sats"
 staload Sym = "ats_symbol.sats"
+macdef BACKSLASH = $Sym.symbol_BACKSLASH
+macdef UNDERSCORE = $Sym.symbol_UNDERSCORE
 staload Syn = "ats_syntax.sats"
 
 (* ****** ****** *)
@@ -375,117 +377,126 @@ end // end of [p0at_tr_errmsg_opr]
 implement
 p0at_tr p0t0 = let
 //
-fun aux_item (p0t0: p0at): p1atitm = let
-  val loc = p0t0.p0at_loc in case+ p0t0.p0at_node of
-    | P0Tann (p0t, s0e) => let
-        val p1t = p0at_tr p0t and s1e = s0exp_tr s0e
-        val p1t_ann = p1at_ann (loc, p1t, s1e)
-      in
-        $Fix.ITEMatm p1t_ann
-      end // end of [P0Tann]
-    | P0Tapp _ => let 
-        val p1t = $Fix.fixity_resolve
-          (loc, p1atitm_app, aux_itemlst p0t0)
-      in
-        $Fix.ITEMatm p1t
-      end // end of [P0Tapp]
-    | P0Tas (id, p0t) => begin
-        $Fix.ITEMatm (p1at_as (loc, id, p0at_tr p0t))
-      end // end of [P0Tas]
-    | P0Tchar c(*char*) => $Fix.ITEMatm (p1at_char (loc, c))
-    | P0Texist (s0as) => let
-        val s1as = s0arglst_tr s0as
-        fn f (
-          body: p1at
-        ) :<cloref1> p1atitm = let
-          val loc = $Loc.location_combine (loc, body.p1at_loc)
-        in
-          $Fix.ITEMatm (p1at_exist (loc, s1as, body))
-        end // end of [f]
-      in
-        $Fix.ITEMopr ($Fix.OPERpre ($Fix.exist_prec_dyn, f))
-      end // end of [P0Texist]
-    | P0Tfloat f(*string*) => $Fix.ITEMatm (p1at_float (loc, f))
-    | P0Tfree (p0t) => begin
-        $Fix.ITEMatm (p1at_free (loc, p0at_tr p0t))
-      end // end of [P0Tfree]
-    | P0Tide id when id = $Sym.symbol_UNDERSCORE => begin
-        $Fix.ITEMatm (p1at_anys loc)
-      end
-    | P0Tide id when id = $Sym.symbol_BACKSLASH => begin
-        p1atitm_backslash
-      end // end of [P0Tide when ...]
-    | P0Tide id => let
-        val p1t = p1at_ide (loc, id)
-      in
-        case+ the_fxtyenv_find id of
-        | ~Some_vt f => p1at_make_opr (p1t, f)
-        | ~None_vt () => $Fix.ITEMatm p1t
-      end // end of [P0Tide]
-    | P0Tint (str) => begin
-        $Fix.ITEMatm (p1at_int (loc, str))
-      end
-    | P0Tlist (p0ts) => let
-        val p1ts = p0atlst_tr p0ts
-      in
-        $Fix.ITEMatm (p1at_list (loc, p1ts))
-      end
-    | P0Tlist2 (p0ts1, p0ts2) => let
-        val p1ts1 = p0atlst_tr p0ts1
-        and p1ts2 = p0atlst_tr p0ts2
-      in
-        $Fix.ITEMatm (p1at_list2 (loc, p1ts1, p1ts2))
-      end
-    | P0Tlst (p0ts) => let
-        val p1ts = p0atlst_tr p0ts
-      in
-        $Fix.ITEMatm (p1at_lst (loc, p1ts))
-      end
-    | P0Topide id => $Fix.ITEMatm (p1at_ide (loc, id))
-    | P0Tqid (q, id) => $Fix.ITEMatm (p1at_qid (loc, q, id))
-    | P0Trec (recknd, lp0ts) => begin
-        $Fix.ITEMatm (p1at_rec (loc, recknd, labp0atlst_tr lp0ts))
-      end
-    | P0Tref (id) => begin
-        $Fix.ITEMatm (p1at_ref (loc, id))
-      end
-    | P0Trefas (id, p0t) => begin
-        $Fix.ITEMatm (p1at_refas (loc, id, p0at_tr p0t))
-      end
-    | P0Tsvararg s0a => begin
-        $Fix.ITEMatm (p1at_svararg (loc, s0vararg_tr s0a))
-      end
-    | P0Tstring str => begin
-        $Fix.ITEMatm (p1at_string (loc, str))
-      end
-    | P0Ttup (tupknd, p0ts) => let
-        val p1ts = p0atlst_tr p0ts
-      in
-        $Fix.ITEMatm (p1at_tup (loc, tupknd, p1ts))
-      end
-    | P0Ttup2 (tupknd, p0ts1, p0ts2) => let
-        val p1ts1 = p0atlst_tr p0ts1
-        val p1ts2 = p0atlst_tr p0ts2
-      in
-        $Fix.ITEMatm (p1at_tup2 (loc, tupknd, p1ts1, p1ts2))
-      end // end of [P0Ttup2]
+fun
+aux_item
+(
+  p0t0: p0at
+) : p1atitm = let
+//
+val loc = p0t0.p0at_loc
+//
+in
+//
+case+
+  p0t0.p0at_node of
+| P0Tann (p0t, s0e) => let
+    val p1t = p0at_tr p0t and s1e = s0exp_tr s0e
+    val p1t_ann = p1at_ann (loc, p1t, s1e)
+  in
+    $Fix.ITEMatm p1t_ann
+  end // end of [P0Tann]
+| P0Tapp _ => let 
+    val p1t =
+      $Fix.fixity_resolve (loc, p1atitm_app, aux_itemlst p0t0)
+  in
+    $Fix.ITEMatm p1t
+  end // end of [P0Tapp]
+| P0Tas (id, p0t) => (
+    $Fix.ITEMatm (p1at_as (loc, id, p0at_tr p0t))
+  ) // end of [P0Tas]
+| P0Tchar c(*char*) => $Fix.ITEMatm (p1at_char (loc, c))
+| P0Texist (s0as) => let
+    val s1as = s0arglst_tr s0as
+    fun f (
+      body: p1at
+    ) :<cloref1> p1atitm = let
+      val loc = $Loc.location_combine (loc, body.p1at_loc)
+    in
+      $Fix.ITEMatm (p1at_exist (loc, s1as, body))
+    end // end of [f]
+  in
+    $Fix.ITEMopr ($Fix.OPERpre ($Fix.exist_prec_dyn, f))
+  end // end of [P0Texist]
+| P0Tfloat f(*string*) => $Fix.ITEMatm (p1at_float (loc, f))
+| P0Tfree (p0t) => (
+    $Fix.ITEMatm (p1at_free (loc, p0at_tr p0t))
+  ) // end of [P0Tfree]
+| P0Tide (id)
+    when id = BACKSLASH => p1atitm_backslash
+| P0Tide (id)
+    when id = UNDERSCORE => $Fix.ITEMatm (p1at_any (loc))
+| P0Tide id => let
+    val p1t = p1at_ide (loc, id)
+  in
+    case+ the_fxtyenv_find id of
+    | ~Some_vt f => p1at_make_opr (p1t, f)
+    | ~None_vt () => $Fix.ITEMatm p1t
+  end // end of [P0Tide]
+| P0Tint (str) => $Fix.ITEMatm (p1at_int (loc, str))
+| P0Tlist (p0ts) => let
+    val p1ts = p0atlst_tr p0ts
+  in
+    $Fix.ITEMatm (p1at_list (loc, p1ts))
+  end
+| P0Tlist2 (p0ts1, p0ts2) => let
+    val p1ts1 = p0atlst_tr p0ts1
+    and p1ts2 = p0atlst_tr p0ts2
+  in
+    $Fix.ITEMatm (p1at_list2 (loc, p1ts1, p1ts2))
+  end
+| P0Tlst (p0ts) => let
+    val p1ts = p0atlst_tr p0ts
+  in
+    $Fix.ITEMatm (p1at_lst (loc, p1ts))
+  end
+| P0Topide id => $Fix.ITEMatm (p1at_ide (loc, id))
+| P0Tqid (q, id) => $Fix.ITEMatm (p1at_qid (loc, q, id))
+| P0Trec (recknd, lp0ts) => (
+    $Fix.ITEMatm (p1at_rec (loc, recknd, labp0atlst_tr lp0ts))
+  )
+| P0Tref (id) => $Fix.ITEMatm (p1at_ref (loc, id))
+| P0Trefas (id, p0t) => (
+    $Fix.ITEMatm (p1at_refas (loc, id, p0at_tr p0t))
+  )
+| P0Tsvararg (s0a) => (
+    $Fix.ITEMatm (p1at_svararg (loc, s0vararg_tr s0a))
+  )
+| P0Tstring str => $Fix.ITEMatm (p1at_string (loc, str))
+| P0Ttup (tupknd, p0ts) => let
+    val p1ts = p0atlst_tr p0ts
+  in
+    $Fix.ITEMatm (p1at_tup (loc, tupknd, p1ts))
+  end
+| P0Ttup2 (
+    tupknd, p0ts1, p0ts2
+  ) => let
+    val p1ts1 = p0atlst_tr p0ts1
+    val p1ts2 = p0atlst_tr p0ts2
+  in
+    $Fix.ITEMatm (p1at_tup2 (loc, tupknd, p1ts1, p1ts2))
+  end // end of [P0Ttup2]
 (*
-    | _ => begin
-        prerr_loc_interror p0t0.p0at_loc;
-        prerr ": p0at_tr: not available yet"; prerr_newline ();
-        $Err.abort {p1atitm} ()
-      end // end of [_]
+| _ => begin
+    prerr_loc_interror p0t0.p0at_loc;
+    prerr ": p0at_tr: not available yet"; prerr_newline ();
+    $Err.abort {p1atitm} ()
+  end // end of [_]
 *)
+//
 end // end of [aux_item]
 //
-and aux_itemlst (p0t0: p0at): p1atitmlst = let
-  fun aux (res: p1atitmlst, p0t0: p0at): p1atitmlst =
+and aux_itemlst
+  (p0t0: p0at): p1atitmlst = let
+  fun aux (
+    res: p1atitmlst, p0t0: p0at
+  ) : p1atitmlst = let
+  in
     case+ p0t0.p0at_node of
     | P0Tapp (p0t1, p0t2) => let
         val res = aux_item p0t2 :: res in aux (res, p0t1)
       end // end of [P0Tapp]
     | _ => aux_item p0t0 :: res
-  // end of [aux]
+  end // end of [aux]
 in
   aux (nil (), p0t0)
 end // end of [aux_itemlst]
@@ -502,13 +513,17 @@ p0atlst_tr (p0ts) =
 // end of [p0atlst_tr]
 
 implement
-labp0atlst_tr (lp0ts) = case+ lp0ts of
-  | LABP0ATLSTcons (l, p0t, lp0ts) => begin
-      LABP1ATLSTcons (l, p0at_tr p0t, labp0atlst_tr lp0ts)
-    end // end of [LABP0ATLSTcons]
-  | LABP0ATLSTnil () => LABP1ATLSTnil ()
-  | LABP0ATLSTdot () => LABP1ATLSTdot ()
-// end of [labp0atlst_tr]
+labp0atlst_tr (lp0ts) = let
+in
+//
+case+ lp0ts of
+| LABP0ATLSTcons (l, p0t, lp0ts) =>
+    LABP1ATLSTcons (l, p0at_tr p0t, labp0atlst_tr lp0ts)
+  // end of [LABP0ATLSTcons]
+| LABP0ATLSTnil () => LABP1ATLSTnil ()
+| LABP0ATLSTdot () => LABP1ATLSTdot ()
+//
+end // end of [labp0atlst_tr]
 
 (* ****** ****** *)
 

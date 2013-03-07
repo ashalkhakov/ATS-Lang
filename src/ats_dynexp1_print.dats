@@ -74,7 +74,7 @@ in
       prstr ")"
     end // end of [P1Tann]
   | P1Tany () => fprint1_string (pf | out, "P1Tany()")
-  | P1Tanys () => fprint1_string (pf | out, "P1Tanys()")
+  | P1Tany2 () => fprint1_string (pf | out, "P1Tany2()")
   | P1Tapp_sta (p1t, s1as) => begin
       prstr "P1Tapp_sta(";
       fprint_p1at (pf | out, p1t);

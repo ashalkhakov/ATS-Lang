@@ -81,8 +81,8 @@ typedef dcstextdef = $Syn.dcstextdef
 datatype p1at_node = 
   | P1Tann of // ascribed pattern
       (p1at, s1exp) 
-  | P1Tany // wildcard: (_)
-  | P1Tanys // wildcards: _
+  | P1Tany // wildcards: _
+  | P1Tany2 // wildcard: (_)
   | P1Tapp_dyn of // constructor
       (p1at, loc_t(*arg*), int, p1atlst)
   | P1Tapp_sta of // static application
@@ -157,7 +157,7 @@ overload prerr with prerr_p1at
 fun p1at_ann (_: loc_t, p1t: p1at, s1e: s1exp): p1at
 
 fun p1at_any (_: loc_t): p1at
-fun p1at_anys (_: loc_t): p1at
+fun p1at_any2 (_: loc_t): p1at
 
 fun p1at_app_dyn
   (loc: loc_t, p1t: p1at, loc_arg: loc_t, npf: int, p1ts: p1atlst): p1at
