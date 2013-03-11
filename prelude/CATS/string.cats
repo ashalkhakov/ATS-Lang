@@ -234,6 +234,20 @@ atspre_strbuf_initialize_substring (
 
 ATSinline()
 ats_ptr_type
+atspre_string_copy
+  (ats_ptr_type str) {
+  int n ; char *des ;
+  n = strlen((char*)str) ;
+  des = (char*)ATS_MALLOC(n+1) ;
+  des[n] = '\000' ;
+  memcpy(des, str, n) ;
+  return (des) ;
+} // end of [atspre_string_copy]
+
+/* ****** ****** */
+
+ATSinline()
+ats_ptr_type
 atspre_string_append
   (ats_ptr_type s1, ats_ptr_type s2) {
   int n1, n2 ; char *des ;
@@ -242,7 +256,7 @@ atspre_string_append
   des = (char*)ATS_MALLOC(n1+n2+1) ;
   des[n1+n2] = '\000' ;
   memcpy(des, s1, n1) ; memcpy (des+n1, s2, n2) ;
-  return (ats_ptr_type)des ;
+  return (des) ;
 } // end of [atspre_string_append]
 
 /* ****** ****** */

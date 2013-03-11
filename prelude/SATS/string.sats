@@ -503,6 +503,13 @@ fun string_make_substring__main {v:view}
 
 (* ****** ****** *)
 
+fun string0_copy
+  (str: string): string = "atspre_string_copy"
+fun string1_copy {n:nat}
+  (str: string (n)): strbufptr_gc (n) = "atspre_string_copy"
+
+(* ****** ****** *)
+
 fun string0_append
   (s1: string, s2: string):<> string // persistent
   = "atspre_string_append" 
