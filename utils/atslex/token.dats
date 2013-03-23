@@ -48,7 +48,7 @@ implement errmsg (msg) = (prerr msg; prerr_newline (); exit 1)
 
 (* ****** ****** *)
 
-#define BASE 8
+#define BASE 10
 #define c2i int_of_char
 #define i2c char_of_int1
 
@@ -106,11 +106,13 @@ pos_advance (ats_int_type c) {
 static ats_int_type the_char ;
 
 ATSinline()
-ats_int_type char_get() { return the_char ; }
+ats_int_type char_get() {
+  return the_char ;
+}
 
 ATSinline()
 ats_void_type
-char_update() { 
+char_update() {
   the_char = atslex_getchar () ;
   pos_advance (the_char) ;
   return ;
@@ -245,21 +247,29 @@ fun string_make_charlst_rev_int
 ats_ptr_type
 string_make_charlst_rev_int
   (ats_ptr_type cs, const ats_int_type n) {
-  ats_ptr_type cs0 = cs ;
   int i0 ;
-  ats_size_type m = 0 ;
+  int m = 0 ;
+  int *p0, *p ;
   char *s0, *s ;
 
-  while (!chars_is_nil(cs)) { i0 = chars_uncons(&cs) ; m += utf8_codepoint_width(i0) ; }
-  cs = cs0 ;
-  s0 = ats_malloc_gc(m+1) ; s = s0 + m ; *s = '\0' ; --s ;
+  p0 = (int *)ats_malloc_gc(n * sizeof(int)) ;
+  p = p0 + n ;
   while (!chars_is_nil(cs)) {
-    int wdt ; /* uninitialized */
     i0 = chars_uncons(&cs) ;
-    wdt = utf8_codepoint_width(i0) ;
-    s -= wdt ;
-    utf8_codepoint_store(s, wdt, i0) ;
+    *--p = i0 ;
+    m += utf8_codepoint_width(i0) ;
   }
+  p = p0 ;
+  s = s0 = ats_malloc_gc(m+1) ;
+  while (m) {
+    int wdt ; /* uninitialized */
+    i0 = *p++ ;
+    wdt = utf8_codepoint_width(i0) ;
+    s = utf8_codepoint_store(s, wdt, i0) ;
+    m -= wdt ;
+  }
+  *s = '\0' ;
+  ats_free_gc(p0) ;
   return s0 ;
 } /* string_make_charlst_rev_int */
 
@@ -311,12 +321,24 @@ tokenize_logue () =
   fun loop {n,level:nat}
     (cs: chars n, n: int n, level: int level): string = let
     val c = char_get ()
+(*
+    //
+    val () = prerrf ("tokenize_logue: %d\n", @(c))
+    val c1 = int1_of_int c
+    val () = if c1 >= 0 then let
+        val (pf_stderr | ()) = $effmask_all (stderr_view_get ())
+      	 val _ = $effmask_ref (utf8_encode (file_mode_lte_w_w, pf_stderr | stderr, c1))
+        val () = $effmask_all (stderr_view_set (pf_stderr | (*empty*)))
+      in (*empty*) end
+    val () = prerr_newline ()
+    //
+*)
   in
     if c >= 0 then begin
       if c = 37 (* '%' *) then let
         val c1 = char_update_get () in
         if c1 >= 0 then begin
-          if c1 = 123 (* '}' *) then begin
+          if c1 = 125 (* '}' *) then begin
             if level > 0 then begin
               char_update (); loop (c1 :: c :: cs, n+2, level-1)
             end else begin
@@ -527,6 +549,7 @@ end // end of [tokenize_comment]
 
 (* ****** ****** *)
 
+// TODO: allow specification in hex or oct
 fun tokenize_int
   (i: int): int = let
   val c = char_get () in
@@ -621,8 +644,8 @@ fun tokenize_word_ide
   cs: chars n, n: int n
 ) : [m:nat] @(size_t m, string32_vt m) = let
   fn char_islttr (c: int): bool =
-    if c >= 97 (* 'a' *) || c <= 122 (* 'z' *) then true
-    else if c >= 65 (* 'A' *) || c <= 90 (* 'Z' *) then true
+    if c >= 97 (* 'a' *) && c <= 122 (* 'z' *) then true
+    else if c >= 65 (* 'A' *) && c <= 90 (* 'Z' *) then true
     else if utf32_isdigit c then true
     else c = 95 (* '_' *)
   // end of [char_islttr]
@@ -785,51 +808,6 @@ end // end of [tokenize]
 
 implement
 token_get () = tokenize ()
-(*
-local
-
-val the_token = ref<Option_vt token> (None_vt ())
-
-in // in of [local]
-
-implement
-token_get () = let
-  val (vbox pf | p) = ref_get_view_ptr (the_token)
-in
-  case+ !p of
-  | ~Some_vt tok => (!p := None_vt (); tok)
-  | None_vt () => (fold@ !p; $effmask_ref (exit_errmsg (1, "[token_get]: internal error")))
-end // end of [token_get]
-
-implement
-token_update () = let
-  val (vbox pf | p) = ref_get_view_ptr (the_token)
-in
-  case+ !p of
-  | ~Some_vt tok => (token_free tok; !p := Some_vt ($effmask_ref (tokenize ())))
-  | ~None_vt () => !p := Some_vt ($effmask_ref (tokenize ()))
-end // end of [token_update]
-
-implement
-token_get_update () = let
-  val (vbox pf | p) = ref_get_view_ptr (the_token)
-in
-  case+ !p of
-  | ~Some_vt tok => (token_free tok; !p := None_vt (); $effmask_ref (tokenize ()))
-  | None_vt () => (fold@ !p; $effmask_ref (tokenize ()))
-end // end of [token_get_update]
-
-implement
-token_putback (x) = let
-  val (vbox pf | p) = ref_get_view_ptr (the_token)
-in
-  case+ !p of
-  | Some_vt _ => (fold@ !p; token_free x; $effmask_ref (exit_errmsg (1, "[token_putback]: internal error")))
-  | ~None_vt () => (!p := Some_vt x)
-end // end of [token_putback]
-
-end // end of [local]
-*)
 
 (* ****** ****** *)
 

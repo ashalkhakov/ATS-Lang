@@ -166,9 +166,9 @@ end // end of [insert_random]
 (* ****** ****** *)
 
 implement states_foreach_and_free {v} (pf | f, sts) = let
-  viewtypedef cloptr_t = (!v | int, intset_t) -<cloptr1> void
+  viewtypedef cloptr_t = (!v | int, intset_t) -<clo1> void
   fun aux {s:nat} .<s>.
-    (pf: !v | f: !cloptr_t, sts: states s): void = case+ sts of
+    (pf: !v | f: &cloptr_t, sts: states s): void = case+ sts of
     | ~STScons (s, tag, ns, sts_l, sts_r) => begin
         f (pf | tag, ns); aux (pf | f, sts_l); aux (pf | f, sts_r)
       end // end of [STScons]

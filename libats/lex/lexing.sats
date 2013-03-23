@@ -35,37 +35,32 @@
 // Author: Hongwei Xi (hwxi AT cs DOT bu DOT edu)
 // Time: July 2007
 //
-
-(* ****** ****** *)
-
-%{#
-#ifndef ATS_LIBATS_LEX_LEXING_SATS
-#define ATS_LIBATS_LEX_LEXING_SATS
-typedef struct {
-  ats_clo_ptr_type free ;
-  ats_clo_ptr_type getc ;
-} atslex_infile_t ; // end of [typedef]
-#endif // end of [ATS_LIBATS_LEX_LEXING_SATS]
-%} // end of [%{#]
+// Author: Artyom Shalkhakov (artyom DOT shalkhakov AT gmail DOT com)
+// Time: March 2013
+//
 
 (* ****** ****** *)
 
 abstype accept_table_t // boxed type
 
 fun accept_table_get
-  (acctbl: accept_table_t, nstate: int): int (* irule *)
+  (acctbl: accept_table_t, nstate: int(*0 to nstates*)): int (* irule or 0 *)
 
-fun __accept_table_make (nton: int) (nitm: int) (s: string): accept_table_t
-
-fun __accept_table_free (acctbl: accept_table_t): void
+fun
+accept_table_of_array {n:nat} {l:addr} (
+  pf_arr: array_v (int, n, l)
+| p_arr: ptr l, ntot: int n
+) : accept_table_t
 
 //
 
 abstype transition_table_t // boxed type
 
-fun __transition_table_make (n: int) (s: string): transition_table_t
-
-fun __transition_table_free (transtbl: transition_table_t): void
+fun
+transition_table_of_array {n:nat} {l:addr} (
+  pf_arr: array_v (List @(int, int, int), n, l)
+| p_arr: ptr l, ntot: int n
+) : transition_table_t
 
 fun transition_table_get // c >= -1
   (transtbl: transition_table_t, nstate: int, c: int): int (* nstate *)
@@ -110,9 +105,7 @@ overload prerr with prerr_position
 //
 // HX: flat type for the input file
 //
-absviewt@ype infile_t
-  (v:view) = $extype "atslex_infile_t"
-// end of [infile_t]
+absviewtype infile_t (v:view)
 
 fun infile_free {v:view}
   (pf: v | f: infile_t v): void = "lexing_infile_free"
@@ -166,7 +159,9 @@ fun lexbuf_char_next (lb: &lexbuf_t): int = "lexbuf_char_next"
 fun lexbuf_is_eof (lb: &lexbuf_t): bool = "lexbuf_is_eof"
 
 fun lexing_engine_lexbuf (
-  lb: &lexbuf_t, transtbl: transition_table_t, acctbl: accept_table_t
+  lb: &lexbuf_t
+, transtbl: transition_table_t
+, acctbl: accept_table_t
 ) : int (*nstate*)
   = "lexing_engine_lexbuf"
 // end of [fun]
@@ -203,8 +198,10 @@ fun lexing_lexbuf_set {l:addr} (pf: lexbuf_t @ l | p: ptr l): void
 // This function frees the default lexbuf.
 fun lexing_lexbuf_free (): void = "lexing_lexbuf_free"
 
-fun lexing_engine
-  (transtbl: transition_table_t, acctbl: accept_table_t): int
+fun lexing_engine (
+  transtbl: transition_table_t
+, acctbl: accept_table_t
+) : int
   = "lexing_engine"
 
 (* ****** ****** *)

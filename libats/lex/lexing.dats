@@ -38,25 +38,6 @@
 
 #include "libc/CATS/stdio.cats"
 
-typedef struct {
-  unsigned char *buf_ptr ;
-  int buf_size ;
-  atslex_infile_t infile ;
-  int fstpos ;
-  int fstpos_line ; // line number
-  int fstpos_loff ; // line offset
-  long int fstpos_toff ; // total offset
-  int lstpos ;
-  int lstpos_line ; // line number
-  int lstpos_loff ; // line offset
-  long int lstpos_toff ; // total offset
-  int curpos ;
-  int curpos_line ; // line number
-  int curpos_loff ; // line offset
-  long int curpos_toff ; // total offset
-  int endpos ;
-} lexbuf ; // end of [typedef]
-
 %} // end of [%{^]
 
 (* ****** ****** *)
@@ -100,14 +81,33 @@ implement prerr_position (pos) = prerr_mac (fprint_position, pos)
 
 (* ****** ****** *)
 
-viewtypedef
-infile (v:view) =
-$extype_struct
-  "atslex_infile_t" of {
+assume infile_t (v:view) = '{
   free= (v | (*none*)) -<cloptr1> void
 , getc= (!v | (*none*)) -<cloptr1> int
-} // end of [infile]
-assume infile_t = infile
+} // end of [infile_t]
+
+%{
+
+typedef struct {
+  unsigned char *buf_ptr ;
+  int buf_size ;
+  ats_ptr_type infile ;
+  int fstpos ;
+  int fstpos_line ; // line number
+  int fstpos_loff ; // line offset
+  long int fstpos_toff ; // total offset
+  int lstpos ;
+  int lstpos_line ; // line number
+  int lstpos_loff ; // line offset
+  long int lstpos_toff ; // total offset
+  int curpos ;
+  int curpos_line ; // line number
+  int curpos_loff ; // line offset
+  long int curpos_toff ; // total offset
+  int endpos ;
+} lexbuf ; // end of [typedef]
+
+%}
 
 (* ****** ****** *)
 
@@ -163,7 +163,7 @@ infile_make_string
   val () = !p := size1_of_int1 (0); 
 //
 in #[
-  V | ( @(pf_gc, pf_at) | @{ free= _free, getc= _getc } )
+  V | ( @(pf_gc, pf_at) | '{ free= _free, getc= _getc } )
 ] end // end of [infile_make_string]
 
 (* ****** ****** *)
@@ -208,7 +208,7 @@ infile_make_strptr
   val () = !p := size1_of_int1 0
 //
 in #[
-  V | ( @(pf_free, pf_sb, pf_gc, pf_at) | @{ free= _free, getc= _getc } )
+  V | ( @(pf_free, pf_sb, pf_gc, pf_at) | '{ free= _free, getc= _getc } )
 ] end // end of [infile_make_strptr]
 
 (* ****** ****** *)
@@ -251,7 +251,7 @@ infile_make_file
     pf_fil: !V | (*none*)
   ) :<cloptr1> int = fgetc_err (pf_mod | !fil)
 in #[
-  V | (pf_fil | @{ free= _free, getc= _getc })
+  V | (pf_fil | '{ free= _free, getc= _getc })
 ] end // end of [infile_make_file]
 
 implement
@@ -262,7 +262,7 @@ infile_make_stdin () = let
   } // end of [_free]
   fn _getc (pf: !V | (*none*)):<cloptr1> int = getchar ()
 in
-  #[ V | (unit_v () | @{ free= _free, getc= _getc } ) ]
+  #[ V | (unit_v () | '{ free= _free, getc= _getc } ) ]
 end // end of [infile_make_stdin]
 
 end // end of [local]
@@ -274,12 +274,12 @@ lexing_engine_lexbuf
   (lxbf, transtbl, acctbl) = let
 //
 fun aux (
-  lxbf: &lexbuf_t, irule: &int, nstate: int
+  lxbf: &lexbuf_t, irule: &int, state: int
 ) :<cloptr1> int =
-  if nstate > 0 then let
-    val irule_new = accept_table_get (acctbl, nstate)
+  if state > 0 then let
+    val irule_new = accept_table_get (acctbl, state)
 (*
-    val () = printf ("lexing_engine_lexbuf: aux: nstate = %i\n", @(nstate))
+    val () = printf ("lexing_engine_lexbuf: aux: state = %i\n", @(state))
     val () = printf ("lexing_engine_lexbuf: aux: irule_new = %i\n", @(irule))
 *)
     val () = if irule_new > 0 then begin
@@ -289,12 +289,12 @@ fun aux (
 (*
     val () = printf ("lexing_engine_lexbuf: c = %i\n", @(c))
 *)
-    val nstate = transition_table_get (transtbl, nstate, c)
+    val state = transition_table_get (transtbl, state, c)
 (*
     val () = printf ("lexing_engine_lexbuf: nstate = %i\n", @(nstate))
 *)
   in
-    aux (lxbf, irule, nstate)
+    aux (lxbf, irule, state)
   end else begin
     lexbuf_curpos_set (lxbf);
 (*
@@ -738,7 +738,7 @@ lexbuf_curpos_fprint (
 
 ats_ptr_type
 lexbuf_make_infile (
-  atslex_infile_t infile
+  ats_ptr_type infile
 ) {
   lexbuf *lxbf ;
   unsigned char *buf_ptr ;

@@ -128,8 +128,8 @@ end // end of [union_intset_intset]
 
 implement
 foreach_intset {v} (pf | f, ns): void = let
-  viewtypedef cloptr_t = (!v | int) -<cloptr1> void
-  fun loop (pf: !v | f: !cloptr_t, ns: intset_t)
+  viewtypedef cloptr_t = (!v | int) -<clo1> void
+  fun loop (pf: !v | f: &cloptr_t, ns: intset_t)
     : void = begin case+ ns of
     | n :: ns => (f (pf | n); loop (pf | f, ns)) | nil () => ()
   end // end of [loop]

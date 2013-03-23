@@ -298,6 +298,26 @@ in
 end // end of [fprint_string32]
 
 (* ****** ****** *)
+(*
+implement
+print_string32 (x) = lete
+  val (pf_stderr | p_stderr) = stdout_get ()
+in
+  fprint_string32 (file_mode_lte_w_w, pf_stdout | p_stdout, s, n);
+  stdout_view_set (pf_stderr | (*none*))
+end // end of [print_string32]
+*)
+(* ****** ****** *)
+(*
+implement
+prerr_string32 (x) = let
+  val (pf_stderr | p_stderr) = stderr_get ()
+in
+  fprint_string32 (file_mode_lte_w_w, pf_stderr | p_stderr, s, n);
+  stderr_view_set (pf_stderr | (*none*))
+end // end of [prerr_string32]
+*)
+(* ****** ****** *)
 
 %{$
 

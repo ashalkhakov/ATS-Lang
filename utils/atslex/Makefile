@@ -38,10 +38,10 @@ ATSCC=$(ATSHOMEQ)/bin/atscc
 #ATSCCFLAGS=-D_ATS_gc
 #ATSCCFLAGS=-D_ATS_gcats
 #ATSCCFLAGS=-D_ATS_GCATS
-ATSCCFLAGS=
+ATSCCFLAGS=-g
 ATSRUNTIME=$(ATSHOMEQ)/ccomp/runtime
 
-CCFLAGS=-g -O2
+CCFLAGS=-g
 INCLUDES=-I$(ATSHOMEQ) -I$(ATSRUNTIME)
 
 ######
@@ -50,31 +50,31 @@ atslex: \
   atslex.dats top_sats.o unicode_dats.o lexgen_dats.o \
   charset_dats.o intset_dats.o states_dats.o \
   parser_dats.o position_dats.o token_dats.o
-	$(ATSCC) $(ATSCCFLAGS) -o atslex \
+	$(ATSCC) -o atslex \
   atslex.dats top_sats.o unicode_dats.o lexgen_dats.o \
   charset_dats.o intset_dats.o states_dats.o \
-  parser_dats.o position_dats.o token_dats.o
+  parser_dats.o position_dats.o token_dats.o $(ATSCCFLAGS)
 
 ######
 
 charset_dats.o: charset.dats
-	$(ATSCC) $(CCFLAGS) -c charset.dats
+	$(ATSCC) -c charset.dats $(CCFLAGS)
 intset_dats.o: intset.dats
-	$(ATSCC) $(CCFLAGS) -c intset.dats
+	$(ATSCC) -c intset.dats $(CCFLAGS)
 unicode_dats.o: unicode.dats
-	$(ATSCC) $(CCFLAGS) -c unicode.dats
+	$(ATSCC) -c unicode.dats $(CCFLAGS)
 lexgen_dats.o: lexgen.dats
-	$(ATSCC) $(CCFLAGS) -c lexgen.dats
+	$(ATSCC) -c lexgen.dats $(CCFLAGS)
 parser_dats.o: parser.dats
-	$(ATSCC) $(CCFLAGS) -c parser.dats
+	$(ATSCC) -c parser.dats $(CCFLAGS)
 position_dats.o: position.dats
-	$(ATSCC) $(CCFLAGS) -c position.dats
+	$(ATSCC) -c position.dats $(CCFLAGS)
 states_dats.o: states.dats
-	$(ATSCC) $(CCFLAGS) -c states.dats
+	$(ATSCC) -c states.dats $(CCFLAGS)
 token_dats.o: token.dats
-	$(ATSCC) $(CCFLAGS) -c token.dats
+	$(ATSCC) -c token.dats $(CCFLAGS)
 top_sats.o: top.sats
-	$(ATSCC) $(CCFLAGS) -c top.sats
+	$(ATSCC) -c top.sats $(CCFLAGS)
 
 ######
 

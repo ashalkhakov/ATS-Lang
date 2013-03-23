@@ -81,6 +81,7 @@ fun utf32_isdigit (p: int): bool
 fun utf32_isspace (p: int): bool
 
 // FIXME: bad name... also, should be abstract
+// TODO: use 0-terminated int32 strings
 viewtypedef string32_vt (n:int) = array (Nat, n)
 viewtypedef string32_vt = [n:nat] string32_vt (n)
 fun eq_string32_string32 {m,n:nat} (
@@ -95,6 +96,12 @@ fun fprint_string32 {m:file_mode} {l:addr} {n:nat} (
 | p_fil: ptr l, x: string32_vt n
 , asz: size_t n
 ): void
+(*
+fun print_string32 (x: string32_vt): void
+overload print with print_string32
+fun prerr_string32 (x: string32_vt): void
+overload prerr with prerr_string32
+*)
 
 fun string_of_string32 {n:nat} (
   x: string32_vt n, n: size_t
@@ -132,21 +139,28 @@ datatype regex = // type for regular expressions
   | {n:nat} REGstr of @(size_t n, string32_vt n)
 // end if [regex]
 
-datatype redef =
+// TODO? viewtypedef redef = List_vt @(string (*identifier*), regex)
+dataviewtype redef =
   | redef_nil | redef_cons of (string (* identifier *), regex, redef)
 // end of [redef]
 
-datatype rules =
+// TODO? viewtypedef rules = List_vt @(regex, string (*code for action*))
+dataviewtype rules =
   | rules_nil | rules_cons of (regex, string (* code for action *), rules)
 // end of [rules]
 
-datatype lexfns =
+// TODO? viewtypedef lexfns = List_vt @{name= string, arg= string, rules= rules}
+dataviewtype lexfns =
   | lexfns_nil | lexfns_cons of (string (*name*), string (*arg*), rules, lexfns)
 // end if [lexfns]
 
-typedef lexer = '{
+viewtypedef lexer = '{
   preamble= string, redef= redef, lexfns= lexfns, postamble= string
 } // end of [lexer]
+
+typedef lexer0 = '{
+  preamble= string, redef= redef?, lexfns= lexfns?, postamble= string
+} // end of [lexer0]
 
 (* ****** ****** *)
 
@@ -168,18 +182,6 @@ fun pos_get_line_prev (): int = "pos_get_line_prev"
 fun pos_get_char_prev (): int = "pos_get_char_prev"
 
 fun token_get (): token
-(*
-// get token from store (FIXME: what if there isn't any?)
-fun token_get (): token = "token_get"
-// extract new token from input stream, put into store
-fun token_update (): void = "token_update"
-// extract new token from input stream,
-// but return it instead of putting into store
-fun token_get_update (): token = "token_get_update"
-// put token back in store (assuming store is empty)
-fun token_putback (x: token): void = "token_putback"
-*)
-// free token
 fun token_free (x: token):<> void = "token_free"
 
 fun tokenize_line_comment (): void
@@ -211,6 +213,8 @@ val charset_all: charset_t // the full charset
 val charset_nil: charset_t // the empty charset
 val charset_eof: charset_t
 
+fun charset_is_nil (cs: charset_t): bool
+
 fun charset_interval (c1: int, c2: int): charset_t
 fun charset_singleton (c: int): charset_t
 
@@ -219,6 +223,11 @@ fun charset_difference (cs1: charset_t, cs2: charset_t): charset_t
 fun charset_intersect (cs1: charset_t, cs2: charset_t): charset_t
 fun charset_union (cs1: charset_t, cs2: charset_t): charset_t
 fun charset_is_member (cs: charset_t, c: int): bool
+fun charset_is_joint (cs1: charset_t, cs2: charset_t): bool
+
+fun compare_charset_charset (cs1: charset_t, cs2: charset_t): Sgn
+
+fun list_vt_of_charset (cs: charset_t, tag: int): [m:nat] (int m, list_vt (@(int, int, int), m))
 
 fun fprint_charset {m:file_mode}
   (pf_mod: file_mode_lte (m, w) | fil: &FILE m, cs: charset_t): void =
@@ -226,6 +235,15 @@ fun fprint_charset {m:file_mode}
 
 fun print_charset (cs: charset_t): void
 fun prerr_charset (cs: charset_t): void
+
+val charset_base_char: charset_t
+val charset_ideographic: charset_t
+val charset_combining_char: charset_t
+val charset_digit: charset_t
+val charset_extender: charset_t
+val charset_blank: charset_t
+val charset_letter: charset_t
+val charset_tr8876_ident_char: charset_t
 
 (* ****** ****** *)
 //
@@ -235,6 +253,7 @@ fun print_regex (reg: regex): void
 fun prerr_regex (reg: regex): void
 
 fun lexer_parse (): lexer
+fun lexer_free (x: &lexer >> lexer0): void
 
 (* ****** ****** *)
 //
@@ -262,7 +281,7 @@ fun print_intset (cs: intset_t): void
 fun prerr_intset (cs: intset_t): void
 
 fun foreach_intset {v:view}
-  (pf: !v | f: !(!v | int) -<cloptr1> void, ns: intset_t): void
+  (pf: !v | f: &(!v | int) -<clo1> void, ns: intset_t): void
 // end of [foreach_intset]
 
 (* ****** ****** *)
@@ -273,11 +292,11 @@ fun states_nil (): states_t
 
 fun states_free (sts: states_t): void
 
-fun states_find (sts: !states_t, ns0: intset_t): int
+fun states_find (sts: !states_t, ns0: intset_t): int(*tag or ~1*)
 fun states_insert (sts: &states_t, tag0: int, ns0: intset_t): void
 
 fun states_foreach_and_free {v:view}
-  (pf: !v | f: !(!v | int, intset_t) -<cloptr1> void, sts: states_t): void
+  (pf: !v | f: &(!v | int, intset_t) -<clo1> void, sts: states_t): void
 // end of [states_foreach_and_free]
 
 (* ****** ****** *)
@@ -285,7 +304,7 @@ fun states_foreach_and_free {v:view}
 // HX: implemented in [lexgen.dats]
 //
 fun fprint_lexfns {m:file_mode}
-  (pf_mod: file_mode_lte (m, w) | fil: &FILE m, rds: redef, lfs: lexfns): void
+  (pf_mod: file_mode_lte (m, w) | fil: &FILE m, rds: &redef, lfs: !lexfns): void
 // end of [fprint_lexfns]
 
 (* ****** ****** *)

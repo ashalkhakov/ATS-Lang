@@ -39,7 +39,7 @@ tables.dats	: for creating and accessing transition and accept tables
 
 //
 
-Usuage:
+Usage:
 
 [atslex] receives its input from STDIN and emits its output to STDOUT.  For
 instance, the following command line reads from an input file named 

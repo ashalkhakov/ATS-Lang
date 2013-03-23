@@ -103,6 +103,16 @@ in
   case+ !p of
   | INPUTsome (!pf_fil | !p_fil) => let
       val c = $effmask_ref (utf8_decode (file_mode_lte_r_r, !pf_fil | !p_fil))
+(*
+      // DEBUG: print what you decoded into the terminal
+      val c1 = int1_of_int c
+      val () = if c1 >= 0 then let
+        val (pf_stderr | ()) = $effmask_all (stderr_view_get ())
+      	 val _ = $effmask_ref (utf8_encode (file_mode_lte_w_w, pf_stderr | stderr, c1))
+        val () = $effmask_all (stderr_view_set (pf_stderr | (*empty*)))
+      in (*empty*) end
+      //
+*)
     in
       fold@ (!p); c
     end // end of [INPUTsome]
@@ -165,12 +175,14 @@ val () = token_initialization ()
 //
 // val () = prerr ("atslex: [lexer_parse] is started.\n")
 //
-val lexer = lexer_parse ()
+var lexer = lexer_parse ()
 val () = the_atslex_input_fin () // close the input channel
 //
 // val () = prerr ("atslex: [lexer_parse] is finished.\n")
 //
 val (pf_stdout | ptr_stdout) = stdout_get ()
+
+val () = fprint_string (file_mode_lte_w_w | !ptr_stdout, "staload \"libats/lex/lexing.sats\"")
 
 val () = fprint_string (
   file_mode_lte_w_w | !ptr_stdout, lexer.preamble
@@ -190,6 +202,7 @@ val () = fprint_string (
 //
 // val () = prerr ("atslex: postamble is finished.\n")
 //
+val () = lexer_free (lexer)
 val () = stdout_view_set (pf_stdout | (*none*))
 
 in
