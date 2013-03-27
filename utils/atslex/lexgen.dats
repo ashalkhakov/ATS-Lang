@@ -724,7 +724,7 @@ fun transition_all {n:nat} {l_csi,l_pos:addr}
       //
       var csets = charsetlst (pf1 | A_csi, n, st)
       // FIXME: necessary?
-      val () = csets := list_vt_cons (charset_eof, csets)
+//      val () = csets := list_vt_cons (charset_eof, csets)
       val csets = split csets
       val ns = transition_one (
         pf1, pf2
@@ -895,9 +895,9 @@ fprint_trans_vt {m}
     | ~list_vt_nil () => ()
   // end of [aux]
 in
-  fprint_string (pf_mod | fil, "'[");
+  fprint_string (pf_mod | fil, "$lst {@(int,int,int)} (");
   aux (fil, ns);
-  fprint_char (pf_mod | fil, ']')
+  fprint_char (pf_mod | fil, ')')
 end // end of [fprint_trans_vt]
 
 (* ****** ****** *)

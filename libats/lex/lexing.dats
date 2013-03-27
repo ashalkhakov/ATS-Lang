@@ -312,7 +312,7 @@ fun aux (
 *)
     val state = transition_table_get (transtbl, state, c)
 (*
-    val () = printf ("lexing_engine_lexbuf: nstate = %i\n", @(nstate))
+    val () = printf ("lexing_engine_lexbuf: state = %i\n", @(state))
 *)
   in
     aux (lxbf, irule, state)
@@ -525,11 +525,11 @@ lexbuf_resize (lexbuf *lxbf) {
   lxbf->fstpos = 0 ;
 
   if (fstpos <= endpos) {
-    memcpy(buf_ptr_new, buf_ptr+fstpos, sizeof(char32_t)*(endpos-fstpos)) ;
+    memcpy(buf_ptr_new, buf_ptr+sizeof(char32_t)*fstpos, sizeof(char32_t)*(endpos-fstpos)) ;
     lxbf->endpos = endpos - fstpos ;
   } else {
-    memcpy(buf_ptr_new, buf_ptr+fstpos, sizeof(char32_t)*(buf_size-fstpos)) ;
-    memcpy(buf_ptr_new+buf_size-fstpos, buf_ptr, sizeof(char32_t)*endpos) ;
+    memcpy(buf_ptr_new, buf_ptr+sizeof(char32_t)*fstpos, sizeof(char32_t)*(buf_size-fstpos)) ;
+    memcpy(buf_ptr_new+sizeof(char32_t)*(buf_size-fstpos), buf_ptr, sizeof(char32_t)*endpos) ;
     lxbf->endpos = buf_size + endpos - fstpos ;
   }
 
@@ -624,7 +624,7 @@ lexbuf_refill (
     buf_ptr[endpos] = c; endpos = 0;
 //
   } /* end of [if] */
-//
+  //
   while (endpos+1 < fstpos) {
     c = lexing_infile_getc (lxbf->infile) ;
     if (c < 0) { lxbf->endpos = endpos ; return ; }
@@ -876,12 +876,12 @@ lexeme_set_lexbuf (
 
 /* ****** ****** */
 
-// TODO: change, this assumes ASCII
 ats_ptr_type
 lexeme_strptr_lexbuf
   (ats_ptr_type lxbf0) {
   int len, fstpos, lstpos ;
-  char *src, *dst0, *dst ;
+  char32_t *src, *dst0, *dst ;
+  char *res ;
   lexbuf *lxbf ;
 
   lxbf = (lexbuf*)lxbf0 ;
@@ -892,7 +892,7 @@ lexeme_strptr_lexbuf
   if (len < 0) { len += lxbf->buf_size ; }
 
   src = (lxbf->buf_ptr) + fstpos ;
-  dst0 = ATS_MALLOC ((len + 1) * sizeof(char)) ;
+  dst0 = ATS_MALLOC ((len + 1) * sizeof(char32_t)) ;
   dst = dst0 ;
 
   if (lstpos < fstpos) {
@@ -906,9 +906,12 @@ lexeme_strptr_lexbuf
     *dst = *src ; ++fstpos ; ++src ; ++dst ;
   }
 
-  *dst = '\000' ;
+  *dst = 0 ;
 
-  return dst0 ;
+  res = string_of_string32(dst0, len) ;
+  ATS_FREE(dst0) ;
+
+  return res ;
 } // end of [lexeme_strptr_lexbuf]
 
 /* ****** ****** */

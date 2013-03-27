@@ -86,25 +86,25 @@ transition_table_get (tbl, nstate, c) = let
   fun loop (xs: List @(int, int, int), c: int): int =
     case+ xs of
     | list_cons (@(c1, c2, n), xs) => if c1 <= c && c <= c2 then n else loop (xs, c)
-    | list_nil () => exit_errmsg (1, "lexing: transition_table_get: there is no transition for character")
+    | list_nil () => 0(*no transition: error*)
   // end of [loop]
-
+(*
   val () = printf (
     "transition_table_get: state = %i and c = %i\n", @(nstate, c)
   ) // end of [val]
-
+*)
   val '(arr, ntot) = tbl
   val nstate = nstate - 1 // we don't store transitions for state 0, which is an error state
   val nstate = int1_of_int nstate
-  val inp = if nstate >= 0 && nstate < ntot then arr[nstate]
-            else exit_errmsg (1, "lexing: transition_table_get: state number is illegal\n")
-  // end of [val]
-  val ans = loop (inp, c)
-
+  val ans = begin
+    if nstate >= 0 && nstate < ntot then loop (arr[nstate], c)
+    else 0
+  end // end of [val]
+(*
   val () = begin
     prerr "transition_table_get: ans = "; prerr ans; prerr_newline ()
   end // end of [val]
-
+*)
 in
   ans
 end // end of [transition_table_get]

@@ -411,7 +411,7 @@ fun tokenize_char_esc_code (ci: int, i: int): int =
     val c = char_get () in
     if c >= 0 then begin
       if utf32_isdigit c then begin
-          char_update (); tokenize_char_esc_code (BASE * ci + (c - 48 (* '0' *)), i+1)
+          char_update (); tokenize_char_esc_code (8 * ci + (c - 48 (* '0' *)), i+1)
       end // end of [_ when ...]
       else ci // end of [_]
     end else ci
@@ -426,13 +426,13 @@ fun tokenize_char_esc (): int = let
       if utf32_isdigit c then
         tokenize_char_esc_code (c - 48 (* '0' *), 0)
       else begin case+ c of
-        | 97 (*'a'*) => 7 (* alert *)
-        | 98 (*'b'*) => 10 (* backspace *)
-        | 102 (*'f'*) => 14 (* line feed *)
-        | 110 (*'n'*) => 12 (* newline *)
-        | 114 (*'r'*) => 15 (* carriage return *)
-        | 116 (*'t'*) => 11 (* horizonal tab *)
-        | 118 (*'v'*) => 13 (* vertical tab *)
+        | 97 (*'a'*) => 0x07 (* alert *)
+        | 98 (*'b'*) => 0x08 (* backspace *)
+        | 102 (*'f'*) => 0x0c (* form feed *)
+        | 110 (*'n'*) => 0x0a (* line feed *)
+        | 114 (*'r'*) => 0x0d (* carriage return *)
+        | 116 (*'t'*) => 0x09 (* horizonal tab *)
+        | 118 (*'v'*) => 0x0b (* vertical tab *)
         | _ => c (* no effect on other chars *)
       end // end of [if]
     end // end of [_ when ...]
