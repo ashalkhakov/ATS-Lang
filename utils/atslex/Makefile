@@ -38,7 +38,7 @@ ATSCC=$(ATSHOMEQ)/bin/atscc
 #ATSCCFLAGS=-D_ATS_gc
 #ATSCCFLAGS=-D_ATS_gcats
 #ATSCCFLAGS=-D_ATS_GCATS
-ATSCCFLAGS=-g
+ATSCCFLAGS=-g -lats_lex
 ATSRUNTIME=$(ATSHOMEQ)/ccomp/runtime
 
 CCFLAGS=-g
@@ -47,11 +47,11 @@ INCLUDES=-I$(ATSHOMEQ) -I$(ATSRUNTIME)
 ######
 
 atslex: \
-  atslex.dats top_sats.o unicode_dats.o lexgen_dats.o \
+  atslex.dats top_sats.o lexgen_dats.o \
   charset_dats.o intset_dats.o states_dats.o \
   parser_dats.o position_dats.o token_dats.o
 	$(ATSCC) -o atslex \
-  atslex.dats top_sats.o unicode_dats.o lexgen_dats.o \
+  atslex.dats top_sats.o lexgen_dats.o \
   charset_dats.o intset_dats.o states_dats.o \
   parser_dats.o position_dats.o token_dats.o $(ATSCCFLAGS)
 
@@ -61,8 +61,6 @@ charset_dats.o: charset.dats
 	$(ATSCC) -c charset.dats $(CCFLAGS)
 intset_dats.o: intset.dats
 	$(ATSCC) -c intset.dats $(CCFLAGS)
-unicode_dats.o: unicode.dats
-	$(ATSCC) -c unicode.dats $(CCFLAGS)
 lexgen_dats.o: lexgen.dats
 	$(ATSCC) -c lexgen.dats $(CCFLAGS)
 parser_dats.o: parser.dats

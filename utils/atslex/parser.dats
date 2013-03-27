@@ -42,6 +42,8 @@ staload "libc/SATS/stdio.sats"
 
 staload _ = "prelude/DATS/array.dats"
 
+staload "libats/lex/unicode.sats"
+
 (* ****** ****** *)
 
 fun prerr_range (): void = let

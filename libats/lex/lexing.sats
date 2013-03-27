@@ -206,13 +206,13 @@ fun lexing_engine (
 
 (* ****** ****** *)
 
-fun lexeme_get_lexbuf (lb: &lexbuf_t, index: int): char
+fun lexeme_get_lexbuf (lb: &lexbuf_t, index: int): int
   = "lexeme_get_lexbuf"
-fun lexeme_get (index: int): char = "lexeme_get"
+fun lexeme_get (index: int): int = "lexeme_get"
 
-fun lexeme_set_lexbuf (lb: &lexbuf_t, index: int, c: char): void
+fun lexeme_set_lexbuf (lb: &lexbuf_t, index: int, c: int): void
   = "lexeme_set_lexbuf"
-fun lexeme_set (index: int, c: char): void = "lexeme_set"
+fun lexeme_set (index: int, c: int): void = "lexeme_set"
 //
 fun lexeme_strptr_lexbuf
   (lb: &lexbuf_t): strptr1 = "lexeme_strptr_lexbuf"

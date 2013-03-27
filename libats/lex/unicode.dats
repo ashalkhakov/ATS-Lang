@@ -37,7 +37,7 @@
 //
 (* ****** ****** *)
 
-staload "top.sats"
+staload "unicode.sats"
 
 staload "libc/SATS/stdio.sats"
 
@@ -46,6 +46,59 @@ staload _ = "prelude/DATS/array.dats"
 (* ****** ****** *)
 
 #define ATS_DYNLOADFLAG 0
+
+(* ****** ****** *)
+
+implement
+get_byte_order (c0, c1) =
+  case+ (c0, c1) of
+  | ('\xFE', '\xFF') => BObig
+  | ('\xFF', '\xFE') => BOlittle
+  | (_, _) => $raise Malformed
+// end of [get_byte_order]
+
+fun
+number_of_char_pair (bo: byte_order, c1: char, c2: char): int = let
+  val c1 = uint_of_char c1
+  and c2 = uint_of_char c2
+in
+  case+ bo of
+  | BOlittle () => int_of_uint ((c2 << 8) lor c1)
+  | BObig () => int_of_uint ((c1 << 8) lor c2)
+end // end of [number_of_char_pair]
+(*
+fun
+char_pair_of_number (bo: byte_order, n: int): @(char, char) = let
+  val n = uint_of_int n
+in
+  case+ bo of
+  | BOlittle () => @(char_of_uint (n land 0xffu), char_of_uint ((n >> 8) land 0xffu))
+  | BObig () => @(char_of_uint ((n >> 8) land 0xffu), char_of_uint (n land 0xffu))
+end // end of [char_pair_of_number]
+
+
+fun
+next_in_string {n,i:nat | i <= n} (bo: byte_order, s: string n, pos: size_t i, bytes: size_t n): int = begin
+  if pos+1 >= bytes then $raise Malformed;
+  number_of_chair_pair (bo, s[pos], s[pos+1])
+end // end of [next_in_string]
+
+fun
+next_code {n,i:nat | i <= n} (bo: byte_order, s: string n, pos: size_t i, bytes: size_t n): [i:nat | i <= n] @(int, size_t i) = let
+  val w1 = next_in_string (bo, s, pos, bytes)
+in
+  if w1 = 0xfffe then $raise (InvalidCodepoint w1);
+  if w1 < 0xd800 || 0xdfff < w1 then @(w1, succ (succ pos))
+  else if w1 <= 0xdbff then let
+    val w2 = next_in_string (bo, s, succ (succ pos), bytes)
+    val () = if w2 < 0xdc00 || w2 > 0xdfff then $raise Malformed
+    val upper10 = (w1 land 0x3ff) << 10
+    and lower10 = w2 land 0x3ff
+  in
+    @(0x10000 + upper10 + lower10, succ (succ (succ (succ pos))))
+  end else $raise Malformed
+// end of [next_code]
+*)
 
 (* ****** ****** *)
 
@@ -234,6 +287,64 @@ in
     | _ => $raise Malformed
   end else c1 // EOF
 end // end of [utf8_decode]
+
+(* ****** ****** *)
+
+%{
+// Copyright (c) 2008-2010 Bjoern Hoehrmann <bjoern@hoehrmann.de>
+// See http://bjoern.hoehrmann.de/utf-8/decoder/dfa/ for details.
+
+#define UTF8_ACCEPT 0
+#define UTF8_REJECT 12
+
+static const uint8_t utf8d[] = {
+  // The first part of the table maps bytes to character classes that
+  // to reduce the size of the transition table and create bitmasks.
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+   1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,  9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+   7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,  7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+   8,8,2,2,2,2,2,2,2,2,2,2,2,2,2,2,  2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+  10,3,3,3,3,3,3,3,3,3,3,3,3,4,3,3, 11,6,6,6,5,8,8,8,8,8,8,8,8,8,8,8,
+
+  // The second part is a transition table that maps a combination
+  // of a state of the automaton and a character class to a state.
+   0,12,24,36,60,96,84,12,12,12,48,72, 12,12,12,12,12,12,12,12,12,12,12,12,
+  12, 0,12,12,12,12,12, 0,12, 0,12,12, 12,24,12,12,12,12,12,24,12,24,12,12,
+  12,12,12,12,12,12,12,24,12,12,12,12, 12,24,12,12,12,12,12,12,12,24,12,12,
+  12,12,12,12,12,12,12,36,12,36,12,12, 12,36,12,12,12,12,12,36,12,36,12,12,
+  12,36,12,12,12,12,12,12,12,12,12,12,
+} ;
+
+ats_bool_type
+utf8_state_is_accept(uint32_t s) {
+  return s == UTF8_ACCEPT ? ats_true_bool : ats_false_bool ;
+} // end of [utf8_state_is_accept]
+
+ats_bool_type
+utf8_state_is_reject(uint32_t s) {
+  return s == UTF8_REJECT ? ats_true_bool : ats_false_bool ;
+} // end of [utf8_state_is_reject]
+
+uint32_t
+utf8_decode_step(
+  ats_ref_type pstate, ats_ref_type pcodep, ats_char_type b
+) {
+  uint32_t *state = (uint32_t*)pstate, *codep = (uint32_t*)pcodep ;
+  uint32_t byte = (uint32_t)b ;
+  uint32_t type = utf8d[byte] ;
+
+  *codep = (*state != UTF8_ACCEPT) ?
+    (byte & 0x3fu) | (*codep << 6) :
+    (0xff >> type) & (byte) ;
+
+  *state = utf8d[256 + *state + type] ;
+  return *state ;
+} // end of [utf8_decode_step]
+
+%}
 
 (* ****** ****** *)
 

@@ -47,6 +47,8 @@ staload "top.sats"
 staload _ = "prelude/DATS/array.dats"
 staload _ = "prelude/DATS/list_vt.dats" // DEBUG
 
+staload "libats/lex/unicode.sats"
+
 typedef intset = intset_t
 
 // datatype for marked regular expressions

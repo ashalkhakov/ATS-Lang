@@ -41,6 +41,8 @@ staload "top.sats"
 
 staload _ = "prelude/DATS/reference.dats"
 
+staload "libats/lex/unicode.sats"
+
 (* ****** ****** *)
 
 extern fun errmsg {a:viewt@ype} (msg: string): a

@@ -46,6 +46,8 @@ staload STDIO = "libc/SATS/stdio.sats"
 
 staload _(*anonymous*) = "prelude/DATS/reference.dats"
 
+staload "libats/lex/unicode.sats"
+
 (* ****** ****** *)
 
 dynload "intset.dats"
@@ -181,8 +183,6 @@ val () = the_atslex_input_fin () // close the input channel
 // val () = prerr ("atslex: [lexer_parse] is finished.\n")
 //
 val (pf_stdout | ptr_stdout) = stdout_get ()
-
-val () = fprint_string (file_mode_lte_w_w | !ptr_stdout, "staload \"libats/lex/lexing.sats\"")
 
 val () = fprint_string (
   file_mode_lte_w_w | !ptr_stdout, lexer.preamble

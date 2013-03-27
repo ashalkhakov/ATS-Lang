@@ -43,6 +43,7 @@
 (* ****** ****** *)
 
 staload "libats/lex/lexing.sats"
+staload "libats/lex/unicode.sats"
 
 (* ****** ****** *)
 
@@ -88,8 +89,11 @@ assume infile_t (v:view) = '{
 
 %{
 
+// TODO: when compiler support is available, remove
+typedef uint32_t char32_t ;
+
 typedef struct {
-  unsigned char *buf_ptr ;
+  char32_t *buf_ptr ;
   int buf_size ;
   ats_ptr_type infile ;
   int fstpos ;
@@ -113,14 +117,10 @@ typedef struct {
 
 implement
 infile_free (pf | infil) = let
-  val () = infil.free (pf | (*none*))
-  val () = cloptr_free (infil.getc)
-  val () = cloptr_free (infil.free)
-//
-  prval () = __assert (infil) where {
-    extern prval __assert {vt:viewt@ype} (x: vt): void
-  } // end of [val]
-//
+  val '{free= free, getc= getc} = infil
+  val () = free (pf | (*none*))
+  val () = cloptr_free (getc)
+  val () = cloptr_free (free)
 in
   // nothing
 end // end of [infile_free]
@@ -130,6 +130,7 @@ infile_getc (pf | infil) = infil.getc (pf | (*none*))
 
 (* ****** ****** *)
 
+// FIXME: untested!
 implement
 infile_make_string
   (inp) = let
@@ -139,7 +140,7 @@ infile_make_string
   // end of [val]
   val n = string_length (str)
 //
-  typedef T = sizeLte n
+  typedef T = @(sizeLte n, int, utf8_state)
   val [l:addr] (pf_gc, pf_at | p) = ptr_alloc_tsz {T} (sizeof<T>)
   viewdef V = (free_gc_v (T?, l), T @ l)
 //
@@ -153,14 +154,26 @@ infile_make_string
     pf: !V | (*none*)
   ) :<cloptr1> int = let
     prval pf_at = (pf.1: T @ l)
-    val i = !p; val ans: int = begin
-      if i < n then (!p := i+1; int_of_char str[i]) else ~1
-    end // end of [val]
+    fun loop {i:nat | i <= n} .<n-i>. (
+      i: size_t i, p: &T, str: string n, n: size_t n
+    ) :<> int =
+      if i < n then let
+	val res = utf8_decode_step (p.2, p.1, str[i])
+      in
+	case+ 0 of
+	| _ when utf8_state_is_accept res => (p.0 := i+1; p.1)
+	| _ when utf8_state_is_reject res => ~1 (*FIXME: more informative error*)
+  	| _ => loop (i+1, p, str, n)
+      end else ~1
+    // end of [loop]
+    val ans = loop (!p.0, !p, str, n)
   in
     pf.1 := pf_at; ans
   end // end of [_getc]
 //
-  val () = !p := size1_of_int1 (0); 
+  val () = !p.0 := size1_of_int1 (0)
+  val () = !p.1 := 0
+  val () = !p.2 := UTF8init
 //
 in #[
   V | ( @(pf_gc, pf_at) | '{ free= _free, getc= _getc } )
@@ -168,6 +181,7 @@ in #[
 
 (* ****** ****** *)
 
+// FIXME: untested!
 implement
 infile_make_strptr
   (inp) = let
@@ -175,7 +189,7 @@ infile_make_strptr
   val [m,n:int] (pf_free, pf_sb | p_sb) = strbuf_of_strptr inp
   val n = strbuf_length (!p_sb)
 //
-  typedef T = sizeLte n
+  typedef T = @(sizeLte n, int, utf8_state)
   val [l2:addr] (pf_gc, pf_at | p) = ptr_alloc_tsz {T} (sizeof<T>)
 //
   viewdef V = (
@@ -194,18 +208,27 @@ infile_make_strptr
   ) :<cloptr1> int = let
     prval pf1_at = pf.1 
     prval pf2_at = pf.3
-    val i = !p
-    val isend = strbuf_is_atend (!p_sb, i)
-    val ans = 
-      if :(pf2_at: T @ l2) => isend then ~1 else begin
-        !p := i+1; int_of_char (strbuf_get_char_at (!p_sb, i))
-      end // end of [if]
-    // end of [val]
+    fun loop {i:nat | i <= n} .<n-i>. (
+      i: size_t i, p: &T, sb: &strbuf (m, n)
+    ) :<> int =
+      if ~strbuf_is_atend (sb, i) then let
+	val c = strbuf_get_char_at (sb, i)
+	val res = utf8_decode_step (p.2, p.1, c)
+      in
+	case+ 0 of
+	| _ when utf8_state_is_accept res => (p.0 := i+1; p.1)
+	| _ when utf8_state_is_reject res => ~1 (*FIXME: more informative error*)
+  	| _ => loop (i+1, p, sb)
+      end else ~1
+    // end of [loop]
+    val ans = loop (!p.0, !p, !p_sb)
   in
     pf.1 := pf1_at; pf.3 := pf2_at; ans
   end // end of [_getc]
 //
-  val () = !p := size1_of_int1 0
+  val () = !p.0 := size1_of_int1 (0)
+  val () = !p.1 := 0
+  val () = !p.2 := UTF8init
 //
 in #[
   V | ( @(pf_free, pf_sb, pf_gc, pf_at) | '{ free= _free, getc= _getc } )
@@ -228,14 +251,6 @@ fun fclose_exn
   (pf: FILE m @ l | p: ptr l): void = "mac#atslib_fclose_exn"
 // end of [fclose_exn]
 
-extern
-fun fgetc_err
-  {m:file_mode}
-  (pf: file_mode_lte (m, r) | f: &FILE m) : int = "mac#atslib_fgetc_err"
-// end of [fgetc_err]
-
-extern fun getchar (): int = "mac#atslib_getchar"
-
 in // in of [local]
 
 implement
@@ -249,7 +264,7 @@ infile_make_file
   ) :<cloptr1> void = fclose_exn (pf_fil | fil)
   fn _getc (
     pf_fil: !V | (*none*)
-  ) :<cloptr1> int = fgetc_err (pf_mod | !fil)
+  ) :<cloptr1> int = utf8_decode (pf_mod, pf_fil | fil)
 in #[
   V | (pf_fil | '{ free= _free, getc= _getc })
 ] end // end of [infile_make_file]
@@ -260,7 +275,13 @@ infile_make_stdin () = let
   fn _free (pf: V | (*none*)):<cloptr1> void = () where {
      prval unit_v () = pf
   } // end of [_free]
-  fn _getc (pf: !V | (*none*)):<cloptr1> int = getchar ()
+  fn _getc (pf: !V | (*none*)):<cloptr1> int = let
+    val (pf_stdin | ()) = stdin_view_get ()
+    val res = utf8_decode (file_mode_lte_r_r, pf_stdin | stdin)
+    val () = stdin_view_set (pf_stdin | (*empty*))
+  in
+    res
+  end // end of [_getc]
 in
   #[ V | (unit_v () | '{ free= _free, getc= _getc } ) ]
 end // end of [infile_make_stdin]
@@ -482,7 +503,7 @@ ats_void_type
 lexbuf_resize (lexbuf *lxbf) {
   int fstpos, curpos, lstpos, endpos ;
   int buf_size, buf_size_new ;
-  unsigned char *buf_ptr, *buf_ptr_new;
+  char32_t *buf_ptr, *buf_ptr_new;
 /*
   fprintf (stdout, "lexbuf_resize: before: buf_size = %i\n", lxbf->buf_size) ;
   fprintf (stdout, "lexbuf_resize: before: fstpos = %i\n", lxbf->fstpos) ;
@@ -496,7 +517,7 @@ lexbuf_resize (lexbuf *lxbf) {
   endpos = lxbf->endpos ;
 
   buf_size_new = buf_size + buf_size ;
-  buf_ptr_new = ATS_MALLOC (buf_size_new) ;
+  buf_ptr_new = ATS_MALLOC (sizeof(char32_t)*buf_size_new) ;
 
   lxbf->buf_ptr = buf_ptr_new ;
   lxbf->buf_size = buf_size_new ;
@@ -504,11 +525,11 @@ lexbuf_resize (lexbuf *lxbf) {
   lxbf->fstpos = 0 ;
 
   if (fstpos <= endpos) {
-    memcpy(buf_ptr_new, buf_ptr+fstpos, endpos-fstpos) ;
+    memcpy(buf_ptr_new, buf_ptr+fstpos, sizeof(char32_t)*(endpos-fstpos)) ;
     lxbf->endpos = endpos - fstpos ;
   } else {
-    memcpy(buf_ptr_new, buf_ptr+fstpos, buf_size-fstpos) ;
-    memcpy(buf_ptr_new+buf_size-fstpos, buf_ptr, endpos) ;
+    memcpy(buf_ptr_new, buf_ptr+fstpos, sizeof(char32_t)*(buf_size-fstpos)) ;
+    memcpy(buf_ptr_new+buf_size-fstpos, buf_ptr, sizeof(char32_t)*endpos) ;
     lxbf->endpos = buf_size + endpos - fstpos ;
   }
 
@@ -574,7 +595,7 @@ lexbuf_refill (
   ats_ptr_type lxbf0
 ) {
   lexbuf *lxbf ;
-  unsigned char *buf_ptr ;
+  char32_t *buf_ptr ;
   int c, fstpos, curpos, endpos ;
 
   lxbf = (lexbuf*)lxbf0 ;
@@ -647,7 +668,7 @@ lexbuf_char_next (
   ats_ptr_type lxbf0
 ) {
   lexbuf *lxbf ;
-  unsigned char *buf_ptr ;
+  char32_t *buf_ptr ;
   int c, fstpos, curpos, endpos ;
 //
   lxbf = (lexbuf*)lxbf0 ;
@@ -741,9 +762,9 @@ lexbuf_make_infile (
   ats_ptr_type infile
 ) {
   lexbuf *lxbf ;
-  unsigned char *buf_ptr ;
+  char32_t *buf_ptr ;
 
-  buf_ptr = ATS_MALLOC (BUF_SIZE) ;
+  buf_ptr = ATS_MALLOC (sizeof(char32_t)*BUF_SIZE) ;
   lxbf = ATS_MALLOC (sizeof(lexbuf)) ;
   lxbf->buf_ptr = buf_ptr ;
   lxbf->buf_size = BUF_SIZE ;
@@ -784,7 +805,7 @@ lexbuf_free (ats_ptr_type lxbf0) {
 
 /* ****** ****** */
 
-ats_char_type
+ats_int_type
 lexeme_get_lexbuf (
   ats_ptr_type lxbf0, ats_int_type i
 ) {
@@ -820,7 +841,7 @@ lexeme_get_lexbuf (
 ats_void_type
 lexeme_set_lexbuf (
   ats_ptr_type lxbf0
-, ats_int_type i, ats_char_type c
+, ats_int_type i, ats_int_type c
 ) {
   int len, fstpos, lstpos, bufsz ;
   lexbuf *lxbf ;
@@ -855,6 +876,7 @@ lexeme_set_lexbuf (
 
 /* ****** ****** */
 
+// TODO: change, this assumes ASCII
 ats_ptr_type
 lexeme_strptr_lexbuf
   (ats_ptr_type lxbf0) {

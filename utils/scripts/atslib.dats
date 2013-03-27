@@ -284,6 +284,10 @@ in
   ccomp_gcc_ar_libfile
     (param_rev, sbp2str (dir + "lexing.dats"), libats_lex_global) ;
   ccomp_gcc_ar_libfile
+    (param_rev, sbp2str (dir + "unicode.sats"), libats_lex_global) ;
+  ccomp_gcc_ar_libfile
+    (param_rev, sbp2str (dir + "unicode.dats"), libats_lex_global) ;
+  ccomp_gcc_ar_libfile
     (param_rev, sbp2str (dir + "tables.dats"), libats_lex_global) ;
   ar_s_exn (libats_lex_global) ;
 end // end of [libats_lex_make]
