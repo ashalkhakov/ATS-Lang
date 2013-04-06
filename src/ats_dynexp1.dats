@@ -65,16 +65,18 @@ val d0ynq_none = $Syn.d0ynq_none ()
 
 (* ****** ****** *)
 
-implement p1at_ann (loc, p1t, s1e) = '{
+implement
+p1at_ann (loc, p1t, s1e) = '{
   p1at_loc= loc, p1at_node= P1Tann (p1t, s1e)
 }
 
-implement p1at_any (loc) = '{
+implement
+p1at_any (loc) = '{
   p1at_loc= loc, p1at_node= P1Tany ()
 }
-
-implement p1at_anys (loc) = '{
-  p1at_loc= loc, p1at_node= P1Tanys ()
+implement
+p1at_any2 (loc) = '{
+  p1at_loc= loc, p1at_node= P1Tany2 ()
 }
 
 implement
@@ -119,21 +121,47 @@ implement p1at_int (loc, str) = '{
   p1at_loc= loc, p1at_node= P1Tint (str)
 }
 
-implement p1at_list (loc, p1ts) = case+ p1ts of
-  | cons (p1t, nil ()) => '{ // singleton elimination
-      p1at_loc= loc, p1at_node= p1t.p1at_node
-    }
-  | _ => '{
-      p1at_loc= loc, p1at_node= P1Tlist (0, p1ts)
-    }
-// end of [p1at_list]
+(* ****** ****** *)
 
-implement p1at_list2 (loc, p1ts1, p1ts2) = let
+implement
+p1at_list
+  (loc, p1ts) = let
+//
+fun aux_ifany (
+  loc: loc_t, p1t: p1at
+) : p1at = let
+in
+//
+case+ p1t.p1at_node of
+| P1Tany _ => p1at_any2 (loc)
+| _ => '{ // singleton elimination
+    p1at_loc= loc, p1at_node= p1t.p1at_node
+  }
+//
+end // end of [aux_ifany]
+//
+in (* in of [let] *)
+//
+case+ p1ts of
+| list_cons (
+    p1t, list_nil ()
+  ) => aux_ifany (loc, p1t)
+| _ => '{
+    p1at_loc= loc, p1at_node= P1Tlist (0, p1ts)
+  }
+//
+end // end of [p1at_list]
+
+implement
+p1at_list2
+  (loc, p1ts1, p1ts2) = let
   val npf = $Lst.list_length p1ts1
   val p1ts = $Lst.list_append (p1ts1, p1ts2)
 in '{
   p1at_loc= loc, p1at_node= P1Tlist (npf, p1ts)
 } end // end of [p1at_list2]
+
+(* ****** ****** *)
 
 implement p1at_lst (loc, p1ts) = '{
   p1at_loc= loc, p1at_node= P1Tlst (p1ts)

@@ -426,11 +426,12 @@ fn p1at_qid_app_dyn_tr (
       end // end of [Some_vt]
     | ~None_vt () => err2 (loc_id, q, id)
   end // end of [val]
-  val is_arg_omit = (case+ p1ts of
-    | cons (p1t, nil ()) => begin
-        case+ p1t.p1at_node of P1Tanys () => true | _ => false
-      end // end of [cons (_, nil)]
-    | _ => false
+  val is_arg_omit = (
+    case+ p1ts of
+    | cons (p1t, nil ()) => (
+        case+ p1t.p1at_node of P1Tany () => true | _ => false
+      ) // end of [cons (_, nil)]
+    | _ => false // end of [_]
   ) : bool // end of [val]
   val np1ts = $Lst.list_length p1ts
   val d2cs = (
@@ -561,7 +562,7 @@ val p2t0 = (
       p2at_ann (loc0, p2t, s2e)
     end // end of [P1Tann]
   | P1Tany _ => p2at_any (loc0)
-  | P1Tanys _ => p2at_any (loc0)
+  | P1Tany2 _ => p2at_any (loc0)
   | P1Tapp_dyn (p1t_fun, _(*loc_arg*), npf, darg) => let
       val loc1 = p1t_fun.p1at_loc
       val p1t_fun = p1at_make_p1at p1t_fun

@@ -56,7 +56,7 @@ list0_of_arrpsz (psz) = let
   val xs = list_vt_of_arrpsz<a> (psz)
 in
   list0_of_list_vt (xs)
-end // end of [list0_make_arrpsz]
+end // end of [list0_of_arrpsz]
 
 (* ****** ****** *)
 
@@ -351,30 +351,43 @@ end // end of [list0_tail_exn]
 (* ****** ****** *)
 
 implement{a}
-list0_take_exn (xs, n) = res where {
-  fun loop {i:nat} .<i>.
-    (xs: list0 a, i: int i, res: &list0 a? >> list0 a): int =
-    if i > 0 then begin case+ xs of
-      | list0_cons (x, xs) => (fold@ res; err) where {
-          val () = res := list0_cons (x, ?)
-          val+ list0_cons (_, !p_res1) = res
-          val err = loop (xs, i-1, !p_res1)
-        } // end of [list0_cons]
-      | list0_nil () => (res := list0_nil (); 1)
-    end else (res := list0_nil (); 0)
-  // end of [loop]    
-  val n = int1_of_int n
-  var res: list0 a // uninitialized
-  val err = if :(res: list0 a) =>
-    (n >= 0) then loop (xs, n, res) else (res := list0_nil (); 1)
-  // end of [if]
-  val () = if err > 0 then let
-    val () = list_vt_free (__cast res) where {
-      extern castfn __cast (_: list0 a): List_vt a
-    } // end of [val]
-  in
-    $raise ListSubscriptException()
-  end // end of [val]
+list0_take_exn
+  (xs, n) = res where {
+//
+fun loop {i:nat} .<i>. (
+  xs: list0 a, i: int i, res: &list0 a? >> list0 a
+) : int = let
+in
+//
+if i > 0 then (
+  case+ xs of
+  | list0_cons
+      (x, xs) => let
+      val () = res := list0_cons (x, ?)
+      val+ list0_cons (_, !p_res1) = res
+      val err = loop (xs, i-1, !p_res1)
+      val () = fold@ (res)
+    in
+      err
+    end // end of [list0_cons]
+  | list0_nil () => (res := list0_nil (); 1)
+) else (res := list0_nil (); 0)
+//
+end // end of [loop]    
+//
+val n = int1_of_int n
+var res: list0 a // uninitialized
+val err = if :(res: list0 a) =>
+  (n >= 0) then loop (xs, n, res) else (res := list0_nil (); 1)
+// end of [if]
+val () = if err > 0 then let
+  val () = list_vt_free (__cast res) where {
+    extern castfn __cast (_: list0 a): List_vt a
+  } // end of [val]
+in
+  $raise ListSubscriptException()
+end // end of [val]
+//
 } // end of [list0_take_exn]
 
 (* ****** ****** *)

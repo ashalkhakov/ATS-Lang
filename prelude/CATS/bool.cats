@@ -38,8 +38,9 @@
 
 /* ****** ****** */
 
-#include <stdio.h>
-#include "ats_types.h"
+extern
+int fprintf (FILE *stream, const char *format, ...) ;
+// in [stdio.h]
 
 /* ****** ****** */
 

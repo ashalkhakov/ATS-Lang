@@ -86,12 +86,10 @@ linset_isnot_member (xs: !set a, x0: a, cmp: cmp a):<> bool
 (* ****** ****** *)
 
 fun{a:t@ype}
-linset_copy (xs: !set (a)):<> set (a)
-
-(* ****** ****** *)
+linset_free (xs: set (a)):<> void
 
 fun{a:t@ype}
-linset_free (xs: set (a)):<> void
+linset_copy (xs: !set (a)):<> set (a)
 
 (* ****** ****** *)
 
@@ -109,19 +107,19 @@ linset_remove (
 
 (* ****** ****** *)
 //
-// HX: choose an element in an unspecified manner
+// HX: choosing an element in an unspecified manner
 //
 fun{a:t@ype}
 linset_choose (
   xs: !set a, x: &a? >> opt (a, b)
 ) : #[b:bool] bool (b) // end of [linset_choose]
 //
-// HX: take out an element in an unspecified manner
+// HX: removing an element chosen in an unspecified manner
 //
 fun{a:t@ype}
-linset_takeout (
+linset_choose_out (
   xs: &set a >> set a, x: &a? >> opt (a, b)
-) : #[b:bool] bool (b) // end of [linset_takeout]
+) : #[b:bool] bool (b) // end of [linset_choose_out]
 //
 (* ****** ****** *)
 

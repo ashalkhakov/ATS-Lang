@@ -39,10 +39,6 @@
 
 /* ****** ****** */
 
-#include "ats_types.h"
-
-/* ****** ****** */
-
 #if (0)
 //
 // HX-2010-03-24: no longer needed
@@ -55,7 +51,7 @@ static inline
 ats_ptr_type
 atspre_option1_of_option0 (ats_ptr_type x) { return x ; }
 
-#endif // end of (0)
+#endif // end of if(0)
 
 /* ****** ****** */
 

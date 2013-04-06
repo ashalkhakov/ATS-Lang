@@ -132,7 +132,7 @@ fun pow2 {n:nat} .<n>. (n: int n)
   in
     (POW2ind (pf1), pf2 | ds)
   end else (
-    (POW2bas (), REPcons (REPnil) | intlst_cons (1, intlst_nil))
+    POW2bas (), REPcons (REPnil) | intlst_cons (1, intlst_nil)
   ) // end of [if]
 // end of [pow2]
 

@@ -51,8 +51,13 @@ staload "ats_ccomp.sats"
 
 (* ****** ****** *)
 
+sortdef vtype = viewtype
+
+(* ****** ****** *)
+
 // for accumulating type defintiions (rec/sum/uni)
-dataviewtype typdeflst =
+dataviewtype
+typdeflst =
   | TYPDEFLSTcons of (typkey, string(*name*), typdeflst)
   | TYPDEFLSTnil of ()
 // end of [typdeflst]
@@ -71,7 +76,8 @@ fun the_saspcstlst_get (): saspcstlst
 
 (* ****** ****** *)
 
-dataviewtype datcstlst =
+dataviewtype
+datcstlst =
   | DATCSTLSTcons of (s2cst_t, datcstlst) | DATCSTLSTnil of ()
 // end of [datcstlst]
 
@@ -83,7 +89,8 @@ fun the_datcstlst_get (): datcstlst
 
 (* ****** ****** *)
 
-dataviewtype exnconlst =
+dataviewtype
+exnconlst =
   | EXNCONLSTcons of (d2con_t, exnconlst) | EXNCONLSTnil of ()
 // end of [exnconlst]
 
@@ -114,7 +121,7 @@ fun the_dynctx_pop (pf: dynctx_push_token | (*none*)): void
 fun the_dynctx_push (): @(dynctx_push_token | void)
 
 fun dynctx_foreach_main
-  {v:view} {vt:viewtype} {f:eff} (
+  {v:view} {vt:vtype} {f:eff} (
     pf: !v
   | m: !dynctx_vt
   , f: (!v | d2var_t, valprim, !vt) -<f> void
@@ -131,7 +138,7 @@ fun the_vartypset_pop (): vartypset and the_vartypset_push (): void
 fun vartypset_d2varlst_make (vtps: vartypset): d2varlst_vt
 
 fun vartypset_foreach_main
-  {v:view} {vt:viewtype} {f:eff} (
+  {v:view} {vt:vtype} {f:eff} (
     pf: !v
   | vtps: vartypset
   , f: (!v | vartyp_t, !vt) -<f> void
@@ -156,7 +163,7 @@ fun the_funlabset_mem (fl: funlab_t): bool
 fun the_funlabset_pop (): funlabset and the_funlabset_push (): void
 
 fun funlabset_foreach_main
-  {v:view} {vt:viewtype} {f:eff} (
+  {v:view} {vt:vtype} {f:eff} (
     pf: !v
   | fls: funlabset
   , f: (!v | funlab_t, !vt) -<f> void
@@ -172,46 +179,54 @@ fun prerr_funlabset (fls: funlabset): void
 
 (* ****** ****** *)
 
-// [abstype dyncstcon_t] is in [ats_hiexp.sats]
+// [dyncstcon] is in [ats_hiexp.sats]
 
 fun dynconset_foreach_main
-  {v:view} {vt:viewtype} {f:eff} (
-    pf: !v
-  | d2cs: dynconset_t
-  , f: (!v | d2con_t, !vt) -<f> void
-  , env: !vt
-  ) :<f> void
-// end of [dynconset_foreach_main]
+  {v:view} {vt:vtype} {f:eff} (
+  pf: !v
+| d2cs: dynconset
+, f: (!v | d2con_t, !vt) -<f> void
+, env: !vt
+) :<f> void // endfun
 
-fun the_dynconset_get (): dynconset_t
+fun the_dynconset_get (): dynconset
 fun the_dynconset_add (d2c: d2con_t): void
 
 (* ****** ****** *)
 //
-// HX: [abstype dyncstset_t] is in [ats_hiexp.sats]
+// HX: [dyncstset] is in [ats_hiexp.sats]
 //
 fun dyncstset_foreach_main
-  {v:view} {vt:viewtype} {f:eff} (
-    pf: !v
-  | d2cs: dyncstset_t
-  , f: (!v | d2cst_t, !vt) -<f> void
-  , env: !vt
-  ) :<f> void
-// end of [dyncstset_foreach_main]
+  {v:view} {vt:vtype} {f:eff} (
+  pf: !v
+| d2cs: dyncstset
+, f: (!v | d2cst_t, !vt) -<f> void
+, env: !vt
+) :<f> void // endfun
 
 fun the_dyncstset_get
-  (): dyncstset_t = "atsopt_the_dyncstset_get"
-fun the_dyncstset_add_if // [d2c] is added only if it has not been
+  (): dyncstset = "atsopt_the_dyncstset_get"
+// end of [the_dyncstset_get]
+
+//
+// HX: [d2c] is added only if it has not been
+//
+fun the_dyncstset_add_if
   (d2c: d2cst_t): void = "atsopt_the_dyncstset_add_if"
+// end of [the_dyncstset_add_if]
+
+fun the_dyncstsetlst_pop
+  (): dyncstset = "atsopt_the_dyncstsetlst_pop"
+// end of [the_dyncstsetlst_pop]
 
 fun the_dyncstsetlst_push
-  (): void = "atsopt_the_dyncstsetlst_push"
-fun the_dyncstsetlst_pop
-  (): dyncstset_t = "atsopt_the_dyncstsetlst_pop"
+  ((*void*)): void = "atsopt_the_dyncstsetlst_push"
+// end of [the_dyncstsetlst_push]
 
 (* ****** ****** *)
 
-dataviewtype extypelst =
+dataviewtype
+extypelst =
   | EXTYPELSTcons of (string (*name*), hityp_t, extypelst)
   | EXTYPELSTnil of ()
 // end of [extypelst]  
@@ -221,7 +236,8 @@ fun the_extypelst_add (name: string, hit: hityp_t): void
 
 (* ****** ****** *)
 
-dataviewtype extvalist =
+dataviewtype
+extvalist =
   | EXTVALLSTnil of ()
   | EXTVALLSTcons of (string (*name*), valprim, extvalist)
 // end of [extvalist]
@@ -233,7 +249,8 @@ fun the_extvalist_add (name: string, vp: valprim): void
 
 (* ****** ****** *)
 
-dataviewtype extcodelst =
+dataviewtype
+extcodelst =
   | EXTCODELSTcons of
       (loc_t, int(*position*), string (*code*), extcodelst)
   | EXTCODELSTnil of ()
@@ -246,7 +263,8 @@ fun the_extcodelst_add (loc: loc_t, pos: int, code: string): void
 
 (* ****** ****** *)
 
-dataviewtype stafilelst =
+dataviewtype
+stafilelst =
   | STAFILELSTcons of ($Fil.filename_t, int(*loadflag*), stafilelst)
   | STAFILELSTnil of ()
 // end of [stafilelst]
@@ -258,7 +276,8 @@ fun the_stafilelst_add (fil: $Fil.filename_t, loadflag: int): void
 
 (* ****** ****** *)
 
-dataviewtype dynfilelst =
+dataviewtype
+dynfilelst =
   | DYNFILELSTcons of ($Fil.filename_t, dynfilelst)
   | DYNFILELSTnil of ()
 // end of [dynfilelst]
@@ -335,7 +354,8 @@ fun loopexnlablst_get (i: int): tmplab_t
 
 (* ****** ****** *)
 
-dataviewtype glocstlst =
+dataviewtype
+glocstlst =
   | GLOCSTLSTcons_clo of (d2cst_t, glocstlst)
   | GLOCSTLSTcons_fun of (d2cst_t, glocstlst)
   | GLOCSTLSTcons_val of (d2cst_t, valprim, glocstlst)
@@ -351,7 +371,8 @@ fun the_glocstlst_add_val (d2c: d2cst_t, vp: valprim): void
 
 (* ****** ****** *)
 
-dataviewtype partvalst =
+dataviewtype
+partvalst =
   | PARTVALSTcons of (string(*name*), valprim, partvalst)
   | PARTVALSTnil of ()
 // end of [partvalst]
@@ -373,7 +394,8 @@ fun the_valprimlst_add_free (vp: valprim): void
 //
 // HX: for tailcall optimization
 //
-dataviewtype tailcallst =
+dataviewtype
+tailcallst =
   | TAILCALLSTcons of (funlab_t, tmpvarlst, tailcallst)
   | TAILCALLSTmark of tailcallst
   | TAILCALLSTnil of ()

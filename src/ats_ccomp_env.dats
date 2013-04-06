@@ -727,8 +727,7 @@ end // end of [prerr_funlabset]
 
 local
 
-typedef dynconset = $Set.set_t (d2con_t)
-assume dynconset_t = dynconset
+assume dynconset_type = $Set.set_t (d2con_t)
 
 val the_dynconset = ref_make_elt<dynconset> ($Set.set_nil)
 
@@ -754,8 +753,7 @@ end // end of [local]
 
 local
 
-typedef dyncstset = $Set.set_t (d2cst_t)
-assume dyncstset_t = dyncstset
+assume dyncstset_type = $Set.set_t (d2cst_t)
 
 viewtypedef dyncstsetlst = List_vt (dyncstset)
 

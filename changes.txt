@@ -8,6 +8,11 @@ ats-lang-anairiats-0.2.10:
    list1_of_list0 -> list_of_list0
 3. Fixing a glitch involving tail-call optimization
 4. Fixing a glitch involving exceptions declared in prelude/SATS
+5. Fixing a minor flaw in atsopt-depgen
+6. Adding linset_copy in libats/linset_avltree
+7. Renaming linset_takeout as linset_choose_out
+8. Differentiating _ from (_): the former pattern is expandable
+   whereas the latter is not
 
 ########################################################################
 

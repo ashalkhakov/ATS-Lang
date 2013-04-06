@@ -39,6 +39,10 @@
 
 (* ****** ****** *)
 
+#define ATS_DYNLOADFLAG 0 // no need for dynamic loading
+
+(* ****** ****** *)
+
 staload "libats/SATS/biarray.sats"
 
 (* ****** ****** *)

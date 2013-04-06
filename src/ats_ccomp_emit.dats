@@ -1538,7 +1538,7 @@ end // end of [emit_instr_arr_stack]
 fn d2cst_fun_is_void
   (d2c: d2cst_t): bool = begin
   hityp_t_fun_is_void (d2cst_get_hityp_some d2c)
-end // end of [funlab_fun_is_void]
+end // end of [d2cst_fun_is_void]
 
 fn funlab_fun_is_void
   (fl: funlab_t): bool = begin

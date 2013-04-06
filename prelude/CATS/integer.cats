@@ -38,7 +38,9 @@
 
 /* ****** ****** */
 
-#include <stdio.h>
+extern
+int fprintf (FILE *stream, const char *format, ...) ;
+// in [stdio.h]
 
 /* ****** ****** */
 

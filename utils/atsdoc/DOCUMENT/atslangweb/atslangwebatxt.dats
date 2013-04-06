@@ -330,6 +330,7 @@ val _RESOURCE = $lst{string}(
 ) // end of [val]
 val _COMMUNITY = $lst{string}(
   "ATS_mailinglist", "Mailing-list for ATS users"
+, "ATS_QandA_forum", "Q&amp;A forum for ATS users"
 , "ATS_irc_channel", "IRC channel for ATS users: ##ats"
 , "ATS_reddit_news", "ATS news at reddit"
 ) // end of [val]

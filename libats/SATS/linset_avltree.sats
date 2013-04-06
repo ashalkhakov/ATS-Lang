@@ -55,8 +55,8 @@ sortdef t0p = t@ype
 (* ****** ****** *)
 
 absviewtype
-set_t0ype_type (elt: t@ype+)
-stadef set = set_t0ype_type
+set_t0ype_viewtype (a: t@ype+)
+stadef set = set_t0ype_viewtype
 
 (* ****** ****** *)
 
@@ -95,6 +95,11 @@ linset_free (xs: set (a)):<> void
 (* ****** ****** *)
 
 fun{a:t@ype}
+linset_copy (xs: !set (a)):<> set (a)
+
+(* ****** ****** *)
+
+fun{a:t@ype}
 linset_insert (
   xs: &set (a), x0: a, cmp: cmp a
 ) :<> bool(*[x0] alreay exists in [xs]*) // end of [linset_insert]
@@ -108,19 +113,19 @@ linset_remove (
 
 (* ****** ****** *)
 //
-// HX: choose an element in an unspecified manner
+// HX: choosing an element in an unspecified manner
 //
 fun{a:t@ype}
 linset_choose (
   xs: !set a, x: &a? >> opt (a, b)
 ) : #[b:bool] bool (b) // end of [linset_choose]
 //
-// HX: take out an element in an unspecified manner
+// HX: removing an element chosen in an unspecified manner
 //
 fun{a:t@ype}
-linset_takeout (
+linset_choose_out (
   xs: &set a >> set a, x: &a? >> opt (a, b)
-) : #[b:bool] bool (b) // end of [linset_takeout]
+) : #[b:bool] bool (b) // end of [linset_choose_out]
 //
 (* ****** ****** *)
 

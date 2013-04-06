@@ -39,10 +39,6 @@
 
 /* ****** ****** */
 
-#include "ats_types.h"
-
-/* ****** ****** */
-
 // it is still empty now!
 
 /* ****** ****** */

@@ -289,10 +289,15 @@ fun hipat_set_asvar
 // end of [hipat_set_asvar]
 
 (* ****** ****** *)
-
-abstype dynconset_t // defined in [ats_ccomp_env.dats]
-abstype dyncstset_t // defined in [ats_ccomp_env.dats]
-
+//
+// HX-2013-03:
+// assumed in [ats_ccomp_env.dats]
+//
+abstype dynconset_type
+typedef dynconset = dynconset_type
+abstype dyncstset_type
+typedef dyncstset = dyncstset_type
+//
 (* ****** ****** *)
 
 datatype hidec_node =
@@ -508,13 +513,13 @@ and hiimpdec = '{ (* implementation *)
 , hiimpdec_tmp= int
 , hiimpdec_decarg= s2qualst, hiimpdec_tmparg= hityplstlst
 , hiimpdec_def= hiexp
-, hiimpdec_cstset= dyncstset_t
+, hiimpdec_cstset= dyncstset
 } // end of [hiimpdec]
 
 and hiimpdec_prf = '{ (* proof implementation *)
   hiimpdec_prf_loc= loc_t
 , hiimpdec_prf_cst= d2cst_t
-, hiimpdec_prf_cstset= dyncstset_t
+, hiimpdec_prf_cstset= dyncstset
 } // end of [hiimpdec_prf]
 
 (* ****** ****** *)
@@ -767,17 +772,16 @@ fun hidec_vardecs (_: loc_t, hids: hivardeclst): hidec
 (* ****** ****** *)
 
 fun hiimpdec_make (
-    _: loc_t
-  , d2c: d2cst_t, tmp: int
-  , decarg: s2qualst, tmparg: hityplstlst, _def: hiexp
-  , _cstset: dyncstset_t
-  ) : hiimpdec
-// end of [hiimpdec_make]
+  loc: loc_t
+, d2c: d2cst_t, tmp: int
+, decarg: s2qualst, tmparg: hityplstlst, def: hiexp
+, d2cs: dyncstset
+) : hiimpdec // end of [hiimpdec_make]
 
 fun hidec_impdec (_: loc_t, hid: hiimpdec): hidec
 
 fun hiimpdec_prf_make
-  (_: loc_t, d2c: d2cst_t, _cstset: dyncstset_t) : hiimpdec_prf
+  (_: loc_t, d2c: d2cst_t, d2cs: dyncstset) : hiimpdec_prf
 // end of [hiimpdec_prf_make]
 
 fun hidec_impdec_prf (_: loc_t, hid: hiimpdec_prf): hidec

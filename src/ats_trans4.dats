@@ -914,17 +914,20 @@ end // end of [c3laulst_tr]
 
 absview dyncstsetlst_push_token
 
-extern fun the_dyncstset_get
-  (): dyncstset_t = "atsopt_the_dyncstset_get"
+extern
+fun the_dyncstset_get
+  (): dyncstset = "atsopt_the_dyncstset_get"
 // end of [extern]
 
-extern fun the_dyncstsetlst_push
+extern
+fun the_dyncstsetlst_push
   (): (dyncstsetlst_push_token | void) = "atsopt_the_dyncstsetlst_push"
 // end of [the_dyncstsetlst_push]
 
-extern fun the_dyncstsetlst_pop (
+extern
+fun the_dyncstsetlst_pop (
   pf: dyncstsetlst_push_token | (*none*)
-) : dyncstset_t = "atsopt_the_dyncstsetlst_pop"
+) : dyncstset = "atsopt_the_dyncstsetlst_pop"
 // end of [extern]
 
 extern // HX: implemented in [ats_ccomp_env.dats]

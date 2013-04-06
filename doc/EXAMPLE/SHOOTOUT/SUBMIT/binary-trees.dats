@@ -78,17 +78,22 @@ fun loop_depths (d: Nat, max_depth: Nat): void = begin
   end
 end // end of [loop_depths]
 
-implement main (argc, argv) = let
+implement
+main (argc, argv) = let
+//
   val () = assert_errmsg
     (argc = 2, "Exit: wrong command format!\n")
   val n = int1_of argv.[1]
   val () = assert_errmsg
     (n >= 0, "The input integer needs to be a natural number.\n")
+//
   val () = gc_chunk_count_limit_set (1 << 15)
   val () = gc_chunk_count_limit_max_set (~1) // infinite
+//
   val max_depth = max (min_depth + 2, n)
   val () = stretch (max_depth)
   val long_lived_tree = long_lived_tree_make (max_depth)
+//
 in
   loop_depths (min_depth, max_depth);
   printf ("long lived tree of depth %i\t check: %i\n", @(max_depth, check_ref long_lived_tree))

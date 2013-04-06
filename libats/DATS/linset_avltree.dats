@@ -98,9 +98,7 @@ avltree_dec (a:t@ype, h:int) =
 (* ****** ****** *)
 
 assume
-set_t0ype_type
-  (a:t@ype) = [h:nat] avltree (a, h)
-// end of [set_t0ype_type]
+set_t0ype_viewtype (a:t@ype) = [h:nat] avltree (a, h)
 
 (* ****** ****** *)
 
@@ -179,6 +177,34 @@ linset_free (xs) = let
 in
   aux (xs)
 end // end of [linset_free]
+
+(* ****** ****** *)
+
+implement{a}
+linset_copy (xs) = let
+//
+fun aux
+  {h:nat} .<h>. (
+  t: !avltree (a, h)
+) :<> avltree (a, h) = let
+in
+//
+case+ t of
+| B (h, x, !p_tl, !p_tr) => let
+    val t2 = B (h, x, aux (!p_tl), aux (!p_tr))
+    prval () = fold@ (t)
+  in
+    t2
+  end // end of [B]
+| E () => let
+   prval () = fold@ (t) in E (*void*)
+  end // end of [E]
+//
+end // end of [aux]
+//
+in
+  aux (xs)
+end // end of [linset_copy]
 
 (* ****** ****** *)
 
@@ -679,7 +705,7 @@ linset_choose
 // end of [linset_choose]
 
 implement{a}
-linset_takeout
+linset_choose_out
   (xs, x0) = case+ xs of
   | ~B (_(*h*), x, tl, tr) => let
       val () = x0 := x
@@ -694,7 +720,7 @@ linset_takeout
     in
       false
     end // end of [E]
-// end of [linset_takeout]
+// end of [linset_choose_out]
 
 (* ****** ****** *)
 

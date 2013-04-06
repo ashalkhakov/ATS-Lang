@@ -38,13 +38,17 @@
 
 /* ****** ****** */
 
-#include <stdio.h> // for [fprintf]
-#include <string.h> // for [memcpy]
+extern
+int fprintf (FILE *stream, const char *format, ...) ;
+// in [stdio.h]
 
 /* ****** ****** */
 
-#include "ats_memory.h"
-#include "ats_types.h"
+extern
+void *memset(void *s, int c, size_t n);
+extern
+void *memcpy(void *dest, const void *src, size_t n) ;
+// in [string.h]
 
 /* ****** ****** */
 
